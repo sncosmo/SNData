@@ -3,3 +3,4 @@ tqdm
 astropy
 sncosmo
 requests
+scipy
