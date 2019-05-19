@@ -1,0 +1,18 @@
+# OS Files
+*.DS_Store
+
+# IDE files
+.idea/
+
+# Python build files
+*__pycache__*
+*.pyc
+
+# Light Curve Data
+SNData/*/data
+
+# Jupyter Checkpoints
+*.ipynb_checkpoints
+
+# Testing cache files
+.pytest_cache/
