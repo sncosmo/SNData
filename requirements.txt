@@ -1,6 +1,6 @@
-numpy
-tqdm
 astropy
-sncosmo
+numpy
 requests
-scipy
+scipy==1.2.1
+sncosmo
+tqdm

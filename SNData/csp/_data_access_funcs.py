@@ -80,9 +80,10 @@ def get_input_for_id(cid, bands=None):
     sn_data['zp'] = _get_zp_for_bands(sn_data['band'])
     sn_data['zpsys'] = np.full(len(sn_data), 'ab')
     sn_data['flux'] = 10 ** ((sn_data['mag'] - sn_data['zp']) / -2.5)
-    sn_data['fluxerr'] = np.log(10) * sn_data['flux'] * sn_data['mag_err'] / 2.5
-    sn_data.remove_columns(['mag', 'mag_err'])
+    sn_data['fluxerr'] = \
+        np.log(10) * sn_data['flux'] * sn_data['mag_err'] / 2.5
 
+    sn_data.remove_columns(['mag', 'mag_err'])
     return sn_data
 
 
