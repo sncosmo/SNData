@@ -58,7 +58,7 @@ _local_filt_names = [
 _band_names = ['u', 'g', 'r', 'i', 'B', 'V0', 'V1', 'V',
                'Y', 'H', 'J', 'Jrc2', 'Ydw', 'Jdw', 'Hdw']
 
-band_names = [f'91bg_proj_csp_{f}' for f in _band_names]
+band_names = [f'SND_csp_{f}' for f in _band_names]
 lambda_effective = [3639.3, 4765.1, 6223.3, 7609.2, 4350.6, 5369.6, 5401.4,
                     5375.2, 10350.8, 12386.5, 12356.3, 16297.7, 10439.8,
                     12383.2, 16282.8]

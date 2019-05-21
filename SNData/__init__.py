@@ -5,12 +5,12 @@
 and CSP. Data is downloaded automatically if it is not locally available,
 including filter transmission curves. This package will temporarily register
 filter transmission curves with SNCosmo using the naming scheme
-`91bg_proj_<survey name>_<filter name>`.
+`SND_<survey name>_<filter name>`.
 
 An example of accessing SDSS data is provided below. The interface for DES or
 CSP is the same, except you would import `des` or `csp` instead of `sdss`.
 
->>> from data_access import sdss
+>>> from SNData import sdss
 >>>
 >>> # Description of data cuts and where the data comes from
 >>> help(sdss.master_table)

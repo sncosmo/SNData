@@ -41,7 +41,7 @@ def get_data_for_id(cid):
 
     file_path = _path.join(meta_data.photometry_dir, f'SN{cid}_snpy.txt')
     data_table = utils.parse_snoopy_data(file_path)
-    data_table['band'] = '91bg_proj_csp_' + data_table['band']
+    data_table['band'] = 'SND_csp_' + data_table['band']
     data_table.meta['cid'] = cid
 
     return data_table
@@ -62,15 +62,13 @@ def _get_zp_for_bands(band):
     return np.array(meta_data.zero_point)[indices]
 
 
-def get_input_for_id(cid, bands=None):
+def get_input_for_id(cid):
     """Returns an SNCosmo input table a given CSP object ID
 
     No data cuts are applied to the returned data.
 
     Args:
         cid         (int): The ID of the desired object
-        bands (list[str]): Optionally only return select bands
-                             (eg. '91bg_proj_csp_V0')
 
     Returns:
         An astropy table of photometric data formatted for use with SNCosmo

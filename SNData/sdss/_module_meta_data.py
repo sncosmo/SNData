@@ -49,7 +49,7 @@ download_data(
 # Register filters if not already registered
 # Effective wavelengths for SDSS filters ugriz in angstroms
 # are available at https://www.sdss.org/instruments/camera/#Filters
-band_names = [f'91bg_proj_sdss_{band}{column}' for band, column in
+band_names = [f'SND_sdss_{band}{column}' for band, column in
               product('ugriz', '123456')]
 
 lambda_effective = tuple((3551, 3551, 3551, 3551, 3551, 3551,
