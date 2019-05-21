@@ -4,4 +4,4 @@
 
 
 
-A standardized and intuitive interface for downloading, parsing, and manipulating light curve data from supernova surveys.
+A standardized and intuitive interface for downloading, parsing, and manipulating data from supernova surveys.
