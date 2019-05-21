@@ -62,13 +62,14 @@ def _get_zp_for_bands(band):
     return np.array(meta_data.zero_point)[indices]
 
 
-def get_input_for_id(cid):
+def get_input_for_id(cid, bands=None):
     """Returns an SNCosmo input table a given CSP object ID
 
     No data cuts are applied to the returned data.
 
     Args:
         cid         (int): The ID of the desired object
+        bands (list[str]): Optionally only return select bands
 
     Returns:
         An astropy table of photometric data formatted for use with SNCosmo

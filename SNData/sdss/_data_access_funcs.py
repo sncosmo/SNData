@@ -102,7 +102,6 @@ def get_input_for_id(cid):
 
     # Format table
     phot_data = get_data_for_id(cid)
-    phot_data = phot_data[phot_data['FLAG'] < 1024]
 
     outlier_list = outlier_mjd.get(cid, [])
     if outlier_list:
@@ -110,17 +109,20 @@ def get_input_for_id(cid):
         phot_data = phot_data[keep_indices]
 
     if not phot_data:
-        return Table(names=['time', 'band', 'zp', 'flux', 'fluxerr', 'zpsys'])
+        return Table(
+            names=['time', 'band', 'zp', 'flux', 'fluxerr', 'zpsys', 'flag'])
 
     sncosmo_table = Table()
     sncosmo_table.meta = phot_data.meta
     sncosmo_table['time'] = phot_data['MJD']
-    sncosmo_table['band'] = construct_band_name(phot_data['FILT'],
-                                                phot_data['IDCCD'])
+    sncosmo_table['band'] = construct_band_name(
+        phot_data['FILT'], phot_data['IDCCD'])
+
     sncosmo_table['zp'] = np.full(len(phot_data), 2.5 * np.log10(3631))
     sncosmo_table['flux'] = phot_data['FLUX'] * 1E-6
     sncosmo_table['fluxerr'] = phot_data['FLUXERR'] * 1E-6
     sncosmo_table['zpsys'] = np.full(len(phot_data), 'ab')
+    sncosmo_table['flag'] = phot_data['FLAG']
     sncosmo_table.meta['cid'] = cid
 
     return sncosmo_table
