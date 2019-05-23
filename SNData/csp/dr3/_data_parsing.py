@@ -21,7 +21,7 @@ def load_table(table_num):
     if not table_path.exists:
         raise ValueError(f'Table {table_num} is not available.')
 
-    return ascii.read(table_path, format='cds', readme_path=readme_path)
+    return ascii.read(str(table_path), format='cds', readme=str(readme_path))
 
 
 def get_data_for_id(obj_id):
