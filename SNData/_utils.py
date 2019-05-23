@@ -81,6 +81,8 @@ def download_file(url, out_file):
         out_file (str): The file path to write to or a file object
     """
 
+    print(f'Fetching {url}')
+
     # Establish remote connection
     response = requests.get(url)
     response.raise_for_status()

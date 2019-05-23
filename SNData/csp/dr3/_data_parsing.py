@@ -16,8 +16,8 @@ from ... import _utils as utils
 def load_table(table_num):
     """Load a table from the data release paper"""
 
-    readme_path = meta_data.tables_dir / 'ReadMe'
-    table_path = meta_data.tables_dir / f'table{table_num}.dat'
+    readme_path = meta_data.table_dir / 'ReadMe'
+    table_path = meta_data.table_dir / f'table{table_num}.dat'
     if not table_path.exists:
         raise ValueError(f'Table {table_num} is not available.')
 
@@ -45,7 +45,7 @@ def get_data_for_id(obj_id):
 
 
 def _get_zp_for_bands(band):
-    """Returns the zero point coresponding to any band in meta_data.band_names
+    """Returns the zero point corresponding to any band in meta_data.band_names
 
     Args:
         band (list[str]): The name of a band

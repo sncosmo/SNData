@@ -10,7 +10,7 @@ _file_dir = FILE_DIR = Path(__file__).resolve().parent
 data_dir = _file_dir / 'data'
 photometry_dir = data_dir / 'DR3'  # DR3 Light Curves
 filter_dir = data_dir / 'filters'  # DR3 Filters
-tables_dir = data_dir / 'tables'  # Data tables
+table_dir = data_dir / 'tables'  # Data tables
 filter_file_names = [
     'u_tel_ccd_atm_ext_1.2.dat',  # u
     'g_tel_ccd_atm_ext_1.2.dat',  # g
@@ -28,6 +28,11 @@ filter_file_names = [
     'J_texas_DUP_atm.dat',  # Jdw
     'H_texas_DUP_atm.dat'  # Hdw
 ]
+
+# Define remote paths of data
+photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
+filter_url = 'https://csp.obs.carnegiescience.edu/data/u_tel_ccd_atm_ext_1.2.dat'
+table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211'
 
 # Filter information
 _band_names = (

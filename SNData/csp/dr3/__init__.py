@@ -16,18 +16,18 @@ from ._meta_data import lambda_effective
 from ... import _utils
 
 # Download data tables
-if not _meta_data.tables_dir.exists():
+if not _meta_data.table_dir.exists():
     print('Downloading data tables...')
     _utils.download_tar(
-        url='http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211',
-        out_dir=_meta_data.tables_dir,
+        url=_meta_data.table_url,
+        out_dir=_meta_data.table_dir,
         mode='r:gz')
 
 # Download photometry
 if not _meta_data.photometry_dir.exists():
     print('Downloading photometry...')
     _utils.download_tar(
-        url='https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz',
+        url=_meta_data.photometry_url,
         out_dir=_meta_data.data_dir,
         mode='r:gz')
 
@@ -36,7 +36,7 @@ if not _meta_data.filter_dir.exists():
     print('Downloading filters...')
     for file_name in _meta_data.filter_file_names:
         _utils.download_file(
-            url='https://csp.obs.carnegiescience.edu/data/u_tel_ccd_atm_ext_1.2.dat',
+            url=_meta_data.filter_url,
             out_file=_meta_data.filter_dir / file_name)
 
 # Register filters
