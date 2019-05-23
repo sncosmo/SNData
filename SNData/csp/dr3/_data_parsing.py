@@ -7,9 +7,21 @@ from glob import glob
 from os import path as _path
 
 import numpy as np
+from astropy.io import ascii
 
 from . import _meta_data as meta_data
 from ... import _utils as utils
+
+
+def load_table(table_num):
+    """Load a table from the data release paper"""
+
+    readme_path = meta_data.tables_dir / 'ReadMe'
+    table_path = meta_data.tables_dir / f'table{table_num}.dat'
+    if not table_path.exists:
+        raise ValueError(f'Table {table_num} is not available.')
+
+    return ascii.read(table_path, format='cds', readme_path=readme_path)
 
 
 def get_data_for_id(obj_id):
@@ -42,7 +54,8 @@ def _get_zp_for_bands(band):
         An array of zero points
     """
     sorter = np.argsort(meta_data.band_names)
-    indices = sorter[np.searchsorted(meta_data.band_names, band, sorter=sorter)]
+    indices = sorter[
+        np.searchsorted(meta_data.band_names, band, sorter=sorter)]
     return np.array(meta_data.zero_point)[indices]
 
 
