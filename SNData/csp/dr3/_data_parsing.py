@@ -7,42 +7,27 @@ from glob import glob
 from os import path as _path
 
 import numpy as np
-from astropy.table import Table
 
-from . import _module_meta_data as meta_data
-from .. import _utils as utils
-
-master_table = Table.read(meta_data.master_path)
-master_table = Table(
-    master_table.columns,
-    dtype=[float, float, 'U10', 'U15', 'U15', 'U30', 'U5', 'U20', float, 'U5',
-           'U10', 'U25', float, float, 'U10', 'U10', 'U10', int, int, float,
-           float, float, float, float, float, float, float, float, float,
-           float, float, float])
-
-master_table['SN'] = [elt.strip() for elt in master_table['SN']]
-
-master_table.remove_columns(['RAJ2000', 'DEJ2000'])
-master_table.rename_column('_RAJ2000', 'RAJ2000')
-master_table.rename_column('_DEJ2000', 'DECJ2000')
+from . import _meta_data as meta_data
+from ... import _utils as utils
 
 
-def get_data_for_id(cid):
+def get_data_for_id(obj_id):
     """Returns photometric data for a supernova candidate in a given filter
 
     No data cuts are applied to the returned data.
 
     Args:
-        cid (str): The Candidate ID of the desired object
+        obj_id (str): The Candidate ID of the desired object
 
     Returns:
         An astropy table of photometric data for the given candidate ID
     """
 
-    file_path = _path.join(meta_data.photometry_dir, f'SN{cid}_snpy.txt')
+    file_path = _path.join(meta_data.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = utils.parse_snoopy_data(file_path)
     data_table['band'] = 'SND_csp_' + data_table['band']
-    data_table.meta['cid'] = cid
+    data_table.meta['obj_id'] = obj_id
 
     return data_table
 
@@ -57,25 +42,23 @@ def _get_zp_for_bands(band):
         An array of zero points
     """
     sorter = np.argsort(meta_data.band_names)
-    indices = sorter[
-        np.searchsorted(meta_data.band_names, band, sorter=sorter)]
+    indices = sorter[np.searchsorted(meta_data.band_names, band, sorter=sorter)]
     return np.array(meta_data.zero_point)[indices]
 
 
-def get_input_for_id(cid, bands=None):
+def get_input_for_id(obj_id):
     """Returns an SNCosmo input table a given CSP object ID
 
     No data cuts are applied to the returned data.
 
     Args:
-        cid         (int): The ID of the desired object
-        bands (list[str]): Optionally only return select bands
+        obj_id      (str): The ID of the desired object
 
     Returns:
         An astropy table of photometric data formatted for use with SNCosmo
     """
 
-    sn_data = get_data_for_id(cid)
+    sn_data = get_data_for_id(obj_id)
     sn_data['zp'] = _get_zp_for_bands(sn_data['band'])
     sn_data['zpsys'] = np.full(len(sn_data), 'ab')
     sn_data['flux'] = 10 ** ((sn_data['mag'] - sn_data['zp']) / -2.5)
@@ -86,11 +69,11 @@ def get_input_for_id(cid, bands=None):
     return sn_data
 
 
-def get_target_ids():
-    """Return a list of target CID values
+def get_obj_ids():
+    """Return a list of target object ids for the current survey
 
     Returns:
-        A lis of CID values
+        A list of object ids as strings
     """
 
     # Get target ids
@@ -98,23 +81,18 @@ def get_target_ids():
     return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
 
 
-def iter_sncosmo_input(bands=None, verbose=False):
-    """Iterate through CSP supernova and yield the SNCosmo input tables
-
-    To return a select collection of band-passes, specify the band argument.
-    No data cuts are applied to the returned data.
+def iter_sncosmo_input(verbose=False):
+    """Iterate through light-curves and yield the SNCosmo input tables
 
     Args:
-        bands (iter[str]): Optional list of band-passes to return
-        verbose    (bool): Optionally display progress bar while iterating
-
+        verbose (bool): Optionally display progress bar while iterating
 
     Yields:
         An astropy table formatted for use with SNCosmo
     """
 
-    iter_data = utils.build_pbar_iter(get_target_ids(), verbose)
+    iter_data = utils.build_pbar(get_obj_ids(), verbose)
     for id_val in iter_data:
-        sncosmo_table = get_input_for_id(id_val, bands)
+        sncosmo_table = get_input_for_id(id_val)
         if sncosmo_table:
             yield sncosmo_table

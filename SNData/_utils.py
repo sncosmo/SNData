@@ -3,8 +3,9 @@
 
 """This module provides utilities used by various submodules."""
 
-import os
 import tarfile
+from pathlib import Path, PosixPath
+from tempfile import TemporaryFile
 
 import numpy as np
 import requests
@@ -72,77 +73,64 @@ def register_filter(file_path, filt_name):
         sncosmo.register(band, filt_name, force=False)
 
 
-def _download_file(url, out_path):
-    """Download a specified file to a given output path
-
-    Any top level .tar.gz archives will be automatically unzipped.
+def download_file(url, out_file):
+    """Download data to a file
 
     Args:
         url      (str): URL of the file to download
-        out_path (str): The path where the downloaded file should be written
+        out_file (str): The file path to write to or a file object
     """
 
-    # Make temporary file path
-    if os.path.isdir(out_path):
-        temp_path = os.path.join(out_path, '.temp')
-        out_dir = out_path
-
-    else:
-        temp_path = out_path + '.temp'
-        out_dir = os.path.dirname(out_path)
-
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-
-    # Download data
+    # Establish remote connection
     response = requests.get(url)
     response.raise_for_status()
-    with open(temp_path, 'wb') as ofile:
-        ofile.write(response.content)
 
-    # Unzip file if its an archive
-    if url.endswith(".tar.gz") or url.endswith(".tgz"):
-        with tarfile.open(temp_path, "r:gz") as data:
-            data.extractall(out_dir)
+    close_on_exit = isinstance(out_file, (str, PosixPath))
+    if close_on_exit:
+        Path(out_file).parent.mkdir(parents=True, exist_ok=True)
+        out_file = open(out_file, 'wb')
 
-        os.remove(temp_path)
-        for (dirpath, dirnames, filenames) in os.walk(out_dir):
-            for file in filenames:
-                if file.endswith(".tar.gz") or file.endswith(".tgz"):
-                    path = os.path.join(dirpath, file)
-                    with tarfile.open(path, "r:gz") as data:
-                        data.extractall(dirpath)
+    out_file.write(response.content)
 
-    else:
-        os.rename(temp_path, out_path)
+    if close_on_exit:
+        out_file.close()
 
 
-def download_data(base_url, out_dir, remote_name, check_local_name=None):
-    """Downloads data files from a given url and unzip if it is a .tar.gz
-
-    If check_local_names is provided, check if <out_dir>/<check_local_name[i]>
-    exists first and don't download the file if it does.
+def download_tar(url, out_dir, mode=None):
+    """Download and unzip a .tar.gz file to a given output path
 
     Args:
-        base_url               (str): Url to download files from
-        out_dir                (str): Directory to save files into
-        remote_name      (list[str]): Name of files to download
-        check_local_name (list[str]): Names of file to check for
+        url     (str): URL of the file to download
+        out_dir (str): The directory to unzip file contents to
+        mode    (str): Compression mode (Default: r:gz)
     """
 
-    for i, f_name in enumerate(remote_name):
-        out_path = os.path.join(out_dir, f_name)
-        if check_local_name is not None:
-            check_path = os.path.join(out_dir, check_local_name[i])
-            if os.path.exists(check_path):
-                continue
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-        print('downloading', f_name)
-        url = requests.compat.urljoin(base_url, f_name)
-        _download_file(url, out_path)
+    # Establish remote connection
+    response = requests.get(url)
+    response.raise_for_status()
+
+    # Download data to file and decompress
+    with TemporaryFile() as ofile:
+        download_file(url, ofile)
+
+        ofile.seek(0)
+        with tarfile.open(fileobj=ofile, mode=mode) as data:
+            data.extractall(out_dir)
 
 
-def build_pbar_iter(data, verbose):
+def build_pbar(data, verbose):
+    """Cast an iterable into a progress bar
+
+    If verbose is False, return ``data`` unchanged.
+
+    Args:
+        data          (iter): An iterable object
+        verbose (bool, dict): Arguments for tqdm.tqdm
+    """
+
     if isinstance(verbose, dict):
         iter_data = tqdm(data, **verbose)
 
@@ -151,4 +139,5 @@ def build_pbar_iter(data, verbose):
 
     else:
         iter_data = data
+
     return iter_data
