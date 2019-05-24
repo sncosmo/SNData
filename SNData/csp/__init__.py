@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides access to data from the Carnegie Supernova Project
-(CSP). It includes data releases 1, 2 and 3.
+(CSP).
 """
 
 from . import dr3

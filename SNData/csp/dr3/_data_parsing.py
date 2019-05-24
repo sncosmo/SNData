@@ -14,6 +14,8 @@ from ... import _utils as utils
 
 
 def _check_for_data():
+    """Raise a RuntimeError if data hasn't been downloaded for this module"""
+
     if not paths.data_dir.exists():
         raise RuntimeError(
             'Data has not been downloaded for this survey. '
@@ -49,7 +51,7 @@ def get_data_for_id(obj_id):
 
     file_path = _path.join(paths.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = utils.parse_snoopy_data(file_path)
-    data_table['band'] = 'SND_csp_' + data_table['band']
+    data_table['band'] = 'csp_dr3' + data_table['band']
     data_table.meta['obj_id'] = obj_id
 
     return data_table
@@ -103,7 +105,6 @@ def get_obj_ids():
 
     _check_for_data()
 
-    # Get target ids
     files = glob(_path.join(paths.photometry_dir, '*.txt'))
     return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
 

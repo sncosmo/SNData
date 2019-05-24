@@ -1,16 +1,17 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Specifies file paths and urls used by this submodule."""
+"""This module specifies file paths and urls used by this submodule."""
 
 from pathlib import Path
 
-# Define local paths of published data
-_file_dir = FILE_DIR = Path(__file__).resolve().parent
+_file_dir = Path(__file__).resolve().parent
 data_dir = _file_dir / 'data'
+
+# Define local paths of published data
 photometry_dir = data_dir / 'DR3'  # DR3 Light Curves
 filter_dir = data_dir / 'filters'  # DR3 Filters
-table_dir = data_dir / 'tables'  # Data tables
+table_dir = data_dir / 'tables'  # DR3 paper tables
 filter_file_names = [
     'u_tel_ccd_atm_ext_1.2.dat',  # u
     'g_tel_ccd_atm_ext_1.2.dat',  # g
