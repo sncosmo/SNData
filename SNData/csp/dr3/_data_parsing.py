@@ -9,17 +9,26 @@ from os import path as _path
 import numpy as np
 from astropy.io import ascii
 
-from . import _paths as paths
+from . import _meta as meta
 from ... import _utils as utils
 
 
 def _check_for_data():
     """Raise a RuntimeError if data hasn't been downloaded for this module"""
 
-    if not paths.data_dir.exists():
+    if not meta.data_dir.exists():
         raise RuntimeError(
             'Data has not been downloaded for this survey. '
             'Please run the ``download_data`` function.')
+
+
+def register_filters():
+    """Register filters for this survey / data release with SNCosmo"""
+
+    _check_for_data()
+    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
+        fpath = meta.filter_dir / _file_name
+        utils.register_filter(fpath, _band_name)
 
 
 def load_table(table_num):
@@ -27,8 +36,8 @@ def load_table(table_num):
 
     _check_for_data()
 
-    readme_path = paths.table_dir / 'ReadMe'
-    table_path = paths.table_dir / f'table{table_num}.dat'
+    readme_path = meta.table_dir / 'ReadMe'
+    table_path = meta.table_dir / f'table{table_num}.dat'
     if not table_path.exists:
         raise ValueError(f'Table {table_num} is not available.')
 
@@ -49,7 +58,7 @@ def get_data_for_id(obj_id):
 
     _check_for_data()
 
-    file_path = _path.join(paths.photometry_dir, f'SN{obj_id}_snpy.txt')
+    file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = utils.parse_snoopy_data(file_path)
     data_table['band'] = 'csp_dr3' + data_table['band']
     data_table.meta['obj_id'] = obj_id
@@ -58,7 +67,7 @@ def get_data_for_id(obj_id):
 
 
 def _get_zp_for_bands(band):
-    """Returns the zero point corresponding to any band in paths.band_names
+    """Returns the zero point corresponding to any band in meta.band_names
 
     Args:
         band (list[str]): The name of a band
@@ -67,10 +76,10 @@ def _get_zp_for_bands(band):
         An array of zero points
     """
 
-    sorter = np.argsort(paths.band_names)
+    sorter = np.argsort(meta.band_names)
     indices = sorter[
-        np.searchsorted(paths.band_names, band, sorter=sorter)]
-    return np.array(paths.zero_point)[indices]
+        np.searchsorted(meta.band_names, band, sorter=sorter)]
+    return np.array(meta.zero_point)[indices]
 
 
 def get_input_for_id(obj_id):
@@ -105,7 +114,7 @@ def get_obj_ids():
 
     _check_for_data()
 
-    files = glob(_path.join(paths.photometry_dir, '*.txt'))
+    files = glob(_path.join(meta.photometry_dir, '*.txt'))
     return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
 
 

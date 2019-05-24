@@ -6,22 +6,45 @@
 import os
 
 import numpy as np
-from astropy.table import Column, Table
+from astropy.io import ascii
+from astropy.table import Table
 
-from . import _paths as paths
+from . import _meta as meta
 from ... import _utils as utils
 
-master_table = Table.read(paths.master_table_path, format='ascii')
-master_table['CID'] = Column(master_table['CID'], dtype=str)
 
+# master_table = Table.read(meta.master_table_path, format='ascii')
+# master_table['CID'] = Column(master_table['CID'], dtype=str)
 
 def _check_for_data():
     """Raise a RuntimeError if data hasn't been downloaded for this module"""
 
-    if not paths.data_dir.exists():
+    if not meta.data_dir.exists():
         raise RuntimeError(
             'Data has not been downloaded for this survey. '
             'Please run the ``download_data`` function.')
+
+
+def register_filters():
+    """Register filters for this survey / data release with SNCosmo"""
+
+    _check_for_data()
+    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
+        fpath = meta.filter_dir / _file_name
+        utils.register_filter(fpath, _band_name)
+
+
+def load_table(table_num):
+    """Load a table from the data release paper"""
+
+    _check_for_data()
+
+    readme_path = meta.table_dir / 'ReadMe'
+    table_path = meta.table_dir / f'table{table_num}.dat'
+    if not table_path.exists:
+        raise ValueError(f'Table {table_num} is not available.')
+
+    return ascii.read(str(table_path), format='cds', readme=str(readme_path))
 
 
 def _get_outliers():
@@ -32,7 +55,7 @@ def _get_outliers():
     """
 
     out_dict = dict()
-    with open(paths.outlier_path) as ofile:
+    with open(meta.outlier_path) as ofile:
         for line in ofile.readlines():
             if line.startswith('IGNORE:'):
                 line_list = line.split()
@@ -43,9 +66,6 @@ def _get_outliers():
                 out_dict[str(cid)].append(mjd)
 
     return out_dict
-
-
-outlier_mjd = _get_outliers()
 
 
 @np.vectorize
@@ -78,7 +98,7 @@ def get_data_for_id(cid):
     _check_for_data()
 
     # Read in ascii data table for specified object
-    file_path = os.path.join(paths.smp_dir, f'SMP_{int(cid):06d}.dat')
+    file_path = os.path.join(meta.smp_dir, f'SMP_{int(cid):06d}.dat')
     all_data = Table.read(file_path, format='ascii')
 
     # Rename columns using header data from file
@@ -112,7 +132,7 @@ def get_input_for_id(cid):
     # Format table
     phot_data = get_data_for_id(cid)
 
-    outlier_list = outlier_mjd.get(cid, [])
+    outlier_list = _get_outliers().get(cid, [])
     if outlier_list:
         keep_indices = ~np.isin(phot_data['MJD'], outlier_list)
         phot_data = phot_data[keep_indices]

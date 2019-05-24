@@ -3,7 +3,7 @@
 
 """This module defines functions for downloading data."""
 
-from . import _paths as paths
+from . import _meta as meta
 from ... import _utils as utils
 
 
@@ -17,7 +17,7 @@ def download_module_data():
         check_local_name=_local_data_file_names
     )
 
-    download_data(
+    utils.download_data(
         base_url=_filt_url,
         out_dir=filter_dir,
         remote_name=_local_filt_file_names,
@@ -29,4 +29,4 @@ def delete_module_data():
     """Delete any data for the current survey / data release"""
 
     import shutil
-    shutil.rmtree(paths.data_dir)
+    shutil.rmtree(meta.data_dir)
