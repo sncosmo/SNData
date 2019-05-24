@@ -9,15 +9,24 @@ from os import path as _path
 import numpy as np
 from astropy.io import ascii
 
-from . import _meta_data as meta_data
+from . import _paths as paths
 from ... import _utils as utils
+
+
+def _check_for_data():
+    if not paths.data_dir.exists():
+        raise RuntimeError(
+            'Data has not been downloaded for this survey. '
+            'Please run the ``download_data`` function.')
 
 
 def load_table(table_num):
     """Load a table from the data release paper"""
 
-    readme_path = meta_data.table_dir / 'ReadMe'
-    table_path = meta_data.table_dir / f'table{table_num}.dat'
+    _check_for_data()
+
+    readme_path = paths.table_dir / 'ReadMe'
+    table_path = paths.table_dir / f'table{table_num}.dat'
     if not table_path.exists:
         raise ValueError(f'Table {table_num} is not available.')
 
@@ -36,7 +45,9 @@ def get_data_for_id(obj_id):
         An astropy table of photometric data for the given candidate ID
     """
 
-    file_path = _path.join(meta_data.photometry_dir, f'SN{obj_id}_snpy.txt')
+    _check_for_data()
+
+    file_path = _path.join(paths.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = utils.parse_snoopy_data(file_path)
     data_table['band'] = 'SND_csp_' + data_table['band']
     data_table.meta['obj_id'] = obj_id
@@ -45,7 +56,7 @@ def get_data_for_id(obj_id):
 
 
 def _get_zp_for_bands(band):
-    """Returns the zero point corresponding to any band in meta_data.band_names
+    """Returns the zero point corresponding to any band in paths.band_names
 
     Args:
         band (list[str]): The name of a band
@@ -53,10 +64,11 @@ def _get_zp_for_bands(band):
     Returns:
         An array of zero points
     """
-    sorter = np.argsort(meta_data.band_names)
+
+    sorter = np.argsort(paths.band_names)
     indices = sorter[
-        np.searchsorted(meta_data.band_names, band, sorter=sorter)]
-    return np.array(meta_data.zero_point)[indices]
+        np.searchsorted(paths.band_names, band, sorter=sorter)]
+    return np.array(paths.zero_point)[indices]
 
 
 def get_input_for_id(obj_id):
@@ -89,8 +101,10 @@ def get_obj_ids():
         A list of object ids as strings
     """
 
+    _check_for_data()
+
     # Get target ids
-    files = glob(_path.join(meta_data.photometry_dir, '*.txt'))
+    files = glob(_path.join(paths.photometry_dir, '*.txt'))
     return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
 
 

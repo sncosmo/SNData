@@ -5,48 +5,34 @@
 Carnegie Supernova Project (CSP).
 """
 
-from . import _meta_data
+from . import _paths
+from ._data_download import delete_module_data
+from ._data_download import download_module_data
 from ._data_parsing import get_data_for_id
 from ._data_parsing import get_input_for_id
 from ._data_parsing import iter_sncosmo_input
 from ._data_parsing import load_table
-from ._meta_data import band_names
-from ._meta_data import lambda_effective
-from ._meta_data import lambda_effective
 from ... import _utils
 
-# Download data tables
-if not _meta_data.table_dir.exists():
-    print('Downloading data tables...')
-    _utils.download_tar(
-        url=_meta_data.table_url,
-        out_dir=_meta_data.table_dir,
-        mode='r:gz')
+# Filter information
+_band_names = (
+    'u', 'g', 'r', 'i', 'B', 'V0', 'V1',
+    'V', 'Y', 'H', 'J', 'Jrc2', 'Ydw', 'Jdw', 'Hdw'
+)
 
-# Download photometry
-if not _meta_data.photometry_dir.exists():
-    print('Downloading photometry...')
-    _utils.download_tar(
-        url=_meta_data.photometry_url,
-        out_dir=_meta_data.data_dir,
-        mode='r:gz')
+band_names = [f'SND_csp_{f}' for f in _band_names]
+lambda_effective = [
+    3639.3, 4765.1, 6223.3, 7609.2, 4350.6, 5369.6, 5401.4,
+    5375.2, 10350.8, 12386.5, 12356.3, 16297.7, 10439.8,
+    12383.2, 16282.8
+]
 
-# Download photometry
-if not _meta_data.filter_dir.exists():
-    print('Downloading filters...')
-    for file_name in _meta_data.filter_file_names:
-        _utils.download_file(
-            url=_meta_data.filter_url,
-            out_file=_meta_data.filter_dir / file_name)
+zero_point = [
+    12.986, 15.111, 14.902, 14.545, 14.328, 14.437, 14.393, 14.439,
+    13.921, 13.836, 13.836, 13.510, 13.770, 13.866, 13.502
+]
 
 # Register filters
-for _file_name, _band_name in zip(_meta_data.filter_file_names, band_names):
-    fpath = _meta_data.filter_dir / _file_name
+for _file_name, _band_name in zip(_paths.filter_file_names, band_names):
+    fpath = _paths.filter_dir / _file_name
     _utils.register_filter(fpath, _band_name)
-
-
-def delete_module_data():
-    """Delete any data downloaded by this module"""
-
-    import shutil
-    shutil.rmtree(_meta_data.data_dir)
