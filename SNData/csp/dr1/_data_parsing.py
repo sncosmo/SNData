@@ -4,10 +4,11 @@
 """This module defines functions for accessing locally available data files."""
 
 from glob import glob
-from os import path as _path
+from pathlib import Path
 
 import numpy as np
 from astropy.io import ascii
+from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
 from ._data_download import _raise_for_data
@@ -17,21 +18,11 @@ from ... import _utils as utils
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    _raise_for_data()
     table_nums = []
     for f in meta.table_dir.rglob('table*.dat'):
         table_nums.append(int(f.stem.lstrip('table')))
 
     return table_nums
-
-
-def register_filters():
-    """Register filters for this survey / data release with SNCosmo"""
-
-    _raise_for_data()
-    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
-        fpath = meta.filter_dir / _file_name
-        utils.register_filter(fpath, _band_name)
 
 
 def load_table(table_num):
@@ -59,27 +50,12 @@ def get_available_ids():
     """
 
     _raise_for_data()
-    files = glob(_path.join(meta.photometry_dir, '*.txt'))
-    return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
+
+    files = glob(str(meta.spectra_dir / 'SN*.dat'))
+    ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
+    return list(set(ids))
 
 
-def _get_zp_for_bands(band):
-    """Returns the zero point corresponding to any band in meta.band_names
-
-    Args:
-        band (list[str]): The name of a band
-
-    Returns:
-        An array of zero points
-    """
-
-    sorter = np.argsort(meta.band_names)
-    indices = np.searchsorted(meta.band_names, band, sorter=sorter)
-
-    return np.array(meta.zero_point)[sorter[indices]]
-
-
-# noinspection PyPep8
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -93,19 +69,42 @@ def get_data_for_id(obj_id):
         An astropy table of data for the given ID
     """
 
-    # Read data file for target
     _raise_for_data()
-    file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
-    data_table = utils.parse_snoopy_data(file_path)
 
-    # Add flux values
-    data_table['band'] = 'csp_dr3_' + data_table['band']
-    data_table['zp'] = _get_zp_for_bands(data_table['band'])
-    data_table['zpsys'] = np.full(len(data_table), 'ab')
-    data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
-    data_table['fluxerr'] = np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
+    out_table = Table(
+        names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
+               'telescope', 'instrument'],
+        dtype=[float, float, float, float, 'U3', 'U3', 'U2']
+    )
 
-    return data_table
+    files = meta.spectra_dir.rglob(f'SN{obj_id[2:]}_*.dat')
+    if not files:
+        raise ValueError(f'No data found for obj_id {obj_id}')
+
+    for f in files:
+        spectral_data = Table.read(
+            f, format='ascii', names=['wavelength', 'flux'])
+
+        # Get meta data for observation
+        file_comments = spectral_data.meta['comments']
+        redshift = float(file_comments[1].lstrip('Redshift: '))
+        max_date = float(file_comments[2].lstrip('JDate_of_max: '))
+        obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
+        epoch = float(file_comments[4].lstrip('Epoch: '))
+        _, _, wrange, telescope, instrument = f.stem.split('_')
+
+        date_col = Column(data=np.full(len(spectral_data), obs_date), name='date')
+        epoch_col = Column(data=np.full(len(spectral_data), epoch), name='epoch')
+        wr_col = Column(data=np.full(len(spectral_data), wrange), name='wavelength_range')
+        tel_col = Column(data=np.full(len(spectral_data), telescope), name='telescope')
+        inst_col = Column(data=np.full(len(spectral_data), instrument), name='instrument')
+        spectral_data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
+
+        out_table = vstack([out_table, spectral_data])
+
+    out_table.meta['redshift'] = redshift
+    out_table.meta['JDate_of_max'] = max_date
+    return out_table
 
 
 def iter_data(verbose=False):

@@ -37,21 +37,13 @@ def download_module_data():
             out_dir=meta.table_dir,
             mode='r:gz')
 
-    # Download photometry
-    if not meta.photometry_dir.exists():
-        print('Downloading photometry...')
+    # Download spectra
+    if not meta.spectra_dir.exists():
+        print('Downloading spectra...')
         utils.download_tar(
-            url=meta.photometry_url,
+            url=meta.spectra_url,
             out_dir=meta.data_dir,
             mode='r:gz')
-
-    # Download filters
-    if not meta.filter_dir.exists():
-        print('Downloading filters...')
-        for file_name in meta.filter_file_names:
-            utils.download_file(
-                url=meta.filter_url,
-                out_file=meta.filter_dir / file_name)
 
 
 def delete_module_data():

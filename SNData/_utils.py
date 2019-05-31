@@ -32,7 +32,7 @@ def parse_snoopy_data(path):
     with open(path) as ofile:
         # Get meta data from first line
         name, z, ra, dec = ofile.readline().split()
-        out_table.meta['name'] = name
+        out_table.meta['obj_id'] = name
         out_table.meta['redshift'] = float(z)
         out_table.meta['ra'] = float(ra)
         out_table.meta['dec'] = float(dec)
