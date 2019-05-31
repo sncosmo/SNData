@@ -26,12 +26,8 @@ def register_filters():
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    _raise_for_data()
-    table_nums = []
-    for f in meta.table_dir.rglob('table*.dat'):
-        table_nums.append(int(f.stem.lstrip('table')))
-
-    return sorted(table_nums)
+    # Todo: figure out how to parse tables 2 and 3
+    return [1, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 
 def load_table(table_num):
@@ -45,7 +41,7 @@ def load_table(table_num):
 
     readme_path = meta.table_dir / 'ReadMe'
     table_path = meta.table_dir / f'table{table_num}.dat'
-    if not table_path.exists:
+    if table_num not in get_available_tables():
         raise ValueError(f'Table {table_num} is not available.')
 
     return ascii.read(str(table_path), format='cds', readme=str(readme_path))
