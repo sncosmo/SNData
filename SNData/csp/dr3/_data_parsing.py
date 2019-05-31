@@ -14,6 +14,15 @@ from ._data_download import _raise_for_data
 from ... import _utils as utils
 
 
+def register_filters():
+    """Register filters for this survey / data release with SNCosmo"""
+
+    _raise_for_data()
+    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
+        fpath = meta.filter_dir / _file_name
+        utils.register_filter(fpath, _band_name)
+
+
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
@@ -23,15 +32,6 @@ def get_available_tables():
         table_nums.append(int(f.stem.lstrip('table')))
 
     return table_nums
-
-
-def register_filters():
-    """Register filters for this survey / data release with SNCosmo"""
-
-    _raise_for_data()
-    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
-        fpath = meta.filter_dir / _file_name
-        utils.register_filter(fpath, _band_name)
 
 
 def load_table(table_num):

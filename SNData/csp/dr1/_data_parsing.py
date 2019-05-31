@@ -56,6 +56,7 @@ def get_available_ids():
     return list(set(ids))
 
 
+# noinspection PyPep8
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 

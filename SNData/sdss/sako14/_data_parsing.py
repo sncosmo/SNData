@@ -6,45 +6,57 @@
 import os
 
 import numpy as np
-from astropy.io import ascii
-from astropy.table import Table
+from astropy.table import Column, Table
 
 from . import _meta as meta
+from ._data_download import _raise_for_data
 from ... import _utils as utils
 
-
-# master_table = Table.read(meta.master_table_path, format='ascii')
-# master_table['CID'] = Column(master_table['CID'], dtype=str)
-
-def _check_for_data():
-    """Raise a RuntimeError if data hasn't been downloaded for this module"""
-
-    if not meta.data_dir.exists():
-        raise RuntimeError(
-            'Data has not been downloaded for this survey. '
-            'Please run the ``download_data`` function.')
+_master_table = None
 
 
 def register_filters():
     """Register filters for this survey / data release with SNCosmo"""
 
-    _check_for_data()
+    _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
         utils.register_filter(fpath, _band_name)
 
 
+def get_available_tables():
+    """Get numbers of available tables for this survey / data release"""
+
+    return [0]
+
+
 def load_table(table_num):
     """Load a table from the data release paper"""
 
-    _check_for_data()
+    _raise_for_data()
 
-    readme_path = meta.table_dir / 'ReadMe'
-    table_path = meta.table_dir / f'table{table_num}.dat'
-    if not table_path.exists:
+    if table_num == 0:
+        global _master_table
+        if _master_table is None:
+            _master_table = Table.read(meta.master_table_path, format='ascii')
+            _master_table['CID'] = Column(_master_table['CID'], dtype=str)
+
+        return _master_table
+
+    else:
         raise ValueError(f'Table {table_num} is not available.')
 
-    return ascii.read(str(table_path), format='cds', readme=str(readme_path))
+
+def get_available_ids():
+    """Return a list of target object ids for the current survey
+
+    Returns:
+        A list of object ids as strings
+    """
+
+    _raise_for_data()
+
+    return _master_table['CID']
 
 
 def _get_outliers():
@@ -69,7 +81,7 @@ def _get_outliers():
 
 
 @np.vectorize
-def construct_band_name(filter_id, ccd_id):
+def _construct_band_name(filter_id, ccd_id):
     """Return the sncosmo band name given filter and CCD id
 
     Args:
@@ -83,22 +95,23 @@ def construct_band_name(filter_id, ccd_id):
     return f'sdss_sako14_{"ugriz"[filter_id]}{ccd_id}'
 
 
-def get_data_for_id(cid):
-    """Returns published photometric data for a SDSS observed object
+def get_data_for_id(obj_id):
+    """Returns data for a given object id
 
-    No data cuts are applied to the returned data.
+    No data cuts are applied to the returned data. See ``get_available_ids()``
+    for a list of available id values.
 
     Args:
-        cid (str): The Candidate ID of the desired object
+        obj_id (str): The ID of the desired object
 
     Returns:
-        An astropy table of photometric data for the given candidate ID
+        An astropy table of data for the given ID
     """
 
-    _check_for_data()
+    _raise_for_data()
 
     # Read in ascii data table for specified object
-    file_path = os.path.join(meta.smp_dir, f'SMP_{int(cid):06d}.dat')
+    file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')
     all_data = Table.read(file_path, format='ascii')
 
     # Rename columns using header data from file
@@ -106,7 +119,7 @@ def get_data_for_id(cid):
     for i, name in enumerate(col_names):
         all_data[f'col{i + 1}'].name = name
 
-    table_meta_data = master_table[master_table['CID'] == cid]
+    table_meta_data = _master_table[_master_table['CID'] == obj_id]
     all_data.meta['redshift'] = table_meta_data['zCMB'][0]
     all_data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
     all_data.meta['ra'] = table_meta_data['RA'][0]
@@ -144,7 +157,7 @@ def get_input_for_id(cid):
     sncosmo_table = Table()
     sncosmo_table.meta = phot_data.meta
     sncosmo_table['time'] = phot_data['MJD']
-    sncosmo_table['band'] = construct_band_name(
+    sncosmo_table['band'] = _construct_band_name(
         phot_data['FILT'], phot_data['IDCCD'])
 
     sncosmo_table['zp'] = np.full(len(phot_data), 2.5 * np.log10(3631))
@@ -157,24 +170,21 @@ def get_input_for_id(cid):
     return sncosmo_table
 
 
-def iter_sncosmo_input(verbose=False):
-    """Iterate through SDSS supernova and yield the SNCosmo input tables
+def iter_data(verbose=False):
+    """Iterate through all available targets and yield data tables
 
-    To return a select collection of band-passes, specify the band argument.
+    An optional progress bar can be formatted by passing a dictionary of tqdm
+    arguments.
 
     Args:
-        verbose (bool): Optionally display progress bar while iterating
+        verbose (bool, dict): Optionally display progress bar while iterating
 
     Yields:
-        An astropy table formatted for use with SNCosmo
+        Astropy tables
     """
 
-    # Customize iterable of data
-    ids = master_table['CID']
-    iter_data = utils.build_pbar(ids, verbose)
-
-    # Yield an SNCosmo input table for each target
-    for cid in iter_data:
+    iterable = utils.build_pbar(get_available_ids(), verbose)
+    for cid in iterable:
         sncosmo_table = get_input_for_id(cid)
         if sncosmo_table:
             yield sncosmo_table
