@@ -98,8 +98,7 @@ def _construct_band_name(filter_id, ccd_id):
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
-    No data cuts are applied to the returned data. See ``get_available_ids()``
-    for a list of available id values.
+    See ``get_available_ids()`` for a list of available id values.
 
     Args:
         obj_id (str): The ID of the desired object
@@ -130,22 +129,22 @@ def get_data_for_id(obj_id):
     return all_data
 
 
-def get_input_for_id(cid):
-    """Returns an SNCosmo input table a given SDSS object ID
+def get_sncosmo_input(obj_id):
+    """Returns an SNCosmo input table a given object ID
 
     Data points flagged in the SDSS II release as outliers are removed.
 
     Args:
-        cid (int): The ID of the desired object
+        obj_id (str): The ID of the desired object
 
     Returns:
-        An astropy table of photometric data formatted for use with SNCosmo
+        An astropy table of data formatted for use with SNCosmo
     """
 
     # Format table
-    phot_data = get_data_for_id(cid)
+    phot_data = get_data_for_id(obj_id)
 
-    outlier_list = _get_outliers().get(cid, [])
+    outlier_list = _get_outliers().get(obj_id, [])
     if outlier_list:
         keep_indices = ~np.isin(phot_data['MJD'], outlier_list)
         phot_data = phot_data[keep_indices]
@@ -165,26 +164,32 @@ def get_input_for_id(cid):
     sncosmo_table['fluxerr'] = phot_data['FLUXERR'] * 1E-6
     sncosmo_table['zpsys'] = np.full(len(phot_data), 'ab')
     sncosmo_table['flag'] = phot_data['FLAG']
-    sncosmo_table.meta['cid'] = cid
+    sncosmo_table.meta['obj_id'] = obj_id
 
     return sncosmo_table
 
 
-def iter_data(verbose=False):
+def iter_data(verbose=False, format_sncosmo=False):
     """Iterate through all available targets and yield data tables
 
     An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments.
+    arguments. Skips any empty tables.
 
     Args:
-        verbose (bool, dict): Optionally display progress bar while iterating
+        verbose  (bool, dict): Optionally display progress bar while iterating
+        format_sncosmo (bool): Format data for use with SNCosmo (Default: False)
 
     Yields:
         Astropy tables
     """
 
     iterable = utils.build_pbar(get_available_ids(), verbose)
-    for cid in iterable:
-        sncosmo_table = get_input_for_id(cid)
-        if sncosmo_table:
-            yield sncosmo_table
+    for obj_id in iterable:
+        if format_sncosmo:
+            data_table = get_sncosmo_input(obj_id)
+
+        else:
+            data_table = get_data_for_id(obj_id)
+
+        if data_table:
+            yield data_table

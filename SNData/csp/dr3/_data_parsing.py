@@ -79,12 +79,10 @@ def _get_zp_for_bands(band):
     return np.array(meta.zero_point)[sorter[indices]]
 
 
-# noinspection PyPep8
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
-    No data cuts are applied to the returned data. See ``get_available_ids()``
-    for a list of available id values.
+    See ``get_available_ids()`` for a list of available id values.
 
     Args:
         obj_id (str): The ID of the desired object
@@ -103,19 +101,36 @@ def get_data_for_id(obj_id):
     data_table['zp'] = _get_zp_for_bands(data_table['band'])
     data_table['zpsys'] = np.full(len(data_table), 'ab')
     data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
-    data_table['fluxerr'] = np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
+    data_table['fluxerr'] = \
+        np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
 
     return data_table
 
 
-def iter_data(verbose=False):
+def get_sncosmo_input(obj_id):
+    """Returns an SNCosmo input table a given object ID
+
+    Data points flagged in the SDSS II release as outliers are removed.
+
+    Args:
+        obj_id (str): The ID of the desired object
+
+    Returns:
+        An astropy table of data formatted for use with SNCosmo
+    """
+
+    return get_data_for_id(obj_id)
+
+
+def iter_data(verbose=False, format_sncosmo=False):
     """Iterate through all available targets and yield data tables
 
     An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments.
+    arguments. Skips any empty tables.
 
     Args:
-        verbose (bool, dict): Optionally display progress bar while iterating
+        verbose  (bool, dict): Optionally display progress bar while iterating
+        format_sncosmo (bool): Format data for use with SNCosmo (Default: False)
 
     Yields:
         Astropy tables

@@ -60,8 +60,7 @@ def get_available_ids():
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
-    No data cuts are applied to the returned data. See ``get_available_ids()``
-    for a list of available id values.
+    See ``get_available_ids()`` for a list of available id values.
 
     Args:
         obj_id (str): The ID of the desired object
@@ -110,11 +109,11 @@ def get_data_for_id(obj_id):
     return out_table
 
 
-def iter_data(verbose=False):
+def iter_data(verbose=False, **kwargs):
     """Iterate through all available targets and yield data tables
 
     An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments.
+    arguments. Skips any empty tables.
 
     Args:
         verbose (bool, dict): Optionally display progress bar while iterating
