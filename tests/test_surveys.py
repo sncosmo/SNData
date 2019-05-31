@@ -14,23 +14,21 @@ class GeneralTests(TestCase):
     def _test_empty_data(self):
         """Test for empty tables in ``iter_data``"""
 
-        err_msg = 'Empty table for {} obj_id {}.'
         for input_table in self.module.iter_data():
             obj_id = input_table.meta['obj_id']
             self.assertTrue(
                 input_table,
-                msg=err_msg.format(self.name, obj_id))
+                msg=f'Empty table for obj_id {obj_id}.')
 
     def _test_delete_data(self):
         """Test ``delete_module_data`` agrees with ``data_is_available``"""
 
         if not self.module.data_is_available():
-            err_msg = f'No data found for {self.name}. Cannot test deletion.'
+            err_msg = f'No data found. Cannot test deletion.'
             raise RuntimeError(err_msg)
 
         self.module.delete_module_data()
-        self.assertFalse(self.module.data_is_available(),
-                         f'Test failed for {self.name}')
+        self.assertFalse(self.module.data_is_available())
 
     def _test_table_parsing(self):
         """Test no errors are raised by ``load_table`` when parsing args from
@@ -39,7 +37,7 @@ class GeneralTests(TestCase):
 
         table_nums = self.module.get_available_tables()
         self.assertGreater(
-            len(table_nums), 0, f'No table available for survey {self.name}')
+            len(table_nums), 0, f'No tables available for survey')
 
         err_msg = 'Empty table number {}'
         for n in table_nums:
@@ -47,7 +45,7 @@ class GeneralTests(TestCase):
                 table = self.module.load_table(n)
 
             except:
-                raise RuntimeError(f'Cannot parse table {n} for {self.name}')
+                raise RuntimeError(f'Cannot parse table {n}')
 
             self.assertTrue(table, err_msg.format(n))
 
@@ -58,7 +56,6 @@ class CSP_DR1(GeneralTests):
     @classmethod
     def setUpClass(cls):
         cls.module = csp.dr1
-        cls.name = 'csp.dr1'
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
@@ -77,7 +74,6 @@ class CSP_DR3(GeneralTests):
     @classmethod
     def setUpClass(cls):
         cls.module = csp.dr3
-        cls.name = 'csp.dr3'
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
@@ -96,7 +92,6 @@ class SDSS_SAKO14(GeneralTests):
     @classmethod
     def setUpClass(cls):
         cls.module = sdss.sako14
-        cls.name = 'sdss.sako14'
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
