@@ -15,7 +15,7 @@ table_dir = data_dir / 'tables'  # DR3 paper tables
 
 # Define urls for remote data
 photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
-filter_url = 'https://csp.obs.carnegiescience.edu/data/u_tel_ccd_atm_ext_1.2.dat'
+filter_url = 'https://csp.obs.carnegiescience.edu/data/'
 table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211'
 
 # Filter information

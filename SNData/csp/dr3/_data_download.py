@@ -46,12 +46,11 @@ def download_module_data():
             mode='r:gz')
 
     # Download filters
-    # Todo: This downloads the smae file repeatedly
     if not meta.filter_dir.exists():
         print('Downloading filters...')
         for file_name in meta.filter_file_names:
             utils.download_file(
-                url=meta.filter_url,
+                url=meta.filter_url + file_name,
                 out_file=meta.filter_dir / file_name)
 
 
