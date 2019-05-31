@@ -56,7 +56,7 @@ def get_available_ids():
 
     _raise_for_data()
 
-    return _master_table['CID']
+    return load_table(0)['CID']
 
 
 def _get_outliers():
@@ -125,6 +125,7 @@ def get_data_for_id(obj_id):
     all_data.meta['dec'] = table_meta_data['DEC'][0]
     all_data.meta['classification'] = table_meta_data['Classification'][0]
     all_data.meta['name'] = table_meta_data['IAUName'][0]
+    all_data.meta['obj_id'] = obj_id
 
     return all_data
 
@@ -164,7 +165,6 @@ def get_sncosmo_input(obj_id):
     sncosmo_table['fluxerr'] = phot_data['FLUXERR'] * 1E-6
     sncosmo_table['zpsys'] = np.full(len(phot_data), 'ab')
     sncosmo_table['flag'] = phot_data['FLAG']
-    sncosmo_table.meta['obj_id'] = obj_id
 
     return sncosmo_table
 

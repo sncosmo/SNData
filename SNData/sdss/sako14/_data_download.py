@@ -29,20 +29,31 @@ def _raise_for_data():
 def download_module_data():
     """Download data for the current survey / data release"""
 
-    # Download photometry
+    print('Downloading SMP data...')
     if not meta.smp_dir.exists():
-        print('Downloading photometry...')
         utils.download_tar(
-            url=meta.sdss_url,
+            url=meta.smp_url,
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    # Download filters
+    print('Downloading SNANA data...')
+    if not meta.snana_dir.exists():
+        utils.download_tar(
+            url=meta.snana_url,
+            out_dir=meta.data_dir,
+            mode='r:gz')
+
+    print('Downloading master table...')
+    if not meta.master_table_path.exists():
+        utils.download_file(
+            url=meta.master_table_url,
+            out_file=meta.master_table_path)
+
+    print('Downloading filters...')
     if not meta.filter_dir.exists():
-        print('Downloading filters...')
         for file_name in meta.filter_file_names:
             utils.download_file(
-                url=meta.filter_url,
+                url=meta.filter_url + file_name,
                 out_file=meta.filter_dir / file_name)
 
 

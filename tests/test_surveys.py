@@ -11,10 +11,13 @@ from SNData import csp, sdss
 class GeneralTests(TestCase):
     """Generic tests for a given survey"""
 
-    def _test_empty_data(self):
+    def _test_empty_data(self, lim=float('inf')):
         """Test for empty tables in ``iter_data``"""
 
-        for input_table in self.module.iter_data():
+        for i, input_table in enumerate(self.module.iter_data()):
+            if i >= lim:
+                break
+
             obj_id = input_table.meta['obj_id']
             self.assertTrue(
                 input_table,
@@ -95,7 +98,7 @@ class SDSS_SAKO14(GeneralTests):
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
-        self._test_empty_data()
+        self._test_empty_data(100)
 
     def test_1_table_parsing(self):
         self._test_table_parsing()

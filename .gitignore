@@ -9,7 +9,7 @@
 *.pyc
 
 # Light Curve Data
-SNData/csp/*/data
+SNData/*/*/data
 
 # Jupyter Checkpoints
 *.ipynb_checkpoints
