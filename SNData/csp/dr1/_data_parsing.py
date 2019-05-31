@@ -104,6 +104,8 @@ def get_data_for_id(obj_id):
 
     out_table.meta['redshift'] = redshift
     out_table.meta['JDate_of_max'] = max_date
+    out_table.meta['obj_id'] = obj_id
+
     return out_table
 
 

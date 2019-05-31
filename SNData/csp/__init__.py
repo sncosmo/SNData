@@ -5,7 +5,7 @@
 (CSP).
 """
 
-from . import dr3
+from . import dr1, dr3
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'

@@ -50,4 +50,9 @@ def delete_module_data():
     """Delete any data for the current survey / data release"""
 
     import shutil
-    shutil.rmtree(meta.data_dir)
+
+    try:
+        shutil.rmtree(meta.data_dir)
+
+    except FileNotFoundError:
+        pass
