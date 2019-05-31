@@ -48,7 +48,7 @@ class GeneralTests(TestCase):
                 table = self.module.load_table(n)
 
             except:
-                raise RuntimeError(f'Cannot parse table {n}')
+                self.fail('Cannot parse table {n}')
 
             self.assertTrue(table, err_msg.format(n))
 
