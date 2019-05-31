@@ -27,7 +27,7 @@ def register_filters():
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    return [0]
+    return ['master']
 
 
 def load_table(table_num):
@@ -35,7 +35,7 @@ def load_table(table_num):
 
     _raise_for_data()
 
-    if table_num == 0:
+    if table_num == 'master':
         global _master_table
         if _master_table is None:
             _master_table = Table.read(meta.master_table_path, format='ascii')
