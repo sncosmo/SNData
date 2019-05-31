@@ -56,7 +56,43 @@ def get_available_ids():
     return list(set(ids))
 
 
-# noinspection PyPep8
+def _read_file(path):
+    """Read a given file path of CSP DR1 data
+
+    Args:
+        path (str): Path of file to read
+
+    Returns:
+        An astropy table with file data and meta data
+    """
+
+    # Handle single file with three columns
+    if path.stem == 'SN07bc_070409_b01_BAA_IM':
+        data = Table.read(
+            path, format='ascii', names=['wavelength', 'flux', '_'])
+        data.remove_column('_')
+
+    else:
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
+
+    # Get meta data for observation
+    file_comments = data.meta['comments']
+    redshift = float(file_comments[1].lstrip('Redshift: '))
+    max_date = float(file_comments[2].lstrip('JDate_of_max: '))
+    obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
+    epoch = float(file_comments[4].lstrip('Epoch: '))
+
+    _, _, wrange, telescope, instrument = path.stem.split('_')
+    date_col = Column(data=np.full(len(data), obs_date), name='date')
+    epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
+    wr_col = Column(data=np.full(len(data), wrange), name='wavelength_range')
+    tel_col = Column(data=np.full(len(data), telescope), name='telescope')
+    inst_col = Column(data=np.full(len(data), instrument), name='instrument')
+    data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
+
+    return max_date, redshift, data
+
+
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -81,25 +117,8 @@ def get_data_for_id(obj_id):
     if not files:
         raise ValueError(f'No data found for obj_id {obj_id}')
 
-    for f in files:
-        spectral_data = Table.read(
-            f, format='ascii', names=['wavelength', 'flux'])
-
-        # Get meta data for observation
-        file_comments = spectral_data.meta['comments']
-        redshift = float(file_comments[1].lstrip('Redshift: '))
-        max_date = float(file_comments[2].lstrip('JDate_of_max: '))
-        obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
-        epoch = float(file_comments[4].lstrip('Epoch: '))
-        _, _, wrange, telescope, instrument = f.stem.split('_')
-
-        date_col = Column(data=np.full(len(spectral_data), obs_date), name='date')
-        epoch_col = Column(data=np.full(len(spectral_data), epoch), name='epoch')
-        wr_col = Column(data=np.full(len(spectral_data), wrange), name='wavelength_range')
-        tel_col = Column(data=np.full(len(spectral_data), telescope), name='telescope')
-        inst_col = Column(data=np.full(len(spectral_data), instrument), name='instrument')
-        spectral_data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
-
+    for path in files:
+        max_date, redshift, spectral_data = _read_file(path)
         out_table = vstack([out_table, spectral_data])
 
     out_table.meta['redshift'] = redshift
