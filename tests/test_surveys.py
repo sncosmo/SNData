@@ -105,3 +105,18 @@ class SDSS_SAKO14(GeneralTests):
 
     def test_2_delete_data(self):
         self._test_delete_data()
+
+
+class DES_SN3YR(GeneralTests):
+    """Tests for the des.SN3YR module"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.module = sdss.sako14
+        cls.module.download_module_data()
+
+    def test_0_empty_data(self):
+        self._test_empty_data(100)
+
+    def test_2_delete_data(self):
+        self._test_delete_data()
