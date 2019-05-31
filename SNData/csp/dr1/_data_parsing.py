@@ -22,7 +22,7 @@ def get_available_tables():
     for f in meta.table_dir.rglob('table*.dat'):
         table_nums.append(int(f.stem.lstrip('table')))
 
-    return table_nums
+    return sorted(table_nums)
 
 
 def load_table(table_num):
