@@ -15,9 +15,7 @@ from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
 from ._meta import band_names
-from ._meta import lambda_effective
-from ._meta import zero_point
 
 data_type = 'photometry'
 publication = 'Krisciunas et al. (2017)'
-arxiv = 'https://arxiv.org/abs/1709.05146'
+ads = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..211K/abstract'

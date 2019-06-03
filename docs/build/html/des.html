@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dark Energy Survey &mdash; SNData 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sloan Digital Sky Survey" href="sdss.html" />
+    <link rel="prev" title="Carnegie Supernova Project" href="csp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SNData
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Survey Docs:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csp.html">Carnegie Supernova Project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dark Energy Survey</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-SNData.des.sn3yr">Third Year Cosmology Release</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sdss.html">Sloan Digital Sky Survey</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNData</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Dark Energy Survey</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/des.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-SNData.des">
+<span id="dark-energy-survey"></span><h1>Dark Energy Survey<a class="headerlink" href="#module-SNData.des" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">des</span></code> module provides access to data from the Dark Energy Survey
+(DES). It includes data used in the cosmological analysis from the first 3
+years of spectroscopically classified supernovae (SNe) from the first
+(DR1) and third (DR3) data releases. For more information on DES see
+<a class="reference external" href="https://des.ncsa.illinois.edu">https://des.ncsa.illinois.edu</a> .</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="18%" />
+<col width="21%" />
+<col width="41%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Data Release</th>
+<th class="head">Module Name</th>
+<th class="head">Data Type</th>
+<th class="head">Publication</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>SN3YR</td>
+<td>des.sn3yr</td>
+<td>Photometric</td>
+<td><a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract">Brout et al. (2019)</a></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="module-SNData.des.sn3yr">
+<span id="third-year-cosmology-release"></span><h2>Third Year Cosmology Release<a class="headerlink" href="#module-SNData.des.sn3yr" title="Permalink to this headline">¶</a></h2>
+<p>This module provides access to data from the first public data release of
+the Dark Energy Survey Supernova Program, DES-SN3YR.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#SNData.des.sn3yr.data_is_available" title="SNData.des.sn3yr.data_is_available"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_is_available</span></code></a>()</td>
+<td>Return whether data has been downloaded for this survey / data release</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#SNData.des.sn3yr.delete_module_data" title="SNData.des.sn3yr.delete_module_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_module_data</span></code></a>()</td>
+<td>Delete any data for the current survey / data release</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#SNData.des.sn3yr.download_module_data" title="SNData.des.sn3yr.download_module_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_module_data</span></code></a>()</td>
+<td>Download data for the current survey / data release</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#SNData.des.sn3yr.get_available_ids" title="SNData.des.sn3yr.get_available_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_ids</span></code></a>()</td>
+<td>Return a list of target object ids for the current survey</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#SNData.des.sn3yr.get_available_tables" title="SNData.des.sn3yr.get_available_tables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_tables</span></code></a>()</td>
+<td>Get numbers of available tables for this survey / data release</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#SNData.des.sn3yr.get_data_for_id" title="SNData.des.sn3yr.get_data_for_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data_for_id</span></code></a>(obj_id)</td>
+<td>Returns DES photometric data for a given object ID</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#SNData.des.sn3yr.iter_data" title="SNData.des.sn3yr.iter_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iter_data</span></code></a>([verbose,&nbsp;format_sncosmo])</td>
+<td>Iterate through all available targets and yield data tables</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#SNData.des.sn3yr.load_table" title="SNData.des.sn3yr.load_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_table</span></code></a>(table_num)</td>
+<td>Load a table from the data paper for this survey / data</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#SNData.des.sn3yr.register_filters" title="SNData.des.sn3yr.register_filters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_filters</span></code></a>()</td>
+<td>Register filters for this survey / data release with SNCosmo</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">band_names</span></code></td>
+<td>Built-in immutable sequence.</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="SNData.des.sn3yr.data_is_available">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">data_is_available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_download.html#data_is_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.data_is_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether data has been downloaded for this survey / data release</p>
+<dl class="docutils">
+<dt>Returns</dt>
+<dd>A boolean</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.delete_module_data">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">delete_module_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_download.html#delete_module_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.delete_module_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete any data for the current survey / data release</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.download_module_data">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">download_module_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_download.html#download_module_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.download_module_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download data for the current survey / data release</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.get_available_ids">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">get_available_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#get_available_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.get_available_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of target object ids for the current survey</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of object ids as strings</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.get_available_tables">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">get_available_tables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#get_available_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.get_available_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get numbers of available tables for this survey / data release</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.get_data_for_id">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">get_data_for_id</code><span class="sig-paren">(</span><em>obj_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#get_data_for_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.get_data_for_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns DES photometric data for a given object ID</p>
+<p>No data cuts are applied to the returned data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj_id</strong> (<em>str</em>) – The ID of the desired object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An astropy table of photometric data for the given candidate ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.iter_data">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">iter_data</code><span class="sig-paren">(</span><em>verbose=False</em>, <em>format_sncosmo=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#iter_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.iter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate through all available targets and yield data tables</p>
+<p>An optional progress bar can be formatted by passing a dictionary of tqdm
+arguments. Skips any empty tables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>verbose</strong> (<em>bool</em><em>, </em><em>dict</em>) – Optionally display progress bar while iterating</li>
+<li><strong>format_sncosmo</strong> (<em>bool</em>) – Format data for use with SNCosmo (Default: False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last">Astropy tables</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.load_table">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">load_table</code><span class="sig-paren">(</span><em>table_num</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#load_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.load_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a table from the data paper for this survey / data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table_num</strong> (<em>int</em>) – The published table number</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="SNData.des.sn3yr.register_filters">
+<code class="descclassname">SNData.des.sn3yr.</code><code class="descname">register_filters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/SNData/des/sn3yr/_data_parsing.html#register_filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SNData.des.sn3yr.register_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register filters for this survey / data release with SNCosmo</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sdss.html" class="btn btn-neutral float-right" title="Sloan Digital Sky Survey" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="csp.html" class="btn btn-neutral float-left" title="Carnegie Supernova Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Daniel Perrefort
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

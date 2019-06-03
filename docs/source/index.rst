@@ -1,32 +1,52 @@
 SNData
 ======
 
-**SNData** provides a Python interface for data releases published by various
-supernova surveys. It is currently under ongoing development.
+**SNData** developed from the need of a uniform Python interface for data
+releases published by various supernova surveys. A summary of data that is
+accessible via the package is provided below. Access to additional surveys
+is added upon request or as needed for individual research projects
+undertaken by the developer(s). To request an additional survey / data release,
+please raise an issue on `GitHub`_
+
+.. _GitHub: https://github.com/djperrefort/sndata
+
+
+Understanding These Docs
+========================
+
+**SNData** is designed to provide as consistent of an interface as possible
+across surveys. However, this is not always possible as the data products
+made available by different surveys can vary wildly in their format. The
+`Installation <installation.html>`_ and `Quick Start <quick_start.html>`_
+guides are intended to help you get up and running quickly and to familiarize
+you with the general **SNData** interface. Additional documentation is
+provided for each individual dataset to highlight an minor deviations a
+survey's module may have from the rest of the package.
 
 
 Available Data
 --------------
 
-+----------------------------+--------------+---------------+------------------------------------------------------------------------------------------+
-| Survey Name                | Data Release | Data Type     | External Link                                                                            |
-+============================+==============+===============+==========================================================================================+
-|                            | DR1          | Spectroscopic | `here <https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1>`_                 |
-+ Carnegie Supernova Survey  +--------------+---------------+------------------------------------------------------------------------------------------+
-|                            | DR3          | Photometric   | `here <https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released>`_     |
-+----------------------------+--------------+---------------+------------------------------------------------------------------------------------------+
-| Dark Energy Survey         | SN3YR        | Photometric   | `here <https://des.ncsa.illinois.edu/releases/sn>`_                                      |
-+----------------------------+--------------+---------------+------------------------------------------------------------------------------------------+
-| Sloan Digital Sky Survey   | SDSS-II      | Photometric   | `here <http://data.darkenergysurvey.org/sd elease/>`_                                    |
-+----------------------------+--------------+---------------+------------------------------------------------------------------------------------------+
++----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
+| Survey Name                | Data Release     | Data Type     | External Link                                                                            |
++============================+==================+===============+==========================================================================================+
+|                            | DR1              | Spectroscopic | `here <https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1>`_                 |
++ Carnegie Supernova Project +------------------+---------------+------------------------------------------------------------------------------------------+
+|                            | DR3              | Photometric   | `here <https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released>`_     |
++----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
+| Dark Energy Survey         | SN3YR            | Photometric   | `here <https://des.ncsa.illinois.edu/releases/sn>`_                                      |
++----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
+| Sloan Digital Sky Survey   | Sako et al. 2014 | Photometric   | `here <http://data.darkenergysurvey.org/sd elease/>`_                                    |
++----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
 
 .. toctree::
    :hidden:
    :maxdepth: 1
    :caption: Contents:
 
+   Overview<self>
    installation
-   getting_started
+   quick_start
 
 .. toctree::
    :hidden:
@@ -34,3 +54,5 @@ Available Data
    :caption: Survey Docs:
 
    csp
+   des
+   sdss

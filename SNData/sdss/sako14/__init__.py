@@ -16,9 +16,7 @@ from ._data_parsing import load_table
 from ._data_parsing import register_filters
 
 from ._meta import band_names
-from ._meta import lambda_effective
-# Todo: from ._meta import zero_point
 
 data_type = 'photometry'
 publication = 'Sako et al. (2014)'
-arxiv = 'https://arxiv.org/abs/1401.3317'
+ads = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

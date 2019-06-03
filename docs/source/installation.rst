@@ -6,7 +6,7 @@ To install the package, please choose from one of the options below.
 .. note::
    No survey data is downloaded when installing or upgrading **SNData**.
    All data management is handled manually as outlined in the
-   `getting started`_ tutorial.
+   `Quick Start <quick_start.html>`_ tutorial.
 
 Using PIP (Recommended)
 -----------------------
@@ -49,5 +49,4 @@ should be installed automatically. If you have any issues installing the
 package, install each dependency from ``requirements.txt`` and then try again.
 
 .. _pip package manager: https://pip.pypa.io/en/stable/
-.. _quick start: .
 .. _GitHub: https://github.com/djperrefort/sndata

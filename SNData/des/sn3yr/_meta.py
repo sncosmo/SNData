@@ -32,7 +32,3 @@ band_names = (
     'des_sn3yr_i',
     'des_sn3yr_z',
     'des_sn3yr_y')
-
-# Effective wavelengths taken from
-# http://www.mso.anu.edu.au/~brad/filters.html
-lambda_effective = (5270, 6590, 7890, 9760, 10030)

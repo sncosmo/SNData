@@ -16,4 +16,4 @@ from ._data_parsing import load_table
 
 data_type = 'spectroscopy'
 publication = 'Folatelli et al. (2013)'
-arxiv = 'https://arxiv.org/abs/1305.6997'
+ads = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'

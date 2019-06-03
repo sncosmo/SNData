@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -14,7 +14,7 @@ long_description = (
 
 setup(name='SNData',
       version='0.0.2',
-      packages=['SNData'],
+      packages=find_packages(),
       keywords='Supernova Astronomy Data Release',
       description='Models the atmospheric transmission function for KPNO',
       long_description=long_description,
