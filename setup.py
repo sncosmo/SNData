@@ -6,12 +6,18 @@ from setuptools import setup
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
+url = 'sn-data.readthedocs.io'
+long_description = (
+    "SNData provides a Python interface for data releases published by "
+    f"various supernova surveys. For more information see {url}"
+)
+
 setup(name='SNData',
-      version='0.0.1',
+      version='0.0.2',
       packages=['SNData'],
       keywords='Supernova Astronomy Data Release',
       description='Models the atmospheric transmission function for KPNO',
-      long_description="",  # Todo
+      long_description=long_description,
       long_description_content_type='text/markdown',
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -26,10 +32,10 @@ setup(name='SNData',
 
       author='Daniel Perrefort',
       author_email='djperrefort@pitt.edu',
-      # url=, Todo
+      url=url,
       license='GPL v3',
 
-      python_requires='>=2.6',
+      python_requires='>=3.7',
       install_requires=requirements,
 
       setup_requires=['pytest-runner'],
