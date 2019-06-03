@@ -36,7 +36,7 @@ setup(name='SNData',
       url=url,
       license='GPL v3',
 
-      python_requires='>=3.7',
+      python_requires='>=3.6',
       install_requires=requirements,
 
       setup_requires=['pytest-runner'],
