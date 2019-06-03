@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
     requirements += ['sncosmo']
 
-url = 'sn-data.readthedocs.io'
+url = 'https://sn-data.readthedocs.io'
 long_description = (
     "SNData provides a Python interface for data releases published by "
     f"various supernova surveys. For more information see {url}"
