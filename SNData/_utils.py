@@ -70,7 +70,8 @@ def register_filter(file_path, filt_name):
     if filt_name not in available_bands:
         filt_data = np.genfromtxt(file_path).T
         band = sncosmo.Bandpass(filt_data[0], filt_data[1])
-        sncosmo.register(band, filt_name, force=False)
+        band.name = filt_name
+        sncosmo.register(band, force=False)
 
 
 def download_file(url, out_file):
