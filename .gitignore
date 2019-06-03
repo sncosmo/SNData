@@ -16,3 +16,6 @@ SNData/*/*/data
 
 # Testing cache files
 .pytest_cache/
+
+# Built Docs
+docs/build

@@ -15,5 +15,7 @@ from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
 from ._meta import band_names
-from ._meta import lambda_effective
-#Todo: from ._meta import zero_point
+
+data_type = 'photometry'
+publication = 'Brout et al. (2019)'
+ads = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'

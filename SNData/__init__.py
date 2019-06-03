@@ -5,4 +5,7 @@
 surveys.
 """
 
-from . import csp, sdss
+from . import csp, des, sdss
+
+__version__ = '0.0.2'
+__author__ = 'Daniel Perrefort'
