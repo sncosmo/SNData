@@ -55,13 +55,13 @@ def get_available_ids():
     return [f.lstrip('des_').rstrip('.dat') for f in file_list]
 
 
-def get_data_for_id(cid):
+def get_data_for_id(obj_id):
     """Returns DES photometric data for a given object ID
 
     No data cuts are applied to the returned data.
 
     Args:
-        cid (str): The ID of the desired object
+        obj_id (str): The ID of the desired object
 
     Returns:
         An astropy table of photometric data for the given candidate ID
@@ -70,7 +70,7 @@ def get_data_for_id(cid):
     _raise_for_data()
 
     # Read in ascci data table for specified object
-    file_path = meta.photometry_dir / f'des_{int(cid):08d}.dat'
+    file_path = meta.photometry_dir / f'des_{int(obj_id):08d}.dat'
     all_data = Table.read(
         file_path, format='ascii',
         data_start=27, data_end=-1,
@@ -85,13 +85,13 @@ def get_data_for_id(cid):
         all_data.meta['PEAKMJD'] = float(table_meta_data[12].split()[1])
         all_data.meta['redshift'] = float(table_meta_data[13].split()[1])
         all_data.meta['redshift_err'] = float(table_meta_data[13].split()[3])
-        all_data.meta['cid'] = cid
+        all_data.meta['obj_id'] = obj_id
         del all_data.meta['comments']
 
     return all_data
 
 
-def get_sncosmo_input(cid):
+def get_sncosmo_input(obj_id):
     """Returns an SNCosmo input table a given object ID
 
     Data points flagged in the SDSS II release as outliers are removed.
@@ -103,7 +103,7 @@ def get_sncosmo_input(cid):
         An astropy table of data formatted for use with SNCosmo
     """
 
-    all_sn_data = get_data_for_id(cid)
+    all_sn_data = get_data_for_id(obj_id)
     sncosmo_table = Table()
     sncosmo_table['time'] = all_sn_data['MJD']
     sncosmo_table['band'] = ['des' + s for s in all_sn_data['BAND']]

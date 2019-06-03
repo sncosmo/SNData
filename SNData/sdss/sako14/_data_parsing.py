@@ -56,7 +56,7 @@ def get_available_ids():
 
     _raise_for_data()
 
-    return load_table(0)['CID']
+    return load_table('master')['CID']
 
 
 def _get_outliers():

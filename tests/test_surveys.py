@@ -1,11 +1,11 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Test input data used for fitting light-curves with SNCosmo."""
+"""Test that survey data is accessed and served correctly"""
 
 from unittest import TestCase
 
-from SNData import csp, sdss
+from SNData import csp, sdss, des
 
 
 class GeneralTests(TestCase):
@@ -112,7 +112,7 @@ class DES_SN3YR(GeneralTests):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = sdss.sako14
+        cls.module = des.sn3yr
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
