@@ -4,7 +4,7 @@ SNData
 .. image:: https://travis-ci.com/djperrefort/SNData.svg?branch=master
     :target: https://travis-ci.com/djperrefort/SNData
 
-**SNData** developed from the need of a uniform Python interface for data
+**SNData** arose from the need for a uniform Python interface for data
 releases published by various supernova surveys. A summary of data that is
 accessible via the package is provided below. Access to additional surveys
 is added upon request or as needed for individual research projects
