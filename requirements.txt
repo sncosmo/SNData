@@ -2,5 +2,5 @@ astropy
 numpy
 requests
 scipy==1.2.1
-sncosmo
+# sncosmo
 tqdm
