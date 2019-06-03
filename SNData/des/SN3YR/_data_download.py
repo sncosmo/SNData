@@ -45,14 +45,6 @@ def download_module_data():
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    # Download fit results
-    if not meta.fits_dir.exists():
-        print('Downloading fit data...')
-        utils.download_tar(
-            url=meta.fits_url,
-            out_dir=meta.data_dir,
-            mode='r:gz')
-
 
 def delete_module_data():
     """Delete any data for the current survey / data release"""

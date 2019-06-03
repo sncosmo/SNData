@@ -13,13 +13,11 @@ data_dir = _file_dir / 'data'
 # Define local paths of published data
 filter_dir = data_dir / '01-FILTERS'
 photometry_dir = data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
-fits_dir = data_dir / '04-BBCFITS'
 
 # Define urls for remote data
 _des_url = 'http://desdr-server.ncsa.illinois.edu/despublic/sn_files/y3/tar_files/'
 filter_url = _des_url + '01-FILTERS.tar.gz'
 photometry_url = _des_url + '02-DATA_PHOTOMETRY.tar.gz'
-fits_url = _des_url + '04-BBCFITS.tar.gz'
 
 filter_file_names = (
     'DECam_g.dat',
