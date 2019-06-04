@@ -5,7 +5,7 @@
 
 from unittest import TestCase
 
-from SNData import csp, sdss, des
+from SNData import csp, des, sdss
 
 
 class GeneralTests(TestCase):
@@ -52,6 +52,21 @@ class GeneralTests(TestCase):
 
             self.assertTrue(table, err_msg.format(n))
 
+    def _test_table_filtering(self):
+        """Test table filtering for ``iter_data``"""
+
+        # Define ids to select on
+        obj_ids = self.module.get_available_ids()
+        filter_ids = obj_ids[len(obj_ids) // 2:]
+
+        # Create a test selection function
+        def filter_func(data_table):
+            return data_table.meta['obj_id'] in filter_ids
+
+        # Check the selection function works
+        for table in self.module.iter_data(filter_func=filter_func):
+            self.assertTrue(table.meta['obj_id'] in filter_ids)
+
 
 class CSP_DR1(GeneralTests):
     """Tests for the csp.dr1 module"""
@@ -67,7 +82,10 @@ class CSP_DR1(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_delete_data(self):
+    def test_2_table_filtering(self):
+        self._test_table_filtering()
+
+    def test_3_delete_data(self):
         self._test_delete_data()
 
 
@@ -85,7 +103,10 @@ class CSP_DR3(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_delete_data(self):
+    def test_2_table_filtering(self):
+        self._test_table_filtering()
+
+    def test_3_delete_data(self):
         self._test_delete_data()
 
 
@@ -103,7 +124,10 @@ class SDSS_SAKO14(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_delete_data(self):
+    def test_2_table_filtering(self):
+        self._test_table_filtering()
+
+    def test_3_delete_data(self):
         self._test_delete_data()
 
 
@@ -118,5 +142,8 @@ class DES_SN3YR(GeneralTests):
     def test_0_empty_data(self):
         self._test_empty_data(100)
 
-    def test_2_delete_data(self):
+    def test_2_table_filtering(self):
+        self._test_table_filtering()
+
+    def test_3_delete_data(self):
         self._test_delete_data()

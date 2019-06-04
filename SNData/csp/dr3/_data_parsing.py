@@ -135,7 +135,7 @@ def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
     """
 
     if filter_func is None:
-        filter_func = lambda x: bool(x)
+        filter_func = lambda x: x
 
     iterable = utils.build_pbar(get_available_ids(), verbose)
     for id_val in iterable:
