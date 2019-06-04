@@ -14,10 +14,10 @@ long_description = (
 )
 
 setup(name='SNData',
-      version='0.0.3',
+      version='0.0.4',
       packages=find_packages(),
       keywords='Supernova Astronomy Data Release',
-      description='Models the atmospheric transmission function for KPNO',
+      description='A Python interface for data published by various supernova surveys',
       long_description=long_description,
       long_description_content_type='text/markdown',
       classifiers=[

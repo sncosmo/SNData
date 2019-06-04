@@ -50,6 +50,7 @@ Available Data
    Overview<self>
    installation
    quick_start
+   integrated_services
 
 .. toctree::
    :hidden:
