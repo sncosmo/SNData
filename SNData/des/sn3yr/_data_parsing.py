@@ -23,9 +23,8 @@ def register_filters():
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
+    raise RuntimeError('No Vizier tables available for this paper.')
     _raise_for_data()
-
-    pass  # Todo
 
 
 def load_table(table_num):
@@ -35,9 +34,8 @@ def load_table(table_num):
         table_num (int): The published table number
     """
 
+    raise RuntimeError('No Vizier tables available for this paper.')
     _raise_for_data()
-
-    pass  # Todo
 
 
 def get_available_ids():
@@ -116,19 +114,24 @@ def get_sncosmo_input(obj_id):
     return sncosmo_table
 
 
-def iter_data(verbose=False, format_sncosmo=False):
+def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
     """Iterate through all available targets and yield data tables
 
     An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Skips any empty tables.
+    arguments. Outputs can be optionally filtered by passing a function
+    ``filter_func`` that accepts a data table and returns a boolean.
 
     Args:
         verbose  (bool, dict): Optionally display progress bar while iterating
         format_sncosmo (bool): Format data for use with SNCosmo (Default: False)
+        filter_func    (func): An optional function to filter outputs by
 
     Yields:
         Astropy tables
     """
+
+    if filter_func is None:
+        filter_func = lambda x: bool(x)
 
     iterable = utils.build_pbar(get_available_ids(), verbose)
     for obj_id in iterable:
@@ -138,6 +141,6 @@ def iter_data(verbose=False, format_sncosmo=False):
         else:
             data_table = get_data_for_id(obj_id)
 
-        if data_table:
+        if filter_func(data_table):
             yield data_table
 

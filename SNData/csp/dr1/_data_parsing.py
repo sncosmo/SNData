@@ -128,21 +128,26 @@ def get_data_for_id(obj_id):
     return out_table
 
 
-def iter_data(verbose=False, **kwargs):
+def iter_data(verbose=False, filter_func=None, **kwargs):
     """Iterate through all available targets and yield data tables
 
     An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Skips any empty tables.
+    arguments. Outputs can be optionally filtered by passing a function
+    ``filter_func`` that accepts a data table and returns a boolean.
 
     Args:
         verbose (bool, dict): Optionally display progress bar while iterating
+        filter_func   (func): An optional function to filter outputs by
 
     Yields:
         Astropy tables
     """
 
+    if filter_func is None:
+        filter_func = lambda x: bool(x)
+
     iterable = utils.build_pbar(get_available_ids(), verbose)
     for id_val in iterable:
         data_table = get_data_for_id(id_val)
-        if data_table:
+        if filter_func(data_table):
             yield data_table
