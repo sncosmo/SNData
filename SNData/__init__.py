@@ -7,5 +7,5 @@ surveys.
 
 from . import csp, des, sdss
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __author__ = 'Daniel Perrefort'

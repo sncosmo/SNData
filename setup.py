@@ -14,7 +14,7 @@ long_description = (
 )
 
 setup(name='SNData',
-      version='0.0.2',
+      version='0.0.3',
       packages=find_packages(),
       keywords='Supernova Astronomy Data Release',
       description='Models the atmospheric transmission function for KPNO',
