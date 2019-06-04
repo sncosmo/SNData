@@ -7,6 +7,10 @@
 # Python build files
 *__pycache__*
 *.pyc
+.eggs/
+SNData.egg-info/
+build/
+dist/
 
 # Light Curve Data
 SNData/*/*/data
