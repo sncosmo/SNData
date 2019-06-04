@@ -111,10 +111,6 @@ def download_tar(url, out_dir, mode=None):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Establish remote connection
-    response = requests.get(url)
-    response.raise_for_status()
-
     # Download data to file and decompress
     with TemporaryFile() as ofile:
         download_file(url, ofile)
