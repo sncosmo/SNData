@@ -140,3 +140,36 @@ def build_pbar(data, verbose):
         iter_data = data
 
     return iter_data
+
+
+def query_ned_coords(uia_name):
+    """Return the J2000 RA and Dec for UIA named supernovae from NED
+
+    Args:
+        uia_name (str): SN name (e.g. ['SN2011fe'])
+
+    Returns:
+        RA position in degrees
+        Dec position in degrees
+    """
+
+    if not uia_name.lower().startswith('sn'):
+        uia_name = "SN" + uia_name
+
+    url = (
+        f"http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname={uia_name}"
+        "&out_csys=Equatorial"
+        "&out_equinox=J2000.0"
+        "&of=ascii_bar"
+        "&list_limit=5"
+        "&img_stamp=NO"
+    )
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    obj_data = response.content.decode('utf-8').split('\n')[-2].split('|')
+    if obj_data[0] != '1':
+        raise RuntimeError(f"Could not retreive coordinates for {uia_name}")
+
+    return float(obj_data[2]), float(obj_data[3])
