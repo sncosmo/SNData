@@ -38,7 +38,8 @@ transmission curves for a given survey.
     # The names of the bands that will be registered
     print(dr3.band_names)
 
-    # Register the band-passes
+    # Register the band-passes of the survey with SNCosmo
+    # You can optionally specify ``force=True`` to re-register band-passes
     dr3.register_filters()
 
     # Get data for a given object (``demo_id`` defined in a previous example)
