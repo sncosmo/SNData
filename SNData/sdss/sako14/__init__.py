@@ -14,9 +14,10 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
+from ._meta import band_names, lambda_effective
 
-from ._meta import band_names
-
+survey_name = 'Sloan Digital Sky Survey'
+survey_abbrev = 'SDSS'
 data_type = 'photometry'
 publication = 'Sako et al. (2014)'
 ads = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

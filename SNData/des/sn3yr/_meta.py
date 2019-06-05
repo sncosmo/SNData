@@ -11,7 +11,7 @@ _file_dir = Path(__file__).resolve().parent
 data_dir = _file_dir / 'data'
 
 # Define local paths of published data
-filter_dir = data_dir / '01-FILTERS'
+filter_dir = data_dir / '01-FILTERS' / 'DECam'
 photometry_dir = data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
 
 # Define urls for remote data
@@ -32,3 +32,5 @@ band_names = (
     'des_sn3yr_i',
     'des_sn3yr_z',
     'des_sn3yr_y')
+
+lambda_effective = (5270, 6590, 7890, 9760, 10030)

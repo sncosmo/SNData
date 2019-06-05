@@ -14,8 +14,10 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names
+from ._meta import band_names, lambda_effective
 
+survey_name = 'Dark Energy Survey'
+survey_abbrev = 'DES'
 data_type = 'photometry'
 publication = 'Brout et al. (2019)'
 ads = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'

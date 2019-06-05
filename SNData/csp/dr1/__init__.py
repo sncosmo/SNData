@@ -14,6 +14,8 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 
+survey_name = 'Carnegie Supernova Project'
+survey_abbrev = 'CSP'
 data_type = 'spectroscopy'
 publication = 'Folatelli et al. (2013)'
 ads = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'
