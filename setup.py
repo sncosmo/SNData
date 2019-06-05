@@ -14,7 +14,7 @@ long_description = (
 )
 
 setup(name='SNData',
-      version='0.0.4',
+      version='0.0.5',
       packages=find_packages(),
       keywords='Supernova Astronomy Data Release',
       description='A Python interface for data published by various supernova surveys',

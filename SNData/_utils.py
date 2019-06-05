@@ -51,13 +51,14 @@ def parse_snoopy_data(path):
     return out_table
 
 
-def register_filter(file_path, filt_name):
+def register_filter(file_path, filt_name, force=False):
     """Registers filter profiles with sncosmo if not already registered
 
     Args:
         file_path (str): Path of an ascii table with wavelength (Angstrom)
                           and transmission columns
         filt_name (str): The name of the registered filter.
+        force    (bool): Whether to re-register a band if already registered
     """
 
     # Get set of registered builtin and custom bandpasses
@@ -71,7 +72,7 @@ def register_filter(file_path, filt_name):
         filt_data = np.genfromtxt(file_path).T
         band = sncosmo.Bandpass(filt_data[0], filt_data[1])
         band.name = filt_name
-        sncosmo.register(band, force=False)
+        sncosmo.register(band, force=force)
 
 
 def download_file(url, out_file):

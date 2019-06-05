@@ -8,5 +8,5 @@ surveys.
 from . import csp, des, sdss
 from ._utils import parse_snoopy_data, query_ned_coords
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __author__ = 'Daniel Perrefort'

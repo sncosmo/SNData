@@ -11,13 +11,17 @@ from ._data_download import _raise_for_data
 from ... import _utils as utils
 
 
-def register_filters():
-    """Register filters for this survey / data release with SNCosmo"""
+def register_filters(force=False):
+    """Register filters for this survey / data release with SNCosmo
+
+    Args:
+        force (bool): Whether to re-register a band if already registered
+    """
 
     _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
-        utils.register_filter(fpath, _band_name)
+        utils.register_filter(fpath, _band_name, force=force)
 
 
 def get_available_tables():
