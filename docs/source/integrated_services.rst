@@ -52,8 +52,9 @@ transmission curves for a given survey.
         break
 
 .. warning::
-  The ``get_sncosmo_input`` function is only available for surveys that provide
-  photometric data. For example, it is not available in ``SNData.csp.dr1``.
+  The ``get_sncosmo_input`` function is intended for use with surveys that
+  provide photometric data. When called for surveys without photometric data
+  (such as ``SNData.csp.dr1``) the function will raise an error.
 
 
 SNooPy
@@ -91,3 +92,31 @@ registered supernovae using the ``query_ned_coords`` function.
 .. _SNooPy: https://csp.obs.carnegiescience.edu/data/snpy
 .. _NED: https://ned.ipac.caltech.edu
 .. _IAU: https://www.iau.org/public/themes/naming_stars/
+
+
+Open Supernova Catalog (OSC)
+----------------------------
+
+The `OSC` is a centralized, open source repository for SN metadata,
+light-curves, and spectra. All three of these data types can be quiered using
+**SNData**.
+
+.. code-block:: python
+   :linenos:
+
+    from SNData import query_osc, query_osc_photometry, query_osc_spectra
+
+    object_name = '2011fe'
+
+    # Object meta data
+    print(query_osc(object_name))
+
+    # All available photometric data as an astropy table
+    data_table = query_osc_photometry(object_name)
+    print(data_table)
+
+    # Note that photometric data includes the meta data
+    print(data_table.meta)
+
+    # Finally, spectral data can also be retrieved as a list of dictionaries
+    print(query_osc_spectra(object_name))

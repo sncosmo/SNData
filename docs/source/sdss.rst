@@ -6,7 +6,7 @@ Sloan Digital Sky Survey
 +--------------+---------------+---------------+----------------------------+
 | Data Release | Module Name   | Data Type     | Publication                |
 +==============+===============+===============+============================+
-| Sako 2014    | sdss.sako14   | Photometric   | `Sako et al. (2014)`_      |
+| Sako 2014    | sdss.sako18   | Photometric   | `Sako et al. (2014)`_      |
 +--------------+---------------+---------------+----------------------------+
 
 
@@ -16,9 +16,9 @@ Sloan Digital Sky Survey
 Sako 2014
 ---------
 
-.. automodule:: SNData.sdss.sako14
+.. automodule:: SNData.sdss.sako18
 
-.. py:currentmodule:: SNData.sdss.sako14
+.. py:currentmodule:: SNData.sdss.sako18
 
 .. autosummary::
 

@@ -25,7 +25,8 @@ snana_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/SDSS_dataRelea
 # Filter information
 # Effective wavelengths for SDSS filters ugriz in angstroms
 # are available at https://www.sdss.org/instruments/camera/#Filters
-band_names = tuple(f'sdss_sako14_{b}{c}' for b, c in product('ugriz', '123456'))
+band_names = tuple(
+    f'sdss_sako18_{b}{c}' for b, c in product('ugriz', '123456'))
 filter_file_names = tuple(f'{b}{c}.dat' for b, c in product('ugriz', '123456'))
 lambda_effective = (
     3551, 3551, 3551, 3551, 3551, 3551,

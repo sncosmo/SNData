@@ -4,7 +4,7 @@
 """Test that survey data is accessed and served correctly"""
 
 from unittest import TestCase
-
+from itertools import islice
 from SNData import csp, des, sdss
 
 
@@ -55,8 +55,10 @@ class GeneralTests(TestCase):
     def _test_table_filtering(self):
         """Test table filtering for ``iter_data``"""
 
+        num_test_tables = 50
+
         # Define ids to select on
-        obj_ids = self.module.get_available_ids()
+        obj_ids = self.module.get_available_ids()[:num_test_tables]
         filter_ids = obj_ids[len(obj_ids) // 2:]
 
         # Create a test selection function
@@ -64,7 +66,10 @@ class GeneralTests(TestCase):
             return data_table.meta['obj_id'] in filter_ids
 
         # Check the selection function works
-        for table in self.module.iter_data(filter_func=filter_func):
+        iter_data = islice(self.module.iter_data(filter_func=filter_func),
+                           num_test_tables)
+
+        for table in iter_data:
             self.assertTrue(table.meta['obj_id'] in filter_ids)
 
 
@@ -110,12 +115,12 @@ class CSP_DR3(GeneralTests):
         self._test_delete_data()
 
 
-class SDSS_SAKO14(GeneralTests):
-    """Tests for the sdss.sako14 module"""
+class SDSS_Sako18(GeneralTests):
+    """Tests for the sdss.sako18 module"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = sdss.sako14
+        cls.module = sdss.sako18
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
