@@ -52,8 +52,9 @@ transmission curves for a given survey.
         break
 
 .. warning::
-  The ``get_sncosmo_input`` function is only available for surveys that provide
-  photometric data. For example, it is not available in ``SNData.csp.dr1``.
+  The ``get_sncosmo_input`` function is intended for use with surveys that
+  provide photometric data. When called for surveys without photometric data
+  (such as ``SNData.csp.dr1``) the function will raise an error.
 
 
 SNooPy
