@@ -131,6 +131,11 @@ def get_data_for_id(obj_id):
     all_data.meta['name'] = table_meta_data['IAUName'][0]
     all_data.meta['obj_id'] = obj_id
 
+    outlier_list = _get_outliers().get(obj_id, [])
+    if outlier_list:
+        keep_indices = ~np.isin(all_data['MJD'], outlier_list)
+        all_data = all_data[keep_indices]
+
     return all_data
 
 
@@ -148,12 +153,6 @@ def get_sncosmo_input(obj_id):
 
     # Format table
     phot_data = get_data_for_id(obj_id)
-
-    outlier_list = _get_outliers().get(obj_id, [])
-    if outlier_list:
-        keep_indices = ~np.isin(phot_data['MJD'], outlier_list)
-        phot_data = phot_data[keep_indices]
-
     if not phot_data:
         return Table(
             names=['time', 'band', 'zp', 'flux', 'fluxerr', 'zpsys', 'flag'])

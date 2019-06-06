@@ -3,6 +3,8 @@
 
 """This module defines functions for downloading data."""
 
+import tarfile
+
 from . import _meta as meta
 from ... import _utils as utils
 
@@ -55,6 +57,10 @@ def download_module_data():
             utils.download_file(
                 url=meta.filter_url + file_name,
                 out_file=meta.filter_dir / file_name)
+
+        outlier_archive = meta.snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
+        with tarfile.open(str(outlier_archive), mode='r:gz') as data:
+            data.extractall(str(outlier_archive.parent))
 
 
 def delete_module_data():

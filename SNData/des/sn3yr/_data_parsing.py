@@ -108,7 +108,7 @@ def get_sncosmo_input(obj_id):
     all_sn_data = get_data_for_id(obj_id)
     sncosmo_table = Table()
     sncosmo_table['time'] = all_sn_data['MJD']
-    sncosmo_table['band'] = ['des' + s for s in all_sn_data['BAND']]
+    sncosmo_table['band'] = ['des_sn3yr_' + s for s in all_sn_data['BAND']]
     sncosmo_table['flux'] = all_sn_data['FLUXCAL']
     sncosmo_table['fluxerr'] = all_sn_data['FLUXCALERR']
     sncosmo_table['zp'] = np.full(len(all_sn_data), 27.5)

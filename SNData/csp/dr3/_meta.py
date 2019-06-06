@@ -19,7 +19,7 @@ filter_url = 'https://csp.obs.carnegiescience.edu/data/'
 table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211'
 
 # Filter information
-filter_file_names = [
+filter_file_names = (
     'u_tel_ccd_atm_ext_1.2.dat',  # u
     'g_tel_ccd_atm_ext_1.2.dat',  # g
     'r_tel_ccd_atm_ext_1.2_new.dat',  # r
@@ -35,7 +35,7 @@ filter_file_names = [
     'Y_texas_DUP_atm.dat',  # Ydw
     'J_texas_DUP_atm.dat',  # Jdw
     'H_texas_DUP_atm.dat'  # Hdw
-]
+)
 
 _band_names = (
     'u', 'g', 'r', 'i', 'B', 'V0', 'V1',
