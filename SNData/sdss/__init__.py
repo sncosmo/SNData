@@ -5,7 +5,7 @@
 (SDSS).
 """
 
-from . import sako14
+from . import sako18
 
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'

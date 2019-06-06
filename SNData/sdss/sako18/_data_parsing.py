@@ -97,7 +97,7 @@ def _construct_band_name(filter_id, ccd_id):
         The name of the filter registered with sncosmo
     """
 
-    return f'sdss_sako14_{"ugriz"[filter_id]}{ccd_id}'
+    return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
 def get_data_for_id(obj_id):

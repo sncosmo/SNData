@@ -115,12 +115,12 @@ class CSP_DR3(GeneralTests):
         self._test_delete_data()
 
 
-class SDSS_SAKO14(GeneralTests):
-    """Tests for the sdss.sako14 module"""
+class SDSS_Sako18(GeneralTests):
+    """Tests for the sdss.sako18 module"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = sdss.sako14
+        cls.module = sdss.sako18
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
