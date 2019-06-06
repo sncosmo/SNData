@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides access to data from the SDSS-II SN Catalog Data
-Release, published in Sako et al. 2014.
+Release, published in Sako et al. 2018.
 """
 
 from ._data_download import data_is_available
@@ -19,5 +19,5 @@ from ._meta import band_names, lambda_effective
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
 data_type = 'photometry'
-publication = 'Sako et al. (2014)'
+publication = 'Sako et al. (2018)'
 ads = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

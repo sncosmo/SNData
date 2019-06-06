@@ -6,14 +6,14 @@ Sloan Digital Sky Survey
 +--------------+---------------+---------------+----------------------------+
 | Data Release | Module Name   | Data Type     | Publication                |
 +==============+===============+===============+============================+
-| Sako 2014    | sdss.sako18   | Photometric   | `Sako et al. (2014)`_      |
+| Sako 2018    | sdss.sako18   | Photometric   | `Sako et al. (2018)`_      |
 +--------------+---------------+---------------+----------------------------+
 
 
-.. _Sako et al. (2014): https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract
+.. _Sako et al. (2018): https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract
 
 
-Sako 2014
+Sako 2018
 ---------
 
 .. automodule:: SNData.sdss.sako18
