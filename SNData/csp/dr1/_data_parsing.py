@@ -60,13 +60,14 @@ def _read_file(path):
     """Read a given file path of CSP DR1 data
 
     Args:
-        path (str): Path of file to read
+        path (str or Path): Path of file to read
 
     Returns:
         An astropy table with file data and meta data
     """
 
     # Handle single file with three columns
+    path = Path(path)
     if path.stem == 'SN07bc_070409_b01_BAA_IM':
         data = Table.read(
             path, format='ascii', names=['wavelength', 'flux', '_'])
@@ -121,13 +122,16 @@ def get_data_for_id(obj_id):
         max_date, redshift, spectral_data = _read_file(path)
         out_table = vstack([out_table, spectral_data])
 
+    # noinspection PyUnboundLocalVariable
     out_table.meta['redshift'] = redshift
+    # noinspection PyUnboundLocalVariable
     out_table.meta['JDate_of_max'] = max_date
     out_table.meta['obj_id'] = obj_id
 
     return out_table
 
 
+# noinspection PyUnusedLocal
 def iter_data(verbose=False, filter_func=None, **kwargs):
     """Iterate through all available targets and yield data tables
 

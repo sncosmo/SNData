@@ -9,7 +9,7 @@ from unittest import TestCase
 
 import sncosmo
 
-from SNData import csp, query_ned_coords
+from SNData import csp, query_ned_coords, query_osc_spectra, query_osc, query_osc_photometry
 
 
 class SNCosmo(TestCase):
@@ -41,3 +41,20 @@ class NED(TestCase):
 
         self.assertEqual(no_prefix, lower_prefix)
         self.assertEqual(lower_prefix, upper_prefix)
+
+
+class OSC(TestCase):
+    """Tests for integrated NED services"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_id = '2011fe'
+
+    def test_general_query(self):
+        self.assertTrue(query_osc(self.test_id))
+
+    def test_photometry_query(self):
+        self.assertTrue(query_osc_photometry(self.test_id))
+
+    def test_spectra_query(self):
+        self.assertTrue(query_osc_spectra(self.test_id))

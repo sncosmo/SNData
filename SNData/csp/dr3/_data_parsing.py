@@ -11,6 +11,7 @@ from astropy.io import ascii
 
 from . import _meta as meta
 from ._data_download import _raise_for_data
+from ... import _integrations as integrations
 from ... import _utils as utils
 
 
@@ -24,7 +25,7 @@ def register_filters(force=False):
     _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
-        utils.register_filter(fpath, _band_name, force=force)
+        integrations.register_filter(fpath, _band_name, force=force)
 
 
 def get_available_tables():
@@ -94,7 +95,7 @@ def get_data_for_id(obj_id):
     # Read data file for target
     _raise_for_data()
     file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
-    data_table = utils.parse_snoopy_data(file_path)
+    data_table = integrations.parse_snoopy_data(file_path)
 
     # Add flux values
     data_table['band'] = 'csp_dr3_' + data_table['band']
@@ -122,6 +123,7 @@ def get_sncosmo_input(obj_id):
     return get_data_for_id(obj_id)
 
 
+# noinspection PyUnusedLocal
 def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
     """Iterate through all available targets and yield data tables
 
@@ -131,7 +133,7 @@ def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
 
     Args:
         verbose  (bool, dict): Optionally display progress bar while iterating
-        format_sncosmo (bool): Format data for use with SNCosmo (Default: False)
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
         filter_func    (func): An optional function to filter outputs by
 
     Yields:

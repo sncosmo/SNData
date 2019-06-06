@@ -10,6 +10,7 @@ from astropy.table import Column, Table
 
 from . import _meta as meta
 from ._data_download import _raise_for_data
+from ... import _integrations as integrations
 from ... import _utils as utils
 
 _master_table = None
@@ -25,7 +26,7 @@ def register_filters(force=False):
     _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
-        utils.register_filter(fpath, _band_name, force= force)
+        integrations.register_filter(fpath, _band_name, force=force)
 
 
 def get_available_tables():
@@ -181,7 +182,7 @@ def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
 
     Args:
         verbose  (bool, dict): Optionally display progress bar while iterating
-        format_sncosmo (bool): Format data for use with SNCosmo (Default: False)
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
         filter_func    (func): An optional function to filter outputs by
 
     Yields:
