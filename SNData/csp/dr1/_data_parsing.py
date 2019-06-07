@@ -131,6 +131,21 @@ def get_data_for_id(obj_id):
     return out_table
 
 
+def get_sncosmo_input(obj_id):
+    """Returns an SNCosmo input table a given object ID
+
+    Data points flagged in the SDSS II release as outliers are removed.
+
+    Args:
+        obj_id (str): The ID of the desired object
+
+    Returns:
+        An astropy table of data formatted for use with SNCosmo
+    """
+
+    raise RuntimeError('Photometric data is not available for csp.dr1')
+
+
 # noinspection PyUnusedLocal
 def iter_data(verbose=False, filter_func=None, **kwargs):
     """Iterate through all available targets and yield data tables

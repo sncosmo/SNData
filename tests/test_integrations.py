@@ -21,7 +21,7 @@ class SNCosmo(TestCase):
         cls.module.download_module_data()
 
     def test_filter_registration(self):
-        """Test registered bands do not have empty names"""
+        """Test csp registered bands do not have empty names"""
 
         self.module.register_filters()
         for band_name in self.module.band_names:
