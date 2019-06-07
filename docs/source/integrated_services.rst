@@ -87,17 +87,12 @@ registered supernovae using the ``query_ned_coords`` function.
     ra, dec = query_ned_coords('2011fe')
     print(f'RA: {ra}, DEC: {dec}')
 
-.. _Vizier.com: https://vizier.unistra.fr
-.. _SNCosmo: https://sncosmo.readthedocs.io/en/v1.8.x/
-.. _SNooPy: https://csp.obs.carnegiescience.edu/data/snpy
-.. _NED: https://ned.ipac.caltech.edu
-.. _IAU: https://www.iau.org/public/themes/naming_stars/
 
 
 Open Supernova Catalog (OSC)
 ----------------------------
 
-The `OSC` is a centralized, open source repository for SN metadata,
+The `OSC`_ is a centralized, open source repository for SN metadata,
 light-curves, and spectra. All three of these data types can be quiered using
 **SNData**.
 
@@ -120,3 +115,10 @@ light-curves, and spectra. All three of these data types can be quiered using
 
     # Finally, spectral data can also be retrieved as a list of dictionaries
     print(query_osc_spectra(object_name))
+
+.. _Vizier.com: https://vizier.unistra.fr
+.. _SNCosmo: https://sncosmo.readthedocs.io/en/v1.8.x/
+.. _SNooPy: https://csp.obs.carnegiescience.edu/data/snpy
+.. _NED: https://ned.ipac.caltech.edu
+.. _IAU: https://www.iau.org/public/themes/naming_stars/
+.. _OSC: https://sne.space
