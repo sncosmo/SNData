@@ -1,6 +1,6 @@
 astropy
 cython
-numpy
+numpy >= 1.16.4
 pandas
 requests
 sncosmo
