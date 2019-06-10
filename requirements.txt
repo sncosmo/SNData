@@ -3,6 +3,5 @@ cython
 numpy
 pandas
 requests
-scipy
 sncosmo
 tqdm
