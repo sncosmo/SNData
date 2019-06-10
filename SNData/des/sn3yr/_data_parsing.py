@@ -28,11 +28,10 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    # _raise_for_data()
-    raise RuntimeError('No Vizier tables available for this paper.')
+    _raise_for_data()
+    return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
-# noinspection PyUnusedLocal
 def load_table(table_num):
     """Load a table from the data paper for this survey / data
 
@@ -40,8 +39,31 @@ def load_table(table_num):
         table_num (int): The published table number
     """
 
-    # _raise_for_data()
-    raise RuntimeError('No Vizier tables available for this paper.')
+    _raise_for_data()
+    if table_num not in get_available_tables():
+        raise ValueError(f'Table {table_num} is not available.')
+
+    data = master_table = Table.read(
+        str(meta.fits_dir / table_num),
+        format='ascii',
+        data_start=4,
+        comment='#',
+        exclude_names=['dummy_col'],
+        names=['dummy_col', 'CID', 'CIDint', 'IDSURVEY', 'TYPE', 'FIELD',
+               'CUTFLAG_SNANA', 'zHEL', 'zHELERR', 'zCMB', 'zCMBERR',
+               'zHD', 'zHDERR', 'VPEC', 'VPECERR', 'HOST_LOGMASS',
+               'HOST_LOGMASS_ERR', 'SNRMAX1', 'SNRMAX2', 'SNRMAX3', 'PKMJD',
+               'PKMJDERR', 'x1', 'x1ERR', 'c', 'cERR', 'mB', 'mBERR', 'x0',
+               'x0ERR', 'COV_x1_c', 'COV_x1_x0', 'COV_c_x0', 'NDOF',
+               'FITCHI2', 'FITPROB', 'RA', 'DECL', 'TGAPMAX', 'TrestMIN',
+               'TrestMAX', 'MWEBV', 'm0obs_i', 'm0obs_r', 'em0obs_i',
+               'em0obs_r',
+               'MU', 'MUMODEL', 'MUERR', 'MUERR_RAW', 'MURES', 'MUPULL',
+               'M0DIF',
+               'ERRCODE', 'biasCor_mu', 'biasCorErr_mu', 'biasCor_mB',
+               'biasCor_x1', 'biasCor_c', 'biasScale_muCOV', 'IDSAMPLE'])
+
+    return data
 
 
 def get_available_ids():
