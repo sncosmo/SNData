@@ -29,7 +29,6 @@ installed with pip by running:
     $ git clone http://github.com/djperrefort/SNData
     $ cd SNData
     $ pip install -r requirements.txt
-    $ pip install sncosmo  # Not included in requirements.txt for testing reasons
 
 
 Using setup.py
