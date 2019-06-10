@@ -12,7 +12,11 @@ class GeneralTests(TestCase):
     """Generic tests for a given survey"""
 
     def _test_empty_data(self, lim=float('inf')):
-        """Test for empty tables in ``iter_data``"""
+        """Test for empty tables in ``iter_data``
+
+        Args:
+            lim (int): Maximum number of tables to check (default: All tables)
+        """
 
         for i, input_table in enumerate(self.module.iter_data()):
             if i >= lim:
@@ -52,13 +56,15 @@ class GeneralTests(TestCase):
 
             self.assertTrue(table, err_msg.format(n))
 
-    def _test_table_filtering(self):
-        """Test table filtering for ``iter_data``"""
+    def _test_table_filtering(self, lim=None):
+        """Test table filtering for ``iter_data``
 
-        num_test_tables = 50
+        Args:
+            lim (int): Maximum number of tables to check (default: All tables)
+        """
 
         # Define ids to select on
-        obj_ids = self.module.get_available_ids()[:num_test_tables]
+        obj_ids = self.module.get_available_ids()[:lim]
         filter_ids = obj_ids[len(obj_ids) // 2:]
 
         # Create a test selection function
@@ -66,8 +72,8 @@ class GeneralTests(TestCase):
             return data_table.meta['obj_id'] in filter_ids
 
         # Check the selection function works
-        iter_data = islice(self.module.iter_data(filter_func=filter_func),
-                           num_test_tables)
+        iter_data = islice(
+            self.module.iter_data(filter_func=filter_func), 0, lim)
 
         for table in iter_data:
             self.assertTrue(table.meta['obj_id'] in filter_ids)
@@ -146,6 +152,9 @@ class DES_SN3YR(GeneralTests):
 
     def test_0_empty_data(self):
         self._test_empty_data(100)
+
+    def test_1_table_parsing(self):
+        self._test_table_parsing()
 
     def test_2_table_filtering(self):
         self._test_table_filtering()
