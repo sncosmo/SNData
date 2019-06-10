@@ -1,6 +1,7 @@
-pandas
 astropy
+cython
 numpy
+pandasd
 requests
 scipy==1.2.1
 # sncosmo
