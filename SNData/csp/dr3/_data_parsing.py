@@ -105,6 +105,7 @@ def get_data_for_id(obj_id):
     data_table['fluxerr'] = \
         np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
 
+    data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
     return data_table
 
 

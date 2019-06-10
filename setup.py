@@ -1,20 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+import re
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
+# Get list of requirements
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
     requirements += ['sncosmo']
 
+# Create long description
 url = 'https://sn-data.readthedocs.io'
 long_description = (
     "SNData provides a Python interface for data releases published by "
     f"various supernova surveys. For more information see {url}"
 )
 
+# Get package version
+init_path = Path(__file__).resolve().parent / 'SNData/__init__.py'
+with open(init_path, 'r') as f:
+    s = f.read()
+
+versionRegExp = re.compile("__version__ = '(.*?)'")
+__version__ = versionRegExp.findall(s)[0]
+
 setup(name='SNData',
-      version='0.0.9',
+      version=__version__,
       packages=find_packages(),
       keywords='Supernova Astronomy Data Release',
       description='A Python interface for data published by various supernova surveys',
