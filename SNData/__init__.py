@@ -12,5 +12,5 @@ from ._integrations import query_osc
 from ._integrations import query_osc_photometry
 from ._integrations import query_osc_spectra
 
-__version__ = '0.0.11'
+__version__ = '0.1.0'
 __author__ = 'Daniel Perrefort'
