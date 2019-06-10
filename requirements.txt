@@ -3,6 +3,6 @@ cython
 numpy
 pandas
 requests
-scipy==1.2.1
+scipy
 sncosmo
 tqdm
