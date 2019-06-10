@@ -9,7 +9,6 @@ from setuptools import find_packages, setup
 # Get list of requirements
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-    requirements += ['sncosmo==1.8.2']
 
 # Create long description
 url = 'https://sn-data.readthedocs.io'
