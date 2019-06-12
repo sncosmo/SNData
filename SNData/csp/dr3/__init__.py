@@ -36,4 +36,4 @@ survey_abbrev = 'CSP'
 survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
 data_type = 'photometric'
 publications = ('Krisciunas et al. 2017', )
-ads = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'

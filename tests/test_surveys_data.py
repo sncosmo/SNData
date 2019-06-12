@@ -4,20 +4,9 @@
 """Test that survey data is accessed and served correctly"""
 
 from itertools import islice
-from pathlib import Path
 from unittest import TestCase
 
-import yaml
-
 from SNData import csp, des, sdss
-
-docs_path = Path(__file__).resolve().parent / 'docs.yml'
-with open(docs_path) as ofile:
-    try:
-        expected_docs = yaml.load(ofile, Loader=yaml.FullLoader)
-
-    except AttributeError:  # Support older yaml versions
-        expected_docs = yaml.load(ofile)
 
 
 class GeneralTests(TestCase):
@@ -90,18 +79,6 @@ class GeneralTests(TestCase):
         for table in iter_data:
             self.assertTrue(table.meta['obj_id'] in filter_ids)
 
-    def _test_docs(self, skip_funcs=()):
-        """Test data access functions have consistent documentation
-
-        Args:
-            skip_funcs (iter[str]): Function names to skip during testing
-        """
-
-        for func_name, doc_string in expected_docs.items():
-            if func_name not in skip_funcs:
-                module_func = getattr(self.module, func_name)
-                self.assertEqual(module_func.__doc__, doc_string)
-
     def _test_ids_are_sorted(self):
         """Test ``get_available_ids`` returns sorted ids"""
 
@@ -120,22 +97,19 @@ class CSP_DR1(GeneralTests):
         cls.module = csp.dr1
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
-
-    def test_1_empty_data(self):
+    def test_0_empty_data(self):
         self._test_empty_data()
 
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
+    def test_2_table_filtering(self):
         self._test_table_filtering()
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_5_delete_data(self):
+    def test_4_delete_data(self):
         self._test_delete_data()
 
 
@@ -147,22 +121,19 @@ class CSP_DR3(GeneralTests):
         cls.module = csp.dr3
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
-
-    def test_1_empty_data(self):
+    def test_0_empty_data(self):
         self._test_empty_data()
 
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
+    def test_2_table_filtering(self):
         self._test_table_filtering()
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_5_delete_data(self):
+    def test_4_delete_data(self):
         self._test_delete_data()
 
 
@@ -174,22 +145,19 @@ class SDSS_Sako18(GeneralTests):
         cls.module = sdss.sako18
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
-
-    def test_1_empty_data(self):
+    def test_0_empty_data(self):
         self._test_empty_data()
 
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
+    def test_2_table_filtering(self):
         self._test_table_filtering()
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_5_delete_data(self):
+    def test_4_delete_data(self):
         self._test_delete_data()
 
 
@@ -201,20 +169,17 @@ class DES_SN3YR(GeneralTests):
         cls.module = des.sn3yr
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
-
-    def test_1_empty_data(self):
+    def test_0_empty_data(self):
         self._test_empty_data()
 
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
+    def test_2_table_filtering(self):
         self._test_table_filtering()
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_5_delete_data(self):
+    def test_4_delete_data(self):
         self._test_delete_data()

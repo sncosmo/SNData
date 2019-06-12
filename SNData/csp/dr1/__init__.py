@@ -32,4 +32,4 @@ survey_abbrev = 'CSP'
 survey_url = 'https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1'
 data_type = 'spectroscopic'
 publications = ('Folatelli et al. 2013', )
-ads = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'

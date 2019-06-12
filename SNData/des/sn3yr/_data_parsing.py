@@ -32,19 +32,21 @@ def get_available_tables():
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
-def load_table(table_num):
+def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
+    See ``get_available_tables`` for a list of valid table IDs.
+
     Args:
-        table_num (int): The published table number
+        table_id (int, str): The published table number or table name
     """
 
     _raise_for_data()
-    if table_num not in get_available_tables():
-        raise ValueError(f'Table {table_num} is not available.')
+    if table_id not in get_available_tables():
+        raise ValueError(f'Table {table_id} is not available.')
 
     data = Table.read(
-        str(meta.fits_dir / table_num),
+        str(meta.fits_dir / table_id),
         format='ascii',
         data_start=4,
         comment='#',

@@ -15,7 +15,6 @@ Deviations from the standard UI:
 Cuts on returned data:
   - Data points manually marked as outliers by the SDSS research time are not
   included in returned data tables.
-
 """
 
 from ._data_download import data_is_available
@@ -35,4 +34,4 @@ survey_abbrev = 'SDSS'
 survey_url = 'http://data.darkenergysurvey.org/sdsssn/dataRelease/'
 data_type = 'photometry'
 publications = ('Sako et al. (2018)', )
-ads = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

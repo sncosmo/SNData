@@ -13,6 +13,8 @@ from ._data_download import _raise_for_data
 from ... import _integrations as integrations
 from ... import _utils as utils
 
+# We will need to access the ``master table`` published by SDSS at various
+# points so we lazy load it and keep it in memory
 _master_table = None
 
 
@@ -35,16 +37,18 @@ def get_available_tables():
     return ['master']
 
 
-def load_table(table_num):
+def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
+    See ``get_available_tables`` for a list of valid table IDs.
+
     Args:
-        table_num (int): The published table number
+        table_id (int, str): The published table number or table name
     """
 
     _raise_for_data()
 
-    if table_num == 'master':
+    if table_id == 'master':
         global _master_table
         if _master_table is None:
             _master_table = Table.read(meta.master_table_path, format='ascii')
@@ -53,7 +57,7 @@ def load_table(table_num):
         return _master_table
 
     else:
-        raise ValueError(f'Table {table_num} is not available.')
+        raise ValueError(f'Table {table_id} is not available.')
 
 
 def get_available_ids():
@@ -68,11 +72,11 @@ def get_available_ids():
     return sorted(load_table('master')['CID'])
 
 
-def _get_outliers():
+def get_outliers():
     """Return a dictionary of data points marked by SDSS II as outliers
 
     Returns:
-        A dictionary {<cid>: [<MJD of bad data point>, ...], ...}
+        A dictionary {<obj_id>: [<MJD of bad data point>, ...], ...}
     """
 
     out_dict = dict()
@@ -127,7 +131,8 @@ def get_data_for_id(obj_id):
     for i, name in enumerate(col_names):
         all_data[f'col{i + 1}'].name = name
 
-    table_meta_data = _master_table[_master_table['CID'] == obj_id]
+    master_table = load_table('master')
+    table_meta_data = master_table[master_table['CID'] == obj_id]
     all_data.meta['redshift'] = table_meta_data['zCMB'][0]
     all_data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
     all_data.meta['ra'] = table_meta_data['RA'][0]
@@ -136,7 +141,7 @@ def get_data_for_id(obj_id):
     all_data.meta['name'] = table_meta_data['IAUName'][0]
     all_data.meta['obj_id'] = obj_id
 
-    outlier_list = _get_outliers().get(obj_id, [])
+    outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:
         keep_indices = ~np.isin(all_data['MJD'], outlier_list)
         all_data = all_data[keep_indices]

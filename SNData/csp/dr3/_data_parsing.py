@@ -35,19 +35,21 @@ def get_available_tables():
     return [1, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 
-def load_table(table_num):
+def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
+    See ``get_available_tables`` for a list of valid table IDs.
+
     Args:
-        table_num (int): The published table number
+        table_id (int, str): The published table number or table name
     """
 
     _raise_for_data()
 
     readme_path = meta.table_dir / 'ReadMe'
-    table_path = meta.table_dir / f'table{table_num}.dat'
-    if table_num not in get_available_tables():
-        raise ValueError(f'Table {table_num} is not available.')
+    table_path = meta.table_dir / f'table{table_id}.dat'
+    if table_id not in get_available_tables():
+        raise ValueError(f'Table {table_id} is not available.')
 
     return ascii.read(str(table_path), format='cds', readme=str(readme_path))
 

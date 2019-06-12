@@ -28,7 +28,7 @@ from ._meta import band_names, lambda_effective
 
 survey_name = 'Dark Energy Survey'
 survey_abbrev = 'DES'
-survey_url = 'https://des.ncsa.illinois.edu/releases/sn'
+survey_url = 'https://des.ncsa.illinois.edu/'
 data_type = 'photometry'
 publications = (
     'Burke et al. 2017',
@@ -36,4 +36,4 @@ publications = (
     'Brout et al. 2018-SYS'
 )
 
-ads = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'
