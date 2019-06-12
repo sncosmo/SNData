@@ -1,0 +1,11 @@
+# This document contains the expected documentation for various functions and is used to ensure consistent documentation across modules
+data_is_available: "Return whether data has been downloaded for this survey / data release\n\n    Returns\n        A boolean\n    "
+delete_module_data: "Delete any data for the current survey / data release"
+download_module_data: "Download data for the current survey / data release"
+get_available_ids: "Return a list of target object ids for the current survey\n\n    Returns:\n        A list of object ids as strings\n    "
+get_available_tables: "Get numbers of available tables for this survey / data release"
+get_data_for_id: "Returns data for a given object id\n\n    See ``get_available_ids()`` for a list of available id values.\n\n    Args:\n        obj_id (str): The ID of the desired object\n\n    Returns:\n        An astropy table of data for the given ID\n    "
+get_sncosmo_input: "Returns an SNCosmo input table a given object ID\n\n    Args:\n        obj_id (str): The ID of the desired object\n\n    Returns:\n        An astropy table of data formatted for use with SNCosmo\n    "
+iter_data: "Iterate through all available targets and yield data tables\n\n    An optional progress bar can be formatted by passing a dictionary of tqdm\n    arguments. Outputs can be optionally filtered by passing a function\n    ``filter_func`` that accepts a data table and returns a boolean.\n\n    Args:\n        verbose  (bool, dict): Optionally display progress bar while iterating\n        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)\n        filter_func    (func): An optional function to filter outputs by\n\n    Yields:\n        Astropy tables\n    "
+load_table: "Load a table from the data paper for this survey / data\n\n    Args:\n        table_num (int): The published table number\n    "
+register_filters: "Register filters for this survey / data release with SNCosmo\n\n    Args:\n        force (bool): Whether to re-register a band if already registered\n    "

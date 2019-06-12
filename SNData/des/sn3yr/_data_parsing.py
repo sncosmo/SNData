@@ -78,19 +78,19 @@ def get_available_ids():
     # Load list of all target ids
     target_list_path = meta.photometry_dir / 'DES-SN3YR_DES.LIST'
     file_list = np.genfromtxt(target_list_path, dtype=str)
-    return [f.lstrip('des_').rstrip('.dat') for f in file_list]
+    return sorted(f.lstrip('des_').rstrip('.dat') for f in file_list)
 
 
 def get_data_for_id(obj_id):
-    """Returns DES photometric data for a given object ID
+    """Returns data for a given object id
 
-    No data cuts are applied to the returned data.
+    See ``get_available_ids()`` for a list of available id values.
 
     Args:
         obj_id (str): The ID of the desired object
 
     Returns:
-        An astropy table of photometric data for the given candidate ID
+        An astropy table of data for the given ID
     """
 
     _raise_for_data()
@@ -119,8 +119,6 @@ def get_data_for_id(obj_id):
 
 def get_sncosmo_input(obj_id):
     """Returns an SNCosmo input table a given object ID
-
-    Data points flagged in the SDSS II release as outliers are removed.
 
     Args:
         obj_id (str): The ID of the desired object

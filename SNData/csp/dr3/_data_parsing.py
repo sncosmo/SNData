@@ -61,7 +61,7 @@ def get_available_ids():
 
     _raise_for_data()
     files = glob(_path.join(meta.photometry_dir, '*.txt'))
-    return [_path.basename(f).split('_')[0].lstrip('SN') for f in files]
+    return sorted(_path.basename(f).split('_')[0].lstrip('SN') for f in files)
 
 
 def _get_zp_for_bands(band):
@@ -111,8 +111,6 @@ def get_data_for_id(obj_id):
 
 def get_sncosmo_input(obj_id):
     """Returns an SNCosmo input table a given object ID
-
-    Data points flagged in the SDSS II release as outliers are removed.
 
     Args:
         obj_id (str): The ID of the desired object

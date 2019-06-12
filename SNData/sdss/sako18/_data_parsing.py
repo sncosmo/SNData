@@ -32,11 +32,15 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    return ['master']
+    return sorted(['master'])
 
 
 def load_table(table_num):
-    """Load a table from the data release paper"""
+    """Load a table from the data paper for this survey / data
+
+    Args:
+        table_num (int): The published table number
+    """
 
     _raise_for_data()
 
@@ -142,8 +146,6 @@ def get_data_for_id(obj_id):
 
 def get_sncosmo_input(obj_id):
     """Returns an SNCosmo input table a given object ID
-
-    Data points flagged in the SDSS II release as outliers are removed.
 
     Args:
         obj_id (str): The ID of the desired object

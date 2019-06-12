@@ -93,7 +93,7 @@ Open Supernova Catalog (OSC)
 ----------------------------
 
 The `OSC`_ is a centralized, open source repository for SN metadata,
-light-curves, and spectra. All three of these data types can be quiered using
+light-curves, and spectra. All three of these data types can be queried using
 **SNData**.
 
 .. code-block:: python

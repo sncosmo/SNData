@@ -168,7 +168,7 @@ def register_filter(file_path, filt_name, force=False):
         force    (bool): Whether to re-register a band if already registered
     """
 
-    # Get set of registered builtin and custom bandpasses
+    # Get set of registered builtin and custom band passes
     available_bands = set(
         k[0] for k in sncosmo.bandpasses._BANDPASSES._loaders)
     available_bands.update(

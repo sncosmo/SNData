@@ -53,7 +53,7 @@ def get_available_ids():
 
     files = glob(str(meta.spectra_dir / 'SN*.dat'))
     ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
-    return list(set(ids))
+    return sorted(set(ids))
 
 
 def _read_file(path):
@@ -133,8 +133,6 @@ def get_data_for_id(obj_id):
 
 def get_sncosmo_input(obj_id):
     """Returns an SNCosmo input table a given object ID
-
-    Data points flagged in the SDSS II release as outliers are removed.
 
     Args:
         obj_id (str): The ID of the desired object

@@ -39,7 +39,7 @@ Available Data
 +----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
 | Dark Energy Survey         | SN3YR            | Photometric   | `here <https://des.ncsa.illinois.edu/releases/sn>`_                                      |
 +----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
-| Sloan Digital Sky Survey   | Sako et al. 2018 | Photometric   | `here <http://data.darkenergysurvey.org/sd elease/>`_                                    |
+| Sloan Digital Sky Survey   | Sako et al. 2018 | Photometric   | `here <http://data.darkenergysurvey.org/sdsssn/dataRelease/>`_                                    |
 +----------------------------+------------------+---------------+------------------------------------------------------------------------------------------+
 
 .. toctree::
