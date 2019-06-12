@@ -2,7 +2,16 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides access to data from the first public data release of
-the Dark Energy Survey Supernova Program, DES-SN3YR.
+the Dark Energy Survey Supernova Program, DES-SN3YR. It includes griz light
+curves of 251 supernovae from the first 3 years of the Dark Energy Survey
+Supernova Program’s (DES-SN) spectroscopically classified sample.
+(Source: Brout et al. 2019)
+
+Deviations from the standard UI:
+  - None
+
+Cuts on returned data:
+  - None
 """
 
 from ._data_download import data_is_available
@@ -19,10 +28,11 @@ from ._meta import band_names, lambda_effective
 
 survey_name = 'Dark Energy Survey'
 survey_abbrev = 'DES'
+survey_url = 'https://des.ncsa.illinois.edu/releases/sn'
 data_type = 'photometry'
-publication = (
+publications = (
     'Burke et al. 2017',
-    'Brout et al. (2019)',
+    'Brout et al. 2019',
     'Brout et al. 2018-SYS'
 )
 

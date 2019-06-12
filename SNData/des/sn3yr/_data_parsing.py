@@ -43,7 +43,7 @@ def load_table(table_num):
     if table_num not in get_available_tables():
         raise ValueError(f'Table {table_num} is not available.')
 
-    data = master_table = Table.read(
+    data = Table.read(
         str(meta.fits_dir / table_num),
         format='ascii',
         data_start=4,
