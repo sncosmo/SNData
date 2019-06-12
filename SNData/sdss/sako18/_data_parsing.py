@@ -32,7 +32,7 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    return sorted(['master'])
+    return ['master']
 
 
 def load_table(table_num):
@@ -65,7 +65,7 @@ def get_available_ids():
 
     _raise_for_data()
 
-    return load_table('master')['CID']
+    return sorted(load_table('master')['CID'])
 
 
 def _get_outliers():
