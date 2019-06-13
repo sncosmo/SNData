@@ -21,7 +21,7 @@ def _raise_for_data():
     """Raise a RuntimeError if data hasn't been downloaded for this module"""
 
     if not data_is_available():
-        raise RuntimeError(
+        raise utils.NoDownloadedData(
             'Data has not been downloaded for this survey. '
             'Please run the ``download_data`` function.')
 

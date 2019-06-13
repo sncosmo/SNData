@@ -11,6 +11,10 @@ import requests
 from tqdm import tqdm
 
 
+class NoDownloadedData(Exception):
+    pass
+
+
 def download_file(url, out_file):
     """Download data to a file
 
