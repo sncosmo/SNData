@@ -32,6 +32,7 @@ def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
     # Todo: figure out how to parse tables 2 and 3
+    _raise_for_data()
     return [1, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 
@@ -51,7 +52,10 @@ def load_table(table_id):
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
-    return ascii.read(str(table_path), format='cds', readme=str(readme_path))
+    data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+    description = utils.read_vizier_table_descriptions(readme_path)[table_id]
+    data.meta['description'] = description
+    return data
 
 
 def get_available_ids():

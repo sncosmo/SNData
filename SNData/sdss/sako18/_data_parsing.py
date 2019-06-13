@@ -34,6 +34,7 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
+    _raise_for_data()
     return ['master']
 
 

@@ -18,6 +18,8 @@ from ... import _utils as utils
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
+    _raise_for_data()
+
     table_nums = []
     for f in meta.table_dir.rglob('table*.dat'):
         table_nums.append(int(f.stem.lstrip('table')))
@@ -41,7 +43,10 @@ def load_table(table_id):
     if not table_path.exists:
         raise ValueError(f'Table {table_id} is not available.')
 
-    return ascii.read(str(table_path), format='cds', readme=str(readme_path))
+    data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+    description = utils.read_vizier_table_descriptions(readme_path)[table_id]
+    data.meta['description'] = description
+    return data
 
 
 def get_available_ids():
