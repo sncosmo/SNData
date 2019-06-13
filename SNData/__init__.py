@@ -14,3 +14,4 @@ from ._integrations import query_osc_spectra
 
 __version__ = '0.2.0'
 __author__ = 'Daniel Perrefort'
+__license__ = 'MIT'
