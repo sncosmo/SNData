@@ -37,6 +37,20 @@ def download_module_data():
             out_dir=meta.table_dir,
             mode='r:gz')
 
+    # Fix formatting of CDS Readme
+    with open(meta.table_dir / 'ReadMe') as ofile:
+        lines = ofile.readlines()
+
+    # Mistakes in Table 2
+    lines[148] = lines[148].replace('[0.734/2.256]?', '?=-')
+    lines[150] = lines[150].replace('[0.036/0.198]?', '?')
+    lines[153] = lines[153].replace('Wang et al.', '?=- Wang et al.')
+    lines[155] = lines[155].replace('Branch et al.', '?=- Branch et al.')
+    lines[161] = lines[161].replace('[-11/66]?', '?=-')
+
+    with open(meta.table_dir / 'ReadMe_formatted', 'w') as ofile:
+        ofile.writelines(lines)
+
     # Download photometry
     if not meta.photometry_dir.exists():
         print('Downloading photometry...')

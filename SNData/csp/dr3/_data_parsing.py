@@ -33,7 +33,7 @@ def get_available_tables():
 
     # Todo: figure out how to parse tables 2 and 3
     _raise_for_data()
-    return [1, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    return [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 
 def load_table(table_id):
@@ -47,7 +47,7 @@ def load_table(table_id):
 
     _raise_for_data()
 
-    readme_path = meta.table_dir / 'ReadMe'
+    readme_path = meta.table_dir / 'ReadMe_formatted'
     table_path = meta.table_dir / f'table{table_id}.dat'
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
