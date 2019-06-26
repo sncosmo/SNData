@@ -12,7 +12,32 @@ from tqdm import tqdm
 
 
 class NoDownloadedData(Exception):
-    pass
+    def __init__(self, *args, **kwargs):
+        default_message = 'Data has not been downloaded for this module / data release.'
+
+        if not (args or kwargs): 
+            args = (default_message,)
+
+         super().__init__(*args, **kwargs)
+
+
+def require_data_path(data_dir):
+    “””Function decorator to raise NoDownloadedData exception if
+       the path ``data_dir`` does not exist
+
+    Args:
+        data_dir (Path): Path object to check for
+    “””
+
+    def inner(func):
+        def wrapper(*args, **kwargs):
+            If not data_dir.exists():
+                raise NoDownloadedData()
+
+            return func(*args, **kwargs)
+        return wrapper
+    return inner
+
 
 
 def download_file(url, out_file):
