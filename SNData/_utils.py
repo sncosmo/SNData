@@ -22,12 +22,12 @@ class NoDownloadedData(Exception):
 
 
 def require_data_path(data_dir):
-    “””Function decorator to raise NoDownloadedData exception if
+    """Function decorator to raise NoDownloadedData exception if
        the path ``data_dir`` does not exist
 
     Args:
         data_dir (Path): Path object to check for
-    “””
+    """
 
     def inner(func):
         def wrapper(*args, **kwargs):
@@ -37,7 +37,6 @@ def require_data_path(data_dir):
             return func(*args, **kwargs)
         return wrapper
     return inner
-
 
 
 def download_file(url, out_file):
