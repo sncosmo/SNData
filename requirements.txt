@@ -5,3 +5,4 @@ pandas
 pyyaml
 requests
 tqdm
+sncosmo

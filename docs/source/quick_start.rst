@@ -89,3 +89,18 @@ data for all available objects.
     for data in dr3.iter_data():
         print(data)
         break
+
+The ``iter_data`` allows users to optionally select a subset of the total data
+by defining a filter function. This function should accept a data table
+yielded by ``iter_data`` and return a boolean. For example, to only select
+target with a redshift less than .1:
+
+.. code-block:: python
+   :linenos:
+
+    def filter_func(data_table):
+        return data_table.meta['redshift'] < .1
+
+    for data in dr3.iter_data(filter_func=filter_func):
+        print(data)
+        break

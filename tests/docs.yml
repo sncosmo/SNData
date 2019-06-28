@@ -1,6 +1,6 @@
 # This document contains the expected documentation for various functions and is used to ensure consistent documentation across modules
 delete_module_data: "Delete any data for the current survey / data release"
-download_module_data: "Download data for the current survey / data release"
+download_module_data: "Download data for the current survey / data release\n\n    Args:\n        force (bool): Re-Download locally available data (Default: False)\n    "
 get_available_ids: "Return a list of target object ids for the current survey\n\n    Returns:\n        A list of object ids as strings\n    "
 get_available_tables: "Get numbers of available tables for this survey / data release"
 get_data_for_id: "Returns data for a given object id\n\n    See ``get_available_ids()`` for a list of available id values.\n\n    Args:\n        obj_id (str): The ID of the desired object\n\n    Returns:\n        An astropy table of data for the given ID\n    "
