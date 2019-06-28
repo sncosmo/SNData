@@ -4,5 +4,4 @@ numpy >= 1.16.4
 pandas
 pyyaml
 requests
-sncosmo
 tqdm

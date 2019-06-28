@@ -49,7 +49,7 @@ setup(name='SNData',
       license='GPL v3',
 
       python_requires='>=3.6',
-      install_requires=requirements,
+      install_requires=requirements + ['sncosmo'],
 
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
