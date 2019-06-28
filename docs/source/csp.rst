@@ -8,7 +8,7 @@ Carnegie Supernova Project
 +==============+===============+===============+=============================+
 | DR1          | csp.dr1       | Spectroscopic | `Folatelli et al. (2013)`_  |
 +--------------+---------------+---------------+-----------------------------+
-| DR3          | csp.dr3       | Photometric   | `dr3_ads_link`_             |
+| DR3          | csp.dr3       | Photometric   | `Krisciunas et al. (2017)`_ |
 +--------------+---------------+---------------+-----------------------------+
 
 .. _Folatelli et al. (2013): https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract
