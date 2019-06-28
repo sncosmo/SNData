@@ -99,15 +99,6 @@ def get_data_for_id(obj_id):
     # Read data file for target
     file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = integrations.parse_snoopy_data(file_path)
-
-    # Add flux values
-    data_table['band'] = 'csp_dr3_' + data_table['band']
-    data_table['zp'] = _get_zp_for_bands(data_table['band'])
-    data_table['zpsys'] = np.full(len(data_table), 'ab')
-    data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
-    data_table['fluxerr'] = \
-        np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
-
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
     return data_table
 
@@ -122,7 +113,16 @@ def get_sncosmo_input(obj_id):
         An astropy table of data formatted for use with SNCosmo
     """
 
-    return get_data_for_id(obj_id)
+    data_table = get_data_for_id(obj_id)
+    # Add flux values
+    data_table['band'] = 'csp_dr3_' + data_table['band']
+    data_table['zp'] = _get_zp_for_bands(data_table['band'])
+    data_table['zpsys'] = np.full(len(data_table), 'ab')
+    data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
+    data_table['fluxerr'] = \
+        np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
+
+    return data_table
 
 
 # noinspection PyUnusedLocal
