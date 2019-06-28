@@ -8,6 +8,7 @@ from unittest import TestCase
 
 from SNData import csp, des, sdss
 
+
 # Todo: Decide (and execute) whether to write test for table descriptions\
 # Todo: Test of error when no data is available
 
@@ -45,19 +46,20 @@ class GeneralTests(TestCase):
         ``get_available_tables``
         """
 
-        table_nums = self.module.get_available_tables()
+        table_names = self.module.get_available_tables()
         self.assertGreater(
-            len(table_nums), 0, f'No tables available for survey')
+            len(table_names), 0, f'No tables available for survey')
 
         err_msg = 'Empty table number {}'
-        for n in table_nums:
+        for table in table_names:
+            print(table)
             try:
-                table = self.module.load_table(n)
+                table = self.module.load_table(table)
 
             except:
-                self.fail('Cannot parse table {n}')
+                self.fail(f'Cannot parse table {table}')
 
-            self.assertTrue(table, err_msg.format(n))
+            self.assertTrue(table, err_msg.format(table))
 
     def _test_table_filtering(self, lim=None):
         """Test table filtering for ``iter_data``
