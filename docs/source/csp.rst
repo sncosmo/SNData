@@ -22,9 +22,10 @@ Data Release 1
 
 .. py:currentmodule:: SNData.csp.dr1
 
+**Attribute Summaries:**
+
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -33,8 +34,8 @@ Data Release 1
     iter_data
     load_table
 
+**Function Documentation:**
 
-.. autofunction:: data_is_available
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids
@@ -51,9 +52,10 @@ Data Release 3
 
 .. py:currentmodule:: SNData.csp.dr3
 
+**Attribute Summaries:**
+
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -64,7 +66,8 @@ Data Release 3
     register_filters
     band_names
 
-.. autofunction:: data_is_available
+**Function Documentation:**
+
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids

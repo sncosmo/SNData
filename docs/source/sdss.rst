@@ -20,9 +20,10 @@ Sako 2018
 
 .. py:currentmodule:: SNData.sdss.sako18
 
+**Attribute Summaries:**
+
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -32,7 +33,8 @@ Sako 2018
     load_table
     register_filters
 
-.. autofunction:: data_is_available
+**Function Documentation:**
+
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids

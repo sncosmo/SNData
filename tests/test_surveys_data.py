@@ -4,20 +4,9 @@
 """Test that survey data is accessed and served correctly"""
 
 from itertools import islice
-from pathlib import Path
 from unittest import TestCase
 
-import yaml
-
 from SNData import csp, des, sdss
-
-docs_path = Path(__file__).resolve().parent / 'docs.yml'
-with open(docs_path) as ofile:
-    try:
-        expected_docs = yaml.load(ofile, Loader=yaml.FullLoader)
-
-    except AttributeError:  # Support older yaml versions
-        expected_docs = yaml.load(ofile)
 
 
 class GeneralTests(TestCase):
@@ -39,34 +28,24 @@ class GeneralTests(TestCase):
                 input_table,
                 msg=f'Empty table for obj_id {obj_id}.')
 
-    def _test_delete_data(self):
-        """Test ``delete_module_data`` agrees with ``data_is_available``"""
-
-        if not self.module.data_is_available():
-            err_msg = f'No data found. Cannot test deletion.'
-            raise RuntimeError(err_msg)
-
-        self.module.delete_module_data()
-        self.assertFalse(self.module.data_is_available())
-
     def _test_table_parsing(self):
         """Test no errors are raised by ``load_table`` when parsing args from
         ``get_available_tables``
         """
 
-        table_nums = self.module.get_available_tables()
+        table_names = self.module.get_available_tables()
         self.assertGreater(
-            len(table_nums), 0, f'No tables available for survey')
+            len(table_names), 0, f'No tables available for survey')
 
         err_msg = 'Empty table number {}'
-        for n in table_nums:
+        for table in table_names:
             try:
-                table = self.module.load_table(n)
+                table = self.module.load_table(table)
 
             except:
-                self.fail('Cannot parse table {n}')
+                self.fail(f'Cannot parse table {table}')
 
-            self.assertTrue(table, err_msg.format(n))
+            self.assertTrue(table, err_msg.format(table))
 
     def _test_table_filtering(self, lim=None):
         """Test table filtering for ``iter_data``
@@ -90,18 +69,6 @@ class GeneralTests(TestCase):
         for table in iter_data:
             self.assertTrue(table.meta['obj_id'] in filter_ids)
 
-    def _test_docs(self, skip_funcs=()):
-        """Test data access functions have consistent documentation
-
-        Args:
-            skip_funcs (iter[str]): Function names to skip during testing
-        """
-
-        for func_name, doc_string in expected_docs.items():
-            if func_name not in skip_funcs:
-                module_func = getattr(self.module, func_name)
-                self.assertEqual(module_func.__doc__, doc_string)
-
     def _test_ids_are_sorted(self):
         """Test ``get_available_ids`` returns sorted ids"""
 
@@ -120,23 +87,17 @@ class CSP_DR1(GeneralTests):
         cls.module = csp.dr1
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
+    def test_0_empty_data(self):
+        self._test_empty_data(10)
 
-    def test_1_empty_data(self):
-        self._test_empty_data()
-
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
-        self._test_table_filtering()
+    def test_2_table_filtering(self):
+        self._test_table_filtering(10)
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_5_delete_data(self):
-        self._test_delete_data()
 
 
 class CSP_DR3(GeneralTests):
@@ -147,23 +108,17 @@ class CSP_DR3(GeneralTests):
         cls.module = csp.dr3
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
+    def test_0_empty_data(self):
+        self._test_empty_data(10)
 
-    def test_1_empty_data(self):
-        self._test_empty_data()
-
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
-        self._test_table_filtering()
+    def test_2_table_filtering(self):
+        self._test_table_filtering(10)
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_5_delete_data(self):
-        self._test_delete_data()
 
 
 class SDSS_Sako18(GeneralTests):
@@ -174,23 +129,17 @@ class SDSS_Sako18(GeneralTests):
         cls.module = sdss.sako18
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
+    def test_0_empty_data(self):
+        self._test_empty_data(10)
 
-    def test_1_empty_data(self):
-        self._test_empty_data()
-
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
-        self._test_table_filtering()
+    def test_2_table_filtering(self):
+        self._test_table_filtering(10)
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_5_delete_data(self):
-        self._test_delete_data()
 
 
 class DES_SN3YR(GeneralTests):
@@ -201,20 +150,14 @@ class DES_SN3YR(GeneralTests):
         cls.module = des.sn3yr
         cls.module.download_module_data()
 
-    def test_0_consistent_docs(self):
-        self._test_docs(skip_funcs=('iter_data', 'register_filters'))
+    def test_0_empty_data(self):
+        self._test_empty_data(10)
 
-    def test_1_empty_data(self):
-        self._test_empty_data()
-
-    def test_2_table_parsing(self):
+    def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_3_table_filtering(self):
-        self._test_table_filtering()
+    def test_2_table_filtering(self):
+        self._test_table_filtering(10)
 
-    def test_4_sorted_ids(self):
+    def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_5_delete_data(self):
-        self._test_delete_data()

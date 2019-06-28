@@ -9,13 +9,15 @@ import numpy as np
 from astropy.table import Column, Table
 
 from . import _meta as meta
-from ._data_download import _raise_for_data
 from ... import _integrations as integrations
 from ... import _utils as utils
 
+# We will need to access the ``master table`` published by SDSS at various
+# points so we lazy load it and keep it in memory
 _master_table = None
 
 
+@utils.require_data_path(meta.data_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -23,28 +25,29 @@ def register_filters(force=False):
         force (bool): Whether to re-register a band if already registered
     """
 
-    _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
         integrations.register_filter(fpath, _band_name, force=force)
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
     return ['master']
 
 
-def load_table(table_num):
+@utils.require_data_path(meta.data_dir)
+def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
+    See ``get_available_tables`` for a list of valid table IDs.
+
     Args:
-        table_num (int): The published table number
+        table_id (int, str): The published table number or table name
     """
 
-    _raise_for_data()
-
-    if table_num == 'master':
+    if table_id == 'master':
         global _master_table
         if _master_table is None:
             _master_table = Table.read(meta.master_table_path, format='ascii')
@@ -53,9 +56,10 @@ def load_table(table_num):
         return _master_table
 
     else:
-        raise ValueError(f'Table {table_num} is not available.')
+        raise ValueError(f'Table {table_id} is not available.')
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
 
@@ -63,16 +67,14 @@ def get_available_ids():
         A list of object ids as strings
     """
 
-    _raise_for_data()
-
     return sorted(load_table('master')['CID'])
 
 
-def _get_outliers():
+def get_outliers():
     """Return a dictionary of data points marked by SDSS II as outliers
 
     Returns:
-        A dictionary {<cid>: [<MJD of bad data point>, ...], ...}
+        A dictionary {<obj_id>: [<MJD of bad data point>, ...], ...}
     """
 
     out_dict = dict()
@@ -104,6 +106,7 @@ def _construct_band_name(filter_id, ccd_id):
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
+@utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -116,8 +119,6 @@ def get_data_for_id(obj_id):
         An astropy table of data for the given ID
     """
 
-    _raise_for_data()
-
     # Read in ascii data table for specified object
     file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')
     all_data = Table.read(file_path, format='ascii')
@@ -127,7 +128,8 @@ def get_data_for_id(obj_id):
     for i, name in enumerate(col_names):
         all_data[f'col{i + 1}'].name = name
 
-    table_meta_data = _master_table[_master_table['CID'] == obj_id]
+    master_table = load_table('master')
+    table_meta_data = master_table[master_table['CID'] == obj_id]
     all_data.meta['redshift'] = table_meta_data['zCMB'][0]
     all_data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
     all_data.meta['ra'] = table_meta_data['RA'][0]
@@ -136,7 +138,7 @@ def get_data_for_id(obj_id):
     all_data.meta['name'] = table_meta_data['IAUName'][0]
     all_data.meta['obj_id'] = obj_id
 
-    outlier_list = _get_outliers().get(obj_id, [])
+    outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:
         keep_indices = ~np.isin(all_data['MJD'], outlier_list)
         all_data = all_data[keep_indices]

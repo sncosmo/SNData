@@ -33,7 +33,7 @@ class NED(TestCase):
     """Tests for integrated NED services"""
 
     def test_prefix_independence(self):
-        """Test results are returned regarless of 'SN' prefic"""
+        """Test results are returned regardless of 'SN' prefix"""
 
         no_prefix = query_ned_coords('2011fe')
         lower_prefix = query_ned_coords('sn2011fe')
@@ -51,10 +51,16 @@ class OSC(TestCase):
         cls.test_id = '2011fe'
 
     def test_general_query(self):
+        """Test queries for an object's metadata"""
+
         self.assertTrue(query_osc(self.test_id))
 
     def test_photometry_query(self):
+        """Test queries for an object's photometric data"""
+
         self.assertTrue(query_osc_photometry(self.test_id))
 
     def test_spectra_query(self):
+        """Test queries for an object's spectroscopic data"""
+
         self.assertTrue(query_osc_spectra(self.test_id))

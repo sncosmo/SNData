@@ -3,34 +3,21 @@
 
 """This module defines functions for downloading data."""
 
+import shutil
+
 from . import _meta as meta
 from ... import _utils as utils
 
 
-def data_is_available():
-    """Return whether data has been downloaded for this survey / data release
+def download_module_data(force=False):
+    """Download data for the current survey / data release
 
-    Returns
-        A boolean
+    Args:
+        force (bool): Re-Download locally available data (Default: False)
     """
 
-    return meta.data_dir.exists()
-
-
-def _raise_for_data():
-    """Raise a RuntimeError if data hasn't been downloaded for this module"""
-
-    if not data_is_available():
-        raise RuntimeError(
-            'Data has not been downloaded for this survey. '
-            'Please run the ``download_data`` function.')
-
-
-def download_module_data():
-    """Download data for the current survey / data release"""
-
     # Download data tables
-    if not meta.table_dir.exists():
+    if force or not meta.table_dir.exists():
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.table_url,
@@ -38,7 +25,7 @@ def download_module_data():
             mode='r:gz')
 
     # Download spectra
-    if not meta.spectra_dir.exists():
+    if force or not meta.spectra_dir.exists():
         print('Downloading spectra...')
         utils.download_tar(
             url=meta.spectra_url,
@@ -48,8 +35,6 @@ def download_module_data():
 
 def delete_module_data():
     """Delete any data for the current survey / data release"""
-
-    import shutil
 
     try:
         shutil.rmtree(meta.data_dir)
