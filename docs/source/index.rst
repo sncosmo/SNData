@@ -41,7 +41,7 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Getting Started:
 
    Overview<self>
    installation
@@ -51,7 +51,7 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Survey Docs:
+   :caption: Module Docs:
 
    csp
    des

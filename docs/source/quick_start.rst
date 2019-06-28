@@ -19,15 +19,22 @@ Carnegie Supernova Survey.
 
     from SNData.csp import dr3
 
+    # Information about the parent survey
+    print(dr3.survey_name)
+    print(dr3.survey_abbrev)
+
     # A summary of the DR3 data set
     help(dr3)
+
+    # Where to go for more information
+    print(dr3.survey_url)
 
     # The type of data in this release
     print(dr3.data_type)
 
     # The primary publication(s) and NASA ADS link(s) describing the data
-    print(dr3.publication)
-    print(dr3.ads)
+    print(dr3.publications)
+    print(dr3.ads_url)
 
 
 Downloading Data
