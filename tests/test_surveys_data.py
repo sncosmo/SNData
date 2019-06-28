@@ -31,16 +31,6 @@ class GeneralTests(TestCase):
                 input_table,
                 msg=f'Empty table for obj_id {obj_id}.')
 
-    def _test_delete_data(self):
-        """Test ``delete_module_data`` agrees with ``data_is_available``"""
-
-        if not self.module.data_is_available():
-            err_msg = f'No data found. Cannot test deletion.'
-            raise RuntimeError(err_msg)
-
-        self.module.delete_module_data()
-        self.assertFalse(self.module.data_is_available())
-
     def _test_table_parsing(self):
         """Test no errors are raised by ``load_table`` when parsing args from
         ``get_available_tables``
@@ -113,9 +103,6 @@ class CSP_DR1(GeneralTests):
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_4_delete_data(self):
-        self._test_delete_data()
-
 
 class CSP_DR3(GeneralTests):
     """Tests for the csp.dr3 module"""
@@ -136,9 +123,6 @@ class CSP_DR3(GeneralTests):
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_4_delete_data(self):
-        self._test_delete_data()
 
 
 class SDSS_Sako18(GeneralTests):
@@ -161,9 +145,6 @@ class SDSS_Sako18(GeneralTests):
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_4_delete_data(self):
-        self._test_delete_data()
-
 
 class DES_SN3YR(GeneralTests):
     """Tests for the des.SN3YR module"""
@@ -184,6 +165,3 @@ class DES_SN3YR(GeneralTests):
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
-
-    def test_4_delete_data(self):
-        self._test_delete_data()
