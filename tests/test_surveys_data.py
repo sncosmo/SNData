@@ -39,7 +39,6 @@ class GeneralTests(TestCase):
 
         err_msg = 'Empty table number {}'
         for table in table_names:
-            print(table)
             try:
                 table = self.module.load_table(table)
 
@@ -89,13 +88,13 @@ class CSP_DR1(GeneralTests):
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
-        self._test_empty_data(25)
+        self._test_empty_data(10)
 
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
     def test_2_table_filtering(self):
-        self._test_table_filtering(25)
+        self._test_table_filtering(10)
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
@@ -110,13 +109,13 @@ class CSP_DR3(GeneralTests):
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
-        self._test_empty_data(25)
+        self._test_empty_data(10)
 
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
     def test_2_table_filtering(self):
-        self._test_table_filtering(25)
+        self._test_table_filtering(10)
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
@@ -131,13 +130,13 @@ class SDSS_Sako18(GeneralTests):
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
-        self._test_empty_data(25)
+        self._test_empty_data(10)
 
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
     def test_2_table_filtering(self):
-        self._test_table_filtering(25)
+        self._test_table_filtering(10)
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
@@ -152,13 +151,13 @@ class DES_SN3YR(GeneralTests):
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
-        self._test_empty_data(25)
+        self._test_empty_data(10)
 
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
     def test_2_table_filtering(self):
-        self._test_table_filtering(25)
+        self._test_table_filtering(10)
 
     def test_3_sorted_ids(self):
         self._test_ids_are_sorted()
