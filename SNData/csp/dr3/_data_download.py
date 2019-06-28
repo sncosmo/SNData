@@ -3,6 +3,8 @@
 
 """This module defines functions for downloading data."""
 
+import shutil
+
 from . import _meta as meta
 from ... import _utils as utils
 
@@ -65,8 +67,6 @@ def download_module_data():
 
 def delete_module_data():
     """Delete any data for the current survey / data release"""
-
-    import shutil
 
     try:
         shutil.rmtree(meta.data_dir)
