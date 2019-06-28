@@ -1,22 +1,26 @@
 Quick Start
 ===========
 
-.. note::
-   The following is provided as a simple demonstration on how to use
-   **SNData**. For more information, or for usage instructions on a specific
-   module, please see that module's documentation page.
+The following is provided as a simple demonstration on how to use **SNData**.
+For more information, or for usage instructions on a specific module, please
+see that module's documentation page.
 
 Importing a Survey
 ------------------
 
 To access data from a specific survey, simply import it from the parent
-package. For demonstration purposes we will be using the third data release
-from the Carnegie Supernova Survey.
+package. A summary of each data release, including any deviations from the
+standard UI, can be accessed by calling the builtin ``help`` function. For
+demonstration purposes we will be using the third data release from the
+Carnegie Supernova Survey.
 
 .. code-block:: python
    :linenos:
 
     from SNData.csp import dr3
+
+    # A summary of the DR3 data set
+    help(dr3)
 
     # The type of data in this release
     print(dr3.data_type)
@@ -29,9 +33,9 @@ from the Carnegie Supernova Survey.
 Downloading Data
 ----------------
 
-To minimize the amount of disk space it uses, **SNData** does not come
-pre-installed with data from any survey. Instead, users must manually tell
-**SNData** to download (or delete) data from the local machine.
+To minimize disk space usage, **SNData** does not come pre-installed with any
+survey data. Instead, users must manually tell **SNData** to download
+(or delete) data from their local machine.
 
 .. code-block:: python
    :linenos:
@@ -51,7 +55,8 @@ pre-installed with data from any survey. Instead, users must manually tell
 
 It is useful to note that any data has already been downloaded is skipped over
 by ``download_module_data``, making it safe to call in an automated pipeline
-environment.
+environment. This behavior can be disabled by specifying the ``force=True``
+argument.
 
 Accessing Data
 --------------

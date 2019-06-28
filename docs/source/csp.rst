@@ -24,7 +24,6 @@ Data Release 1
 
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -33,8 +32,6 @@ Data Release 1
     iter_data
     load_table
 
-
-.. autofunction:: data_is_available
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids
@@ -53,7 +50,6 @@ Data Release 3
 
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -64,7 +60,6 @@ Data Release 3
     register_filters
     band_names
 
-.. autofunction:: data_is_available
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids

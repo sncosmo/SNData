@@ -21,7 +21,6 @@ Third Year Cosmology Release
 
 .. autosummary::
 
-    data_is_available
     delete_module_data
     download_module_data
     get_available_ids
@@ -32,7 +31,6 @@ Third Year Cosmology Release
     register_filters
     band_names
 
-.. autofunction:: data_is_available
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
 .. autofunction:: get_available_ids

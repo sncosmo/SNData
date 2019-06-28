@@ -1,6 +1,10 @@
 Integrated Services
 ===================
 
+**SNData** provides a handful of utilities for interfacing with external
+services commonly used in the astronomical and supernova sciences.
+
+
 Vizier
 ------
 
@@ -26,9 +30,9 @@ these tables are accessible via their table numbers in the publication.
 SNCosmo
 -------
 
-**SNData** supports the formatting of data from photometric surveys for use
-with the `SNCosmo`_ light-curve fitter. This includes registering the filter
-transmission curves for a given survey.
+**SNData** is capable of formatting data for use with the `SNCosmo`_
+light-curve fitter. This includes registering the filter transmission curves
+for a given survey.
 
 .. code-block:: python
    :linenos:
@@ -61,7 +65,7 @@ SNooPy
 ------
 
 `SNooPy`_ is a collection of Python tools developed by the Carnegie Supernova
-Project for the analysis of TypeIa supernovae. **SNData** provides the
+Project for the analysis of TypeIa supernovae. **SNData** includes the
 ``parse_snoopy_data`` for parsing snoopy files as an astropy table.
 
 .. code-block:: python
@@ -75,9 +79,9 @@ Project for the analysis of TypeIa supernovae. **SNData** provides the
 NASA/IPAC Extragalactic Database (NED)
 --------------------------------------
 
-The `NED`_ is a comprehensive database of data for extragalactic objects
-maintained by NASA. Your can query NED for the position (RA and Dec) of `IAU`_
-registered supernovae using the ``query_ned_coords`` function.
+The `NED`_ is a comprehensive database of extragalactic objects maintained by
+NASA. You can query NED for the position (RA and Dec) of `IAU`_ registered
+supernovae using the ``query_ned_coords`` function.
 
 .. code-block:: python
    :linenos:
@@ -86,7 +90,6 @@ registered supernovae using the ``query_ned_coords`` function.
 
     ra, dec = query_ned_coords('2011fe')
     print(f'RA: {ra}, DEC: {dec}')
-
 
 
 Open Supernova Catalog (OSC)
