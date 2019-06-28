@@ -7,11 +7,11 @@ import numpy as np
 from astropy.table import Table
 
 from . import _meta as meta
-from ._data_download import _raise_for_data
 from ... import _integrations as integrations
 from ... import _utils as utils
 
 
+@utils.require_data_path(meta.data_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -19,19 +19,19 @@ def register_filters(force=False):
         force (bool): Whether to re-register a band if already registered
     """
 
-    _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
         integrations.register_filter(fpath, _band_name, force=force)
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    _raise_for_data()
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
+@utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -41,7 +41,6 @@ def load_table(table_id):
         table_id (int, str): The published table number or table name
     """
 
-    _raise_for_data()
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
@@ -68,6 +67,7 @@ def load_table(table_id):
     return data
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
 
@@ -75,14 +75,13 @@ def get_available_ids():
         A list of object ids as strings
     """
 
-    _raise_for_data()
-
     # Load list of all target ids
     target_list_path = meta.photometry_dir / 'DES-SN3YR_DES.LIST'
     file_list = np.genfromtxt(target_list_path, dtype=str)
     return sorted(f.lstrip('des_').rstrip('.dat') for f in file_list)
 
 
+@utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -94,8 +93,6 @@ def get_data_for_id(obj_id):
     Returns:
         An astropy table of data for the given ID
     """
-
-    _raise_for_data()
 
     # Read in ascci data table for specified object
     file_path = meta.photometry_dir / f'des_{int(obj_id):08d}.dat'

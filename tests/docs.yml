@@ -1,5 +1,4 @@
 # This document contains the expected documentation for various functions and is used to ensure consistent documentation across modules
-data_is_available: "Return whether data has been downloaded for this survey / data release\n\n    Returns\n        A boolean\n    "
 delete_module_data: "Delete any data for the current survey / data release"
 download_module_data: "Download data for the current survey / data release"
 get_available_ids: "Return a list of target object ids for the current survey\n\n    Returns:\n        A list of object ids as strings\n    "

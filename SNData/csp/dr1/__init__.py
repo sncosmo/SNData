@@ -17,19 +17,18 @@ Cuts on returned data:
   - None
 """
 
-from ._data_download import data_is_available
 from ._data_download import delete_module_data
 from ._data_download import download_module_data
 from ._data_parsing import get_available_ids
 from ._data_parsing import get_available_tables
 from ._data_parsing import get_data_for_id
+from ._data_parsing import get_sncosmo_input
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
-from ._data_parsing import get_sncosmo_input
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'
 survey_url = 'https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1'
 data_type = 'spectroscopic'
-publications = ('Folatelli et al. 2013', )
+publications = ('Folatelli et al. 2013',)
 ads_url = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'

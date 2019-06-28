@@ -7,25 +7,6 @@ from . import _meta as meta
 from ... import _utils as utils
 
 
-def data_is_available():
-    """Return whether data has been downloaded for this survey / data release
-
-    Returns
-        A boolean
-    """
-
-    return meta.data_dir.exists()
-
-
-def _raise_for_data():
-    """Raise a RuntimeError if data hasn't been downloaded for this module"""
-
-    if not data_is_available():
-        raise utils.NoDownloadedData(
-            'Data has not been downloaded for this survey. '
-            'Please run the ``download_data`` function.')
-
-
 def download_module_data():
     """Download data for the current survey / data release"""
 

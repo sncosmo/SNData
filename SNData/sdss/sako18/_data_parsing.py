@@ -9,7 +9,6 @@ import numpy as np
 from astropy.table import Column, Table
 
 from . import _meta as meta
-from ._data_download import _raise_for_data
 from ... import _integrations as integrations
 from ... import _utils as utils
 
@@ -18,6 +17,7 @@ from ... import _utils as utils
 _master_table = None
 
 
+@utils.require_data_path(meta.data_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -25,19 +25,19 @@ def register_filters(force=False):
         force (bool): Whether to re-register a band if already registered
     """
 
-    _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
         integrations.register_filter(fpath, _band_name, force=force)
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    _raise_for_data()
     return ['master']
 
 
+@utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -46,8 +46,6 @@ def load_table(table_id):
     Args:
         table_id (int, str): The published table number or table name
     """
-
-    _raise_for_data()
 
     if table_id == 'master':
         global _master_table
@@ -61,14 +59,13 @@ def load_table(table_id):
         raise ValueError(f'Table {table_id} is not available.')
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
 
     Returns:
         A list of object ids as strings
     """
-
-    _raise_for_data()
 
     return sorted(load_table('master')['CID'])
 
@@ -109,6 +106,7 @@ def _construct_band_name(filter_id, ccd_id):
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
+@utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -120,8 +118,6 @@ def get_data_for_id(obj_id):
     Returns:
         An astropy table of data for the given ID
     """
-
-    _raise_for_data()
 
     # Read in ascii data table for specified object
     file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')

@@ -10,11 +10,11 @@ import numpy as np
 from astropy.io import ascii
 
 from . import _meta as meta
-from ._data_download import _raise_for_data
 from ... import _integrations as integrations
 from ... import _utils as utils
 
 
+@utils.require_data_path(meta.data_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -22,20 +22,20 @@ def register_filters(force=False):
         force (bool): Whether to re-register a band if already registered
     """
 
-    _raise_for_data()
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
         fpath = meta.filter_dir / _file_name
         integrations.register_filter(fpath, _band_name, force=force)
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
     # Todo: figure out how to parse tables 2 and 3
-    _raise_for_data()
     return [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 
+@utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -44,8 +44,6 @@ def load_table(table_id):
     Args:
         table_id (int, str): The published table number or table name
     """
-
-    _raise_for_data()
 
     readme_path = meta.table_dir / 'ReadMe_formatted'
     table_path = meta.table_dir / f'table{table_id}.dat'
@@ -58,6 +56,7 @@ def load_table(table_id):
     return data
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
 
@@ -65,7 +64,6 @@ def get_available_ids():
         A list of object ids as strings
     """
 
-    _raise_for_data()
     files = glob(_path.join(meta.photometry_dir, '*.txt'))
     return sorted(_path.basename(f).split('_')[0].lstrip('SN') for f in files)
 
@@ -86,6 +84,7 @@ def _get_zp_for_bands(band):
     return np.array(meta.zero_point)[sorter[indices]]
 
 
+@utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -99,7 +98,6 @@ def get_data_for_id(obj_id):
     """
 
     # Read data file for target
-    _raise_for_data()
     file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = integrations.parse_snoopy_data(file_path)
 

@@ -19,7 +19,6 @@ Cuts on returned data:
   - None
 """
 
-from ._data_download import data_is_available
 from ._data_download import delete_module_data
 from ._data_download import download_module_data
 from ._data_parsing import get_available_ids
@@ -35,5 +34,5 @@ survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'
 survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
 data_type = 'photometric'
-publications = ('Krisciunas et al. 2017', )
+publications = ('Krisciunas et al. 2017',)
 ads_url = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'

@@ -17,7 +17,6 @@ Cuts on returned data:
   included in returned data tables.
 """
 
-from ._data_download import data_is_available
 from ._data_download import delete_module_data
 from ._data_download import download_module_data
 from ._data_parsing import get_available_ids
@@ -33,5 +32,5 @@ survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
 survey_url = 'http://data.darkenergysurvey.org/sdsssn/dataRelease/'
 data_type = 'photometry'
-publications = ('Sako et al. (2018)', )
+publications = ('Sako et al. (2018)',)
 ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

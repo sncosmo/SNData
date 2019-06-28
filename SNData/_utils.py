@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides utilities used by various submodules."""
-
+from functools import wraps
 import tarfile
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
@@ -13,12 +13,13 @@ from tqdm import tqdm
 
 class NoDownloadedData(Exception):
     def __init__(self, *args, **kwargs):
-        default_message = 'Data has not been downloaded for this module / data release.'
+        default_message = \
+            'Data has not been downloaded for this module / data release.'
 
-        if not (args or kwargs): 
+        if not (args or kwargs):
             args = (default_message,)
 
-         super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 def require_data_path(data_dir):
@@ -30,8 +31,9 @@ def require_data_path(data_dir):
     """
 
     def inner(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
-            If not data_dir.exists():
+            if not data_dir.exists():
                 raise NoDownloadedData()
 
             return func(*args, **kwargs)

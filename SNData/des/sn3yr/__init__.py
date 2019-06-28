@@ -14,7 +14,6 @@ Cuts on returned data:
   - None
 """
 
-from ._data_download import data_is_available
 from ._data_download import delete_module_data
 from ._data_download import download_module_data
 from ._data_parsing import get_available_ids

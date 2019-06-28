@@ -11,14 +11,12 @@ from astropy.io import ascii
 from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
-from ._data_download import _raise_for_data
 from ... import _utils as utils
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
-
-    _raise_for_data()
 
     table_nums = []
     for f in meta.table_dir.rglob('table*.dat'):
@@ -27,6 +25,7 @@ def get_available_tables():
     return sorted(table_nums)
 
 
+@utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -35,8 +34,6 @@ def load_table(table_id):
     Args:
         table_id (int, str): The published table number or table name
     """
-
-    _raise_for_data()
 
     readme_path = meta.table_dir / 'ReadMe'
     table_path = meta.table_dir / f'table{table_id}.dat'
@@ -49,14 +46,13 @@ def load_table(table_id):
     return data
 
 
+@utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
 
     Returns:
         A list of object ids as strings
     """
-
-    _raise_for_data()
 
     files = glob(str(meta.spectra_dir / 'SN*.dat'))
     ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
@@ -101,6 +97,7 @@ def _read_file(path):
     return max_date, redshift, data
 
 
+@utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
 
@@ -112,8 +109,6 @@ def get_data_for_id(obj_id):
     Returns:
         An astropy table of data for the given ID
     """
-
-    _raise_for_data()
 
     out_table = Table(
         names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
