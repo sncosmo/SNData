@@ -10,30 +10,34 @@ from . import _meta as meta
 from ... import _utils as utils
 
 
-def download_module_data():
-    """Download data for the current survey / data release"""
+def download_module_data(force=False):
+    """Download data for the current survey / data release
 
-    if not meta.smp_dir.exists():
+    Args:
+        force (bool): Re-Download locally available data (Default: False)
+    """
+
+    if force or not meta.smp_dir.exists():
         print('Downloading SMP data...')
         utils.download_tar(
             url=meta.smp_url,
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if not meta.snana_dir.exists():
+    if force or not meta.snana_dir.exists():
         print('Downloading SNANA data...')
         utils.download_tar(
             url=meta.snana_url,
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if not meta.master_table_path.exists():
+    if force or not meta.master_table_path.exists():
         print('Downloading master table...')
         utils.download_file(
             url=meta.master_table_url,
             out_file=meta.master_table_path)
 
-    if not meta.filter_dir.exists():
+    if force or not meta.filter_dir.exists():
         print('Downloading filters...')
         for file_name in meta.filter_file_names:
             utils.download_file(

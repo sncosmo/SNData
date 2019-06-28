@@ -14,7 +14,7 @@ Deviations from the standard UI:
 
 Cuts on returned data:
   - Data points manually marked as outliers by the SDSS research time are not
-  included in returned data tables.
+    included in returned data tables.
 """
 
 from ._data_download import delete_module_data

@@ -9,11 +9,15 @@ from . import _meta as meta
 from ... import _utils as utils
 
 
-def download_module_data():
-    """Download data for the current survey / data release"""
+def download_module_data(force=False):
+    """Download data for the current survey / data release
+
+    Args:
+        force (bool): Re-Download locally available data (Default: False)
+    """
 
     # Download data tables
-    if not meta.table_dir.exists():
+    if force or not meta.table_dir.exists():
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.table_url,
@@ -21,7 +25,7 @@ def download_module_data():
             mode='r:gz')
 
     # Download spectra
-    if not meta.spectra_dir.exists():
+    if force or not meta.spectra_dir.exists():
         print('Downloading spectra...')
         utils.download_tar(
             url=meta.spectra_url,
