@@ -31,7 +31,6 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    # Todo: figure out how to parse tables 2 and 3
     return [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 

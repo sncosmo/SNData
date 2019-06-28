@@ -2,8 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides utilities used by various submodules."""
-from functools import wraps
+
 import tarfile
+from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
 
@@ -37,7 +38,9 @@ def require_data_path(data_dir):
                 raise NoDownloadedData()
 
             return func(*args, **kwargs)
+
         return wrapper
+
     return inner
 
 

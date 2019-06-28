@@ -9,9 +9,6 @@ from unittest import TestCase
 from SNData import csp, des, sdss
 
 
-# Todo: Decide (and execute) whether to write test for table descriptions\
-# Todo: Test of error when no data is available
-
 class GeneralTests(TestCase):
     """Generic tests for a given survey"""
 
