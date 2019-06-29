@@ -7,13 +7,25 @@ the local data for use by the parent module.
 
 from pathlib import Path
 
+# Define local paths of published data
 _file_dir = Path(__file__).resolve().parent
 data_dir = _file_dir / 'data'
-
-# Define local paths of published data
 spectra_dir = data_dir / 'spectra'
-table_dir = data_dir / 'tables'
+eso_summary_path = spectra_dir / 'target_summary.csv'
+vizier_dir = data_dir / 'tables'
 
-# Define urls for remote data
-# photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
-table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/137/3731'
+# Define URLs for remote data
+vizier_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/137/3731'
+
+# URL of table listing spectra file IDS
+eso_summary_url = (
+    'http://archive.eso.org/wdb/wdb/adp/phase3_main/query?wdbo=csv'
+
+    # Specify data we want
+    '&collection_name=ESSENCE'
+    '&dataproduct_type=spectrum'
+    '&tab_dp_id=on'
+)
+
+# Pattern for download link link for a given file ID
+eso_spectra_url_pattern = 'http://archive.eso.org/datalink/links?ID=ivo://eso.org/ID?{}&eso_download=file'
