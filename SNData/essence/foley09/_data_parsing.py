@@ -66,7 +66,7 @@ def get_data_for_id(obj_id):
 
     summary_table = Table.read(meta.eso_summary_path)
     file_name = summary_table[summary_table['Object'] == obj_id]['ARCFILE'][0]
-    hdul = fits.open(file_name)
+    hdul = fits.open(meta.spectra_dir / (file_name + '.fits'))
     data_table = Table(
         np.array(hdul[1].data[0]).T,
         names=['WAVE', 'FLUX', 'ERR']
