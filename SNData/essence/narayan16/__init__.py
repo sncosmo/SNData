@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
+# Todo: Add spectroscopic data
 """This module provides access to 213 Type Ia supernovae discovered by the
 ESSENCE survey at redshifts 0.1 <= z <= 0.81 between 2002 and 2008. It includes
 R and I band photometry measured from images obtained using the MOSAIC II
