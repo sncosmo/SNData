@@ -6,7 +6,7 @@
 from itertools import islice
 from unittest import TestCase
 
-from SNData import csp, des, sdss, essence
+from SNData import csp, des, essence, sdss
 
 
 class GeneralTests(TestCase):

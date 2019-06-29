@@ -9,7 +9,7 @@ from unittest import TestCase
 import requests
 import yaml
 
-from SNData import csp, des, sdss
+from SNData import csp, des, essence, sdss
 
 docs_path = Path(__file__).resolve().parent / 'docs.yml'
 with open(docs_path) as ofile:
@@ -109,6 +109,23 @@ class DES_SN3YR(GeneralTests):
     @classmethod
     def setUpClass(cls):
         cls.module = des.sn3yr
+
+    def test_consistent_docs(self):
+        self._test_consistent_docs()
+
+    def test_ads_url(self):
+        self._test_ads_url()
+
+    def test_survey_url(self):
+        self._test_survey_url()
+
+
+class ESSENCE_Narayan16(GeneralTests):
+    """Tests for the essence.narayan16 module"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.module = essence.narayan16
 
     def test_consistent_docs(self):
         self._test_consistent_docs()
