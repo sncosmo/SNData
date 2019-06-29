@@ -1,5 +1,5 @@
-Dark Energy Survey
-==================
+Dark Energy Survey (DES)
+========================
 
 .. automodule:: SNData.des
 
