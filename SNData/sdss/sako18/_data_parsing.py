@@ -106,14 +106,46 @@ def _construct_band_name(filter_id, ccd_id):
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
+def _format_sncosmo_table(data_table):
+    """Format a data table for use with SNCosmo
+
+    Args:
+        data_table (Table): A data table returned by ``get_data_for_id``
+
+    Returns:
+        The same data in a new table following the SNCosmo data model
+    """
+
+    # Format table
+    if not data_table:
+        return Table(
+            names=['time', 'band', 'zp', 'flux', 'fluxerr', 'zpsys', 'flag'])
+
+    out_table = Table()
+    out_table.meta = data_table.meta
+
+    out_table['time'] = data_table['MJD']
+    out_table['band'] = _construct_band_name(
+        data_table['FILT'], data_table['IDCCD'])
+
+    out_table['zp'] = np.full(len(data_table), 2.5 * np.log10(3631))
+    out_table['flux'] = data_table['FLUX'] * 1E-6
+    out_table['fluxerr'] = data_table['FLUXERR'] * 1E-6
+    out_table['zpsys'] = np.full(len(data_table), 'ab')
+    out_table['flag'] = data_table['FLAG']
+
+    return out_table
+
+
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id):
+def get_data_for_id(obj_id, format_sncosmo):
     """Returns data for a given object id
 
     See ``get_available_ids()`` for a list of available id values.
 
     Args:
-        obj_id (str): The ID of the desired object
+        obj_id          (str): The ID of the desired object
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
     Returns:
         An astropy table of data for the given ID
@@ -121,60 +153,33 @@ def get_data_for_id(obj_id):
 
     # Read in ascii data table for specified object
     file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')
-    all_data = Table.read(file_path, format='ascii')
+    data = Table.read(file_path, format='ascii')
 
     # Rename columns using header data from file
-    col_names = all_data.meta['comments'][-1].split()
+    col_names = data.meta['comments'][-1].split()
     for i, name in enumerate(col_names):
-        all_data[f'col{i + 1}'].name = name
+        data[f'col{i + 1}'].name = name
 
+    # Add meta data
     master_table = load_table('master')
     table_meta_data = master_table[master_table['CID'] == obj_id]
-    all_data.meta['redshift'] = table_meta_data['zCMB'][0]
-    all_data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
-    all_data.meta['ra'] = table_meta_data['RA'][0]
-    all_data.meta['dec'] = table_meta_data['DEC'][0]
-    all_data.meta['classification'] = table_meta_data['Classification'][0]
-    all_data.meta['name'] = table_meta_data['IAUName'][0]
-    all_data.meta['obj_id'] = obj_id
+    data.meta['redshift'] = table_meta_data['zCMB'][0]
+    data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
+    data.meta['ra'] = table_meta_data['RA'][0]
+    data.meta['dec'] = table_meta_data['DEC'][0]
+    data.meta['classification'] = table_meta_data['Classification'][0]
+    data.meta['name'] = table_meta_data['IAUName'][0]
+    data.meta['obj_id'] = obj_id
 
     outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:
-        keep_indices = ~np.isin(all_data['MJD'], outlier_list)
-        all_data = all_data[keep_indices]
+        keep_indices = ~np.isin(data['MJD'], outlier_list)
+        data = data[keep_indices]
 
-    return all_data
+    if format_sncosmo:
+        data = _format_sncosmo_table(data)
 
-
-def get_sncosmo_input(obj_id):
-    """Returns an SNCosmo input table a given object ID
-
-    Args:
-        obj_id (str): The ID of the desired object
-
-    Returns:
-        An astropy table of data formatted for use with SNCosmo
-    """
-
-    # Format table
-    phot_data = get_data_for_id(obj_id)
-    if not phot_data:
-        return Table(
-            names=['time', 'band', 'zp', 'flux', 'fluxerr', 'zpsys', 'flag'])
-
-    sncosmo_table = Table()
-    sncosmo_table.meta = phot_data.meta
-    sncosmo_table['time'] = phot_data['MJD']
-    sncosmo_table['band'] = _construct_band_name(
-        phot_data['FILT'], phot_data['IDCCD'])
-
-    sncosmo_table['zp'] = np.full(len(phot_data), 2.5 * np.log10(3631))
-    sncosmo_table['flux'] = phot_data['FLUX'] * 1E-6
-    sncosmo_table['fluxerr'] = phot_data['FLUXERR'] * 1E-6
-    sncosmo_table['zpsys'] = np.full(len(phot_data), 'ab')
-    sncosmo_table['flag'] = phot_data['FLAG']
-
-    return sncosmo_table
+    return data
 
 
 def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
@@ -198,11 +203,6 @@ def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
 
     iterable = utils.build_pbar(get_available_ids(), verbose)
     for obj_id in iterable:
-        if format_sncosmo:
-            data_table = get_sncosmo_input(obj_id)
-
-        else:
-            data_table = get_data_for_id(obj_id)
-
+        data_table = get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
         if filter_func(data_table):
             yield data_table
