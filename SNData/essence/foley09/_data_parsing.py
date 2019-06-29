@@ -3,7 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from astropy.io import ascii
+import numpy as np
+from astropy.io import ascii, fits
 from astropy.table import Table
 
 from . import _meta as meta
@@ -50,7 +51,6 @@ def get_available_ids():
     return list(Table.read(meta.eso_summary_path)['Object'])
 
 
-# Todo: Finish
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id):
     """Returns data for a given object id
@@ -64,7 +64,16 @@ def get_data_for_id(obj_id):
         An astropy table of data for the given ID
     """
 
-    raise RuntimeError("This function hasn't been finished")
+    summary_table = Table.read(meta.eso_summary_path)
+    file_name = summary_table[summary_table['Object'] == obj_id]['ARCFILE'][0]
+    hdul = fits.open(file_name)
+    data_table = Table(
+        np.array(hdul[1].data[0]).T,
+        names=['WAVE', 'FLUX', 'ERR']
+    )
+
+    data_table.meta = dict(hdul[1].header)
+    return data_table
 
 
 def get_sncosmo_input(obj_id):
