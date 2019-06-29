@@ -6,7 +6,7 @@ Supernovae trace Cosmic Expansion survey (ESSENCE). It includes data published
 in Narayan et al. 2016.
 """
 
-from . import narayan16
+from . import foley09, narayan16
 
 survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
 survey_abbrev = 'ESSENCE'
