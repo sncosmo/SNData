@@ -31,8 +31,8 @@ def load_table(table_id):
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
-    readme_path = meta.table_dir / 'ReadMe'
-    table_path = meta.table_dir / f'table{table_id}.dat'
+    readme_path = meta.vizier_dir / 'ReadMe'
+    table_path = meta.vizier_dir / f'table{table_id}.dat'
     data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
     description = utils.read_vizier_table_descriptions(readme_path)[table_id]
     data.meta['description'] = description
