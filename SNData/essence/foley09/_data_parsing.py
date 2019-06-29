@@ -3,9 +3,6 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
-from os import path as _path
-
 from astropy.io import ascii
 from astropy.table import Table
 
@@ -41,7 +38,6 @@ def load_table(table_id):
     return data
 
 
-# Todo: Finish
 @utils.require_data_path(meta.data_dir)
 def get_available_ids():
     """Return a list of target object ids for the current survey
@@ -50,7 +46,8 @@ def get_available_ids():
         A list of object ids as strings
     """
 
-    raise RuntimeError("This function hasn't been finished")
+    # Todo: Handle when some of the files didn't finish downloading
+    return list(Table.read(meta.eso_summary_path)['Object'])
 
 
 # Todo: Finish
