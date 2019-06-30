@@ -3,11 +3,12 @@
 
 """This module defines functions for downloading data."""
 
-import shutil
 import tarfile
 
 from . import _meta as meta
 from ... import _utils as utils
+
+delete_module_data = utils.factory_delete_module_data(meta.data_dir)
 
 
 def download_module_data(force=False):
@@ -47,9 +48,3 @@ def download_module_data(force=False):
         outlier_archive = meta.snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
         with tarfile.open(str(outlier_archive), mode='r:gz') as data:
             data.extractall(str(outlier_archive.parent))
-
-
-def delete_module_data():
-    """Delete any data for the current survey / data release"""
-
-    shutil.rmtree(meta.data_dir)

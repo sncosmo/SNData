@@ -84,13 +84,14 @@ def _get_zp_for_bands(band):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id):
+def get_data_for_id(obj_id, format_sncosmo=False):
     """Returns data for a given object id
 
     See ``get_available_ids()`` for a list of available id values.
 
     Args:
-        obj_id (str): The ID of the desired object
+        obj_id          (str): The ID of the desired object
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
     Returns:
         An astropy table of data for the given ID
@@ -100,53 +101,18 @@ def get_data_for_id(obj_id):
     file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
     data_table = integrations.parse_snoopy_data(file_path)
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
-    return data_table
 
-
-def get_sncosmo_input(obj_id):
-    """Returns an SNCosmo input table a given object ID
-
-    Args:
-        obj_id (str): The ID of the desired object
-
-    Returns:
-        An astropy table of data formatted for use with SNCosmo
-    """
-
-    data_table = get_data_for_id(obj_id)
-    # Add flux values
-    data_table['band'] = 'csp_dr3_' + data_table['band']
-    data_table['zp'] = _get_zp_for_bands(data_table['band'])
-    data_table['zpsys'] = np.full(len(data_table), 'ab')
-    data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
-    data_table['fluxerr'] = \
-        np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
+    if format_sncosmo:
+        # Add flux values
+        data_table['band'] = 'csp_dr3_' + data_table['band']
+        data_table['zp'] = _get_zp_for_bands(data_table['band'])
+        data_table['zpsys'] = np.full(len(data_table), 'ab')
+        data_table['flux'] = \
+            10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
+        data_table['fluxerr'] = \
+            np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
 
     return data_table
 
 
-# noinspection PyUnusedLocal
-def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
-    """Iterate through all available targets and yield data tables
-
-    An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Outputs can be optionally filtered by passing a function
-    ``filter_func`` that accepts a data table and returns a boolean.
-
-    Args:
-        verbose  (bool, dict): Optionally display progress bar while iterating
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
-        filter_func    (func): An optional function to filter outputs by
-
-    Yields:
-        Astropy tables
-    """
-
-    if filter_func is None:
-        filter_func = lambda x: x
-
-    iterable = utils.build_pbar(get_available_ids(), verbose)
-    for id_val in iterable:
-        data_table = get_data_for_id(id_val)
-        if filter_func(data_table):
-            yield data_table
+iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)

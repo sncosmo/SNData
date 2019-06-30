@@ -3,6 +3,7 @@
 
 """This module provides utilities used by various submodules."""
 
+import shutil
 import tarfile
 from functools import wraps
 from pathlib import Path, PosixPath
@@ -149,3 +150,45 @@ def read_vizier_table_descriptions(readme_path):
             table_descriptions[table_num] = table_desc
 
     return table_descriptions
+
+
+def factory_iter_data(id_func, data_func):
+    def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
+        """Iterate through all available targets and yield data tables
+
+        An optional progress bar can be formatted by passing a dictionary of tqdm
+        arguments. Outputs can be optionally filtered by passing a function
+        ``filter_func`` that accepts a data table and returns a boolean.
+
+        Args:
+            verbose  (bool, dict): Optionally display progress bar while iterating
+            format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+            filter_func    (func): An optional function to filter outputs by
+
+        Yields:
+            Astropy tables
+        """
+
+        if filter_func is None:
+            filter_func = lambda x: x
+
+        iterable = build_pbar(id_func(), verbose)
+        for obj_id in iterable:
+            data_table = data_func(obj_id, format_sncosmo=format_sncosmo)
+            if filter_func(data_table):
+                yield data_table
+
+    return iter_data
+
+
+def factory_delete_module_data(data_dir):
+    def delete_module_data():
+        """Delete any data for the current survey / data release"""
+
+        try:
+            shutil.rmtree(data_dir)
+
+        except FileNotFoundError:
+            pass
+
+    return delete_module_data

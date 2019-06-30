@@ -98,17 +98,22 @@ def _read_file(path):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id):
+def get_data_for_id(obj_id, format_sncosmo=False):
     """Returns data for a given object id
 
     See ``get_available_ids()`` for a list of available id values.
 
     Args:
-        obj_id (str): The ID of the desired object
+        obj_id          (str): The ID of the desired object
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
     Returns:
         An astropy table of data for the given ID
     """
+
+    if format_sncosmo:
+        raise RuntimeError(
+            'SNCosmo Formatting is not supported for spectroscopic data.')
 
     out_table = Table(
         names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
@@ -133,40 +138,4 @@ def get_data_for_id(obj_id):
     return out_table
 
 
-def get_sncosmo_input(obj_id):
-    """Returns an SNCosmo input table a given object ID
-
-    Args:
-        obj_id (str): The ID of the desired object
-
-    Returns:
-        An astropy table of data formatted for use with SNCosmo
-    """
-
-    raise RuntimeError('Photometric data is not available for csp.dr1')
-
-
-# noinspection PyUnusedLocal
-def iter_data(verbose=False, filter_func=None, **kwargs):
-    """Iterate through all available targets and yield data tables
-
-    An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Outputs can be optionally filtered by passing a function
-    ``filter_func`` that accepts a data table and returns a boolean.
-
-    Args:
-        verbose (bool, dict): Optionally display progress bar while iterating
-        filter_func   (func): An optional function to filter outputs by
-
-    Yields:
-        Astropy tables
-    """
-
-    if filter_func is None:
-        filter_func = lambda x: x
-
-    iterable = utils.build_pbar(get_available_ids(), verbose)
-    for id_val in iterable:
-        data_table = get_data_for_id(id_val)
-        if filter_func(data_table):
-            yield data_table
+iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
