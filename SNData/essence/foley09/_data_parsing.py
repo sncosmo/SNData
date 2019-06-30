@@ -51,6 +51,9 @@ def get_available_ids():
     return sorted(Table.read(meta.eso_summary_path)['Object'])
 
 
+# Todo: We are missing spectra
+# Todo: Check this returns all spectra for a given object
+#  (It might currently only return the first spectra)
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id, format_sncosmo):
     """Returns data for a given object id
