@@ -69,13 +69,14 @@ def get_available_ids():
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id):
+def get_data_for_id(obj_id, format_sncosmo):
     """Returns data for a given object id
 
     See ``get_available_ids()`` for a list of available id values.
 
     Args:
-        obj_id (str): The ID of the desired object
+        obj_id          (str): The ID of the desired object
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
     Returns:
         An astropy table of data for the given ID
@@ -88,6 +89,9 @@ def get_data_for_id(obj_id):
                'Fluxerr_hi']
     )
 
+    # Enforce uniformity across package
+    data_table.meta['obj_id'] = data_table.meta.pop('objid')
+
     # Get meta data
     with open(path) as infile:
         keys = infile.readline().lstrip('# ').split()
@@ -96,27 +100,27 @@ def get_data_for_id(obj_id):
     for k, v in zip(keys, vals):
         data_table.meta[k] = v
 
-    # Enforce uniformity across package
-    data_table.meta['obj_id'] = data_table.meta.pop('objid')
-
     # Remove column names from table comments
     data_table.meta['comments'].pop()
+
+    if format_sncosmo:
+        data_table = _format_sncosmo_table(data_table)
 
     return data_table
 
 
-def get_sncosmo_input(obj_id):
-    """Returns an SNCosmo input table a given object ID
+def _format_sncosmo_table(data_table):
+    """Format a data table for use with SNCosmo
 
     Args:
-        obj_id (str): The ID of the desired object
+        data_table (Table): A data table returned by ``get_data_for_id``
 
     Returns:
-        An astropy table of data formatted for use with SNCosmo
+        The same data in a new table following the SNCosmo data model
     """
 
-    data_table = get_data_for_id(obj_id)
     out_table = Table()
+    out_table.meta = data_table.meta
 
     out_table['mjd'] = data_table['MJD']
     out_table['band'] = 'csp_dr3_' + data_table['Passband']
@@ -129,32 +133,4 @@ def get_sncosmo_input(obj_id):
     return out_table
 
 
-def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
-    """Iterate through all available targets and yield data tables
-
-    An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Outputs can be optionally filtered by passing a function
-    ``filter_func`` that accepts a data table and returns a boolean.
-
-    Args:
-        verbose  (bool, dict): Optionally display progress bar while iterating
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
-        filter_func    (func): An optional function to filter outputs by
-
-    Yields:
-        Astropy tables
-    """
-
-    if filter_func is None:
-        filter_func = lambda x: x
-
-    iterable = utils.build_pbar(get_available_ids(), verbose)
-    for obj_id in iterable:
-        if format_sncosmo:
-            data_table = get_sncosmo_input(obj_id)
-
-        else:
-            data_table = get_data_for_id(obj_id)
-
-        if filter_func(data_table):
-            yield data_table
+iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)

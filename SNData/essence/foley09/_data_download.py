@@ -3,13 +3,13 @@
 
 """This module defines functions for downloading data."""
 
-import shutil
-
 import requests
 from astropy.table import Table
 
 from . import _meta as meta
 from ... import _utils as utils
+
+delete_module_data = utils.factory_delete_module_data(meta.data_dir)
 
 
 def download_module_data(force=False):
@@ -44,13 +44,3 @@ def download_module_data(force=False):
         if force or not file_path.exists():
             url = meta.eso_spectra_url_pattern.format(row['ARCFILE'])
             utils.download_file(url, file_path)
-
-
-def delete_module_data():
-    """Delete any data for the current survey / data release"""
-
-    try:
-        shutil.rmtree(meta.data_dir)
-
-    except FileNotFoundError:
-        pass
