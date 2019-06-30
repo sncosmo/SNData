@@ -3,10 +3,10 @@
 
 """This module defines functions for downloading data."""
 
-import shutil
-
 from . import _meta as meta
 from ... import _utils as utils
+
+delete_module_data = utils.factory_delete_module_data(meta.data_dir)
 
 
 def download_module_data(force=False):
@@ -31,13 +31,3 @@ def download_module_data(force=False):
             url=meta.spectra_url,
             out_dir=meta.data_dir,
             mode='r:gz')
-
-
-def delete_module_data():
-    """Delete any data for the current survey / data release"""
-
-    try:
-        shutil.rmtree(meta.data_dir)
-
-    except FileNotFoundError:
-        pass

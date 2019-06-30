@@ -3,6 +3,7 @@
 
 """This module provides utilities used by various submodules."""
 
+import shutil
 import tarfile
 from functools import wraps
 from pathlib import Path, PosixPath
@@ -151,7 +152,7 @@ def read_vizier_table_descriptions(readme_path):
     return table_descriptions
 
 
-def create_iter_func(id_func, data_func):
+def factory_iter_data(id_func, data_func):
     def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
         """Iterate through all available targets and yield data tables
 
@@ -178,3 +179,16 @@ def create_iter_func(id_func, data_func):
                 yield data_table
 
     return iter_data
+
+
+def factory_delete_module_data(data_dir):
+    def delete_module_data():
+        """Delete any data for the current survey / data release"""
+
+        try:
+            shutil.rmtree(data_dir)
+
+        except FileNotFoundError:
+            pass
+
+    return delete_module_data

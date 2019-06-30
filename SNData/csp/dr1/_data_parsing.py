@@ -138,4 +138,4 @@ def get_data_for_id(obj_id, format_sncosmo=False):
     return out_table
 
 
-iter_data = utils.create_iter_func(get_available_ids, get_data_for_id)
+iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
