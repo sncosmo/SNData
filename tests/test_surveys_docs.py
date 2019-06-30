@@ -33,7 +33,7 @@ class GeneralTests(TestCase):
         for func_name, doc_string in expected_docs.items():
             if func_name not in skip_funcs:
                 module_func = getattr(self.module, func_name)
-                self.assertEqual(module_func.__doc__, doc_string,
+                self.assertEqual(doc_string, module_func.__doc__,
                                  f'Wrong docstring for ``{func_name}``')
 
     def _test_ads_url(self):

@@ -81,14 +81,37 @@ def get_available_ids():
     return sorted(f.lstrip('des_').rstrip('.dat') for f in file_list)
 
 
+def _format_sncosmo_table(data_table):
+    """Format a data table for use with SNCosmo
+
+    Args:
+        data_table (Table): A data table returned by ``get_data_for_id``
+
+    Returns:
+        The same data in a new table following the SNCosmo data model
+    """
+
+    out_table = Table()
+    out_table.meta = data_table.meta
+
+    out_table['time'] = data_table['MJD']
+    out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
+    out_table['flux'] = data_table['FLUXCAL']
+    out_table['fluxerr'] = data_table['FLUXCALERR']
+    out_table['zp'] = np.full(len(data_table), 27.5)
+    out_table['zpsys'] = np.full(len(data_table), 'ab')
+    return out_table
+
+
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id):
+def get_data_for_id(obj_id, format_sncosmo):
     """Returns data for a given object id
 
     See ``get_available_ids()`` for a list of available id values.
 
     Args:
-        obj_id (str): The ID of the desired object
+        obj_id          (str): The ID of the desired object
+        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
     Returns:
         An astropy table of data for the given ID
@@ -96,7 +119,7 @@ def get_data_for_id(obj_id):
 
     # Read in ascci data table for specified object
     file_path = meta.photometry_dir / f'des_{int(obj_id):08d}.dat'
-    all_data = Table.read(
+    data = Table.read(
         file_path, format='ascii',
         data_start=27, data_end=-1,
         names=['VARLIST:', 'MJD', 'BAND', 'FIELD', 'FLUXCAL', 'FLUXCALERR',
@@ -105,66 +128,18 @@ def get_data_for_id(obj_id):
     # Add meta data to table
     with open(file_path) as ofile:
         table_meta_data = ofile.readlines()
-        all_data.meta['ra'] = float(table_meta_data[7].split()[1])
-        all_data.meta['dec'] = float(table_meta_data[8].split()[1])
-        all_data.meta['PEAKMJD'] = float(table_meta_data[12].split()[1])
-        all_data.meta['redshift'] = float(table_meta_data[13].split()[1])
-        all_data.meta['redshift_err'] = float(table_meta_data[13].split()[3])
-        all_data.meta['obj_id'] = obj_id
-        del all_data.meta['comments']
+        data.meta['ra'] = float(table_meta_data[7].split()[1])
+        data.meta['dec'] = float(table_meta_data[8].split()[1])
+        data.meta['PEAKMJD'] = float(table_meta_data[12].split()[1])
+        data.meta['redshift'] = float(table_meta_data[13].split()[1])
+        data.meta['redshift_err'] = float(table_meta_data[13].split()[3])
+        data.meta['obj_id'] = obj_id
+        del data.meta['comments']
 
-    return all_data
+    if format_sncosmo:
+        data = _format_sncosmo_table(data)
 
-
-def get_sncosmo_input(obj_id):
-    """Returns an SNCosmo input table a given object ID
-
-    Args:
-        obj_id (str): The ID of the desired object
-
-    Returns:
-        An astropy table of data formatted for use with SNCosmo
-    """
-
-    all_sn_data = get_data_for_id(obj_id)
-    sncosmo_table = Table()
-    sncosmo_table['time'] = all_sn_data['MJD']
-    sncosmo_table['band'] = ['des_sn3yr_' + s for s in all_sn_data['BAND']]
-    sncosmo_table['flux'] = all_sn_data['FLUXCAL']
-    sncosmo_table['fluxerr'] = all_sn_data['FLUXCALERR']
-    sncosmo_table['zp'] = np.full(len(all_sn_data), 27.5)
-    sncosmo_table['zpsys'] = np.full(len(all_sn_data), 'ab')
-    sncosmo_table.meta = all_sn_data.meta
-
-    return sncosmo_table
+    return data
 
 
-def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
-    """Iterate through all available targets and yield data tables
-
-    An optional progress bar can be formatted by passing a dictionary of tqdm
-    arguments. Outputs can be optionally filtered by passing a function
-    ``filter_func`` that accepts a data table and returns a boolean.
-
-    Args:
-        verbose  (bool, dict): Optionally display progress bar while iterating
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
-        filter_func    (func): An optional function to filter outputs by
-
-    Yields:
-        Astropy tables
-    """
-
-    if filter_func is None:
-        filter_func = lambda x: x
-
-    iterable = utils.build_pbar(get_available_ids(), verbose)
-    for obj_id in iterable:
-        if format_sncosmo:
-            data_table = get_sncosmo_input(obj_id)
-
-        else:
-            data_table = get_data_for_id(obj_id)
-
-        if filter_func(data_table):
-            yield data_table
+iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
