@@ -6,6 +6,7 @@
 from pathlib import Path
 from unittest import TestCase
 
+from warnings import warn
 import requests
 import yaml
 
@@ -39,16 +40,16 @@ class GeneralTests(TestCase):
     def _test_ads_url(self):
         """Test module.ads_url returns a 200 status code"""
 
-        response = requests.get(self.module.ads_url)
-        self.assertEqual(response.status_code, 200)
+        stat_code = requests.get(self.module.ads_url).status_code
+        if not stat_code == 200:
+            warn(f'Error code {stat_code}: {self.module.survey_url}')
 
     def _test_survey_url(self):
         """Test module.survey_url returns a 200 status code"""
 
-        response = requests.get(self.module.survey_url)
-        stat_code = response.status_code
-        err_msg = f'Error code {stat_code}: {self.module.survey_url}'
-        self.assertEqual(stat_code, 200, err_msg)
+        stat_code = requests.get(self.module.survey_url).status_code
+        if not stat_code == 200:
+            warn(f'Error code {stat_code}: {self.module.survey_url}')
 
 
 class CSP_DR1(GeneralTests):
@@ -60,7 +61,7 @@ class CSP_DR1(GeneralTests):
 
     def test_consistent_docs(self):
         self._test_consistent_docs(
-            skip_funcs=('iter_data', 'register_filters'))
+            skip_funcs=('register_filters'))
 
     def test_ads_url(self):
         self._test_ads_url()
@@ -145,7 +146,7 @@ class ESSENCE_Foley09(GeneralTests):
         cls.module = essence.foley09
 
     def test_consistent_docs(self):
-        self._test_consistent_docs()
+        self._test_consistent_docs('register_filters')
 
     def test_ads_url(self):
         self._test_ads_url()

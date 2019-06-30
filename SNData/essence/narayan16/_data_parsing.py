@@ -89,9 +89,6 @@ def get_data_for_id(obj_id, format_sncosmo):
                'Fluxerr_hi']
     )
 
-    # Enforce uniformity across package
-    data_table.meta['obj_id'] = data_table.meta.pop('objid')
-
     # Get meta data
     with open(path) as infile:
         keys = infile.readline().lstrip('# ').split()
@@ -99,6 +96,9 @@ def get_data_for_id(obj_id, format_sncosmo):
 
     for k, v in zip(keys, vals):
         data_table.meta[k] = v
+
+    # Enforce uniformity across package
+    data_table.meta['obj_id'] = data_table.meta.pop('objid')
 
     # Remove column names from table comments
     data_table.meta['comments'].pop()

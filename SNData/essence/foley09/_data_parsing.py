@@ -48,7 +48,7 @@ def get_available_ids():
     """
 
     # Todo: Handle when some of the files didn't finish downloading
-    return list(Table.read(meta.eso_summary_path)['Object'])
+    return sorted(Table.read(meta.eso_summary_path)['Object'])
 
 
 @utils.require_data_path(meta.data_dir)
@@ -78,6 +78,7 @@ def get_data_for_id(obj_id, format_sncosmo):
     )
 
     data_table.meta = dict(hdul[1].header)
+    data_table.meta['obj_id'] = obj_id
     return data_table
 
 
