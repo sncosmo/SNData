@@ -6,43 +6,76 @@
 import pandas as pd
 from astropy.table import Table
 
+from . import _utils as utils
+
 
 class Combined_Dataset:
 
     def __init__(self, *data_sets):
         """Combine data from different surveys into a single data set"""
 
-        # Create a dataframe
-        self._obj_id_df = None
-        for data_module in data_sets:
+        self._data_modules = set(*data_sets)
+
+        # Create a DataFrame of combined object ids
+        self._obj_ids = None
+        for data_module in self._data_modules:
             _, survey, release = data_module.__name__.split('.')
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
+            id_df.insert(1, 'flag', 1)
             id_df.insert(0, 'release', release)
             id_df.insert(0, 'survey', survey)
 
-            if self._obj_id_df is None:
-                self._obj_id_df = id_df
+            if self._obj_ids is None:
+                self._obj_ids = id_df
 
             else:
-                self._obj_id_df.append(id_df, ignore_index=True)
+                self._obj_ids.append(id_df, ignore_index=True)
+
+    def download_combined_data(self, force=False):
+        """Download data for all combined surveys / data releases
+
+        Args:
+            force (bool): Re-Download locally available data (Default: False)
+        """
+
+        for module in self._data_modules:
+            print(f'Downloading data for {module.__name__}')
+            module.download_module_data(force=force)
+
+    def delete_combined_data(self):
+        """Delete any data for all combined surveys / data releases"""
+
+        for module in self._data_modules:
+            module.delete_module_data()
 
     def get_available_ids(self):
         """Return a table of object ids available in the combined data set"""
 
-        return Table(self._obj_id_df)
+        id_table = Table.from_pandas(self._obj_ids)
+        id_table['ignore'] = 1 - id_table['flag']
+        id_table.remove_column('flag')
+        return id_table
 
-    def get_duplicate_ids(self, ignore_survey=False, ignore_release=False):
+    def get_duplicate_ids(self, ignore_survey=True, ignore_release=True):
         """Return a table of duplicate object ids for the combined data set
 
         Args:
-            ignore_survey  (bool): Don't report ids from different surveys (Default: False)
-            ignore_release (bool): Don't report ids from different releases (Default: False)
+            ignore_survey  (bool): Don't report ids from different surveys (Default: True)
+            ignore_release (bool): Don't report ids from different releases (Default: True)
 
         Returns:
             An astropy table of duplicate id values
         """
 
-        pass
+        subset = ['obj_id']
+        if not ignore_survey:
+            subset.append('survey')
+
+        if not ignore_release:
+            subset.append('release')
+
+        indices = self._obj_ids.duplicated(subset=subset, keep=False)
+        return Table.from_pandas(self._obj_ids[indices])
 
     def register_filters(self, force=False):
         """Register filters for the combined data with SNCosmo
@@ -51,7 +84,13 @@ class Combined_Dataset:
             force (bool): Whether to re-register a band if already registered (Default: False)
         """
 
-        pass
+        for module in self._data_modules:
+            try:
+                module.register_filters(force=force)
+
+            except utils.NoDownloadedData:
+                raise utils.NoDownloadedData(
+                    f'No data downloaded for {module.__name__}')
 
     def get_data_for_id(self, obj_id, survey=None, release=None,
                         format_sncosmo=False):
