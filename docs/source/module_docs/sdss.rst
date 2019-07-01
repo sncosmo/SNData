@@ -1,5 +1,5 @@
-Sloan Digital Sky Survey
-========================
+Sloan Digital Sky Survey (SDSS)
+===============================
 
 .. automodule:: SNData.sdss
 

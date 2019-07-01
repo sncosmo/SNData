@@ -49,11 +49,21 @@ for a given survey.
     # You can optionally specify ``force=True`` to re-register band-passes
     dr3.register_filters()
 
-    # Get data for a given object (``demo_id`` defined in a previous example)
-    data_table = dr3.get_sncosmo_input(demo_id)
+    # Get data for SN 2004dt
+    data_table = dr3.get_data_for_id('2004dt', format_sncosmo=True)
     print(data_table)
 
-    # You can also iterate over all data tables
+    # Fit the data
+    model = sncosmo.Model('salt2')
+    model.set(z=data_table.meta['redshift'])
+    result, fitted_model = sncosmo.fit_lc(
+        data=data_table,
+        model=model,
+        vparam_names=['t0', 'x0', 'x1', 'c'])
+
+    print(result)
+
+    # You can also use the ``format_sncosmo`` feature when iterating over data tables
     for data in dr3.iter_data(format_sncosmo=True):
         print(data)
         break

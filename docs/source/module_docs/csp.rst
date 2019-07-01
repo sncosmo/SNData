@@ -1,5 +1,5 @@
-Carnegie Supernova Project
-==========================
+Carnegie Supernova Project (CSP)
+================================
 
 .. automodule:: SNData.csp
 

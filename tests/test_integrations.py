@@ -9,7 +9,8 @@ from unittest import TestCase
 
 import sncosmo
 
-from SNData import csp, query_ned_coords, query_osc_spectra, query_osc, query_osc_photometry
+from SNData import csp, query_ned_coords, query_osc, query_osc_photometry, \
+    query_osc_spectra
 
 
 class SNCosmo(TestCase):

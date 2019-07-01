@@ -6,7 +6,7 @@
 from itertools import islice
 from unittest import TestCase
 
-from SNData import csp, des, sdss
+from SNData import csp, des, essence, sdss
 
 
 class GeneralTests(TestCase):
@@ -148,6 +148,27 @@ class DES_SN3YR(GeneralTests):
     @classmethod
     def setUpClass(cls):
         cls.module = des.sn3yr
+        cls.module.download_module_data()
+
+    def test_0_empty_data(self):
+        self._test_empty_data(10)
+
+    def test_1_table_parsing(self):
+        self._test_table_parsing()
+
+    def test_2_table_filtering(self):
+        self._test_table_filtering(10)
+
+    def test_3_sorted_ids(self):
+        self._test_ids_are_sorted()
+
+
+class ESSENCE_Narayan16(GeneralTests):
+    """Tests for the essence.narayan16 module"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.module = essence.narayan16
         cls.module.download_module_data()
 
     def test_0_empty_data(self):
