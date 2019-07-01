@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from glob import glob
+
 import numpy as np
 from astropy.io import ascii, fits
 from astropy.table import Table
@@ -47,13 +49,13 @@ def get_available_ids():
         A list of object ids as strings
     """
 
-    # Todo: Handle when some of the files didn't finish downloading
-    return sorted(Table.read(meta.eso_summary_path)['Object'])
+    files = glob(str(meta.spectra_dir / '*.fits'))
+    if not len(files) == 52:
+        raise utils.NoDownloadedData()
 
+    return sorted(set(Table.read(meta.eso_summary_path)['Object']))
 
 # Todo: We are missing spectra
-# Todo: Check this returns all spectra for a given object
-#  (It might currently only return the first spectra)
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id, format_sncosmo):
     """Returns data for a given object id
