@@ -7,8 +7,6 @@ discovered by the ESSENCE survey at redshifts 0.1 <= z <= 0.81 between 2002 and
 the MOSAIC II camera at the CTIO Blanco telescope.
 (Source: Narayan et al. 2017)
 
-For the corresponding spectroscopic data, see the matheson05 module.
-
 Deviations from the standard UI:
   - None
 
