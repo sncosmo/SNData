@@ -5,8 +5,8 @@
 
 from pathlib import Path
 from unittest import TestCase
-
 from warnings import warn
+
 import requests
 import yaml
 
@@ -130,23 +130,6 @@ class ESSENCE_Narayan16(GeneralTests):
 
     def test_consistent_docs(self):
         self._test_consistent_docs()
-
-    def test_ads_url(self):
-        self._test_ads_url()
-
-    def test_survey_url(self):
-        self._test_survey_url()
-
-
-class ESSENCE_Foley09(GeneralTests):
-    """Tests for the essence.narayan16 module"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.module = essence.matheson05
-
-    def test_consistent_docs(self):
-        self._test_consistent_docs('register_filters')
 
     def test_ads_url(self):
         self._test_ads_url()
