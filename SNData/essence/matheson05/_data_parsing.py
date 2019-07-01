@@ -70,7 +70,7 @@ def get_data_for_id(obj_id, format_sncosmo):
 
     if format_sncosmo:
         raise RuntimeError(
-            'Photometric data is not available for essence.foley09')
+            'Photometric data is not available for essence.matheson05')
 
     summary_table = Table.read(meta.eso_summary_path)
     file_name = summary_table[summary_table['Object'] == obj_id]['ARCFILE'][0]

@@ -189,7 +189,7 @@ class ESSENCE_Foley09(GeneralTests):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = essence.foley09
+        cls.module = essence.matheson05
         cls.module.download_module_data()
 
     def test_0_empty_data(self):

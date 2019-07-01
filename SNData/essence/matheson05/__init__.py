@@ -2,10 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides access to spectroscopic observations from the ESSENCE
-high-redshift supernova (SN) survey during its first four years of operation.
-The sample represents 273 hr of spectroscopic observations with 6.5-10 m class
-telescopes of objects detected and selected for spectroscopy by the ESSENCE
-team. It includes 184 spectra of 156 objects. (Source: Foley et al. 2009)
+high-redshift supernova (SN) survey during its first two years of operation.
+It includes spectra of 52 Type Ia supernovae (SNe Ia) at moderate redshifts
+(0.2 <= z<= 0.8). (Source: Foley et al. 2009)
 
 Deviations from the standard UI:
   - This module provides spectroscopic data and does not support integration
@@ -29,5 +28,5 @@ survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
 survey_abbrev = 'ESSENCE'
 survey_url = 'http://www.ctio.noao.edu/essence/'
 data_type = 'spectroscopic'
-publications = ('Foley et al. 2009',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2009AJ....137.3731F/abstract'
+publications = ('Matheson et al. 2005',)
+ads_url = 'https://ui.adsabs.harvard.edu/#abs/2005AJ....129.2352M'

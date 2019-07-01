@@ -7,7 +7,7 @@ and photometric data published in Foley et al. 2009 and Narayan et al. 2016
 respectively.
 """
 
-from . import foley09, narayan16
+from . import matheson05, narayan16
 
 survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
 survey_abbrev = 'ESSENCE'

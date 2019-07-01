@@ -20,11 +20,11 @@ vizier_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/137/3731'
 # URL of table listing spectra file IDS
 # Todo: This table does not contain all of the spectra
 eso_summary_url = (
-    'http://archive.eso.org/wdb/wdb/adp/phase3_main/query?wdbo=csv'
+    'http://archive.eso.org/wdb/wdb/adp/phase3_main/query?'
 
     # Specify data we want
-    '&collection_name=ESSENCE'
-    '&dataproduct_type=spectrum'
+    '&wdbo=csv'
+    '&prog_id=170.A-0519'
     '&tab_dp_id=on'
 )
 

@@ -143,7 +143,7 @@ class ESSENCE_Foley09(GeneralTests):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = essence.foley09
+        cls.module = essence.matheson05
 
     def test_consistent_docs(self):
         self._test_consistent_docs('register_filters')
