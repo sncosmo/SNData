@@ -6,6 +6,7 @@ surveys.
 """
 
 from . import csp, des, sdss
+from ._combine_data import Combined_Dataset
 from ._integrations import parse_snoopy_data
 from ._integrations import query_ned_coords
 from ._integrations import query_osc
