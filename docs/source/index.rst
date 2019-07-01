@@ -35,7 +35,7 @@ Available Data
 +------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
 | Dark Energy Survey                                   | SN3YR               | Photometric   | `des.ncsa.illinois.edu <https://des.ncsa.illinois.edu/releases/sn>`_                                            |
 +------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-+ Equation of State: Supernovae trace Cosmic Expansion | Narayan et al. 2016 | Photometric   | `http://www.ctio.noao.edu/essence/ <http://www.ctio.noao.edu/essence/>`_                                        |
++ Equation of State: Supernovae Trace Cosmic Expansion | Narayan et al. 2016 | Photometric   | `http://www.ctio.noao.edu/essence/ <http://www.ctio.noao.edu/essence/>`_                                        |
 +------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
 | Sloan Digital Sky Survey                             | Sako et al. 2018    | Photometric   | `data.darkenergysurvey.org <http://data.darkenergysurvey.org/sdsssn/dataRelease/>`_                             |
 +------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
