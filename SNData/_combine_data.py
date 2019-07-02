@@ -14,16 +14,18 @@ class Combined_Dataset:
     def __init__(self, *data_sets):
         """Combine data from different surveys into a single data set"""
 
-        self._data_modules = set(*data_sets)
+        self._data_modules = dict()
 
         # Create a DataFrame of combined object ids
         self._obj_ids = None
-        for data_module in self._data_modules:
+        for data_module in set(*data_sets):
             _, survey, release = data_module.__name__.split('.')
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
             id_df.insert(1, 'flag', 1)
             id_df.insert(0, 'release', release)
             id_df.insert(0, 'survey', survey)
+
+            self._data_modules[':'.join((survey, release))] = data_module
 
             if self._obj_ids is None:
                 self._obj_ids = id_df
@@ -38,14 +40,14 @@ class Combined_Dataset:
             force (bool): Re-Download locally available data (Default: False)
         """
 
-        for module in self._data_modules:
+        for module in self._data_modules.keys():
             print(f'Downloading data for {module.__name__}')
             module.download_module_data(force=force)
 
     def delete_combined_data(self):
         """Delete any data for all combined surveys / data releases"""
 
-        for module in self._data_modules:
+        for module in self._data_modules.keys():
             module.delete_module_data()
 
     def get_available_ids(self):
@@ -84,7 +86,7 @@ class Combined_Dataset:
             force (bool): Whether to re-register a band if already registered (Default: False)
         """
 
-        for module in self._data_modules:
+        for module in self._data_modules.values():
             try:
                 module.register_filters(force=force)
 
@@ -108,7 +110,29 @@ class Combined_Dataset:
             An astropy table of data for the given ID
         """
 
-        pass
+        identifier = self._obj_ids[self._obj_ids['obj_id'] == obj_id]
+        if survey is not None:
+            identifier = identifier[identifier['survey'] == survey]
+
+        if release is not None:
+            identifier = identifier[identifier['release'] == release]
+
+        if len(identifier) == 0:
+            raise ValueError('Unrecognized object ID')
+
+        if len(identifier) > 1:
+            err_msg = f'Found duplicate objects for obj_id: {obj_id}'
+            if release:
+                err_msg += f', release: {release}'
+
+            if survey:
+                err_msg += f', release: {survey}'
+
+            raise ValueError(err_msg)
+
+        module_key = ':'.join((identifier['survey'], identifier['release']))
+        data_module = self._data_modules[module_key]
+        data_module.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
 
     def iter_data(self, survey=None, release=None, verbose=False,
                   format_sncosmo=False, filter_func=None):
@@ -129,9 +153,28 @@ class Combined_Dataset:
             Astropy tables
         """
 
-        pass
+        if filter_func is None:
+            filter_func = lambda x: x
 
-    def map_object_ids(self, mapping):
+        identifiers = self._obj_ids
+        if survey is not None:
+            identifiers = identifiers[identifiers['survey'] == survey]
+
+        if release is not None:
+            identifiers = identifiers[identifiers['release'] == release]
+
+        for index, row in utils.build_pbar(identifiers.iterrows(), verbose):
+            data = self.get_data_for_id(
+                obj_id=row['obj_id'],
+                survey=row['survey'],
+                release=row['release'],
+                format_sncosmo=format_sncosmo
+            )
+
+            if filter_func(data):
+                yield data
+
+    def rename_object_ids(self, mapping):
         """Manually rename an object's id
 
         Object ids should be specified as a tuple
