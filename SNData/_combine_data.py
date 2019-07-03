@@ -4,7 +4,6 @@
 """This module handles combining data from different data sets."""
 
 import pandas as pd
-from astropy.table import Table
 
 from . import _utils as utils
 
@@ -18,10 +17,9 @@ class Combined_Dataset:
 
         # Create a DataFrame of combined object ids
         self._obj_ids = None
-        for data_module in set(*data_sets):
+        for data_module in set(data_sets):
             _, survey, release = data_module.__name__.split('.')
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
-            id_df.insert(1, 'flag', 1)
             id_df.insert(0, 'release', release)
             id_df.insert(0, 'survey', survey)
 
@@ -33,7 +31,7 @@ class Combined_Dataset:
             else:
                 self._obj_ids.append(id_df, ignore_index=True)
 
-    def download_combined_data(self, force=False):
+    def download_module_data(self, force=False):
         """Download data for all combined surveys / data releases
 
         Args:
@@ -44,7 +42,7 @@ class Combined_Dataset:
             print(f'Downloading data for {module.__name__}')
             module.download_module_data(force=force)
 
-    def delete_combined_data(self):
+    def delete_module_data(self):
         """Delete any data for all combined surveys / data releases"""
 
         for module in self._data_modules.keys():
@@ -53,10 +51,9 @@ class Combined_Dataset:
     def get_available_ids(self):
         """Return a table of object ids available in the combined data set"""
 
-        id_table = Table.from_pandas(self._obj_ids)
-        id_table['ignore'] = 1 - id_table['flag']
-        id_table.remove_column('flag')
-        return id_table
+        return sorted(
+            zip(*[self._obj_ids[c].values.tolist() for c in self._obj_ids])
+        )
 
     def get_duplicate_ids(self, ignore_survey=True, ignore_release=True):
         """Return a table of duplicate object ids for the combined data set
@@ -77,7 +74,8 @@ class Combined_Dataset:
             subset.append('release')
 
         indices = self._obj_ids.duplicated(subset=subset, keep=False)
-        return Table.from_pandas(self._obj_ids[indices])
+        duplicate_data = self._obj_ids[indices]
+        return sorted(duplicate_data.itertuples(index=False, name=None))
 
     def register_filters(self, force=False):
         """Register filters for the combined data with SNCosmo
@@ -94,43 +92,28 @@ class Combined_Dataset:
                 raise utils.NoDownloadedData(
                     f'No data downloaded for {module.__name__}')
 
-    def get_data_for_id(self, obj_id, survey=None, release=None,
-                        format_sncosmo=False):
-        """Returns data for a given object id
+    def get_data_for_id(self, obj_id, format_sncosmo=False):
+        """Return data for a given object id
 
-        See ``get_available_ids()`` for a table of available id values.
+        See ``get_available_ids()`` for a table of available id values. Object
 
         Args:
-            obj_id          (str): The ID of the desired object
-            survey          (str): The name of the object's survey (Default: None)
-            release         (str): The name of the object's data release (Default: None)
+            obj_id   (Tuple[str]): The ID of the desired object
             format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
         """
 
-        identifier = self._obj_ids[self._obj_ids['obj_id'] == obj_id]
-        if survey is not None:
-            identifier = identifier[identifier['survey'] == survey]
+        id_data = self._obj_ids[
+            self._obj_ids['obj_id'] == obj_id[0] &
+            self._obj_ids['obj_id'] == obj_id[1] &
+            self._obj_ids['obj_id'] == obj_id][2]
 
-        if release is not None:
-            identifier = identifier[identifier['release'] == release]
-
-        if len(identifier) == 0:
+        if len(id_data) == 0:
             raise ValueError('Unrecognized object ID')
 
-        if len(identifier) > 1:
-            err_msg = f'Found duplicate objects for obj_id: {obj_id}'
-            if release:
-                err_msg += f', release: {release}'
-
-            if survey:
-                err_msg += f', release: {survey}'
-
-            raise ValueError(err_msg)
-
-        module_key = ':'.join((identifier['survey'], identifier['release']))
+        module_key = ':'.join((id_data['survey'], id_data['release']))
         data_module = self._data_modules[module_key]
         data_module.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
 
@@ -156,43 +139,24 @@ class Combined_Dataset:
         if filter_func is None:
             filter_func = lambda x: x
 
-        identifiers = self._obj_ids
+        id_data = self._obj_ids
         if survey is not None:
-            identifiers = identifiers[identifiers['survey'] == survey]
+            id_data = id_data[id_data['survey'] == survey]
 
         if release is not None:
-            identifiers = identifiers[identifiers['release'] == release]
+            id_data = id_data[id_data['release'] == release]
 
-        for index, row in utils.build_pbar(identifiers.iterrows(), verbose):
-            data = self.get_data_for_id(
-                obj_id=row['obj_id'],
-                survey=row['survey'],
-                release=row['release'],
-                format_sncosmo=format_sncosmo
-            )
-
+        for index, row in utils.build_pbar(id_data.iterrows(), verbose):
+            obj_id = (row['obj_id'], row['survey'], row['release'])
+            data = self.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
             if filter_func(data):
                 yield data
 
-    def rename_object_ids(self, mapping):
-        """Manually rename an object's id
-
-        Object ids should be specified as a tuple
-        (survey name, release name, obj_id value).
-
-        Args:
-            mapping (dict): A dictionary of the form {<old id>: <new id>, ...}
-        """
-
+    def get_joined_ids(self):
         pass
 
-    def ignore_id(self, obj_id, survey=None, release=None):
-        """Flag an object id to be ignored
+    def join_object_ids(self, *obj_ids):
+        pass
 
-        Args:
-            obj_id  (str): The ID of the desired object
-            survey  (str): The name of the object's survey (Default: None)
-            release (str): The name of the object's data release (Default: None)
-        """
-
+    def unjoin_object_id(self, mapping):
         pass
