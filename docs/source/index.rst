@@ -26,19 +26,26 @@ particular survey or data release may have from the rest of the package.
 Available Data
 --------------
 
-+------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-| Survey Name                                          | Data Release        | Data Type     | External Link                                                                                                   |
-+======================================================+=====================+===============+=================================================================================================================+
-|                                                      | DR1                 | Spectroscopic | `csp.obs.carnegiescience.edu <https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1>`_                 |
-+ Carnegie Supernova Project                           +---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-|                                                      | DR3                 | Photometric   | `csp.obs.carnegiescience.edu <https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released>`_     |
-+------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-| Dark Energy Survey                                   | SN3YR               | Photometric   | `des.ncsa.illinois.edu <https://des.ncsa.illinois.edu/releases/sn>`_                                            |
-+------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-+ Equation of State: Supernovae Trace Cosmic Expansion | Narayan et al. 2016 | Photometric   | `http://www.ctio.noao.edu/essence/ <http://www.ctio.noao.edu/essence/>`_                                        |
-+------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
-| Sloan Digital Sky Survey                             | Sako et al. 2018    | Photometric   | `data.darkenergysurvey.org <http://data.darkenergysurvey.org/sdsssn/dataRelease/>`_                             |
-+------------------------------------------------------+---------------------+---------------+-----------------------------------------------------------------------------------------------------------------+
++------------------------------------------------------+------------------------+---------------+
+| Survey Name                                          | Data Release           | Data Type     |
++======================================================+========================+===============+
+|                                                      | `DR1`_                 | Spectroscopic |
++ Carnegie Supernova Project                           +------------------------+---------------+
+|                                                      | `DR3`_                 | Photometric   |
++------------------------------------------------------+------------------------+---------------+
+| Dark Energy Survey                                   | `SN3YR`_               | Photometric   |
++------------------------------------------------------+------------------------+---------------+
++ Equation of State: Supernovae Trace Cosmic Expansion | `Narayan et al. 2016`_ | Photometric   |
++------------------------------------------------------+------------------------+---------------+
+| Sloan Digital Sky Survey                             | `Sako et al. 2018`_    | Photometric   |
++------------------------------------------------------+------------------------+---------------+
+
+.. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
+.. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
+.. _SN3YR: https://des.ncsa.illinois.edu/releases/sn
+.. _Narayan et al. 2016: http://www.ctio.noao.edu/essence/
+.. _Sako et al. 2018: http://data.darkenergysurvey.org/sdsssn/dataRelease/
+
 
 .. toctree::
    :hidden:
