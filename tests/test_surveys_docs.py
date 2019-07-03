@@ -136,3 +136,14 @@ class ESSENCE_Narayan16(GeneralTests):
 
     def test_survey_url(self):
         self._test_survey_url()
+
+
+class Combined(GeneralTests):
+    """Tests for the essence.narayan16 module"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.module = essence.narayan16
+
+    def test_consistent_docs(self):
+        self._test_consistent_docs()

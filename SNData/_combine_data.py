@@ -8,6 +8,8 @@ import pandas as pd
 from . import _utils as utils
 
 
+# Todo: Class Docstring
+# Todo: Implement ID joining
 class CombinedDataset:
 
     def __init__(self, *data_sets):
@@ -117,7 +119,8 @@ class CombinedDataset:
 
         module_key = f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
         data_module = self._data_modules[module_key]
-        return data_module.get_data_for_id(obj_id[0], format_sncosmo=format_sncosmo)
+        return data_module.get_data_for_id(
+            obj_id[0], format_sncosmo=format_sncosmo)
 
     def iter_data(self, survey=None, release=None, verbose=False,
                   format_sncosmo=False, filter_func=None):
@@ -157,8 +160,8 @@ class CombinedDataset:
     def get_joined_ids(self):
         pass
 
-    def join_object_ids(self, *obj_ids):
+    def join_ids(self, *obj_ids):
         pass
 
-    def unjoin_object_id(self, mapping):
+    def seperate_ids(self, mapping):
         pass

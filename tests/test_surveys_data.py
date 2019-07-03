@@ -190,7 +190,7 @@ class ESSENCE_Narayan16(GeneralTests):
         self._test_ids_are_sorted()
 
 
-class CombinedDatasets(GeneralTests):
+class Combined(GeneralTests):
     """Tests the combined des.sn3yr and csp.dr3 modules"""
 
     @classmethod

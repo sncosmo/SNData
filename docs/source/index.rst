@@ -49,12 +49,14 @@ Available Data
    installation
    quick_start
    integrated_services
+   .. combining_datasets
 
 .. toctree::
    :hidden:
    :maxdepth: 1
    :caption: Module Docs:
 
+   module_docs/combined
    module_docs/csp
    module_docs/des
    module_docs/essence
