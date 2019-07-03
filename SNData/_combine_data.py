@@ -8,7 +8,7 @@ import pandas as pd
 from . import _utils as utils
 
 
-class Combined_Dataset:
+class CombinedDataset:
 
     def __init__(self, *data_sets):
         """Combine data from different surveys into a single data set"""
@@ -38,8 +38,8 @@ class Combined_Dataset:
             force (bool): Re-Download locally available data (Default: False)
         """
 
-        for module in self._data_modules.keys():
-            print(f'Downloading data for {module.__name__}')
+        for name, module in self._data_modules.items():
+            print(f'Downloading data for {name}')
             module.download_module_data(force=force)
 
     def delete_module_data(self):
@@ -51,8 +51,9 @@ class Combined_Dataset:
     def get_available_ids(self):
         """Return a table of object ids available in the combined data set"""
 
+        data_order = ['obj_id', 'release', 'survey']
         return sorted(
-            zip(*[self._obj_ids[c].values.tolist() for c in self._obj_ids])
+            zip(*[self._obj_ids[c].values.tolist() for c in data_order])
         )
 
     def get_duplicate_ids(self, ignore_survey=True, ignore_release=True):
@@ -106,16 +107,17 @@ class Combined_Dataset:
         """
 
         id_data = self._obj_ids[
-            self._obj_ids['obj_id'] == obj_id[0] &
-            self._obj_ids['obj_id'] == obj_id[1] &
-            self._obj_ids['obj_id'] == obj_id][2]
+            (self._obj_ids['obj_id'] == obj_id[0]) &
+            (self._obj_ids['release'] == obj_id[1]) &
+            (self._obj_ids['survey'] == obj_id[2])
+        ]
 
         if len(id_data) == 0:
             raise ValueError('Unrecognized object ID')
 
-        module_key = ':'.join((id_data['survey'], id_data['release']))
+        module_key = f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
         data_module = self._data_modules[module_key]
-        data_module.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
+        return data_module.get_data_for_id(obj_id[0], format_sncosmo=format_sncosmo)
 
     def iter_data(self, survey=None, release=None, verbose=False,
                   format_sncosmo=False, filter_func=None):
@@ -147,7 +149,7 @@ class Combined_Dataset:
             id_data = id_data[id_data['release'] == release]
 
         for index, row in utils.build_pbar(id_data.iterrows(), verbose):
-            obj_id = (row['obj_id'], row['survey'], row['release'])
+            obj_id = (row['obj_id'], row['release'], row['survey'])
             data = self.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
             if filter_func(data):
                 yield data
