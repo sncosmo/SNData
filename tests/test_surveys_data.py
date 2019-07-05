@@ -7,7 +7,6 @@ from itertools import islice
 from unittest import TestCase
 
 from SNData import csp, des, essence, sdss
-from SNData import CombinedDataset
 
 
 class GeneralTests(TestCase):
@@ -187,22 +186,4 @@ class ESSENCE_Narayan16(GeneralTests):
         self._test_table_filtering(10)
 
     def test_3_sorted_ids(self):
-        self._test_ids_are_sorted()
-
-
-class Combined(GeneralTests):
-    """Tests the combined des.sn3yr and csp.dr3 modules"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.module = CombinedDataset(csp.dr3, des.sn3yr)
-        cls.module.download_module_data()
-
-    def test_0_empty_data(self):
-        self._test_empty_data(10)
-
-    def test_1_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()

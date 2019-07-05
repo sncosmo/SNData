@@ -61,7 +61,7 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Module Docs:
+   :caption: Module API Docs:
 
    module_docs/combined
    module_docs/csp

@@ -61,10 +61,10 @@ def load_table(table_id):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_ids():
-    """Return a list of target object ids for the current survey
+    """Return a list of target object IDs for the current survey
 
     Returns:
-        A list of object ids as strings
+        A list of object IDs as strings
     """
 
     return sorted(load_table('master')['CID'])
@@ -93,7 +93,7 @@ def get_outliers():
 
 @np.vectorize
 def _construct_band_name(filter_id, ccd_id):
-    """Return the sncosmo band name given filter and CCD id
+    """Return the sncosmo band name given filter and CCD ID
 
     Args:
         filter_id (int): Filter index 1 through 5 for 'ugriz'
@@ -139,9 +139,9 @@ def _format_sncosmo_table(data_table):
 
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id, format_sncosmo):
-    """Returns data for a given object id
+    """Returns data for a given object ID
 
-    See ``get_available_ids()`` for a list of available id values.
+    See ``get_available_ids()`` for a list of available ID values.
 
     Args:
         obj_id          (str): The ID of the desired object

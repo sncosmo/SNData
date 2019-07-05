@@ -43,10 +43,10 @@ def load_table(table_id):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_ids():
-    """Return a list of target object ids for the current survey
+    """Return a list of target object IDs for the current survey
 
     Returns:
-        A list of object ids as strings
+        A list of object IDs as strings
     """
 
     files = glob(str(meta.spectra_dir / '*.fits'))
@@ -58,9 +58,9 @@ def get_available_ids():
 # Todo: We are missing spectra
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id, format_sncosmo):
-    """Returns data for a given object id
+    """Returns data for a given object ID
 
-    See ``get_available_ids()`` for a list of available id values.
+    See ``get_available_ids()`` for a list of available ID values.
 
     Args:
         obj_id          (str): The ID of the desired object
