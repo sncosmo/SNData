@@ -1,11 +1,14 @@
 SNData
 ======
 
-**SNData** provides a uniform Python interface for data releases published by
-various supernova surveys. A summary of available data sets is provided below.
-Access to additional surveys is added upon request or as needed for individual
-research projects undertaken by the developer(s). To request an additional
-survey / data release, please raise an issue on `GitHub`_.
+**SNData** provides access to spectroscopic and photometric data published by
+a variety of supernova (SN) surveys. It is designed to support the development
+of scalable analysis pipelines that translate with minimal effort between
+different data sets or to a combination of multiple data sets. A summary of
+accessible data sets is provided below. Access to additional surveys is added
+upon request or as needed for individual research projects undertaken by the
+developer(s). To request an additional survey / data release, please raise an
+issue on `GitHub`_.
 
 .. _GitHub: https://github.com/djperrefort/sndata
 
@@ -16,11 +19,11 @@ Using These Docs
 **SNData** is designed to provide as consistent of an interface as possible
 across surveys. However, this is not always possible as the data products
 made available by different surveys can vary wildly in their format. The
-`Installation <installation.html>`_ and `Quick Start <quick_start.html>`_
-guides are intended to help you get up and running quickly and to familiarize
-you with the general **SNData** interface. Additional documentation is
-provided for each individual dataset to highlight any minor deviations a
-particular survey or data release may have from the rest of the package.
+*Getting Started* guides are intended to help you get up and running quickly
+and to familiarize you with the general **SNData** interface. Additional
+API documentation is provided for each individual dataset to highlight any
+(very) minor deviations a particular survey or data release may have from the
+rest of the package.
 
 
 Available Data
@@ -53,10 +56,10 @@ Available Data
    :caption: Getting Started:
 
    Overview<self>
-   installation
-   quick_start
-   integrated_services
-   .. combining_datasets
+   getting_started/installation
+   getting_started/quick_start
+   getting_started/integrated_services
+   getting_started/combining_datasets
 
 .. toctree::
    :hidden:
