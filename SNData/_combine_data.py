@@ -40,7 +40,9 @@ def _reduce_id_mapping(id_list):
 
             rest = rest2
 
-        new_id_list.append(first)
+        if len(first) > 1:
+            new_id_list.append(first)
+
         old_id_list = rest
 
     return new_id_list

@@ -5,10 +5,14 @@
 sets
 """
 
-from SNData import CombinedDataset, csp, des
+from unittest import TestCase
+
+from SNData import csp, des
+from SNData._combine_data import CombinedDataset, _reduce_id_mapping
 
 
-class Combined():
+# Todo: Test CombinedDataset class
+class Combined(TestCase):
     """Tests the combined des.sn3yr and csp.dr3 modules"""
 
     @classmethod
@@ -17,3 +21,26 @@ class Combined():
         cls.module.download_module_data()
 
 
+class MapReduction(TestCase):
+    """Tests for the _reduce_id_mapping function"""
+
+    def test_empty_sets(self):
+        """Test _reduce_id_mapping removes empty sets"""
+
+        map_in = [{1, 2, 3}, {4, 5}, {}]
+        expected_map = [{1, 2, 3}, {4, 5}]
+        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))
+
+    def test_joining(self):
+        """Test _reduce_id_mapping correctly joins sets"""
+
+        map_in = [{1, 2, 3}, {3, 4}, {5, 6}, {6, 7}, {7, 8}]
+        expected_map = [{1, 2, 3, 4}, {5, 6, 7, 8}]
+        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))
+
+    def test_single_value_sets(self):
+        """Test _reduce_id_mapping removes empty of length 1"""
+
+        map_in = [{1, 2, 3}, {4, 5}, {7}]
+        expected_map = [{1, 2, 3}, {4, 5}]
+        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))

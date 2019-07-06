@@ -82,6 +82,17 @@ simple as:
    # To undo the above joining action
    combined_data.separate_ids(obj_id_1, obj_id_2, obj_id_3, ...)
 
+When retrieving data for a joined ID, the returned data table is simply the
+collective data tables for each joined ID stacked vertically. This can be
+somewhat cumbersome when joining data selts that use different data models.
+One solution is to use the ``format_sncosmo`` option when retrieving data
+to ensure that the data is combined into a uniform format.
+
+.. code-block:: python
+   :linenos:
+
+   combined_data.get_data_for_id(obj_id_1, format_sncosmo=True)
+
 It is worth noting that ``CombinedDataset`` objects are aware of successive
 join actions. This means that the following two examples are functionally
 equivalent.
