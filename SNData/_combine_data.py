@@ -46,7 +46,6 @@ def _reduce_id_mapping(id_list):
     return new_id_list
 
 
-# Todo: Class Docstring
 class CombinedDataset:
     """Combine data from different surveys into a single data set
 
@@ -58,6 +57,7 @@ class CombinedDataset:
 
         # Data access modules for each combined data release
         self._data_modules = dict()
+        self.data_type = ', '.join(set(ds.data_type for ds in data_sets))
 
         # Create a DataFrame of combined object IDs
         self._obj_ids = None
@@ -257,12 +257,16 @@ class CombinedDataset:
 
         return copy(self._joined_ids)
 
-    def join_ids(self, obj_ids):
+    def join_ids(self, *obj_ids):
         """Join a list of object ID values to indicate the same object
 
         Args:
             obj_ids (list[tuple[str]]): List of object IDs to join
         """
+
+        if len(obj_ids) <= 1:
+            raise ValueError(
+                'Object IDs can only be joined in stes of 2 or more.')
 
         self._joined_ids.append(set(obj_ids))
         self._joined_ids = _reduce_id_mapping(self._joined_ids)
@@ -273,6 +277,10 @@ class CombinedDataset:
         Args:
             obj_ids (list[tuple[str]]): List of object IDs to separate
         """
+
+        if len(obj_ids) <= 1:
+            raise ValueError(
+                'Object IDs can only be joined in stes of 2 or more.')
 
         obj_ids = set(obj_ids)
         for obj_id_set in self._joined_ids:

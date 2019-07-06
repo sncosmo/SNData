@@ -17,13 +17,11 @@ Using These Docs
 ----------------
 
 **SNData** is designed to provide as consistent of an interface as possible
-across surveys. However, this is not always possible as the data products
-made available by different surveys can vary wildly in their format. The
-*Getting Started* guides are intended to help you get up and running quickly
-and to familiarize you with the general **SNData** interface. Additional
-API documentation is provided for each individual dataset to highlight any
-(very) minor deviations a particular survey or data release may have from the
-rest of the package.
+across surveys. The *Getting Started* guides are intended to help you get up
+and running quickly and to familiarize you with the general **SNData**
+interface. Additional API documentation is provided for each individual
+data set to highlight any (very) minor deviations a particular survey or
+data release may have from the rest of the package.
 
 
 Available Data

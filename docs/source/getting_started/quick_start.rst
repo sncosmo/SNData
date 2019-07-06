@@ -50,9 +50,6 @@ survey data. Instead, users must manually tell **SNData** to download
     # Get an overview of the provided data
     help(dr3)
 
-    # Check for available data
-    print(dr3.data_is_available())
-
     # Download data for the given survey / data release
     dr3.download_module_data()
 
