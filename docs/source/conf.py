@@ -24,9 +24,15 @@ copyright = '2019, Daniel Perrefort'
 author = 'Daniel Perrefort'
 
 # The short X.Y version
+<<<<<<< HEAD
 version = '0.3.3'
 # The full version, including alpha/beta/rc tags
 release = '0.3.3'
+=======
+version = '0.3.2'
+# The full version, including alpha/beta/rc tags
+release = '0.3.2'
+>>>>>>> master
 
 # -- General configuration ---------------------------------------------------
 

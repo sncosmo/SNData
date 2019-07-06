@@ -6,8 +6,10 @@ Tests are run using csp.dr3
 """
 
 from unittest import TestCase
+from warnings import warn
 
 import sncosmo
+from requests.exceptions import HTTPError
 
 from SNData import csp, query_ned_coords, query_osc, query_osc_photometry, \
     query_osc_spectra
@@ -36,12 +38,16 @@ class NED(TestCase):
     def test_prefix_independence(self):
         """Test results are returned regardless of 'SN' prefix"""
 
-        no_prefix = query_ned_coords('2011fe')
-        lower_prefix = query_ned_coords('sn2011fe')
-        upper_prefix = query_ned_coords('SN2011fe')
+        try:
+            no_prefix = query_ned_coords('2011fe')
+            lower_prefix = query_ned_coords('sn2011fe')
+            upper_prefix = query_ned_coords('SN2011fe')
 
-        self.assertEqual(no_prefix, lower_prefix)
-        self.assertEqual(lower_prefix, upper_prefix)
+            self.assertEqual(no_prefix, lower_prefix)
+            self.assertEqual(lower_prefix, upper_prefix)
+
+        except HTTPError:
+            warn('Could not reach NED.')
 
 
 class OSC(TestCase):
