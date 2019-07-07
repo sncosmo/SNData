@@ -28,9 +28,6 @@ class GeneralTests(TestCase):
                 input_table,
                 msg=f'Empty table for obj_id {obj_id}.')
 
-        else:
-            return
-
         self.fail('No data yielded')
 
     def _test_table_parsing(self):
