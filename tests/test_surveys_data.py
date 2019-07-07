@@ -21,7 +21,7 @@ class GeneralTests(TestCase):
 
         for i, input_table in enumerate(self.module.iter_data()):
             if i >= lim:
-                break
+                return
 
             obj_id = input_table.meta['obj_id']
             self.assertTrue(
