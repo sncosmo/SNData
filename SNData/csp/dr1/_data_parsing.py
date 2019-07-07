@@ -51,7 +51,7 @@ def get_available_ids():
     """Return a list of target object IDs for the current survey
 
     Returns:
-        A list of object ids as strings
+        A list of object IDs as strings
     """
 
     files = glob(str(meta.spectra_dir / 'SN*.dat'))

@@ -211,7 +211,7 @@ class CombinedDataset:
 
         for id_set in self._joined_ids:
             if obj_id in id_set:
-                return self._get_data_id_list(obj_id, format_sncosmo)
+                return self._get_data_id_list(id_set, format_sncosmo)
 
         return self.get_data_for_id(obj_id, format_sncosmo)
 
