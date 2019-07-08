@@ -11,42 +11,71 @@ from astropy.table import vstack
 
 from SNData import csp, des
 from SNData._combine_data import CombinedDataset, _reduce_id_mapping
+from .test_surveys_data import GeneralTests
 
 
-# Todo: Finish tests for CombinedDataset class
-class Combined(TestCase):
+class Combined(GeneralTests):
     """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = CombinedDataset(csp.dr3, des.sn3yr)
+        cls.joined_surveys = (csp.dr3, des.sn3yr)
+        cls.module = CombinedDataset(*cls.joined_surveys)
         cls.module.download_module_data()
+
+    def test_obj_id_dataframe(self):
+        """Test for expected data releases in object id DataFrame"""
+
+        expected = set(s.survey_abbrev.lower() for s in self.joined_surveys)
+        actual = set(self.module._obj_ids['survey'])
+        self.assertEqual(expected, actual)
 
     def test_id_joining(self):
         """Test correct data is returned after joining / separating IDs"""
 
-        test_ids = [('csp', 'dr3', '2004dt'), ('csp', 'dr3', '2004ef')]
-        obj1_data = self.module.get_data_for_id(test_ids[0], True)
-        obj2_data = self.module.get_data_for_id(test_ids[1], True)
-        expected_return = vstack(obj1_data, obj2_data)
+        # Get data for two individual IDs and manual vstack them to get
+        # the combined data
+        test_ids = [('2004dt', 'dr3', 'csp'), ('2004ef', 'dr3', 'csp')]
+        expected_obj0_data = self.module.get_data_for_id(test_ids[0], True)
+        expected_obj1_data = self.module.get_data_for_id(test_ids[1], True)
+        expected_return = vstack(
+            (expected_obj0_data, expected_obj1_data),
+            metadata_conflicts='silent')
 
+        # Join IDs and make sure we get the combined data from get_data_for_id
+        # sorted operations are only to make unittest reports neater
         self.module.join_ids(*test_ids)
-        actual_return = self.module.get_data_for_id(test_ids[0])
-        self.assertEqual(expected_return, actual_return)
+        actual_return = self.module.get_data_for_id(test_ids[0], True)
+        self.assertListEqual(
+            sorted(expected_return.as_array().tolist()),
+            sorted(actual_return.as_array().tolist()),
+            'Incorrect data for joined IDs.'
+        )
 
-        self.module.separate_ids(test_ids[1])
-        self.assertEqual(self.module.get_data_for_id(test_ids[0]), obj1_data)
+        # Check we get the original data after seperating ids
+        self.module.separate_ids(test_ids[0])
+        obj0_data = self.module.get_data_for_id(test_ids[0], True)
+        obj1_data = self.module.get_data_for_id(test_ids[1], True)
+        self.assertListEqual(
+            sorted(expected_obj0_data.as_array().tolist()),
+            sorted(obj0_data.as_array().tolist()),
+            'Incorrect data for first ID after joining.'
+        )
 
-    def test_iter_data(self):
-        """Test ``iter_data`` correctly slices data by survey / release value
-        """
+        self.assertListEqual(
+            sorted(expected_obj1_data.as_array().tolist()),
+            sorted(obj1_data.as_array().tolist()),
+            'Incorrect data for second ID after joining.'
+        )
 
-        pass
+    def test_ids_are_sorted(self):
+        self._test_ids_are_sorted()
 
-    def test_duplicate_ids(self):
-        """Test ``get_duplicate_ids`` returns the correct values"""
+    def test_table_filtering(self):
+        self._test_table_filtering()
 
-        pass
+    def test_empty_data(self):
+        self._test_empty_data()
 
 
 class MapReduction(TestCase):

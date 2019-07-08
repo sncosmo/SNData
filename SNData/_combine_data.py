@@ -75,7 +75,7 @@ class CombinedDataset:
                 self._obj_ids = id_df
 
             else:
-                self._obj_ids.append(id_df, ignore_index=True)
+                self._obj_ids = self._obj_ids.append(id_df, ignore_index=True)
 
         self._joined_ids = []
 
@@ -103,28 +103,6 @@ class CombinedDataset:
         return sorted(
             zip(*[self._obj_ids[c].values.tolist() for c in data_order])
         )
-
-    def get_duplicate_ids(self, ignore_survey=True, ignore_release=True):
-        """Return a table of duplicate object IDs for the combined data set
-
-        Args:
-            ignore_survey  (bool): Don't report IDs from different surveys (Default: True)
-            ignore_release (bool): Don't report IDs from different releases (Default: True)
-
-        Returns:
-            An astropy table of duplicate ID values
-        """
-
-        subset = ['obj_id']
-        if not ignore_survey:
-            subset.append('survey')
-
-        if not ignore_release:
-            subset.append('release')
-
-        indices = self._obj_ids.duplicated(subset=subset, keep=False)
-        duplicate_data = self._obj_ids[indices]
-        return sorted(duplicate_data.itertuples(index=False, name=None))
 
     def register_filters(self, force=False):
         """Register filters for the combined data with SNCosmo
@@ -159,7 +137,7 @@ class CombinedDataset:
             ]
 
         if len(id_data) == 0:
-            raise ValueError('Unrecognized object ID')
+            raise ValueError(f'Unrecognized object ID: {obj_id}')
 
         module_key = \
             f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
@@ -182,19 +160,24 @@ class CombinedDataset:
             An astropy table of data for the given ID
         """
 
-        combined_table = None
+        first_id = obj_id_list.pop()
+        combined_table = self._get_data_single_id(first_id, format_sncosmo)
+        combined_table.meta = {first_id: combined_table.meta}
+        combined_table.meta['obj_id'] = [first_id]
+        del combined_table.meta[first_id]['obj_id']
+
         for obj_id in obj_id_list:
             data_table = self._get_data_single_id(obj_id, format_sncosmo)
 
-            if combined_table is None:
-                data_table.meta['obj_id'] = [data_table.meta['obj_id']]
-                data_table.meta[obj_id] = data_table.meta
-                combined_table = data_table
+            new_meta = data_table.meta
+            data_table.meta = {}
+            del new_meta['obj_id']
 
-            else:
-                combined_table.meta['obj_id'].append(data_table.meta['obj_id'])
-                combined_table.meta[obj_id] = data_table.meta
-                combined_table = vstack((combined_table, data_table))
+            combined_table = vstack((combined_table, data_table))
+            combined_table.meta['obj_id'].append(obj_id)
+            combined_table.meta[obj_id] = new_meta
+
+        return combined_table
 
     def get_data_for_id(self, obj_id, format_sncosmo=False):
         """Return data for a given object ID
@@ -213,7 +196,7 @@ class CombinedDataset:
             if obj_id in id_set:
                 return self._get_data_id_list(id_set, format_sncosmo)
 
-        return self.get_data_for_id(obj_id, format_sncosmo)
+        return self._get_data_single_id(obj_id, format_sncosmo)
 
     def iter_data(self, survey=None, release=None, verbose=False,
                   format_sncosmo=False, filter_func=None):
@@ -277,7 +260,7 @@ class CombinedDataset:
         """Separate a list of object IDs so they are no longer joined to other IDs
 
         Args:
-            obj_ids (list[tuple[str]]): List of object IDs to separate
+            obj_ids (tuple[str]): List of object IDs to separate
         """
 
         if len(obj_ids) <= 1:

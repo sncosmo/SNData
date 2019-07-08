@@ -19,16 +19,20 @@ class GeneralTests(TestCase):
             lim (int): Maximum number of tables to check (default: All tables)
         """
 
+        passed_data = False
         for i, input_table in enumerate(self.module.iter_data()):
             if i >= lim:
                 return
 
+            passed_data = True
             obj_id = input_table.meta['obj_id']
+
             self.assertTrue(
                 input_table,
                 msg=f'Empty table for obj_id {obj_id}.')
 
-        self.fail('No data yielded')
+        if not passed_data:
+            self.fail('No data yielded')
 
     def _test_table_parsing(self):
         """Test no errors are raised by ``load_table`` when parsing args from
