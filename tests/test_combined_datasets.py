@@ -71,11 +71,8 @@ class Combined(GeneralTests):
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 
-    def test_table_filtering(self):
-        self._test_table_filtering()
-
     def test_empty_data(self):
-        self._test_empty_data()
+        self._test_empty_data(10)
 
 
 class MapReduction(TestCase):

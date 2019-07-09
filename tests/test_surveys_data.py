@@ -3,7 +3,6 @@
 
 """Test that survey data is accessed and served correctly"""
 
-from itertools import islice
 from unittest import TestCase
 
 from SNData import csp, des, essence, sdss
