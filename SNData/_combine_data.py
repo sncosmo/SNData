@@ -59,31 +59,35 @@ class CombinedDataset:
 
         # Data access modules for each combined data release
         self._data_modules = dict()
+        for module in set(data_sets):
+            _, survey, release = module.__name__.split('.')
+            self._data_modules[':'.join((survey, release))] = module
+
         self.data_type = ', '.join(set(ds.data_type for ds in data_sets))
         self._joined_ids = []
         self._obj_id_dataframe = None
 
     @property
     def _obj_ids(self):
-        if self._obj_id_dataframe:
+        if self._obj_id_dataframe is not None:
             return self._obj_id_dataframe
 
         # Create a DataFrame of combined object IDs
-        for data_module in set(self._data_modules.values()):
+        obj_id_dataframe = None
+        for data_module in self._data_modules.values():
             _, survey, release = data_module.__name__.split('.')
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
             id_df.insert(0, 'release', release)
             id_df.insert(0, 'survey', survey)
 
-            self._data_modules[':'.join((survey, release))] = data_module
-
-            if self._obj_ids is None:
-                self._obj_id_dataframe = id_df
+            if obj_id_dataframe is None:
+                obj_id_dataframe = id_df
 
             else:
-                self._obj_id_dataframe = self._obj_ids.append(
+                obj_id_dataframe = obj_id_dataframe.append(
                     id_df, ignore_index=True)
 
+        self._obj_id_dataframe = obj_id_dataframe
         return self._obj_id_dataframe
 
     def download_module_data(self, force=False):
@@ -100,7 +104,7 @@ class CombinedDataset:
     def delete_module_data(self):
         """Delete any data for all combined surveys / data releases"""
 
-        for module in self._data_modules.keys():
+        for module in self._data_modules.values():
             module.delete_module_data()
 
     def get_available_ids(self):
