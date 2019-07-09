@@ -84,7 +84,7 @@ supernovae using the ``query_ned_coords`` function.
 .. code-block:: python
    :linenos:
 
-    from SNData import query_ned_coords
+    from sndata import query_ned_coords
 
     ra, dec = query_ned_coords('2011fe')
     print(f'RA: {ra}, DEC: {dec}')
@@ -100,7 +100,7 @@ light-curves, and spectra. All three of these data types can be queried using
 .. code-block:: python
    :linenos:
 
-    from SNData import query_osc, query_osc_photometry, query_osc_spectra
+    from sndata import query_osc, query_osc_photometry, query_osc_spectra
 
     object_name = '2011fe'
 
@@ -128,7 +128,7 @@ Project for the analysis of TypeIa supernovae. **SNData** includes the
 .. code-block:: python
    :linenos:
 
-    from SNData import parse_snoopy_data
+    from sndata import parse_snoopy_data
 
     data_table = parse_snoopy_data('my_directory/my_file.snpy')
 

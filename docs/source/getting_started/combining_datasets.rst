@@ -20,7 +20,7 @@ object.
 .. code-block:: python
    :linenos:
 
-    from SNData import CombinedDataset, csp, des
+    from sndata import CombinedDataset, csp, des
 
     combined_data = CombinedDataset(csp.dr3, des.sn3yr)
 
