@@ -18,14 +18,14 @@ long_description = (
 )
 
 # Get package version
-init_path = Path(__file__).resolve().parent / 'SNData/__init__.py'
+init_path = Path(__file__).resolve().parent / 'sndata/__init__.py'
 with open(init_path, 'r') as f:
     s = f.read()
 
 versionRegExp = re.compile("__version__ = '(.*?)'")
 __version__ = versionRegExp.findall(s)[0]
 
-setup(name='SNData',
+setup(name='sndata',
       version=__version__,
       packages=find_packages(),
       keywords='Supernova Astronomy Data Release',

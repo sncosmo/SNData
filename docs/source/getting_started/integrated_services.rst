@@ -71,7 +71,7 @@ for a given survey.
 .. warning::
   The ``get_sncosmo_input`` function is intended for use with surveys that
   provide photometric data. When called for surveys without photometric data
-  (such as ``SNData.csp.dr1``) the function will raise an error.
+  (such as ``sndata.csp.dr1``) the function will raise an error.
 
 
 NASA/IPAC Extragalactic Database (NED)

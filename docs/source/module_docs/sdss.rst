@@ -1,7 +1,7 @@
 Sloan Digital Sky Survey (SDSS)
 ===============================
 
-.. automodule:: SNData.sdss
+.. automodule:: sndata.sdss
 
 +--------------+---------------+---------------+----------------------------+
 | Data Release | Module Name   | Data Type     | Publication                |
@@ -16,9 +16,9 @@ Sloan Digital Sky Survey (SDSS)
 Sako 2018
 ---------
 
-.. automodule:: SNData.sdss.sako18
+.. automodule:: sndata.sdss.sako18
 
-.. py:currentmodule:: SNData.sdss.sako18
+.. py:currentmodule:: sndata.sdss.sako18
 
 **Attribute Summaries:**
 

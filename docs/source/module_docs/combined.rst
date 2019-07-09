@@ -1,5 +1,5 @@
 Combined Datasets
 ================================
 
-.. autoclass:: SNData.CombinedDataset
+.. autoclass:: sndata.CombinedDataset
    :members:

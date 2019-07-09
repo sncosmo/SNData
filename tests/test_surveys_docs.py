@@ -10,7 +10,7 @@ from warnings import warn
 import requests
 import yaml
 
-from SNData import csp, des, essence, sdss
+from sndata import csp, des, essence, sdss
 
 docs_path = Path(__file__).resolve().parent / 'docs.yml'
 with open(docs_path) as ofile:

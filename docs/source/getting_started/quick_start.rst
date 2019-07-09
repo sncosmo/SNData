@@ -17,7 +17,7 @@ Carnegie Supernova Survey.
 .. code-block:: python
    :linenos:
 
-    from SNData.csp import dr3
+    from sndata.csp import dr3
 
     # Information about the parent survey
     print(dr3.survey_name)

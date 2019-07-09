@@ -1,7 +1,7 @@
 Carnegie Supernova Project (CSP)
 ================================
 
-.. automodule:: SNData.csp
+.. automodule:: sndata.csp
 
 +--------------+---------------+---------------+-----------------------------+
 | Data Release | Module Name   | Data Type     | Publication                 |
@@ -18,9 +18,9 @@ Carnegie Supernova Project (CSP)
 Data Release 1
 --------------
 
-.. automodule:: SNData.csp.dr1
+.. automodule:: sndata.csp.dr1
 
-.. py:currentmodule:: SNData.csp.dr1
+.. py:currentmodule:: sndata.csp.dr1
 
 **Attribute Summaries:**
 
@@ -48,9 +48,9 @@ Data Release 1
 Data Release 3
 --------------
 
-.. automodule:: SNData.csp.dr3
+.. automodule:: sndata.csp.dr3
 
-.. py:currentmodule:: SNData.csp.dr3
+.. py:currentmodule:: sndata.csp.dr3
 
 **Attribute Summaries:**
 

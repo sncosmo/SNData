@@ -1,7 +1,7 @@
 Dark Energy Survey (DES)
 ========================
 
-.. automodule:: SNData.des
+.. automodule:: sndata.des
 
 +--------------+-------------+---------------+-----------------------------+
 | Data Release | Module Name | Data Type     | Publication                 |
@@ -15,9 +15,9 @@ Dark Energy Survey (DES)
 Third Year Cosmology Release
 ----------------------------
 
-.. automodule:: SNData.des.sn3yr
+.. automodule:: sndata.des.sn3yr
 
-.. py:currentmodule:: SNData.des.sn3yr
+.. py:currentmodule:: sndata.des.sn3yr
 
 **Attribute Summaries:**
 

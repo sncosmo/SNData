@@ -11,7 +11,7 @@ from warnings import warn
 import sncosmo
 from requests.exceptions import HTTPError
 
-from SNData import csp, query_ned_coords, query_osc, query_osc_photometry, \
+from sndata import csp, query_ned_coords, query_osc, query_osc_photometry, \
     query_osc_spectra
 
 

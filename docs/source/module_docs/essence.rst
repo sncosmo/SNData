@@ -1,7 +1,7 @@
 Equation of State: Supernovae trace Cosmic Expansion (ESSENCE)
 ==============================================================
 
-.. automodule:: SNData.essence
+.. automodule:: sndata.essence
 
 +---------------------+-------------+---------------+-----------------------------+
 | Data Release        | Module Name | Data Type     | Publication                 |
@@ -19,9 +19,9 @@ Equation of State: Supernovae trace Cosmic Expansion (ESSENCE)
    Matheson et al. 2005
    --------------------
 
-   .. automodule:: SNData.essence.matheson05
+   .. automodule:: sndata.essence.matheson05
 
-   .. py:currentmodule:: SNData.essence.matheson05
+   .. py:currentmodule:: sndata.essence.matheson05
 
    **Attribute Summaries:**
 
@@ -49,9 +49,9 @@ Equation of State: Supernovae trace Cosmic Expansion (ESSENCE)
 Narayan et al. 2016
 -------------------
 
-.. automodule:: SNData.essence.narayan16
+.. automodule:: sndata.essence.narayan16
 
-.. py:currentmodule:: SNData.essence.narayan16
+.. py:currentmodule:: sndata.essence.narayan16
 
 **Attribute Summaries:**
 

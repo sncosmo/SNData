@@ -9,8 +9,8 @@ from unittest import TestCase
 
 from astropy.table import vstack
 
-from SNData import csp, des
-from SNData._combine_data import CombinedDataset, _reduce_id_mapping
+from sndata import csp, des
+from sndata._combine_data import CombinedDataset, _reduce_id_mapping
 from .test_surveys_data import GeneralTests
 
 

@@ -5,7 +5,7 @@
 
 from unittest import TestCase
 
-from SNData import csp, des, essence, sdss
+from sndata import csp, des, essence, sdss
 
 
 class GeneralTests(TestCase):
