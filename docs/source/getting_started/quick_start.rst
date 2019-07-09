@@ -102,7 +102,7 @@ target with a redshift less than .1:
         print(data)
         break
 
-.. important:: In order to evaluate a filter function, the `iter_data` needs to
-   read data for a given object from file. For this reason, filter functions
-   should not be used in an attempt improve runtime by reducing I/O operations
-   as it will have no effect.
+.. important:: As ``iter_data`` iterates over supernovae, it reads in data
+   from file for a given object before checking the filter function. For this
+   reason, filter functions should not be used in an attempt improve runtime
+   by reducing I/O operations as it will have no effect.
