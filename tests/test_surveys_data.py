@@ -53,28 +53,6 @@ class GeneralTests(TestCase):
 
             self.assertTrue(table, err_msg.format(table))
 
-    def _test_table_filtering(self, lim=None):
-        """Test table filtering for ``iter_data``
-
-        Args:
-            lim (int): Maximum number of tables to check (default: All tables)
-        """
-
-        # Define ids to select on
-        obj_ids = self.module.get_available_ids()[:lim]
-        filter_ids = obj_ids[len(obj_ids) // 2:]
-
-        # Create a test selection function
-        def filter_func(data_table):
-            return data_table.meta['obj_id'] in filter_ids
-
-        # Check the selection function works
-        iter_data = islice(
-            self.module.iter_data(filter_func=filter_func), 0, lim)
-
-        for table in iter_data:
-            self.assertTrue(table.meta['obj_id'] in filter_ids)
-
     def _test_ids_are_sorted(self):
         """Test ``get_available_ids`` returns sorted ids"""
 
@@ -99,10 +77,7 @@ class CSP_DR1(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_3_sorted_ids(self):
+    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()
 
 
@@ -120,10 +95,7 @@ class CSP_DR3(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_3_sorted_ids(self):
+    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()
 
 
@@ -141,10 +113,7 @@ class SDSS_Sako18(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_3_sorted_ids(self):
+    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()
 
 
@@ -162,10 +131,7 @@ class DES_SN3YR(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_3_sorted_ids(self):
+    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()
 
 
@@ -183,8 +149,5 @@ class ESSENCE_Narayan16(GeneralTests):
     def test_1_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_table_filtering(self):
-        self._test_table_filtering(10)
-
-    def test_3_sorted_ids(self):
+    def test_2_sorted_ids(self):
         self._test_ids_are_sorted()
