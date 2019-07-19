@@ -27,6 +27,7 @@ from ._data_parsing import load_table
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'
+release = 'dr1'
 survey_url = 'https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1'
 data_type = 'spectroscopic'
 publications = ('Folatelli et al. 2013',)

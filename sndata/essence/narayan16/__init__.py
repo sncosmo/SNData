@@ -26,6 +26,7 @@ from ._meta import band_names, lambda_effective
 
 survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
 survey_abbrev = 'ESSENCE'
+release = 'narayan16'
 survey_url = 'http://www.ctio.noao.edu/essence/'
 data_type = 'photometric'
 publications = ('Narayan et al. 2016',)
