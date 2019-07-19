@@ -26,6 +26,7 @@ from ._data_parsing import load_table
 
 survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
 survey_abbrev = 'ESSENCE'
+release = 'matheson05'
 survey_url = 'http://www.ctio.noao.edu/essence/'
 data_type = 'spectroscopic'
 publications = ('Matheson et al. 2005',)

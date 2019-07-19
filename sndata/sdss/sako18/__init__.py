@@ -29,6 +29,7 @@ from ._meta import band_names, lambda_effective
 
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
+release = 'sako18'
 survey_url = 'http://data.darkenergysurvey.org/sdsssn/dataRelease/'
 data_type = 'photometry'
 publications = ('Sako et al. (2018)',)

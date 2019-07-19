@@ -26,6 +26,7 @@ from ._meta import band_names, lambda_effective
 
 survey_name = 'Dark Energy Survey'
 survey_abbrev = 'DES'
+release = 'sn3yr'
 survey_url = 'https://des.ncsa.illinois.edu/'
 data_type = 'photometry'
 publications = (
