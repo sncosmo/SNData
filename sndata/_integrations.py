@@ -155,6 +155,7 @@ def parse_snoopy_data(path):
             time, mag, mag_err = line_list
             out_table.add_row([time, band, mag, mag_err])
 
+    out_table['time'] += 53000  # Convert from snoopy format to MJD
     return out_table
 
 
