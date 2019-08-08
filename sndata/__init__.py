@@ -38,7 +38,7 @@ def get_zp(band_name):
         The zero point as a float
     """
 
-    survey, release, *_ = band_name.split()
+    survey, release, *_ = band_name.split('_')
     modules_dict = {'csp': csp, 'des': des, 'sdss': sdss}
     module = getattr(modules_dict[survey.lower()], release.lower())
     if not hasattr(module, 'band_names'):

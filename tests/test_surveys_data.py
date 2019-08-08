@@ -6,6 +6,7 @@
 from unittest import TestCase
 
 from sndata import csp, des, essence, sdss
+from sndata import get_zp
 
 
 class GeneralTests(TestCase):
@@ -61,6 +62,13 @@ class GeneralTests(TestCase):
 
         self.assertTrue(is_sorted)
 
+    def _test_get_zp(self):
+        """Test that ``get_dr3_zp`` returns the correct zero point"""
+
+        returned_zp = [get_zp(b) for b in self.module.band_names]
+        actual_zp = self.module._meta.zero_point
+        self.assertSequenceEqual(actual_zp, returned_zp)
+
 
 class CSP_DR1(GeneralTests):
     """Tests for the csp.dr1 module"""
@@ -70,13 +78,13 @@ class CSP_DR1(GeneralTests):
         cls.module = csp.dr1
         cls.module.download_module_data()
 
-    def test_0_empty_data(self):
+    def test_empty_data(self):
         self._test_empty_data(10)
 
-    def test_1_table_parsing(self):
+    def test_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_sorted_ids(self):
+    def test_sorted_ids(self):
         self._test_ids_are_sorted()
 
 
@@ -88,14 +96,17 @@ class CSP_DR3(GeneralTests):
         cls.module = csp.dr3
         cls.module.download_module_data()
 
-    def test_0_empty_data(self):
+    def test_empty_data(self):
         self._test_empty_data(10)
 
-    def test_1_table_parsing(self):
+    def test_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_sorted_ids(self):
+    def test_sorted_ids(self):
         self._test_ids_are_sorted()
+
+    def test_test_get_zp(self):
+        self._test_get_zp()
 
 
 class SDSS_Sako18(GeneralTests):
@@ -106,14 +117,17 @@ class SDSS_Sako18(GeneralTests):
         cls.module = sdss.sako18
         cls.module.download_module_data()
 
-    def test_0_empty_data(self):
+    def test_empty_data(self):
         self._test_empty_data(10)
 
-    def test_1_table_parsing(self):
+    def test_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_sorted_ids(self):
+    def test_sorted_ids(self):
         self._test_ids_are_sorted()
+
+    def test_test_get_zp(self):
+        self._test_get_zp()
 
 
 class DES_SN3YR(GeneralTests):
@@ -124,14 +138,17 @@ class DES_SN3YR(GeneralTests):
         cls.module = des.sn3yr
         cls.module.download_module_data()
 
-    def test_0_empty_data(self):
+    def test_empty_data(self):
         self._test_empty_data(10)
 
-    def test_1_table_parsing(self):
+    def test_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_sorted_ids(self):
+    def test_sorted_ids(self):
         self._test_ids_are_sorted()
+
+    def test_test_get_zp(self):
+        self._test_get_zp()
 
 
 class ESSENCE_Narayan16(GeneralTests):
@@ -142,11 +159,11 @@ class ESSENCE_Narayan16(GeneralTests):
         cls.module = essence.narayan16
         cls.module.download_module_data()
 
-    def test_0_empty_data(self):
+    def test_empty_data(self):
         self._test_empty_data(10)
 
-    def test_1_table_parsing(self):
+    def test_table_parsing(self):
         self._test_table_parsing()
 
-    def test_2_sorted_ids(self):
+    def test_sorted_ids(self):
         self._test_ids_are_sorted()
