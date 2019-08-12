@@ -6,6 +6,8 @@
 from itertools import product
 from pathlib import Path
 
+import numpy as np
+
 _file_dir = Path(__file__).resolve().parent
 data_dir = _file_dir / 'data'
 
@@ -28,6 +30,7 @@ snana_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/SDSS_dataRelea
 band_names = tuple(
     f'sdss_sako18_{b}{c}' for b, c in product('ugriz', '123456'))
 filter_file_names = tuple(f'{b}{c}.dat' for b, c in product('ugriz', '123456'))
+zero_point = [2.5 * np.log10(3631) for _ in band_names]
 lambda_effective = (
     3551, 3551, 3551, 3551, 3551, 3551,
     4686, 4686, 4686, 4686, 4686, 4686,

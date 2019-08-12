@@ -105,7 +105,7 @@ class CSP_DR3(GeneralTests):
     def test_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_test_get_zp(self):
+    def test_get_zp(self):
         self._test_get_zp()
 
 
@@ -126,7 +126,7 @@ class SDSS_Sako18(GeneralTests):
     def test_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_test_get_zp(self):
+    def test_get_zp(self):
         self._test_get_zp()
 
 
@@ -147,7 +147,7 @@ class DES_SN3YR(GeneralTests):
     def test_sorted_ids(self):
         self._test_ids_are_sorted()
 
-    def test_test_get_zp(self):
+    def test_get_zp(self):
         self._test_get_zp()
 
 
