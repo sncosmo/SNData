@@ -19,7 +19,8 @@ Third Year Cosmology Release
 
 .. py:currentmodule:: sndata.des.sn3yr
 
-**Attribute Summaries:**
+Attribute Summaries
+^^^^^^^^^^^^^^^^^^^
 
 .. autosummary::
 
@@ -33,7 +34,8 @@ Third Year Cosmology Release
     register_filters
     band_names
 
-**Function Documentation:**
+Function Documentation
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data

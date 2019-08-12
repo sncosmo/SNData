@@ -31,7 +31,8 @@ def register_filters(force=False):
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
-    return [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    file_list = meta.table_dir.glob('*.dat')
+    return [int(f.stem.strip('table')) for f in file_list]
 
 
 @utils.require_data_path(meta.data_dir)
