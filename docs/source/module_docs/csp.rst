@@ -22,7 +22,8 @@ Data Release 1
 
 .. py:currentmodule:: sndata.csp.dr1
 
-**Attribute Summaries:**
+Attribute Summaries
+^^^^^^^^^^^^^^^^^^^
 
 .. autosummary::
 
@@ -34,7 +35,8 @@ Data Release 1
     iter_data
     load_table
 
-**Function Documentation:**
+Function Documentation
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
@@ -52,7 +54,8 @@ Data Release 3
 
 .. py:currentmodule:: sndata.csp.dr3
 
-**Attribute Summaries:**
+Attribute Summaries
+^^^^^^^^^^^^^^^^^^^
 
 .. autosummary::
 
@@ -66,7 +69,8 @@ Data Release 3
     register_filters
     band_names
 
-**Function Documentation:**
+Function Documentation
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data

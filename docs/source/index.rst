@@ -64,7 +64,7 @@ Available Data
    :maxdepth: 1
    :caption: Module API Docs:
 
-   module_docs/combined
+   module_docs/sndata
    module_docs/csp
    module_docs/des
    module_docs/essence

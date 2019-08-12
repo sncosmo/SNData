@@ -20,7 +20,8 @@ Sako 2018
 
 .. py:currentmodule:: sndata.sdss.sako18
 
-**Attribute Summaries:**
+Attribute Summaries
+^^^^^^^^^^^^^^^^^^^
 
 .. autosummary::
 
@@ -33,7 +34,8 @@ Sako 2018
     load_table
     register_filters
 
-**Function Documentation:**
+Function Documentation
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data

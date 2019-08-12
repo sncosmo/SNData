@@ -54,7 +54,8 @@ Narayan et al. 2016
 
 .. py:currentmodule:: sndata.essence.narayan16
 
-**Attribute Summaries:**
+Attribute Summaries
+^^^^^^^^^^^^^^^^^^^
 
 .. autosummary::
 
@@ -68,7 +69,8 @@ Narayan et al. 2016
     register_filters
     band_names
 
-**Function Documentation:**
+Function Documentation
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: delete_module_data
 .. autofunction:: download_module_data
