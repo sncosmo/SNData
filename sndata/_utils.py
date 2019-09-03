@@ -87,14 +87,14 @@ def download_file(url, out_file):
     response = requests.get(url)
     response.raise_for_status()
 
-    close_on_exit = isinstance(out_file, (str, PosixPath))
-    if close_on_exit:
+    is_file_handle = not isinstance(out_file, (str, PosixPath))
+    if not is_file_handle:
         Path(out_file).parent.mkdir(parents=True, exist_ok=True)
         out_file = open(out_file, 'wb')
 
     out_file.write(response.content)
 
-    if close_on_exit:
+    if not is_file_handle:
         out_file.close()
 
 
@@ -114,9 +114,19 @@ def download_tar(url, out_dir, mode=None):
     with TemporaryFile() as ofile:
         download_file(url, ofile)
 
+        # Writing to the file moves us to the end of the file
+        # We move back to the beginning so we can decompress the data
         ofile.seek(0)
+
         with tarfile.open(fileobj=ofile, mode=mode) as data:
-            data.extractall(out_dir)
+            for file_ in data:
+                try:
+                    data.extract(file_, path=out_dir)
+
+                except IOError as e:
+                    # If output path already exists, delete it and try again
+                    Path(file_.name).unlink()
+                    data.extract(file_, path=out_dir)
 
 
 def build_pbar(data, verbose):
