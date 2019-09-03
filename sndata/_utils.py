@@ -9,7 +9,9 @@ from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
 
+import numpy as np
 import requests
+from astropy.time import Time
 from tqdm import tqdm
 
 
@@ -22,6 +24,32 @@ class NoDownloadedData(Exception):
             args = (default_message,)
 
         super().__init__(*args, **kwargs)
+
+
+@np.vectorize
+def convert_to_jd(date):
+    """Convert MJD and Snoopy dates into JD
+
+    Args:
+        date (float): Time stamp in JD, MJD, or SNPY format
+
+    Returns:
+        The time value in JD format
+    """
+
+    snoopy_offset = 53000
+    mjd_offset = 2400000.5
+    date_format = 'mjd'
+
+    if date < snoopy_offset:
+        date += snoopy_offset
+
+    elif date > mjd_offset:
+        date_format = 'jd'
+
+    t = Time(date, format=date_format)
+    t.format = 'jd'
+    return t.value
 
 
 def require_data_path(data_dir):

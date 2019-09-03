@@ -20,7 +20,8 @@ def get_available_tables():
 
     table_nums = []
     for f in meta.table_dir.rglob('table*.dat'):
-        table_nums.append(int(f.stem.lstrip('table')))
+        table_number = f.stem.lstrip('table')
+        table_nums.append(int(table_number))
 
     return sorted(table_nums)
 
@@ -60,32 +61,36 @@ def get_available_ids():
 
 
 def _read_file(path):
-    """Read a given file path of CSP DR1 data
+    """Read a file path of spectroscopic data from CSP DR1
 
     Args:
         path (str or Path): Path of file to read
 
     Returns:
+        The data of maximum for the observed target
+        The redshift of the target
         An astropy table with file data and meta data
     """
 
-    # Handle single file with three columns
+    # Handle the single file with a different data model:
+    # There are three columns instead of two
     path = Path(path)
     if path.stem == 'SN07bc_070409_b01_BAA_IM':
-        data = Table.read(
-            path, format='ascii', names=['wavelength', 'flux', '_'])
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux', '_'])
         data.remove_column('_')
 
     else:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
-    # Get meta data for observation
+    # Get various data from the table meta data
     file_comments = data.meta['comments']
     redshift = float(file_comments[1].lstrip('Redshift: '))
     max_date = float(file_comments[2].lstrip('JDate_of_max: '))
     obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
     epoch = float(file_comments[4].lstrip('Epoch: '))
 
+    # Add remaining columns. These values are constant for a single file
+    # (i.e. a single spectrum) but vary across files (across spectra)
     _, _, wrange, telescope, instrument = path.stem.split('_')
     date_col = Column(data=np.full(len(data), obs_date), name='date')
     epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
@@ -94,9 +99,13 @@ def _read_file(path):
     inst_col = Column(data=np.full(len(data), instrument), name='instrument')
     data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
 
+    # Ensure dates are in JD format
+    data['date'] = utils.convert_to_jd(data['date'])
+
     return max_date, redshift, data
 
 
+# noinspection PyUnboundLocalVariable
 @utils.require_data_path(meta.data_dir)
 def get_data_for_id(obj_id, format_sncosmo=False):
     """Returns data for a given object ID
@@ -129,9 +138,7 @@ def get_data_for_id(obj_id, format_sncosmo=False):
         max_date, redshift, spectral_data = _read_file(path)
         out_table = vstack([out_table, spectral_data])
 
-    # noinspection PyUnboundLocalVariable
     out_table.meta['redshift'] = redshift
-    # noinspection PyUnboundLocalVariable
     out_table.meta['JDate_of_max'] = max_date
     out_table.meta['obj_id'] = obj_id
 

@@ -3,9 +3,6 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
-from os import path as _path
-
 import numpy as np
 from astropy.io import ascii
 
@@ -23,8 +20,8 @@ def register_filters(force=False):
     """
 
     for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
-        fpath = meta.filter_dir / _file_name
-        integrations.register_filter(fpath, _band_name, force=force)
+        filter_path = meta.filter_dir / _file_name
+        integrations.register_filter(filter_path, _band_name, force=force)
 
 
 @utils.require_data_path(meta.data_dir)
@@ -32,7 +29,7 @@ def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
     file_list = meta.table_dir.glob('*.dat')
-    return [int(f.stem.strip('table')) for f in file_list]
+    return [int(table_path.stem.strip('table')) for table_path in file_list]
 
 
 @utils.require_data_path(meta.data_dir)
@@ -64,8 +61,8 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = glob(_path.join(meta.photometry_dir, '*.txt'))
-    return sorted(_path.basename(f).split('_')[0].lstrip('SN') for f in files)
+    files = meta.photometry_dir.glob('*.txt')
+    return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
 
 def _get_zp_for_bands(band):
@@ -99,7 +96,7 @@ def get_data_for_id(obj_id, format_sncosmo=False):
     """
 
     # Read data file for target
-    file_path = _path.join(meta.photometry_dir, f'SN{obj_id}_snpy.txt')
+    file_path = meta.photometry_dir / f'SN{obj_id}_snpy.txt'
     data_table = integrations.parse_snoopy_data(file_path)
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
