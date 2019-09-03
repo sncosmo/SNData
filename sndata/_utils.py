@@ -124,8 +124,9 @@ def download_tar(url, out_dir, mode=None):
                     data.extract(file_, path=out_dir)
 
                 except IOError as e:
+                    print(e)
                     # If output path already exists, delete it and try again
-                    Path(file_.name).unlink()
+                    (out_dir / file_.name).unlink()
                     data.extract(file_, path=out_dir)
 
 
