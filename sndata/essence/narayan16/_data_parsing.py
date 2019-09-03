@@ -89,6 +89,8 @@ def get_data_for_id(obj_id, format_sncosmo=False):
                'Fluxerr_hi']
     )
 
+    data_table['JD'] = utils.convert_to_jd(data_table['MJD'])
+
     # Get meta data
     with open(path) as infile:
         keys = infile.readline().lstrip('# ').split()
@@ -122,7 +124,7 @@ def _format_sncosmo_table(data_table):
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['mjd'] = data_table['MJD']
+    out_table['time'] = data_table['JD']
     out_table['band'] = 'csp_dr3_' + data_table['Passband']
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
