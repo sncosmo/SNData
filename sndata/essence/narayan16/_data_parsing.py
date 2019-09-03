@@ -126,11 +126,11 @@ def _format_sncosmo_table(data_table):
     out_table.meta = data_table.meta
 
     out_table['time'] = data_table['JD']
-    out_table['band'] = 'csp_dr3_' + data_table['Passband']
+    out_table['band'] = ['csp_dr3_' + band for band in data_table['Passband']]
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
     out_table['flux'] = data_table['Flux']
-    out_table['flux_err'] = np.max(
+    out_table['fluxerr'] = np.max(
         [data_table['Fluxerr_hi'], data_table['Fluxerr_lo']], axis=0)
 
     return out_table

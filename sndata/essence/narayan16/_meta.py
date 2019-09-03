@@ -23,3 +23,4 @@ i_filter_url = 'https://www.noao.edu/kpno/mosaic/filters/asc6028.f287.r04.txt'
 filter_file_names = ('R_band.dat', 'I_band.dat')
 band_names = ('essence_narayan16_R', 'essence_narayan16_I')
 lambda_effective = (6440, 8050)
+zero_point = tuple(27.5 for _ in band_names)
