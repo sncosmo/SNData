@@ -155,12 +155,13 @@ def get_data_for_id(obj_id, format_sncosmo=False):
     # Read in ascii data table for specified object
     file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')
     data = Table.read(file_path, format='ascii')
-    data['JD'] = utils.convert_to_jd(data['MJD'])
 
     # Rename columns using header data from file
     col_names = data.meta['comments'][-1].split()
     for i, name in enumerate(col_names):
         data[f'col{i + 1}'].name = name
+
+    data['JD'] = utils.convert_to_jd(data['MJD'])
 
     # Add meta data
     master_table = load_table('master')
