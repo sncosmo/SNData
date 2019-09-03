@@ -26,7 +26,8 @@ def register_filters(force=False):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_tables():
-    """Get numbers of available tables for this survey / data release"""
+    """Get table numbers for machine readable tables published in the paper
+    for this data release"""
 
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
