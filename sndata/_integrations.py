@@ -11,6 +11,8 @@ import requests
 import sncosmo
 from astropy.table import Table
 
+from . import _utils
+
 
 def add_sn_prefix(uia_name):
     """Add the SN prefix to an IAU name if not already present
@@ -155,7 +157,7 @@ def parse_snoopy_data(path):
             time, mag, mag_err = line_list
             out_table.add_row([time, band, mag, mag_err])
 
-    out_table['time'] += 53000  # Convert from snoopy format to MJD
+    out_table['time'] = _utils.convert_to_jd(out_table['time'])
     return out_table
 
 

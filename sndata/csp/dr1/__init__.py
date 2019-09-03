@@ -11,7 +11,7 @@ Deviations from the standard UI:
   - This module provides spectroscopic data and does not support integration
     features with SNCosmo
   - The ``band_names``, ``lambda_effective``, and ``register_filter``
-    attributes are not available.
+    attributes / methods are not available.
 
 Cuts on returned data:
   - None

@@ -9,12 +9,13 @@ from unittest import TestCase
 
 from astropy.table import vstack
 
+from base_tests import DataParsingTestBase
+from sndata import CombinedDataset
 from sndata import csp, des
-from sndata._combine_data import CombinedDataset, _reduce_id_mapping
-from .test_surveys_data import GeneralTests
+from sndata._combine_data import _reduce_id_mapping
 
 
-class Combined(GeneralTests):
+class Combined(DataParsingTestBase):
     """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
 
     @classmethod
@@ -71,8 +72,8 @@ class Combined(GeneralTests):
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 
-    def test_empty_data(self):
-        self._test_empty_data(10)
+    def test_no_empty_data_tables(self):
+        self._test_no_empty_data_tables(10)
 
 
 class MapReduction(TestCase):

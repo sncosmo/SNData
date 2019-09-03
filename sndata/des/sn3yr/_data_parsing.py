@@ -26,7 +26,8 @@ def register_filters(force=False):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_tables():
-    """Get numbers of available tables for this survey / data release"""
+    """Get table numbers for machine readable tables published in the paper
+    for this data release"""
 
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
@@ -94,7 +95,7 @@ def _format_sncosmo_table(data_table):
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = data_table['MJD']
+    out_table['time'] = data_table['JD']
     out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
     out_table['flux'] = data_table['FLUXCAL']
     out_table['fluxerr'] = data_table['FLUXCALERR']
@@ -124,6 +125,8 @@ def get_data_for_id(obj_id, format_sncosmo=False):
         data_start=27, data_end=-1,
         names=['VARLIST:', 'MJD', 'BAND', 'FIELD', 'FLUXCAL', 'FLUXCALERR',
                'ZPFLUX', 'PSF', 'SKYSIG', 'GAIN', 'PHOTFLAG', 'PHOTPROB'])
+
+    data['JD'] = utils.convert_to_jd(data['MJD'])
 
     # Add meta data to table
     with open(file_path) as ofile:

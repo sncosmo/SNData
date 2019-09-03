@@ -32,7 +32,8 @@ def register_filters(force=False):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_tables():
-    """Get numbers of available tables for this survey / data release"""
+    """Get table numbers for machine readable tables published in the paper
+    for this data release"""
 
     return ['master']
 
@@ -124,7 +125,7 @@ def _format_sncosmo_table(data_table):
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = data_table['MJD']
+    out_table['time'] = data_table['JD']
     out_table['band'] = _construct_band_name(
         data_table['FILT'], data_table['IDCCD'])
 
@@ -159,6 +160,8 @@ def get_data_for_id(obj_id, format_sncosmo=False):
     col_names = data.meta['comments'][-1].split()
     for i, name in enumerate(col_names):
         data[f'col{i + 1}'].name = name
+
+    data['JD'] = utils.convert_to_jd(data['MJD'])
 
     # Add meta data
     master_table = load_table('master')

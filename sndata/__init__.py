@@ -13,7 +13,7 @@ from ._integrations import query_osc
 from ._integrations import query_osc_photometry
 from ._integrations import query_osc_spectra
 
-__version__ = '0.5.1'
+__version__ = '0.6.0'
 __author__ = 'Daniel Perrefort'
 __license__ = 'MIT'
 
@@ -39,7 +39,7 @@ def get_zp(band_name):
     """
 
     survey, release, *_ = band_name.split('_')
-    modules_dict = {'csp': csp, 'des': des, 'sdss': sdss}
+    modules_dict = {'csp': csp, 'des': des, 'sdss': sdss, 'essence': essence}
     module = getattr(modules_dict[survey.lower()], release.lower())
     if not hasattr(module, 'band_names'):
         raise ValueError(

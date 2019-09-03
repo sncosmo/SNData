@@ -30,7 +30,8 @@ def register_filters(force=False):
 
 @utils.require_data_path(meta.data_dir)
 def get_available_tables():
-    """Get numbers of available tables for this survey / data release"""
+    """Get table numbers for machine readable tables published in the paper
+    for this data release"""
 
     return [6]
 
@@ -89,6 +90,8 @@ def get_data_for_id(obj_id, format_sncosmo=False):
                'Fluxerr_hi']
     )
 
+    data_table['JD'] = utils.convert_to_jd(data_table['MJD'])
+
     # Get meta data
     with open(path) as infile:
         keys = infile.readline().lstrip('# ').split()
@@ -122,12 +125,12 @@ def _format_sncosmo_table(data_table):
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['mjd'] = data_table['MJD']
-    out_table['band'] = 'csp_dr3_' + data_table['Passband']
+    out_table['time'] = data_table['JD']
+    out_table['band'] = ['csp_dr3_' + band for band in data_table['Passband']]
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
     out_table['flux'] = data_table['Flux']
-    out_table['flux_err'] = np.max(
+    out_table['fluxerr'] = np.max(
         [data_table['Fluxerr_hi'], data_table['Fluxerr_lo']], axis=0)
 
     return out_table
