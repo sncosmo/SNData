@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Test that survey data is accessed and served correctly"""
+"""Tests for the ``csp.dr3`` module."""
 
 from sndata import csp
 from base_tests import DataParsingTestBase, DocumentationTestBase
@@ -42,7 +42,7 @@ class Documentation(DocumentationTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = csp.dr1
+        cls.module = csp.dr3
 
     def test_consistent_docs(self):
         self._test_consistent_docs()

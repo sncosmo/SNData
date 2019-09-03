@@ -1,11 +1,10 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Test that survey data is accessed and served correctly"""
-
-from base_tests import DataParsingTestBase, DocumentationTestBase
+"""Tests for the ``csp.dr1`` module."""
 
 from sndata import csp
+from base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
@@ -37,7 +36,8 @@ class Documentation(DocumentationTestBase):
         cls.module = csp.dr1
 
     def test_consistent_docs(self):
-        self._test_consistent_docs()
+        skip_funcs = ('register_filters', )
+        self._test_consistent_docs(skip_funcs)
 
     def test_ads_url(self):
         self._test_ads_url_status()

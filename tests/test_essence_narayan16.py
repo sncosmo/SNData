@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Test that survey data is accessed and served correctly"""
+"""Tests for the ``essence.narayan16`` module."""
 
 from sndata import essence
 from base_tests import DataParsingTestBase, DocumentationTestBase
