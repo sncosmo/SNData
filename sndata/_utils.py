@@ -37,19 +37,14 @@ def convert_to_jd(date):
         The time value in JD format
     """
 
-    snoopy_offset = 2453000
+    snoopy_offset = 52999.5
     mjd_offset = 2400000.5
-
-    # Assume the date is in MJD unless it is too small / large
     date_format = 'mjd'
 
     if date < snoopy_offset:
-        # Manually convert Snoopy format to JD
         date += snoopy_offset
-        date_format = 'jd'
 
     elif date > mjd_offset:
-        # Too big to be MJD or snoopy. Must be JD
         date_format = 'jd'
 
     t = Time(date, format=date_format)
@@ -123,7 +118,7 @@ def download_tar(url, out_dir, mode=None):
         # We move back to the beginning so we can decompress the data
         ofile.seek(0)
 
-        with tarfile.open(fileobj=ofile, mode=mode, errorlevel=1) as data:
+        with tarfile.open(fileobj=ofile, mode=mode) as data:
             for file_ in data:
                 try:
                     data.extract(file_, path=out_dir)
