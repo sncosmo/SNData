@@ -46,11 +46,6 @@ The resulting object provides the same user interface as the rest of the
         print(data)
         break
 
-Just as with the rest of the **SNData** package, ``CombinedDataset`` objects
-support filter functions and formatting data for SNCosmo (see the
-*Quick Start* and *Integrated Services* pages respectively for more
-information).
-
 
 .. important::
 
@@ -83,15 +78,13 @@ simple as:
    combined_data.separate_ids(obj_id_1, obj_id_2, obj_id_3, ...)
 
 When retrieving data for a joined ID, the returned data table is simply the
-collective data tables for each joined ID stacked vertically. This can be
-somewhat cumbersome when joining data selts that use different data models.
-One solution is to use the ``format_sncosmo`` option when retrieving data
-to ensure that the data is combined into a uniform format.
+collective data tables for each joined ID stacked vertically.
 
 .. code-block:: python
    :linenos:
 
-   combined_data.get_data_for_id(obj_id_1, format_sncosmo=True)
+   data = combined_data.get_data_for_id(obj_id_1)
+   print(data)
 
 It is worth noting that ``CombinedDataset`` objects are aware of successive
 join actions. This means that the following two examples are functionally
@@ -112,7 +105,12 @@ Excluded Features
 -----------------
 
 There are a handful of meta data features provided for individual data releases
-that are not supported for combined data sets. The following methods attributes
-do not exist for ``CombinedDataset`` objects: ``survey_name``,
-``survey_abbrev``, ``survey_url``, ``publications``, ``ads_url``
+that are not supported for combined data sets. The following attributes
+do not exist for ``CombinedDataset`` objects:
+
+- ``survey_name``
+- ``survey_abbrev``
+- ``survey_url``
+- ``publications``
+- ``ads_url``
 

@@ -14,6 +14,17 @@ from . import _meta as meta
 from ... import _utils as utils
 
 
+def register_filters(force=False):
+    """Register filters for this survey / data release with SNCosmo
+
+    Args:
+        force (bool): Whether to re-register a band if already registered
+    """
+
+    raise ValueError('CSP DR1 is a spectroscopic data release '
+                     'and has no filters to register.')
+
+
 @utils.require_data_path(meta.data_dir)
 def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
@@ -108,22 +119,18 @@ def _read_file(path):
 
 # noinspection PyUnboundLocalVariable
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id, format_sncosmo=False):
+def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 
     See ``get_available_ids()`` for a list of available ID values.
 
     Args:
-        obj_id          (str): The ID of the desired object
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+        obj_id        (str): The ID of the desired object
+        format_table (bool): Format data for ``SNCosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
     """
-
-    if format_sncosmo:
-        raise RuntimeError(
-            'SNCosmo Formatting is not supported for spectroscopic data.')
 
     out_table = Table(
         names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',

@@ -3,8 +3,10 @@
 
 """Tests for the ``csp.dr3`` module."""
 
-from sndata import csp
+import numpy as np
 from base_tests import DataParsingTestBase, DocumentationTestBase
+
+from sndata import csp
 
 
 class DataParsing(DataParsingTestBase):
@@ -36,6 +38,28 @@ class DataParsing(DataParsingTestBase):
     def test_sncosmo_registered_band_names(self):
         self._test_sncosmo_registered_band_names()
 
+    def test_instrument_offset(self):
+        """Test returned DR3 data encorporates the instrument offset using a
+         single data point from 2005el.
+         """
+
+        def get_test_point(band, obj_id='2005el', time=2453640.80, **kwargs):
+            data = csp.dr3.get_data_for_id(obj_id, **kwargs)
+            y_data = data[data['band'] == band]
+            print(y_data)
+            return y_data[y_data['time'] == time]
+
+        unformated_data = get_test_point('Y', '2005el', format_table=False)
+        formated_data = get_test_point('csp_dr3_Y', '2005el')
+
+        # Check magnitude offset from natural to AB mag
+        offset = np.round(formated_data['mag'] - unformated_data['mag'], 4)
+        Yband_offset = 0.63  # From Krisciunas et al. 2017
+        self.assertEqual(offset, Yband_offset)
+
+        # Check error in mag is not changed
+        self.assertEqual(formated_data['mag_err'], unformated_data['mag_err'])
+
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""
@@ -52,4 +76,3 @@ class Documentation(DocumentationTestBase):
 
     def test_survey_url(self):
         self._test_survey_url_status()
-

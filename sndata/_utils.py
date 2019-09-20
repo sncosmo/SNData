@@ -37,7 +37,7 @@ def convert_to_jd(date):
         The time value in JD format
     """
 
-    snoopy_offset = 53000
+    snoopy_offset = 52999.5
     mjd_offset = 2400000.5
     date_format = 'mjd'
 
@@ -124,7 +124,6 @@ def download_tar(url, out_dir, mode=None):
                     data.extract(file_, path=out_dir)
 
                 except IOError as e:
-                    print(e)
                     # If output path already exists, delete it and try again
                     (out_dir / file_.name).unlink()
                     data.extract(file_, path=out_dir)
@@ -195,16 +194,17 @@ def read_vizier_table_descriptions(readme_path):
 
 
 def factory_iter_data(id_func, data_func):
-    def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
+    def iter_data(verbose=False, format_table=True, filter_func=None):
         """Iterate through all available targets and yield data tables
 
-        An optional progress bar can be formatted by passing a dictionary of tqdm
-        arguments. Outputs can be optionally filtered by passing a function
-        ``filter_func`` that accepts a data table and returns a boolean.
+        An optional progress bar can be formatted by passing a dictionary of
+        ``tqdm`` arguments. Outputs can be optionally filtered by passing a
+        function ``filter_func`` that accepts a data table and returns a
+        boolean.
 
         Args:
             verbose  (bool, dict): Optionally display progress bar while iterating
-            format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+            format_table   (bool): Format data for ``SNCosmo`` (Default: True)
             filter_func    (func): An optional function to filter outputs by
 
         Yields:
@@ -216,7 +216,7 @@ def factory_iter_data(id_func, data_func):
 
         iterable = build_pbar(id_func(), verbose)
         for obj_id in iterable:
-            data_table = data_func(obj_id, format_sncosmo=format_sncosmo)
+            data_table = data_func(obj_id, format_table=format_table)
             if filter_func(data_table):
                 yield data_table
 

@@ -99,12 +99,12 @@ class DataParsingTestBase(TestCase):
         for sncosmo."""
 
         test_id = self.module.get_available_ids()[0]
-        test_data = self.module.get_data_for_id(test_id, format_sncosmo=True)
+        test_data = self.module.get_data_for_id(test_id, format_table=True)
         self.assertGreater(test_data['time'][0], 275300.5)
 
     def _test_sncosmo_column_names(self):
         test_id = self.module.get_available_ids()[0]
-        test_data = self.module.get_data_for_id(test_id, format_sncosmo=True)
+        test_data = self.module.get_data_for_id(test_id, format_table=True)
 
         expected_cols = ('time', 'band', 'flux', 'fluxerr', 'zp', 'zpsys')
         for column in expected_cols:
@@ -116,7 +116,7 @@ class DataParsingTestBase(TestCase):
             RuntimeError,
             self.module.get_data_for_id,
             obj_id=self.module.get_available_ids()[0],
-            format_sncosmo=True)
+            format_table=True)
 
     def _test_sncosmo_registered_band_names(self):
         """Test registered bands do have the correct name"""
@@ -151,13 +151,23 @@ class DocumentationTestBase(TestCase):
     def _test_ads_url_status(self):
         """Test module.ads_url returns a 200 status code"""
 
-        stat_code = requests.get(self.module.ads_url).status_code
+        try:
+            stat_code = requests.get(self.module.ads_url, timeout=15).status_code
+
+        except TimeoutError:
+            stat_code = 0
+
         if not stat_code == 200:
             warn(f'Error code {stat_code}: {self.module.survey_url}')
 
     def _test_survey_url_status(self):
         """Test module.survey_url returns a 200 status code"""
 
-        stat_code = requests.get(self.module.survey_url).status_code
+        try:
+            stat_code = requests.get(self.module.survey_url, timeout=15).status_code
+
+        except TimeoutError:
+            stat_code = 0
+
         if not stat_code == 200:
             warn(f'Error code {stat_code}: {self.module.survey_url}')

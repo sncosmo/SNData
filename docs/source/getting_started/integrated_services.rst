@@ -16,6 +16,8 @@ metadata.
 .. code-block:: python
    :linenos:
 
+    from sndata.sdss import sako18
+
     # A list of available table numbers
     table_nums = dr3.get_available_tables()
 
@@ -23,19 +25,29 @@ metadata.
     print(table.meta)
     print(table)
 
-.. note::
-   Publications will often reference data tables that were not included in the
-   publication, but are available online. These tables are also included in
-   ``get_available_tables``, but will have a string identifier instead of an
-   integer.
+Publications will often reference data tables that were not included in the
+publication, but are available online. These tables may also included in
+``get_available_tables``, but will have a string identifier instead of an
+integer table number. An example of this is the SDSS SNe data release from
+Sako et al. 2018 which contained a summary table they call the "master" table
 
+.. code-block:: python
+   :linenos:
+
+    from sndata.sdss import sako18
+    sako18.download_module_data()
+    print(sako18.get_available_tables())
+
+    >>> ['master']
 
 SNCosmo
 -------
 
-**SNData** is capable of formatting data for use with the `SNCosmo`_
-light-curve fitter. This includes registering the filter transmission curves
-for a given survey.
+**SNData** is automatically formats data for use with the `SNCosmo`_
+light-curve fitter. To fully take advantage of this, **SNData** is also able to
+register the filter transmission curves for a given survey into the `sncosmo`
+registry (the registry is how sncosmo keeps track of what various filters,
+models, etc. are called).
 
 .. code-block:: python
    :linenos:
@@ -50,7 +62,7 @@ for a given survey.
     dr3.register_filters()
 
     # Get data for SN 2004dt
-    data_table = dr3.get_data_for_id('2004dt', format_sncosmo=True)
+    data_table = dr3.get_data_for_id('2004dt')
     print(data_table)
 
     # Fit the data
@@ -62,16 +74,6 @@ for a given survey.
         vparam_names=['t0', 'x0', 'x1', 'c'])
 
     print(result)
-
-    # You can also use the ``format_sncosmo`` feature when iterating over data tables
-    for data in dr3.iter_data(format_sncosmo=True):
-        print(data)
-        break
-
-.. warning::
-  The ``get_sncosmo_input`` function is intended for use with surveys that
-  provide photometric data. When called for surveys without photometric data
-  (such as ``sndata.csp.dr1``) the function will raise an error.
 
 
 NASA/IPAC Extragalactic Database (NED)
@@ -118,23 +120,8 @@ light-curves, and spectra. All three of these data types can be queried using
     print(query_osc_spectra(object_name))
 
 
-SNooPy
-------
-
-`SNooPy`_ is a collection of Python tools developed by the Carnegie Supernova
-Project for the analysis of TypeIa supernovae. **SNData** includes the
-``parse_snoopy_data`` for parsing snoopy files as an astropy table.
-
-.. code-block:: python
-   :linenos:
-
-    from sndata import parse_snoopy_data
-
-    data_table = parse_snoopy_data('my_directory/my_file.snpy')
-
 .. _Vizier.com: https://vizier.unistra.fr
 .. _SNCosmo: https://sncosmo.readthedocs.io/en/v1.8.x/
-.. _SNooPy: https://csp.obs.carnegiescience.edu/data/snpy
 .. _NED: https://ned.ipac.caltech.edu
 .. _IAU: https://www.iau.org/public/themes/naming_stars/
 .. _OSC: https://sne.space

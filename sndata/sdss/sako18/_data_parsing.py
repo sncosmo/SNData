@@ -139,14 +139,14 @@ def _format_sncosmo_table(data_table):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id, format_sncosmo=False):
+def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 
     See ``get_available_ids()`` for a list of available ID values.
 
     Args:
-        obj_id          (str): The ID of the desired object
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+        obj_id        (str): The ID of the desired object
+        format_table (bool): Format data for ``SNCosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -179,7 +179,7 @@ def get_data_for_id(obj_id, format_sncosmo=False):
         keep_indices = ~np.isin(data['MJD'], outlier_list)
         data = data[keep_indices]
 
-    if format_sncosmo:
+    if format_table:
         data = _format_sncosmo_table(data)
 
     return data

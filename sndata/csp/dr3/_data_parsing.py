@@ -83,14 +83,14 @@ def _get_zp_for_bands(band):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id, format_sncosmo=False):
+def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 
     See ``get_available_ids()`` for a list of available ID values.
 
     Args:
-        obj_id          (str): The ID of the desired object
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+        obj_id        (str): The ID of the desired object
+        format_table (bool): Format data for ``SNCosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -101,15 +101,18 @@ def get_data_for_id(obj_id, format_sncosmo=False):
     data_table = integrations.parse_snoopy_data(file_path)
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
-    if format_sncosmo:
-        # Add flux values
+    if format_table:
+        # Convert band names to package standard
         data_table['band'] = 'csp_dr3_' + data_table['band']
+
+        offsets = np.array([meta.instrument_offsets[b] for b in data_table['band']])
+        data_table['mag'] += offsets
+
+        # Add flux values
         data_table['zp'] = _get_zp_for_bands(data_table['band'])
         data_table['zpsys'] = np.full(len(data_table), 'ab')
-        data_table['flux'] = \
-            10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
-        data_table['fluxerr'] = \
-            np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
+        data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
+        data_table['fluxerr'] = np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5
 
     return data_table
 

@@ -24,9 +24,6 @@ class DataParsing(DataParsingTestBase):
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 
-    def test_format_sncosmo_raises_err(self):
-        self._test_format_sncosmo_raises_err()
-
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""
@@ -36,8 +33,7 @@ class Documentation(DocumentationTestBase):
         cls.module = csp.dr1
 
     def test_consistent_docs(self):
-        skip_funcs = ('register_filters', )
-        self._test_consistent_docs(skip_funcs)
+        self._test_consistent_docs()
 
     def test_ads_url(self):
         self._test_ads_url_status()
