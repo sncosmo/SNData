@@ -24,9 +24,6 @@ class DataParsing(DataParsingTestBase):
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 
-    def test_format_sncosmo_raises_err(self):
-        self._test_format_sncosmo_raises_err()
-
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""
