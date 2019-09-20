@@ -123,13 +123,12 @@ def download_tar(url, out_dir, mode=None):
         # We move back to the beginning so we can decompress the data
         ofile.seek(0)
 
-        with tarfile.open(fileobj=ofile, mode=mode) as data:
+        with tarfile.open(fileobj=ofile, mode=mode, errorlevel=1) as data:
             for file_ in data:
                 try:
                     data.extract(file_, path=out_dir)
 
                 except IOError as e:
-                    print(e)
                     # If output path already exists, delete it and try again
                     (out_dir / file_.name).unlink()
                     data.extract(file_, path=out_dir)
