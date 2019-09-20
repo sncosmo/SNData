@@ -83,14 +83,14 @@ def _get_zp_for_bands(band):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id, format_sncosmo=True):
+def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 
     See ``get_available_ids()`` for a list of available ID values.
 
     Args:
-        obj_id          (str): The ID of the desired object
-        format_sncosmo (bool): Format data for ``SNCosmo`` (Default: True)
+        obj_id        (str): The ID of the desired object
+        format_table (bool): Format data for ``SNCosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -101,7 +101,7 @@ def get_data_for_id(obj_id, format_sncosmo=True):
     data_table = integrations.parse_snoopy_data(file_path)
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
-    if format_sncosmo:
+    if format_table:
         # Convert band names to package standard
         data_table['band'] = 'csp_dr3_' + data_table['band']
 

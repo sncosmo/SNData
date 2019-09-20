@@ -36,6 +36,12 @@ class DataParsing(DataParsingTestBase):
     def test_sncosmo_registered_band_names(self):
         self._test_sncosmo_registered_band_names()
 
+    def correct_data_for_2005el(self):
+        """Test a handful of measurements for 2005el match values in
+        Krisciunas et al. 2017"""
+
+        self.fail()
+
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""

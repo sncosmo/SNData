@@ -99,12 +99,12 @@ class DataParsingTestBase(TestCase):
         for sncosmo."""
 
         test_id = self.module.get_available_ids()[0]
-        test_data = self.module.get_data_for_id(test_id, format_sncosmo=True)
+        test_data = self.module.get_data_for_id(test_id, format_table=True)
         self.assertGreater(test_data['time'][0], 275300.5)
 
     def _test_sncosmo_column_names(self):
         test_id = self.module.get_available_ids()[0]
-        test_data = self.module.get_data_for_id(test_id, format_sncosmo=True)
+        test_data = self.module.get_data_for_id(test_id, format_table=True)
 
         expected_cols = ('time', 'band', 'flux', 'fluxerr', 'zp', 'zpsys')
         for column in expected_cols:
@@ -116,7 +116,7 @@ class DataParsingTestBase(TestCase):
             RuntimeError,
             self.module.get_data_for_id,
             obj_id=self.module.get_available_ids()[0],
-            format_sncosmo=True)
+            format_table=True)
 
     def _test_sncosmo_registered_band_names(self):
         """Test registered bands do have the correct name"""

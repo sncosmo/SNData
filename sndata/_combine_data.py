@@ -130,12 +130,12 @@ class CombinedDataset:
                 raise utils.NoDownloadedData(
                     f'No data downloaded for {module.__name__}')
 
-    def _get_data_single_id(self, obj_id, format_sncosmo=True):
+    def _get_data_single_id(self, obj_id, format_table=True):
         """Return data for a given object ID
 
         Args:
             obj_id   (tuple[str]): The ID of the desired object
-            format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -155,9 +155,9 @@ class CombinedDataset:
 
         data_module = self._data_modules[module_key]
         return data_module.get_data_for_id(
-            obj_id[0], format_sncosmo=format_sncosmo)
+            obj_id[0], format_table=format_table)
 
-    def _get_data_id_list(self, obj_id_list, format_sncosmo=True):
+    def _get_data_id_list(self, obj_id_list, format_table=True):
         """Return data for a list of object ID
 
         Data tables for individual object IDs are vertically stacked. Meta
@@ -165,20 +165,20 @@ class CombinedDataset:
 
         Args:
             obj_id_list (list[tuple[str]]): The ID of the desired object
-            format_sncosmo          (bool): Format data for SNCosmo.fit_lc (Default: False)
+            format_table          (bool): Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
         """
 
         first_id = obj_id_list.pop()
-        combined_table = self._get_data_single_id(first_id, format_sncosmo)
+        combined_table = self._get_data_single_id(first_id, format_table)
         combined_table.meta = {first_id: combined_table.meta}
         combined_table.meta['obj_id'] = [first_id]
         del combined_table.meta[first_id]['obj_id']
 
         for obj_id in obj_id_list:
-            data_table = self._get_data_single_id(obj_id, format_sncosmo)
+            data_table = self._get_data_single_id(obj_id, format_table)
 
             new_meta = data_table.meta
             data_table.meta = {}
@@ -190,14 +190,14 @@ class CombinedDataset:
 
         return combined_table
 
-    def get_data_for_id(self, obj_id, format_sncosmo=True):
+    def get_data_for_id(self, obj_id, format_table=True):
         """Return data for a given object ID
 
         See ``get_available_ids()`` for a table of available ID values. Object
 
         Args:
             obj_id   (tuple[str]): The ID of the desired object
-            format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -205,12 +205,12 @@ class CombinedDataset:
 
         for id_set in self._joined_ids:
             if obj_id in id_set:
-                return self._get_data_id_list(id_set, format_sncosmo)
+                return self._get_data_id_list(id_set, format_table)
 
-        return self._get_data_single_id(obj_id, format_sncosmo)
+        return self._get_data_single_id(obj_id, format_table)
 
     def iter_data(self, survey=None, release=None, verbose=False,
-                  format_sncosmo=True, filter_func=None):
+                  format_table=True, filter_func=None):
         """Iterate through all available targets and yield data tables
 
         An optional progress bar can be formatted by passing a dictionary of tqdm
@@ -221,7 +221,7 @@ class CombinedDataset:
             survey          (str): Only include data from a given survey (Default: None)
             release         (str): Only include data from a given data release (Default: None)
             verbose  (bool, dict): Optionally display progress bar while iterating (Default: False)
-            format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
             filter_func    (func): An optional function to filter outputs by
 
         Yields:
@@ -240,7 +240,7 @@ class CombinedDataset:
 
         for index, row in utils.build_pbar(id_data.iterrows(), verbose):
             obj_id = (row['obj_id'], row['release'], row['survey'])
-            data = self.get_data_for_id(obj_id, format_sncosmo=format_sncosmo)
+            data = self.get_data_for_id(obj_id, format_table=format_table)
             if filter_func(data):
                 yield data
 

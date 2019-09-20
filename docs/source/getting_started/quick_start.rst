@@ -81,7 +81,7 @@ Observational data can be retrieved for individual objects as astropy tables.
 .. important:: Data tables returned by SNDATA are formatted for use with the
    ``sncosmo`` python package. In doing so, the values of the table may be
    manipulated from the original file data into different units, column names,
-   etc. To disable this feature, specify the ``format_sncosmo=False`` argument.
+   etc. To disable this feature, specify the ``format_table=False`` argument.
 
 The ``iter_data`` function is also provided for convenience to iterate over
 data for all available objects.

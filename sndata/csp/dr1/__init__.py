@@ -8,10 +8,8 @@ The observations cover a range of phases from 12 days before to over 150 days
 after the time of B-band maximum light. (Source: Folatelli et al. 2013)
 
 Deviations from the standard UI:
-  - This module provides spectroscopic data and does not support integration
-    features with SNCosmo
-  - The ``band_names``, ``lambda_effective``, and ``register_filter``
-    attributes / methods are not available.
+  - This module provides spectroscopic data and as such the ``band_names``,
+  and ``lambda_effective`` attributes are not available.
 
 Cuts on returned data:
   - None
