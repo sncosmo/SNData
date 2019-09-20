@@ -65,7 +65,7 @@ def get_data_for_id(obj_id, format_sncosmo=True):
 
     Args:
         obj_id          (str): The ID of the desired object
-        format_sncosmo (bool): Format data for SNCosmo.fit_lc (Default: False)
+        format_sncosmo (bool): Format data for ``SNCosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID

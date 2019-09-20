@@ -66,8 +66,6 @@ Accessing Data
 --------------
 
 Observational data can be retrieved for individual objects as astropy tables.
-The ``iter_data`` function is also provided for convenience to iterate over
-data for all available objects.
 
 .. code-block:: python
    :linenos:
@@ -80,6 +78,14 @@ data for all available objects.
     data_table = get_data_for_id(demo_id)
     print(data_table)
 
+.. important:: Data tables returned by SNDATA are formatted for use with the
+   ``sncosmo`` python package. In doing so, the values of the table may be
+   manipulated from the original file data into different units, column names,
+   etc. To disable this feature, specify the ``format_sncosmo=False`` argument.
+
+The ``iter_data`` function is also provided for convenience to iterate over
+data for all available objects.
+
     # Don't forget to check the meta data
     print(data_table.meta)
 
@@ -87,7 +93,7 @@ data for all available objects.
         print(data)
         break
 
-The ``iter_data`` allows users to optionally select a subset of the total data
+This function allows users to optionally select a subset of the total data
 by defining a filter function. This function should accept a data table
 yielded by ``iter_data`` and return a boolean. For example, to only select
 target with a redshift less than .1:
