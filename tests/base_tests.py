@@ -151,13 +151,23 @@ class DocumentationTestBase(TestCase):
     def _test_ads_url_status(self):
         """Test module.ads_url returns a 200 status code"""
 
-        stat_code = requests.get(self.module.ads_url).status_code
+        try:
+            stat_code = requests.get(self.module.ads_url, timeout=15).status_code
+
+        except TimeoutError:
+            stat_code = 0
+
         if not stat_code == 200:
             warn(f'Error code {stat_code}: {self.module.survey_url}')
 
     def _test_survey_url_status(self):
         """Test module.survey_url returns a 200 status code"""
 
-        stat_code = requests.get(self.module.survey_url).status_code
+        try:
+            stat_code = requests.get(self.module.survey_url, timeout=15).status_code
+
+        except TimeoutError:
+            stat_code = 0
+
         if not stat_code == 200:
             warn(f'Error code {stat_code}: {self.module.survey_url}')
