@@ -139,7 +139,7 @@ def _format_sncosmo_table(data_table):
 
 
 @utils.require_data_path(meta.data_dir)
-def get_data_for_id(obj_id, format_sncosmo=False):
+def get_data_for_id(obj_id, format_sncosmo=True):
     """Returns data for a given object ID
 
     See ``get_available_ids()`` for a list of available ID values.

@@ -200,7 +200,7 @@ def read_vizier_table_descriptions(readme_path):
 
 
 def factory_iter_data(id_func, data_func):
-    def iter_data(verbose=False, format_sncosmo=False, filter_func=None):
+    def iter_data(verbose=False, format_sncosmo=True, filter_func=None):
         """Iterate through all available targets and yield data tables
 
         An optional progress bar can be formatted by passing a dictionary of tqdm

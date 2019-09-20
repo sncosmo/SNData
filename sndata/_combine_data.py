@@ -130,7 +130,7 @@ class CombinedDataset:
                 raise utils.NoDownloadedData(
                     f'No data downloaded for {module.__name__}')
 
-    def _get_data_single_id(self, obj_id, format_sncosmo=False):
+    def _get_data_single_id(self, obj_id, format_sncosmo=True):
         """Return data for a given object ID
 
         Args:
@@ -157,7 +157,7 @@ class CombinedDataset:
         return data_module.get_data_for_id(
             obj_id[0], format_sncosmo=format_sncosmo)
 
-    def _get_data_id_list(self, obj_id_list, format_sncosmo=False):
+    def _get_data_id_list(self, obj_id_list, format_sncosmo=True):
         """Return data for a list of object ID
 
         Data tables for individual object IDs are vertically stacked. Meta
@@ -190,7 +190,7 @@ class CombinedDataset:
 
         return combined_table
 
-    def get_data_for_id(self, obj_id, format_sncosmo=False):
+    def get_data_for_id(self, obj_id, format_sncosmo=True):
         """Return data for a given object ID
 
         See ``get_available_ids()`` for a table of available ID values. Object
@@ -210,7 +210,7 @@ class CombinedDataset:
         return self._get_data_single_id(obj_id, format_sncosmo)
 
     def iter_data(self, survey=None, release=None, verbose=False,
-                  format_sncosmo=False, filter_func=None):
+                  format_sncosmo=True, filter_func=None):
         """Iterate through all available targets and yield data tables
 
         An optional progress bar can be formatted by passing a dictionary of tqdm
