@@ -76,3 +76,6 @@ class Documentation(DocumentationTestBase):
 
     def test_survey_url(self):
         self._test_survey_url_status()
+
+    def test_hase_meta_attributes(self):
+        self._test_hase_meta_attributes()

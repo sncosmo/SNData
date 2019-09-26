@@ -1,18 +1,18 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Tests for the ``essence.narayan16`` module."""
+"""Tests for the sdss.sako18 module"""
 
-from sndata import essence
+from sndata import sdss
 from base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
-    """Tests for the essence.narayan16 module"""
+    """Tests for the sdss.sako18 module"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = essence.narayan16
+        cls.module = sdss.sako18
         cls.module.download_module_data(force=True)
 
     def test_no_empty_data_tables(self):
@@ -42,7 +42,7 @@ class Documentation(DocumentationTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = essence.narayan16
+        cls.module = sdss.sako18
 
     def test_consistent_docs(self):
         self._test_consistent_docs()
