@@ -4,7 +4,7 @@
 """Tests for the ``csp.dr1`` module."""
 
 from sndata import csp
-from base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):

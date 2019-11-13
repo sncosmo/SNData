@@ -4,7 +4,7 @@
 """Tests for the ``essence.narayan16`` module."""
 
 from sndata import essence
-from base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):

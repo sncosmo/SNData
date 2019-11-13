@@ -4,9 +4,9 @@
 """Tests for the ``csp.dr3`` module."""
 
 import numpy as np
-from base_tests import DataParsingTestBase, DocumentationTestBase
 
 from sndata import csp
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):

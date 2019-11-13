@@ -4,7 +4,7 @@
 """Tests for the ``des.SN3YR`` module."""
 
 from sndata import des
-from base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):

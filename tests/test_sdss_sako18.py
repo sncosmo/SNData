@@ -4,7 +4,7 @@
 """Tests for the sdss.sako18 module"""
 
 from sndata import sdss
-from base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
