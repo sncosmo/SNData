@@ -3,11 +3,11 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from astropy.io import fits
-from astropy.table import Column, Table
+from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
 from ... import _utils as utils
+from ..._iraf_parse import read_multispec
 
 # Cahce the master table for later use
 _master_table = None
@@ -81,19 +81,21 @@ def get_data_for_id(obj_id, format_table=True):
     """
 
     master_table = load_table('master')
-    master_record = master_table[master_table['CID'] == obj_id][0]
-    spectrum_id = master_record['SID']
+    spectra_ids = []
 
-    # Read in ascii data table for specified object
-    file_path = meta.spectra_dir / f'gal{obj_id}-{spectrum_id}.fits'
-    with fits.open(file_path, memmap=False) as hdulist:
-        data = Table(rows=hdulist[0].data)
-        data.meta.update(hdulist[0].header)
+    data_tables = []
+    for row in master_table[master_table['CID'] == obj_id]:
+        for spec_type in row['Files'].split(','):
+            file_path = meta.spectra_dir / f'{spec_type.lower()}{obj_id}-{sid}.fits'
+            header, wave, flux = read_multispec(file_path)
+            data = Table([wave, flux[0]], names=['wavelength', 'flux'])
+            data['spec_type'] = spec_type
+            data['date'] = row['Date']
+            data_tables.append(data)
 
-    data.meta['Type'] = master_record['Type']
-    data.meta['zSN'] = master_record['zSN']
-    data.meta['zGal'] = master_record['zGal']
-    return data
+    out_data = vstack(data_tables)
+    out_data.meta['obj_id'] = obj_id
+    return out_data
 
 
 iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
