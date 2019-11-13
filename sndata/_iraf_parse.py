@@ -1,41 +1,13 @@
-"""readmultispec.py
+"""This module parses spectroscopic data from a fits file written in
+the IRAF multispec format. Parsing includes the ability to read most multispec
+formats including linear, log, cubic spline, Chebyshev or Legendre dispersion
+spectra
 
-Read IRAF (echelle) spectrum in multispec format from a FITS file.
-Can read most multispec formats including linear, log, cubic spline,
-Chebyshev or Legendre dispersion spectra.
-
-Usage: retdict = readmultispec(fitsfile, reform=True)
-
-Inputs:
-
-fitfile     Name of the FITS file
-reform      If true (the default), a single spectrum dimensioned
-            [4,1,NWAVE] is returned as flux[4,NWAVE].  If false,
-            it is returned as a 3-D array flux[4,1,NWAVE].
-
-Returns a dictionary with these entries:
-flux        Array dimensioned [NCOMPONENTS,NORDERS,NWAVE] with the spectra.
-            If NORDERS=1, array is [NCOMPONENTS,NWAVE]; if NCOMPONENTS is also
-            unity, array is [NWAVE].  (This can be changed
-            using the reform keyword.)  Commonly the first dimension
-            is 4 and indexes the spectrum, an alternate version of
-            the spectrum, the sky, and the error array.  I have also
-            seen examples where NCOMPONENTS=2 (probably spectrum and
-            error).  Generally I think you can rely on the first element
-            flux[0] to be the extracted spectrum.  I don't know of
-            any foolproof way to figure out from the IRAF header what the
-            various components are.
-wavelen     Array dimensioned [NORDERS,NWAVE] with the wavelengths for
-            each order.
-header      The full FITS header from pyfits.
-wavefields  [NORDERS] List with the analytical wavelength
-            description (polynomial coefficients, etc.) extracted from
-            the header.  This is probably not very useful but is
-            included just in case.
-
-History:
-Created by Rick White based on my IDL readechelle.pro, 2012 August 15
-Apologies for any IDL-isms that remain!
+This code is was originally written by Rick White and then shared with
+Kevin Gullikson who distributed it publicly under a GPL-3.0 licence.
+Minor modifications to the public code were made after adopting the code here
+in order to improve readability and port the code from Python 2 to Python 3.
+Original Code: https://github.com/kgullikson88/General
 """
 
 import numpy as np
@@ -45,9 +17,16 @@ from astropy.io import fits as pyfits
 def nonlinearwave(nwave, specstr, verbose=False):
     """Compute non-linear wavelengths from multispec string
 
-    Returns wavelength array and dispersion fields.
-    Raises a ValueError if it can't understand the dispersion string.
+    Args:
+        nwave    (int): Number of wavelength values to return
+        specstr:
+        verbose (bool): Print status while parsing
+
+    Returns:
+        An array of wavelength values
+        The dispersion fields
     """
+    print('f', specstr)
 
     fields = specstr.split()
     if int(fields[2]) != 2:
@@ -74,7 +53,7 @@ def nonlinearwave(nwave, specstr, verbose=False):
 
         if len(fields) != 15 + npieces + 3:
             raise ValueError('Bad order-%d spline format (%d fields)' % (
-            npieces, len(fields)))
+                npieces, len(fields)))
 
         coeff = np.asarray(fields[15:], dtype=float)
         # normalized x coordinates
@@ -87,14 +66,16 @@ def nonlinearwave(nwave, specstr, verbose=False):
         x1 = 1 + 3 * a * (1 + a * b)
         x2 = 1 + 3 * b * (1 + a * b)
         x3 = b ** 3
-        wave = coeff[j] * x0 + coeff[j + 1] * x1 + coeff[j + 2] * x2 + coeff[j + 3] * x3
+        wave = coeff[j] * x0 + coeff[j + 1] * x1 + coeff[j + 2] * x2 + coeff[
+            j + 3] * x3
 
     elif ftype == 1 or ftype == 2:
 
         # chebyshev or legendre polynomial
         # legendre not tested yet
         if len(fields) < 15:
-            raise ValueError('Bad polynomial format (only %d fields)' % len(fields))
+            raise ValueError(
+                'Bad polynomial format (only %d fields)' % len(fields))
 
         order = int(fields[12])
         pmin = float(fields[13])
@@ -110,8 +91,10 @@ def nonlinearwave(nwave, specstr, verbose=False):
         if len(fields) != 15 + order:
             # raise ValueError('Bad order-%d polynomial format (%d fields)' % (order, len(fields)))
             if verbose:
-                print('Bad order-%d polynomial format (%d fields)' % (order, len(fields)))
-                print("Changing order from %i to %i" % (order, len(fields) - 15))
+                print('Bad order-%d polynomial format (%d fields)' % (
+                    order, len(fields)))
+                print(
+                    "Changing order from %i to %i" % (order, len(fields) - 15))
 
             order = len(fields) - 15
 
@@ -143,15 +126,34 @@ def nonlinearwave(nwave, specstr, verbose=False):
     return wave, fields
 
 
-def readmultispec(fitsfile, reform=True, quiet=False):
-    """Read IRAF echelle spectrum in multispec format from a FITS file
+def read_multispec(fitsfile, reform=True, quiet=False):
+    """Read an IRAF spectrum in multispec format from a FITS file
 
-    Can read most multispec formats including linear, log, cubic spline,
-    Chebyshev or Legendre dispersion spectra
+    Args:
+        fitsfile (str): Path of the FITS file to read
+        reform  (bool): Return flux in to 2D [n, m] instead of 3D [n, 1, m]
+        quiet   (bool): Suppress print statements
 
-    If reform is true, a single spectrum dimensioned 4,1,NWAVE is returned
-    as 4,NWAVE (this is the default.)  If reform is false, it is returned as
-    a 3-D array.
+    Returns:
+        A dictionary with these entries:
+            flux        Array dimensioned [NCOMPONENTS,NORDERS,NWAVE] with the spectra.
+                        If NORDERS=1, array is [NCOMPONENTS,NWAVE]; if NCOMPONENTS is also
+                        unity, array is [NWAVE].  (This can be changed
+                        using the reform keyword.)  Commonly the first dimension
+                        is 4 and indexes the spectrum, an alternate version of
+                        the spectrum, the sky, and the error array.  I have also
+                        seen examples where NCOMPONENTS=2 (probably spectrum and
+                        error).  Generally I think you can rely on the first element
+                        flux[0] to be the extracted spectrum.  I don't know of
+                        any foolproof way to figure out from the IRAF header what the
+                        various components are.
+            wavelen     Array dimensioned [NORDERS,NWAVE] with the wavelengths for
+                        each order.
+            header      The full FITS header from pyfits.
+            wavefields  [NORDERS] List with the analytical wavelength
+                        description (polynomial coefficients, etc.) extracted from
+                        the header.  This is probably not very useful but is
+                        included just in case.
     """
 
     fh = pyfits.open(fitsfile)
@@ -198,7 +200,8 @@ def readmultispec(fitsfile, reform=True, quiet=False):
                 flux = np.squeeze(flux)
                 wavelen.shape = (nwave,)
 
-            return {'flux': flux, 'wavelen': wavelen, 'header': header, 'wavefields': None}
+            return {'flux': flux, 'wavelen': wavelen, 'header': header,
+                    'wavefields': None}
     except KeyError:
         pass
 
@@ -207,7 +210,8 @@ def readmultispec(fitsfile, reform=True, quiet=False):
         wat2 = header['wat2_*']
 
     except KeyError:
-        raise ValueError('Cannot decipher header, need either WAT2_ or CRVAL keywords')
+        raise ValueError(
+            'Cannot decipher header, need either WAT2_ or CRVAL keywords')
 
     # concatenate them all together into one big string
     watstr = []
@@ -238,7 +242,8 @@ def readmultispec(fitsfile, reform=True, quiet=False):
         wparms[i, :] = w1[:9]
         if w1[2] == -1:
             raise ValueError(
-                'Spectrum %d has no wavelength calibration (type=%d)' % (i + 1, w1[2]))
+                'Spectrum %d has no wavelength calibration (type=%d)' % (
+                    i + 1, w1[2]))
 
             # elif w1[6] != 0:
             #    raise ValueError('Spectrum %d has non-zero redshift (z=%f)' % (i+1,w1[6]))
@@ -251,7 +256,8 @@ def readmultispec(fitsfile, reform=True, quiet=False):
         verbose = (not quiet) and (i == 0)
         if wparms[i, 2] == 0 or wparms[i, 2] == 1:
             # simple linear or log spacing
-            wavelen[i, :] = np.arange(nwave, dtype=float) * wparms[i, 4] + wparms[i, 3]
+            wavelen[i, :] = np.arange(nwave, dtype=float) * wparms[i, 4] + \
+                            wparms[i, 3]
             if wparms[i, 2] == 1:
                 wavelen[i, :] = 10.0 ** wavelen[i, :]
                 if verbose:
@@ -274,4 +280,5 @@ def readmultispec(fitsfile, reform=True, quiet=False):
         flux = np.squeeze(flux)
         wavelen.shape = (nwave,)
 
-    return {'flux': flux, 'wavelen': wavelen, 'header': header, 'wavefields': wavefields}
+    return {'flux': flux, 'wavelen': wavelen, 'header': header,
+            'wavefields': wavefields}
