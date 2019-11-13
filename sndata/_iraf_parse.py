@@ -263,10 +263,6 @@ def read_multispec(fitsfile, reform=True, quiet=True):
             wavelen[i, :], wavefields[i] = nonlinear_wave(
                 nwave, specstr[i], verbose=verbose)
 
-        wavelen *= 1.0 + wparms[i, 6]
-        if verbose:
-            print(f"Correcting for redshift: z={wparms[i, 6]}")
-
     if nspec == 1 and reform:
         # get rid of unity dimensions
         flux = np.squeeze(flux)
