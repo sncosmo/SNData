@@ -7,7 +7,6 @@ from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
 from ... import _utils as utils
-from ..._iraf_parse import read_multispec
 
 # Cahce the master table for later use
 _master_table = None
@@ -81,16 +80,17 @@ def get_data_for_id(obj_id, format_table=True):
     """
 
     master_table = load_table('master')
-    spectra_ids = []
 
     data_tables = []
     for row in master_table[master_table['CID'] == obj_id]:
         for spec_type in row['Files'].split(','):
-            file_path = meta.spectra_dir / f'{spec_type.lower()}{obj_id}-{sid}.fits'
-            header, wave, flux = read_multispec(file_path)
-            data = Table([wave, flux[0]], names=['wavelength', 'flux'])
+            file_name = f'{spec_type.lower()}{obj_id}-{row["SID"]}.txt'
+            file_path = str(meta.spectra_dir / file_name)
+            data = Table.read(file_path, format='ascii', names=['wavelength', 'flux'])
+
             data['spec_type'] = spec_type
             data['date'] = row['Date']
+            data['telescope'] = row['Telescope']
             data_tables.append(data)
 
     out_data = vstack(data_tables)
