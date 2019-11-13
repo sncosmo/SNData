@@ -128,25 +128,19 @@ def read_multispec(fitsfile, reform=True, quiet=True):
         quiet   (bool): Suppress print statements
 
     Returns:
-        A dictionary with these entries:
-            flux        Array dimensioned [NCOMPONENTS,NORDERS,NWAVE] with the spectra.
-                        If NORDERS=1, array is [NCOMPONENTS,NWAVE]; if NCOMPONENTS is also
-                        unity, array is [NWAVE].  (This can be changed
-                        using the reform keyword.)  Commonly the first dimension
-                        is 4 and indexes the spectrum, an alternate version of
-                        the spectrum, the sky, and the error array.  I have also
-                        seen examples where NCOMPONENTS=2 (probably spectrum and
-                        error).  Generally I think you can rely on the first element
-                        flux[0] to be the extracted spectrum.  I don't know of
-                        any foolproof way to figure out from the IRAF header what the
-                        various components are.
-            wavelen     Array dimensioned [NORDERS,NWAVE] with the wavelengths for
-                        each order.
-            header      The full FITS header from pyfits.
-            wavefields  [NORDERS] List with the analytical wavelength
-                        description (polynomial coefficients, etc.) extracted from
-                        the header.  This is probably not very useful but is
-                        included just in case.
+        The file's header data
+        An array of wavelengths dimensioned [NORDERS, NWAVE]
+        An array of flux values dimensioned [NCOMPONENTS, NORDERS, NWAVE]
+            If NORDERS=1, array is [NCOMPONENTS, NWAVE]; if NCOMPONENTS is also
+            unity, array is [NWAVE]. (This can be changed
+            using the reform keyword.) Commonly the first dimension
+            is 4 and indexes the spectrum, an alternate version of
+            the spectrum, the sky, and the error array.  I have also
+            seen examples where NCOMPONENTS=2 (probably spectrum and
+            error).  Generally I think you can rely on the first element
+            flux[0] to be the extracted spectrum.  I don't know of
+            any foolproof way to figure out from the IRAF header what the
+            various components are.
     """
 
     fh = pyfits.open(fitsfile)
@@ -198,7 +192,8 @@ def read_multispec(fitsfile, reform=True, quiet=True):
                 flux = np.squeeze(flux)
                 wavelen.shape = (nwave,)
 
-            return {'flux': flux, 'wavelen': wavelen, 'header': header, 'wavefields': None}
+            return header, wavelen, flux
+
     except KeyError:
         pass
 
@@ -277,7 +272,4 @@ def read_multispec(fitsfile, reform=True, quiet=True):
         flux = np.squeeze(flux)
         wavelen.shape = (nwave,)
 
-    return {'flux': flux,
-            'wavelen': wavelen,
-            'header': header,
-            'wavefields': wavefields}
+    return header, wavelen, flux
