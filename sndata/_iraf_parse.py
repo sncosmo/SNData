@@ -3,10 +3,11 @@ the IRAF multispec format. Parsing includes the ability to read most multispec
 formats including linear, log, cubic spline, Chebyshev or Legendre dispersion
 spectra
 
-This code is was originally written by Rick White and then shared with
-Kevin Gullikson who distributed it publicly under a GPL-3.0 licence.
-Minor modifications to the public code were made after adopting the code here
-in order to improve readability and port the code from Python 2 to Python 3.
+This code is was originally written by Rick White and then shared with Kevin
+Gullikson who distributed it publicly under a GPL-3.0 licence. Minor
+modifications to the public code were made after adopting it here. Changes
+were made to improve readability and port the code from Python 2 to Python 3.
+The automatic rest-framing of spectra was also removed.
 Original Code: https://github.com/kgullikson88/General
 """
 
