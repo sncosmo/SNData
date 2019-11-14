@@ -13,7 +13,7 @@ from ._integrations import query_osc
 from ._integrations import query_osc_photometry
 from ._integrations import query_osc_spectra
 
-__version__ = '0.7.0'
+__version__ = '0.7.1'
 __author__ = 'Daniel Perrefort'
 __license__ = 'MIT'
 
