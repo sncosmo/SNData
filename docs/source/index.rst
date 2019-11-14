@@ -47,26 +47,28 @@ data release may have from the rest of the package. In general you should:
 
 1. Read the installation guide (~1 minute if you know how to use ``pip``)
 2. Read the quick start guide to learn how the package works (~5 minutes)
-3. (Eventually) read the slow start guide for a better understanding of the available features and hopw they can make your life easier (~10 minutes)
+3. (Eventually) read the slow start guide for a better understanding of the available features and how they can make your life easier (~10 minutes)
 4. Refer to the API documentation for a given survey as necessary
 
 
 Available Data
 --------------
 
-+------------------------------------------------------+------------------------+---------------+
-| Survey Name                                          | Data Release           | Data Type     |
-+======================================================+========================+===============+
-|                                                      | `DR1`_                 | Spectroscopic |
-+ Carnegie Supernova Project                           +------------------------+---------------+
-|                                                      | `DR3`_                 | Photometric   |
-+------------------------------------------------------+------------------------+---------------+
-| Dark Energy Survey                                   | `SN3YR`_               | Photometric   |
-+------------------------------------------------------+------------------------+---------------+
-+ Equation of State: Supernovae Trace Cosmic Expansion | `Narayan et al. 2016`_ | Photometric   |
-+------------------------------------------------------+------------------------+---------------+
-| Sloan Digital Sky Survey                             | `Sako et al. 2018`_    | Photometric   |
-+------------------------------------------------------+------------------------+---------------+
++------------------------------------------------------+---------------+------------------------+
+| Survey Name                                          | Data Type     | Data Release           |
++======================================================+===============+========================+
+|                                                      | Spectroscopic | `DR1`_                 |
++ Carnegie Supernova Project                           +---------------+------------------------+
+|                                                      | Photometric   | `DR3`_                 |
++------------------------------------------------------+---------------+------------------------+
+| Dark Energy Survey                                   | Photometric   | `SN3YR`_               |
++------------------------------------------------------+---------------+------------------------+
++ Equation of State: Supernovae Trace Cosmic Expansion | Photometric   | `Narayan et al. 2016`_ |
++------------------------------------------------------+---------------+------------------------+
+|                                                      | Photometric   | `Sako et al. 2018`_    |
++ Sloan Digital Sky Survey                             +---------------+------------------------+
+|                                                      | Spectroscopic | `Sako et al. 2018`_    |
++------------------------------------------------------+---------------|------------------------+
 
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
@@ -83,6 +85,7 @@ Available Data
    Overview<self>
    getting_started/installation
    getting_started/quick_start
+   getting_started/slow_start
    getting_started/combining_datasets
 
 .. toctree::
@@ -95,3 +98,10 @@ Available Data
    module_docs/des
    module_docs/essence
    module_docs/sdss
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: For Developers:
+
+   developers/general_notes
