@@ -6,7 +6,7 @@ Digital Sky Survey (SDSS). For more information on SDSS see
 https://www.sdss.org .
 """
 
-from . import sako18
+from . import sako18, sako18spec
 
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'

@@ -171,3 +171,19 @@ class DocumentationTestBase(TestCase):
 
         if not stat_code == 200:
             warn(f'Error code {stat_code}: {self.module.survey_url}')
+
+    def _test_hase_meta_attributes(self):
+        """Test the module has the correct attributes for meta data"""
+
+        expected_attributes = ('survey_name',
+                               'survey_abbrev',
+                               'release',
+                               'survey_url',
+                               'data_type',
+                               'publications',
+                               'ads_url')
+
+        for attribute in expected_attributes:
+            self.assertTrue(
+                hasattr(self.module, attribute),
+                f'Missing attribute {attribute}')

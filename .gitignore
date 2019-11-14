@@ -13,10 +13,7 @@ build/
 dist/
 
 # Light Curve Data
-SNData/*/*/data
-
-# Jupyter Checkpoints
-*.ipynb_checkpoints
+sndata/*/*/data
 
 # Testing cache files
 .pytest_cache/

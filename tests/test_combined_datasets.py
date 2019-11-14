@@ -9,10 +9,10 @@ from unittest import TestCase
 
 from astropy.table import vstack
 
-from base_tests import DataParsingTestBase
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
+from .base_tests import DataParsingTestBase
 
 
 class Combined(DataParsingTestBase):

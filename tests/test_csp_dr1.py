@@ -4,7 +4,7 @@
 """Tests for the ``csp.dr1`` module."""
 
 from sndata import csp
-from base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
@@ -40,3 +40,6 @@ class Documentation(DocumentationTestBase):
 
     def test_survey_url(self):
         self._test_survey_url_status()
+
+    def test_hase_meta_attributes(self):
+        self._test_hase_meta_attributes()
