@@ -142,9 +142,11 @@ def parse_snoopy_data(path):
         # Get meta data from first line
         name, z, ra, dec = ofile.readline().split()
         out_table.meta['obj_id'] = name
-        out_table.meta['redshift'] = float(z)
         out_table.meta['ra'] = float(ra)
         out_table.meta['dec'] = float(dec)
+        out_table.meta['z'] = float(z)
+        out_table.meta['z_err'] = None
+        out_table.meta['comments'] = None
 
         # Read photometric data from the rest of the file
         band = None

@@ -146,9 +146,9 @@ def get_data_for_id(obj_id, format_table=True):
         max_date, redshift, spectral_data = _read_file(path)
         out_table = vstack([out_table, spectral_data])
 
-    out_table.meta['redshift'] = redshift
-    out_table.meta['JDate_of_max'] = max_date
     out_table.meta['obj_id'] = obj_id
+    out_table.meta['z'] = redshift
+    out_table.meta.move_to_end('comments')
 
     return out_table
 

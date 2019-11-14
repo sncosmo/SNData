@@ -30,7 +30,7 @@ def get_available_tables():
     for this data release"""
 
     file_list = meta.table_dir.glob('*.dat')
-    return [int(table_path.stem.strip('table')) for table_path in file_list]
+    return sorted(int(table_path.stem.strip('table')) for table_path in file_list)
 
 
 @utils.require_data_path(meta.data_dir)
