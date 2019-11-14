@@ -46,7 +46,6 @@ class DataParsing(DataParsingTestBase):
         def get_test_point(band, obj_id='2005el', time=2453640.80, **kwargs):
             data = csp.dr3.get_data_for_id(obj_id, **kwargs)
             y_data = data[data['band'] == band]
-            print(y_data)
             return y_data[y_data['time'] == time]
 
         unformated_data = get_test_point('Y', '2005el', format_table=False)

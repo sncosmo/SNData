@@ -77,7 +77,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -107,12 +107,12 @@ def get_data_for_id(obj_id, format_table=True):
     data_table.meta['comments'].pop()
 
     if format_table:
-        data_table = _format_sncosmo_table(data_table)
+        data_table = _format_table(data_table)
 
     return data_table
 
 
-def _format_sncosmo_table(data_table):
+def _format_table(data_table):
     """Format a data table for use with SNCosmo
 
     Args:
