@@ -95,6 +95,7 @@ def get_data_for_id(obj_id, format_table=True):
             data['telescope'] = row['Telescope']
             data_tables.append(data)
 
+    # Load target meta data from the master table of the photometric data
     global _photometry_master_table
     if _photometry_master_table is None:
         _photometry_master_table = Table.read(
@@ -108,7 +109,8 @@ def get_data_for_id(obj_id, format_table=True):
     out_data.meta['ra'] = phot_record['RA']
     out_data.meta['dec'] = phot_record['DEC']
     out_data.meta['z'] = phot_record['zCMB']
-    out_data.meta['dtype'] = 'spectra'
+    out_data.meta['z_err'] = phot_record['zerrCMB'][0]
+    out_data.meta['dtype'] = 'spectroscopic'
     out_data.meta['comments'] = \
         'z represents CMB corrected redshift of the supernova.'
 

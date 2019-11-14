@@ -166,13 +166,15 @@ def get_data_for_id(obj_id, format_table=True):
     # Add meta data
     master_table = load_table('master')
     table_meta_data = master_table[master_table['CID'] == obj_id]
-    data.meta['redshift'] = table_meta_data['zCMB'][0]
-    data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
+    data.meta['obj_id'] = obj_id
     data.meta['ra'] = table_meta_data['RA'][0]
     data.meta['dec'] = table_meta_data['DEC'][0]
+    data.meta['z'] = table_meta_data['zCMB'][0]
+    data.meta['z_err'] = table_meta_data['zerrCMB'][0]
+    data.meta['dtype'] = 'photometric'
+    data.meta['comments'] = \
+        'z represents CMB corrected redshift of the supernova.'
     data.meta['classification'] = table_meta_data['Classification'][0]
-    data.meta['name'] = table_meta_data['IAUName'][0]
-    data.meta['obj_id'] = obj_id
 
     outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:
