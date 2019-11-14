@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from functools import lru_cache
+
 import numpy as np
 from astropy.table import Table
 
@@ -32,6 +34,7 @@ def get_available_tables():
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -112,7 +115,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -131,13 +134,16 @@ def get_data_for_id(obj_id, format_table=True):
     # Add meta data to table
     with open(file_path) as ofile:
         table_meta_data = ofile.readlines()
+        data.meta['obj_id'] = obj_id
         data.meta['ra'] = float(table_meta_data[7].split()[1])
         data.meta['dec'] = float(table_meta_data[8].split()[1])
-        data.meta['PEAKMJD'] = float(table_meta_data[12].split()[1])
-        data.meta['redshift'] = float(table_meta_data[13].split()[1])
-        data.meta['redshift_err'] = float(table_meta_data[13].split()[3])
-        data.meta['obj_id'] = obj_id
-        del data.meta['comments']
+        data.meta['z'] = float(table_meta_data[13].split()[1])
+        data.meta['z_err'] = float(table_meta_data[13].split()[3])
+        data.meta['dtype'] = 'photometric'
+        data.meta['comments'] = \
+            'z represents CMB corrected redshift of the supernova.'
+
+        data.meta.move_to_end('comments')
 
     if format_table:
         data = _format_sncosmo_table(data)

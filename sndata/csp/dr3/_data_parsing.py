@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from functools import lru_cache
+
 import numpy as np
 from astropy.io import ascii
 
@@ -30,9 +32,10 @@ def get_available_tables():
     for this data release"""
 
     file_list = meta.table_dir.glob('*.dat')
-    return [int(table_path.stem.strip('table')) for table_path in file_list]
+    return sorted(int(table_path.stem.strip('table')) for table_path in file_list)
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -90,7 +93,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID

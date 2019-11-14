@@ -3,7 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-import os
+from functools import lru_cache
 
 import numpy as np
 from astropy.table import Column, Table
@@ -11,10 +11,6 @@ from astropy.table import Column, Table
 from . import _meta as meta
 from ... import _integrations as integrations
 from ... import _utils as utils
-
-# We will need to access the ``master table`` published by SDSS at various
-# points so we lazy load it
-_master_table = None
 
 
 @utils.require_data_path(meta.data_dir)
@@ -38,6 +34,7 @@ def get_available_tables():
     return ['master']
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -49,11 +46,8 @@ def load_table(table_id):
     """
 
     if table_id == 'master':
-        global _master_table
-        if _master_table is None:
-            _master_table = Table.read(meta.master_table_path, format='ascii')
-            _master_table['CID'] = Column(_master_table['CID'], dtype=str)
-
+        _master_table = Table.read(meta.master_table_path, format='ascii')
+        _master_table['CID'] = Column(_master_table['CID'], dtype=str)
         return _master_table
 
     else:
@@ -146,14 +140,14 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
     """
 
     # Read in ascii data table for specified object
-    file_path = os.path.join(meta.smp_dir, f'SMP_{int(obj_id):06d}.dat')
+    file_path = meta.smp_dir / f'SMP_{int(obj_id):06d}.dat'
     data = Table.read(file_path, format='ascii')
 
     # Rename columns using header data from file
@@ -166,13 +160,15 @@ def get_data_for_id(obj_id, format_table=True):
     # Add meta data
     master_table = load_table('master')
     table_meta_data = master_table[master_table['CID'] == obj_id]
-    data.meta['redshift'] = table_meta_data['zCMB'][0]
-    data.meta['redshift_err'] = table_meta_data['zerrCMB'][0]
+    data.meta['obj_id'] = obj_id
     data.meta['ra'] = table_meta_data['RA'][0]
     data.meta['dec'] = table_meta_data['DEC'][0]
+    data.meta['z'] = table_meta_data['zCMB'][0]
+    data.meta['z_err'] = table_meta_data['zerrCMB'][0]
+    data.meta['dtype'] = 'photometric'
+    data.meta['comments'] = \
+        'z represents CMB corrected redshift of the supernova.'
     data.meta['classification'] = table_meta_data['Classification'][0]
-    data.meta['name'] = table_meta_data['IAUName'][0]
-    data.meta['obj_id'] = obj_id
 
     outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:

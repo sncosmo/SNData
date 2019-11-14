@@ -20,3 +20,7 @@ sndata/*/*/data
 
 # Built Docs
 docs/build
+
+# Jupyter Notebooks
+*.ipynb
+.ipynb_checkpoints/

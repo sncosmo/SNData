@@ -3,7 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
+from functools import lru_cache
 from os import path as _path
 
 import numpy as np
@@ -36,6 +36,7 @@ def get_available_tables():
     return [6]
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -65,7 +66,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = glob(_path.join(meta.photometry_dir, '*.dat'))
+    files = meta.photometry_dir.glob('*.dat')
     return sorted(_path.basename(f).split('.')[0] for f in files)
 
 
@@ -77,7 +78,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -107,12 +108,12 @@ def get_data_for_id(obj_id, format_table=True):
     data_table.meta['comments'].pop()
 
     if format_table:
-        data_table = _format_sncosmo_table(data_table)
+        data_table = _format_table(data_table)
 
     return data_table
 
 
-def _format_sncosmo_table(data_table):
+def _format_table(data_table):
     """Format a data table for use with SNCosmo
 
     Args:

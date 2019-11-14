@@ -3,7 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -38,6 +38,7 @@ def get_available_tables():
     return sorted(table_nums)
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -67,7 +68,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = glob(str(meta.spectra_dir / 'SN*.dat'))
+    files = meta.spectra_dir.glob('SN*.dat')
     ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
     return sorted(set(ids))
 
@@ -126,7 +127,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     Args:
         obj_id        (str): The ID of the desired object
-        format_table (bool): Format data for ``SNCosmo`` (Default: True)
+        format_table (bool): Format for use with ``sncosmo`` (Default: True)
 
     Returns:
         An astropy table of data for the given ID
@@ -146,9 +147,12 @@ def get_data_for_id(obj_id, format_table=True):
         max_date, redshift, spectral_data = _read_file(path)
         out_table = vstack([out_table, spectral_data])
 
-    out_table.meta['redshift'] = redshift
-    out_table.meta['JDate_of_max'] = max_date
     out_table.meta['obj_id'] = obj_id
+    out_table.meta['ra'] = None
+    out_table.meta['dec'] = None
+    out_table.meta['z'] = redshift
+    out_table.meta['z_err'] = None
+    out_table.meta.move_to_end('comments')
 
     return out_table
 
