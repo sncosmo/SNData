@@ -10,7 +10,8 @@ data_dir = _file_dir / 'data'
 
 # Define local paths of published data
 master_table_path = data_dir / 'master_data.txt'  # Master table
-spectra_dir = data_dir / 'Spectra_txt'  # spectra fits files
+spectra_dir = data_dir / 'Spectra_txt'  # spectra txt files
+spectra_zip = _file_dir / 'Spectra_txt.zip'  # Compressed spectra files
 
 # Define urls for remote data
 master_table_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/spectroscopy_table.txt'

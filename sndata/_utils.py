@@ -223,12 +223,13 @@ def factory_iter_data(id_func, data_func):
     return iter_data
 
 
-def factory_delete_module_data(data_dir):
+def factory_delete_module_data(*dirs):
     def delete_module_data():
         """Delete any data for the current survey / data release"""
 
         try:
-            shutil.rmtree(data_dir)
+            for data_dir in dirs:
+                shutil.rmtree(data_dir)
 
         except FileNotFoundError:
             pass

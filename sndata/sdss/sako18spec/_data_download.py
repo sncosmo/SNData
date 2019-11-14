@@ -3,6 +3,8 @@
 
 """This module defines functions for downloading data."""
 
+import zipfile
+
 from . import _meta as meta
 from ... import _utils as utils
 
@@ -22,10 +24,16 @@ def download_module_data(force=False):
             url=meta.master_table_url,
             out_file=meta.master_table_path)
 
-    if force or not meta.spectra_dir.exists():
-        print('Downloading spectra...')
-        utils.download_tar(
-            url=meta.spectra_url,
-            out_dir=meta.data_dir,
-            mode='r:gz')
+    # Spectral data parsing requires IRAF so we use preparsed data instead
 
+    # if force or not meta.spectra_dir.exists():
+    #     print('Downloading spectra...')
+    #     utils.download_tar(
+    #         url=meta.spectra_url,
+    #         out_dir=meta.data_dir,
+    #         mode='r:gz')
+
+    if force or not meta.spectra_dir.exists():
+        print('Unzipping spectra...')
+        with zipfile.ZipFile(meta.spectra_zip, 'r') as zip_ref:
+            zip_ref.extractall(meta.data_dir)
