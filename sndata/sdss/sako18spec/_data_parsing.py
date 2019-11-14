@@ -8,8 +8,9 @@ from astropy.table import Column, Table, vstack
 from . import _meta as meta
 from ... import _utils as utils
 
-# Cahce the master table for later use
+# Cache the master table for later use
 _master_table = None
+_photometry_master_table = None
 
 
 def register_filters(force=False):
@@ -86,15 +87,31 @@ def get_data_for_id(obj_id, format_table=True):
         for spec_type in row['Files'].split(','):
             file_name = f'{spec_type.lower()}{obj_id}-{row["SID"]}.txt'
             file_path = str(meta.spectra_dir / file_name)
-            data = Table.read(file_path, format='ascii', names=['wavelength', 'flux'])
+            data = Table.read(file_path, format='ascii',
+                              names=['wavelength', 'flux'])
 
             data['spec_type'] = spec_type
             data['date'] = row['Date']
             data['telescope'] = row['Telescope']
             data_tables.append(data)
 
+    global _photometry_master_table
+    if _photometry_master_table is None:
+        _photometry_master_table = Table.read(
+            meta.photometry_master_table_path, format='ascii')
+
+    phot_record_idx = _photometry_master_table['CID'] == int(obj_id)
+    phot_record = _photometry_master_table[phot_record_idx][0]
+
     out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
+    out_data.meta['ra'] = phot_record['RA']
+    out_data.meta['dec'] = phot_record['DEC']
+    out_data.meta['z'] = phot_record['zCMB']
+    out_data.meta['dtype'] = 'spectra'
+    out_data.meta['comments'] = \
+        'z represents CMB corrected redshift of the supernova.'
+
     return out_data
 
 

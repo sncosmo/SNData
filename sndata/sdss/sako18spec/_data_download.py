@@ -24,6 +24,14 @@ def download_module_data(force=False):
             url=meta.master_table_url,
             out_file=meta.master_table_path)
 
+    # We download the master table of the photometric data release so
+    # that we have access to the ra, dec, and z of each target
+    if force or not meta.photometry_master_table_path.exists():
+        print('Downloading target meta data...')
+        utils.download_file(
+            url=meta.photometry_master_table_url,
+            out_file=meta.photometry_master_table_path)
+
     # Spectral data parsing requires IRAF so we use preparsed data instead
 
     # if force or not meta.spectra_dir.exists():
