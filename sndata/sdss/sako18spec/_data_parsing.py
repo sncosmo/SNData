@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from functools import lru_cache
+
 from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
@@ -33,6 +35,7 @@ def get_available_tables():
     return ['master']
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -44,11 +47,8 @@ def load_table(table_id):
     """
 
     if table_id == 'master':
-        global _master_table
-        if _master_table is None:
-            _master_table = Table.read(meta.master_table_path, format='ascii')
-            _master_table['CID'] = Column(_master_table['CID'], dtype=str)
-
+        _master_table = Table.read(meta.master_table_path, format='ascii')
+        _master_table['CID'] = Column(_master_table['CID'], dtype=str)
         return _master_table
 
     else:

@@ -3,7 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -38,6 +38,7 @@ def get_available_tables():
     return sorted(table_nums)
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -67,7 +68,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = glob(str(meta.spectra_dir / 'SN*.dat'))
+    files = meta.spectra_dir.glob('SN*.dat')
     ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
     return sorted(set(ids))
 

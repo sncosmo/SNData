@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from functools import lru_cache
+
 import numpy as np
 from astropy.table import Table
 
@@ -32,6 +34,7 @@ def get_available_tables():
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data

@@ -3,7 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from glob import glob
+from functools import lru_cache
 
 import numpy as np
 from astropy.io import ascii, fits
@@ -20,6 +20,7 @@ def get_available_tables():
     return [1]
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -49,7 +50,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = glob(str(meta.spectra_dir / '*.fits'))
+    files = meta.spectra_dir.glob('*.fits')
     if not len(files) == 52:
         raise utils.NoDownloadedData()
 

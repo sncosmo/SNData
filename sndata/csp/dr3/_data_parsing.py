@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from functools import lru_cache
+
 import numpy as np
 from astropy.io import ascii
 
@@ -33,6 +35,7 @@ def get_available_tables():
     return sorted(int(table_path.stem.strip('table')) for table_path in file_list)
 
 
+@lru_cache(maxsize=None)
 @utils.require_data_path(meta.data_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
