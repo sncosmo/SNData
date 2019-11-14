@@ -5,7 +5,7 @@ To install the package, please choose from one of the options below.
 
 .. note::
    No survey data is downloaded when installing or upgrading **SNData**.
-   All data management is handled manually as outlined in the
+   All data management is handled explicitly, as outlined in the
    `Quick Start <quick_start.html>`_ tutorial.
 
 Using PIP (Recommended)

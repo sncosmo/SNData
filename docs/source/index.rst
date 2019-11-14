@@ -43,7 +43,12 @@ across surveys. The *Getting Started* guides are intended to help you get up
 and running quickly and to familiarize you with the general **SNData**
 interface. Additional API documentation is provided for each individual
 data set to highlight any (very) minor deviations a particular survey or
-data release may have from the rest of the package.
+data release may have from the rest of the package. In general you should:
+
+1. Read the installation guide (~1 minute if you know how to use ``pip``)
+2. Read the quick start guide to learn how the package works (~5 minutes)
+3. (Eventually) read the slow start guide for a better understanding of the available features and hopw they can make your life easier (~10 minutes)
+4. Refer to the API documentation for a given survey as necessary
 
 
 Available Data
