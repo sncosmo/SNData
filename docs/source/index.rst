@@ -78,7 +78,6 @@ Available Data
    Overview<self>
    getting_started/installation
    getting_started/quick_start
-   getting_started/integrated_services
    getting_started/combining_datasets
 
 .. toctree::
