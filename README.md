@@ -1,13 +1,5 @@
 # SNData
 
-
-.. |python| image:: https://img.shields.io/badge/python-3.5+-blue.svg
-    :target: #
-
-.. |license| image:: https://img.shields.io/badge/license-GPL%20v3.0-blue.svg
-    :target: https://www.gnu.org/licenses/gpl-3.0.en.html
-
-
 [![python](https://img.shields.io/badge/python-3.6+-g.svg)]()
 [![license](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Build Status](https://www.travis-ci.com/mwvgroup/SNData.svg?branch=master)](https://www.travis-ci.com/mwvgroup/SNData) 
