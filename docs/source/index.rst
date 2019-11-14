@@ -1,6 +1,28 @@
 SNData
 ======
 
+.. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
+    :target: #
+
+.. |license| image:: https://img.shields.io/badge/license-GPL%20v3.0-blue.svg
+    :target: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+.. |travis| image:: https://www.travis-ci.com/mwvgroup/SNData.svg?branch=master
+   :target: https://www.travis-ci.com/mwvgroup/SNData
+
+.. |cover| image:: https://coveralls.io/repos/github/mwvgroup/SNData/badge.svg?branch=master
+   :target: https://coveralls.io/github/mwvgroup/SNData?branch=master
+
+.. |docs| image:: https://readthedocs.org/projects/sn-data/badge/?version=latest
+   :target: https://sn-data.readthedocs.io/en/latest/?badge=latest
+
+.. rst-class:: badges
+
+   +--------------------------------------------+
+   | |python| |license| |travis| |cover| |docs| |
+   +--------------------------------------------+
+
+
 **SNData** provides access to spectroscopic and photometric data published by
 a variety of supernova (SN) surveys. It is designed to support the development
 of scalable analysis pipelines that translate with minimal effort between
