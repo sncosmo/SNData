@@ -13,6 +13,9 @@ matrix:
 install:
   - pip install -r requirements.txt
   - python setup.py install
+
+  # To send coverage to coveralls
+  - pip install coverage
   - pip install pytest-cov
 
 script:
