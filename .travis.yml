@@ -11,8 +11,12 @@ matrix:
       sudo: true
 
 install:
-  - "pip install -r requirements.txt"
-  - "python setup.py install"
+  - pip install -r requirements.txt
+  - python setup.py install
+  - pip install coverage
 
 script:
-  - pytest
+  - pytest --cov=sndata/
+
+after_success:
+  - coveralls
