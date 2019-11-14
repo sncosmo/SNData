@@ -147,7 +147,10 @@ def get_data_for_id(obj_id, format_table=True):
         out_table = vstack([out_table, spectral_data])
 
     out_table.meta['obj_id'] = obj_id
+    out_table.meta['ra'] = None
+    out_table.meta['dec'] = None
     out_table.meta['z'] = redshift
+    out_table.meta['z_err'] = None
     out_table.meta.move_to_end('comments')
 
     return out_table
