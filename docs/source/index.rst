@@ -47,8 +47,8 @@ data release may have from the rest of the package. In general you should:
 
 1. Read the installation guide (~1 minute if you know how to use ``pip``)
 2. Read the quick start guide to learn how the package works (~5 minutes)
-3. (Eventually) read the slow start guide for a better understanding of the available features and how they can make your life easier (~10 minutes)
-4. Refer to the API documentation for a given survey as necessary
+3. Read the slow start guide for a better understanding of the available features and how they can make your life easier (~10 minutes)
+4. Refer to the API documentation for a given survey as you see necessary
 
 
 Available Data
