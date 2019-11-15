@@ -14,9 +14,8 @@ Using PIP (Recommended)
 To install using the `pip package manager`_, run:
 
 .. code-block:: bash
-   :linenos:
 
-    $ pip install sndata
+    pip install sndata
 
 Pip will automatically install any missing dependencies in your Python
 environment. If you have any issues installing the package, try installing the
@@ -24,11 +23,10 @@ dependency manually and then reinstall **sndata**. Dependencies can be
 installed with pip by running:
 
 .. code-block:: bash
-   :linenos:
 
-    $ git clone http://github.com/djperrefort/SNData
-    $ cd SNData
-    $ pip install -r requirements.txt
+    git clone http://github.com/djperrefort/SNData
+    cd SNData
+    pip install -r requirements.txt
 
 
 Using setup.py
@@ -38,11 +36,10 @@ If pip is unavailable on your system, the package source code is
 available on `GitHub`_.
 
 .. code-block:: bash
-   :linenos:
 
-    $ git clone http://github.com/djperrefort/SNData
-    $ cd SNData
-    $ python setup.py install --user
+    git clone http://github.com/djperrefort/SNData
+    cd SNData
+    python setup.py install --user
 
 As in the previous method, any missing dependencies in your Python environment
 should be installed automatically. If you have any issues installing the
