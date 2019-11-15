@@ -68,6 +68,8 @@ Accessing Data
 --------------
 
 Observational data can be retrieved for individual objects as astropy tables.
+For convenience, the Ra, Dec, redshift, and redshift error are included in the
+table's meta data when available.
 
 .. code-block:: python
    :linenos:
@@ -80,7 +82,10 @@ Observational data can be retrieved for individual objects as astropy tables.
    data_table = get_data_for_id(demo_id)
    print(data_table)
 
-.. important:: Data tables returned by SNDATA are formatted for use with the
+   # Don't forget to check the meta data!
+   print(data_table.meta)
+
+.. important:: Data tables returned by SNData are formatted for use with the
    ``sncosmo`` python package. In doing so, the values of the table may be
    manipulated from the original file data into different units, column names,
    etc. To disable this feature, specify the ``format_table=False`` argument.
@@ -90,9 +95,6 @@ data for all available objects.
 
 .. code-block:: python
    :linenos:
-
-   # Don't forget to check the meta data
-   print(data_table.meta)
 
    for data in dr3.iter_data():
        print(data)
