@@ -98,10 +98,3 @@ Available Data
    module_docs/des
    module_docs/essence
    module_docs/sdss
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-   :caption: For Developers:
-
-   developers/general_notes
