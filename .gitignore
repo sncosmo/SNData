@@ -8,7 +8,7 @@
 *__pycache__*
 *.pyc
 .eggs/
-SNData.egg-info/
+*.egg-info/
 build/
 dist/
 

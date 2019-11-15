@@ -53,4 +53,5 @@ setup(name='sndata',
 
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
-      include_package_data=False)
+      include_package_data=True
+      )
