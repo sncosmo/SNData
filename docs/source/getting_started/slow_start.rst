@@ -88,6 +88,9 @@ Observational data can be retrieved for individual objects as astropy tables.
 The ``iter_data`` function is also provided for convenience to iterate over
 data for all available objects.
 
+.. code-block:: python
+   :linenos:
+
    # Don't forget to check the meta data
    print(data_table.meta)
 
