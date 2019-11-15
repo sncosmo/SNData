@@ -36,6 +36,6 @@ For a more in depth overview, see the ..slow_start
    # For convenience you can iterate over all tables
    data_iterator = dr3.iter_data()
    for data in data_iterator:
-   print('The first data table:')
-   print(data)
-   break
+       print('The first data table:')
+       print(data)
+       break
