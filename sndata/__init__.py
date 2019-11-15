@@ -7,15 +7,10 @@ surveys.
 
 from . import csp, des, essence, sdss
 from ._combine_data import CombinedDataset
-from ._integrations import parse_snoopy_data
-from ._integrations import query_ned_coords
-from ._integrations import query_osc
-from ._integrations import query_osc_photometry
-from ._integrations import query_osc_spectra
 
 __version__ = '0.7.1'
 __author__ = 'Daniel Perrefort'
-__license__ = 'MIT'
+__license__ = 'GPL 3.0'
 
 
 def delete_all_data():
