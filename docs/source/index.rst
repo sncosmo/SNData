@@ -68,7 +68,7 @@ Available Data
 |                                                      | Photometric   | `Sako et al. 2018`_    |
 + Sloan Digital Sky Survey                             +---------------+------------------------+
 |                                                      | Spectroscopic | `Sako et al. 2018`_    |
-+------------------------------------------------------+---------------|------------------------+
++------------------------------------------------------+---------------+------------------------+
 
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
@@ -79,10 +79,15 @@ Available Data
 
 .. toctree::
    :hidden:
+   :maxdepth: 0
+
+   Overview<self>
+
+.. toctree::
+   :hidden:
    :maxdepth: 1
    :caption: Getting Started:
 
-   Overview<self>
    getting_started/installation
    getting_started/quick_start
    getting_started/slow_start
