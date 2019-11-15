@@ -13,7 +13,7 @@ For the photometric data of this data release see the ``sako18`` module.
 
 Deviations from the standard UI:
   - This module provides spectroscopic data and as such the ``band_names``,
-  and ``lambda_effective`` attributes are not available.
+    and ``lambda_effective`` attributes are not available.
 
 Cuts on returned data:
   - None
