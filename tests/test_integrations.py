@@ -10,8 +10,10 @@ from warnings import warn
 
 from requests.exceptions import HTTPError
 
-from sndata import query_ned_coords, query_osc, query_osc_photometry, \
-    query_osc_spectra
+from sndata._integrations import (query_ned_coords,
+                                  query_osc,
+                                  query_osc_photometry,
+                                  query_osc_spectra)
 
 
 class NED(TestCase):
