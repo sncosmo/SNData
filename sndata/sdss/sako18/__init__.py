@@ -1,7 +1,7 @@
 # !/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""This module provides access to the PHOTOMETRIC data release of the Sloan
+"""This module provides access to the **photometric** data release of the Sloan
 Digital Sky Survey-II (SDSS-II) Supernova Survey conducted between 2005 and
 2007. Light curves are presented for 10,258 variable and transient sources
 discovered through repeat ugriz imaging of SDSS Stripe 82, a 300 deg2 area
@@ -9,7 +9,7 @@ along the celestial equator. This data release is comprised of all transient
 sources brighter than r ≃ 22.5 mag with no history of variability prior to
 2004. (Source: Sako et al. 2018)
 
-For the SPECTROSCOPIC data of this data release see teh ``sako18spec`` module.
+For the spectroscopic data of this data release see the ``sako18spec`` module.
 
 Deviations from the standard UI:
   - None
