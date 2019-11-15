@@ -3,7 +3,7 @@ Quick Start
 
 The following is provided as a short example on how to import a supernova
 data release, download the corresponding data, and read it in from memory.
-For a more in depth overview, see the SlowStart_.
+For a more in depth overview, see the :ref:`SlowStart`.
 
 .. code-block:: python
    :linenos:
