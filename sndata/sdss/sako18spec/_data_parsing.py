@@ -59,21 +59,30 @@ def get_data_for_id(obj_id, format_table=True):
 
     # Read in all spectra for the given object Id
     data_tables = []
-    for path in meta.spectra_dir.glob(f'*{obj_id}-*.txt'):
+    files = list(meta.spectra_dir.glob(f'sn{obj_id}-*.txt'))
+    files += list(meta.spectra_dir.glob(f'gal{obj_id}-*.txt'))
+    for path in files:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
+        extraction = path.stem.split('-')[0].strip(obj_id)
+        sid = path.stem.split('-')[-1]
+
+        summary_row = spectra_summary[spectra_summary['SID'] == sid][0]
+        if extraction == 'gal':
+            type = 'Gal'
+
+        else:
+            type = summary_row['Type'].lower()
 
         # Get meta data for the current spectrum from the summary table
-        sid = path.stem.split('-')[-1]
-        master_row = spectra_summary[spectra_summary['SID'] == sid]
-        assert len(master_row) == 1
-
-        data['spec_type'] = path.stem.split('-')[0].strip(obj_id)
-        data['date'] = master_row['Date'][0]
-        data['telescope'] = master_row['Telescope'][0]
+        data['extraction'] = path.stem.split('-')[0].strip(str(obj_id))
+        data['sid'] = sid
+        data['type'] = type
+        data['date'] = summary_row['Date']
+        data['telescope'] = summary_row['Telescope']
         data_tables.append(data)
 
     # Load target meta data from the master table of the photometric data
-    phot_record_idx = master_table['CID'] == int(obj_id)
+    phot_record_idx = master_table['CID'] == obj_id
     phot_record = master_table[phot_record_idx]
 
     out_data = vstack(data_tables)

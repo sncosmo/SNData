@@ -58,11 +58,14 @@ def load_table(table_id):
 
     if table_id == 'master':
         table = Table.read(meta.table_dir / 'master_data.txt', format='ascii')
-        table['CID'] = Column(table['CID'], dtype=str)
 
     else:
         table = Table.read(
             meta.table_dir / f'Table{table_id}.txt', format='ascii')
+
+    table['CID'] = Column(table['CID'], dtype=str)
+    if table_id == 9:
+        table['SID'] = Column(table['SID'], dtype=str)
 
     return table
 
