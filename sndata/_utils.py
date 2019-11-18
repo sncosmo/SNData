@@ -239,6 +239,18 @@ def factory_delete_module_data(*dirs):
 
 
 def check_url(url, timeout=None):
+    """Return whether a connection can be established to a given URL
+
+    If False, a warning is also raised.
+
+    Args:
+        url     (str): The URL to check
+        timeout (int): Optional number of seconds to timeout after
+
+    Returns:
+        A boolean
+    """
+
     try:
         _ = requests.get(url, timeout=timeout)
         return True
