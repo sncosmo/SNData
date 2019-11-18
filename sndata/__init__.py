@@ -8,7 +8,7 @@ surveys.
 from . import csp, des, essence, sdss
 from ._combine_data import CombinedDataset
 
-__version__ = '0.7.2'
+__version__ = '0.7.3'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
