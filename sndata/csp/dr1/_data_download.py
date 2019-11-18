@@ -17,7 +17,9 @@ def download_module_data(force=False):
     """
 
     # Download data tables
-    if force or not meta.table_dir.exists():
+    if (force or not meta.table_dir.exists()) \
+            and utils.check_url(meta.table_url):
+
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.table_url,
@@ -25,7 +27,9 @@ def download_module_data(force=False):
             mode='r:gz')
 
     # Download spectra
-    if force or not meta.spectra_dir.exists():
+    if (force or not meta.spectra_dir.exists()) \
+            and utils.check_url(meta.spectra_url):
+
         print('Downloading spectra...')
         utils.download_tar(
             url=meta.spectra_url,

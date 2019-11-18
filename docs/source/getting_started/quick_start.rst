@@ -2,7 +2,7 @@ Quick Start
 ===========
 
 The following is provided as a short example on how to import a supernova
-data release, download the corresponding data, and read it in from memory.
+data release, download the corresponding data, and read it into memory.
 For a more in depth overview, see the :ref:`SlowStart`.
 
 .. code-block:: python
@@ -20,7 +20,7 @@ For a more in depth overview, see the :ref:`SlowStart`.
    print(published_tables)
 
    # Read one of those tables by referencing the table name or number
-   dr3_table_1 = dr3.load_table(published_tables[0])
+   dr3_demo_table = dr3.load_table(published_tables[0])
 
    # Check what objects are included in the data release
    object_ids = dr3.get_available_ids()

@@ -13,7 +13,7 @@ from ... import _integrations as integrations
 from ... import _utils as utils
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.filter_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -26,7 +26,7 @@ def register_filters(force=False):
         integrations.register_filter(fpath, _band_name, force=force)
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.master_table_path)
 def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
@@ -35,7 +35,7 @@ def get_available_tables():
 
 
 @lru_cache(maxsize=None)
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.master_table_path)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -54,7 +54,7 @@ def load_table(table_id):
         raise ValueError(f'Table {table_id} is not available.')
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.smp_dir)
 def get_available_ids():
     """Return a list of target object IDs for the current survey
 
@@ -132,7 +132,7 @@ def _format_sncosmo_table(data_table):
     return out_table
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.smp_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 

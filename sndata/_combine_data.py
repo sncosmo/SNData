@@ -173,8 +173,10 @@ class CombinedDataset:
 
         first_id = obj_id_list.pop()
         combined_table = self._get_data_single_id(first_id, format_table)
-        combined_table.meta = {first_id: combined_table.meta}
-        combined_table.meta['obj_id'] = [first_id]
+        combined_table.meta = {
+            first_id: combined_table.meta,
+            'obj_id': [first_id]}
+
         del combined_table.meta[first_id]['obj_id']
 
         for obj_id in obj_id_list:

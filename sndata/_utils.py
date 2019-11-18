@@ -8,6 +8,7 @@ import tarfile
 from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
+from warnings import warn
 
 import numpy as np
 import requests
@@ -52,19 +53,19 @@ def convert_to_jd(date):
     return t.value
 
 
-def require_data_path(data_dir):
-    """Function decorator to raise NoDownloadedData exception if
-       the path ``data_dir`` does not exist
+def require_data_path(*data_dirs):
+    """Decorator to raise NoDownloadedData exception if given paths don't exist
 
     Args:
-        data_dir (Path): Path object to check for
+        *data_dirs (Path): Path objects to check exists
     """
 
     def inner(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if not data_dir.exists():
-                raise NoDownloadedData()
+            for data_dir in data_dirs:
+                if not data_dir.exists():
+                    raise NoDownloadedData()
 
             return func(*args, **kwargs)
 
@@ -123,7 +124,7 @@ def download_tar(url, out_dir, mode=None):
                 try:
                     data.extract(file_, path=out_dir)
 
-                except IOError as e:
+                except IOError:
                     # If output path already exists, delete it and try again
                     (out_dir / file_.name).unlink()
                     data.extract(file_, path=out_dir)
@@ -235,3 +236,26 @@ def factory_delete_module_data(*dirs):
             pass
 
     return delete_module_data
+
+
+def check_url(url, timeout=None):
+    """Return whether a connection can be established to a given URL
+
+    If False, a warning is also raised.
+
+    Args:
+        url     (str): The URL to check
+        timeout (int): Optional number of seconds to timeout after
+
+    Returns:
+        A boolean
+    """
+
+    try:
+        _ = requests.get(url, timeout=timeout)
+        return True
+
+    except requests.ConnectionError:
+        warn(f'Could not connect to {url}')
+
+    return False
