@@ -13,7 +13,7 @@ from . import _meta as meta
 from ... import _utils as utils
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.data_dir)  # Todo: Use subdir of meta.data_dir
 def get_available_tables():
     """Get numbers of available tables for this survey / data release"""
 
@@ -21,7 +21,7 @@ def get_available_tables():
 
 
 @lru_cache(maxsize=None)
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.data_dir)  # Todo: Use subdir of meta.data_dir
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -42,7 +42,7 @@ def load_table(table_id):
     return data
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.data_dir)  # Todo: Use subdir of meta.data_dir
 def get_available_ids():
     """Return a list of target object IDs for the current survey
 
@@ -58,7 +58,7 @@ def get_available_ids():
 
 
 # Todo: We are missing spectra
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.data_dir)  # Todo: Use subdir of meta.data_dir
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 

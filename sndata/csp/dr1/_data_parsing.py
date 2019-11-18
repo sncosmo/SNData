@@ -25,7 +25,7 @@ def register_filters(force=False):
                      'and has no filters to register.')
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.table_dir)
 def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
@@ -39,7 +39,7 @@ def get_available_tables():
 
 
 @lru_cache(maxsize=None)
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.table_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -60,7 +60,7 @@ def load_table(table_id):
     return data
 
 
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.spectra_dir)
 def get_available_ids():
     """Return a list of target object IDs for the current survey
 
@@ -119,7 +119,7 @@ def _read_file(path):
 
 
 # noinspection PyUnboundLocalVariable
-@utils.require_data_path(meta.data_dir)
+@utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
 

@@ -53,19 +53,19 @@ def convert_to_jd(date):
     return t.value
 
 
-def require_data_path(data_dir):
-    """Function decorator to raise NoDownloadedData exception if
-       the path ``data_dir`` does not exist
+def require_data_path(*data_dirs):
+    """Decorator to raise NoDownloadedData exception if given paths don't exist
 
     Args:
-        data_dir (Path): Path object to check for
+        *data_dirs (Path): Path objects to check exists
     """
 
     def inner(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if not data_dir.exists():
-                raise NoDownloadedData()
+            for data_dir in data_dirs:
+                if not data_dir.exists():
+                    raise NoDownloadedData()
 
             return func(*args, **kwargs)
 
