@@ -11,7 +11,6 @@ from . import _meta as meta
 from ... import _utils as utils
 
 # Cache the master table for later use
-_master_table = None
 _photometry_master_table = None
 
 
@@ -47,9 +46,9 @@ def load_table(table_id):
     """
 
     if table_id == 'master':
-        _master_table = Table.read(meta.master_table_path, format='ascii')
-        _master_table['CID'] = Column(_master_table['CID'], dtype=str)
-        return _master_table
+        master_table = Table.read(meta.master_table_path, format='ascii')
+        master_table['CID'] = Column(master_table['CID'], dtype=str)
+        return master_table
 
     else:
         raise ValueError(f'Table {table_id} is not available.')

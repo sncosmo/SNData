@@ -38,7 +38,7 @@ def get_zp(band_name):
     module = getattr(modules_dict[survey.lower()], release.lower())
     if not hasattr(module, 'band_names'):
         raise ValueError(
-            'Survey {} {} does not have registered photometric bandpasses.')
+            'Survey {} {} does not have registered photometric band passes.')
 
     bands = list(module.band_names)
     zp = module._meta.zero_point

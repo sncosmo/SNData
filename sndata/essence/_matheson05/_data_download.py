@@ -46,9 +46,6 @@ def download_module_data(force=False):
     for row in Table.read(meta.eso_summary_path):
         file_path = meta.spectra_dir / (row['ARCFILE'] + '.fits')
         if force or not file_path.exists():
-            if utils.check_url(meta.table_url):
-                url = meta.eso_spectra_url_pattern.format(row['ARCFILE'])
+            url = meta.eso_spectra_url_pattern.format(row['ARCFILE'])
+            if utils.check_url(url):
                 utils.download_file(url, file_path)
-
-            else:
-                break
