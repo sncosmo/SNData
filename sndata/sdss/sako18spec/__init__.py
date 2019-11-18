@@ -11,6 +11,15 @@ sources brighter than r ≃ 22.5 mag with no history of variability prior to
 
 For the photometric data of this data release see the ``sako18`` module.
 
+.. note::
+   In the returned data tables, the ``extraction`` column refers to the type
+   extraction performed on the spectrum. The ``type`` column refers to the
+   actual type of the spectrum determined after the recorded spectra were
+   inspected. In some cases the galaxy contribution dominates the observation
+   and there was no discernible SN light. Thus there may be cases where the
+   extraction of a SN spectra was attempted, but the resulting spectrum was
+   galactic in type.
+
 Deviations from the standard UI:
   - This module provides spectroscopic data and as such the ``band_names``,
     and ``lambda_effective`` attributes are not available.
@@ -19,8 +28,8 @@ Cuts on returned data:
   - None
 """
 
-from ._data_download import delete_module_data
-from ._data_download import download_module_data
+from ..sako18._data_download import delete_module_data
+from ..sako18._data_download import download_module_data
 from ._data_parsing import get_available_ids
 from ._data_parsing import get_available_tables
 from ._data_parsing import get_data_for_id

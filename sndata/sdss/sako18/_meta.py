@@ -18,6 +18,9 @@ smp_dir = data_dir / 'SMP_Data/'  # SMP data files
 snana_dir = data_dir / 'SDSS_dataRelease-snana/'  # SNANA files
 outlier_path = snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
 
+spectra_zip = _file_dir / 'Spectra_txt.zip'
+spectra_dir = data_dir / 'Spectra_txt'  # spectra txt files
+
 # Define urls for remote data
 filter_url = 'http://www.ioa.s.u-tokyo.ac.jp/~doi/sdss/'
 table_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'

@@ -3,15 +3,17 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from functools import lru_cache
+from astropy.table import Table, vstack
 
-from astropy.table import Column, Table, vstack
-
-from . import _meta as meta
+from .. import sako18
+from ..sako18 import _meta as meta
 from ... import _utils as utils
 
 # Cache the master table for later use
 _photometry_master_table = None
+
+get_available_tables = sako18.get_available_tables
+load_table = sako18.load_table
 
 
 def register_filters(force=False):
@@ -24,35 +26,6 @@ def register_filters(force=False):
     raise ValueError('The ``sako18spec`` module is a spectroscopic data '
                      'release and has no filters to register. '
                      'See the ``sako18`` module for photometric data')
-
-
-@utils.require_data_path(meta.master_table_path)
-def get_available_tables():
-    """Get table numbers for machine readable tables published in the paper
-    for this data release"""
-
-    return ['master']
-
-
-@lru_cache(maxsize=None)
-@utils.require_data_path(meta.master_table_path)
-def load_table(table_id):
-    """Load a table from the data paper for this survey / data
-
-    See ``get_available_tables`` for a list of valid table IDs.
-
-    Args:
-        table_id (int, str): The published table number or table name
-    """
-
-    if table_id == 'master':
-        master_table = Table.read(meta.master_table_path, format='ascii')
-        master_table['CID'] = Column(master_table['CID'], dtype=str)
-        master_table['SID'] = Column(master_table['SID'], dtype=str)
-        return master_table
-
-    else:
-        raise ValueError(f'Table {table_id} is not available.')
 
 
 @utils.require_data_path(meta.spectra_dir)
@@ -82,6 +55,7 @@ def get_data_for_id(obj_id, format_table=True):
     """
 
     master_table = load_table('master')
+    spectra_summary = load_table(9)
 
     # Read in all spectra for the given object Id
     data_tables = []
@@ -90,7 +64,7 @@ def get_data_for_id(obj_id, format_table=True):
 
         # Get meta data for the current spectrum from the summary table
         sid = path.stem.split('-')[-1]
-        master_row = master_table[master_table['SID'] == sid]
+        master_row = spectra_summary[spectra_summary['SID'] == sid]
         assert len(master_row) == 1
 
         data['spec_type'] = path.stem.split('-')[0].strip(obj_id)
@@ -99,13 +73,8 @@ def get_data_for_id(obj_id, format_table=True):
         data_tables.append(data)
 
     # Load target meta data from the master table of the photometric data
-    global _photometry_master_table
-    if _photometry_master_table is None:
-        _photometry_master_table = Table.read(
-            meta.photometry_master_table_path, format='ascii')
-
-    phot_record_idx = _photometry_master_table['CID'] == int(obj_id)
-    phot_record = _photometry_master_table[phot_record_idx]
+    phot_record_idx = master_table['CID'] == int(obj_id)
+    phot_record = master_table[phot_record_idx]
 
     out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
