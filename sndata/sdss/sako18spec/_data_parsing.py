@@ -48,6 +48,7 @@ def load_table(table_id):
     if table_id == 'master':
         master_table = Table.read(meta.master_table_path, format='ascii')
         master_table['CID'] = Column(master_table['CID'], dtype=str)
+        master_table['SID'] = Column(master_table['SID'], dtype=str)
         return master_table
 
     else:
@@ -62,7 +63,8 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    return sorted(set(load_table('master')['CID']))
+    files = meta.spectra_dir.glob('*.txt')
+    return sorted(set(f.stem.split('-')[0].strip('sngal') for f in files))
 
 
 @utils.require_data_path(meta.spectra_dir)
@@ -81,18 +83,20 @@ def get_data_for_id(obj_id, format_table=True):
 
     master_table = load_table('master')
 
+    # Read in all spectra for the given object Id
     data_tables = []
-    for row in master_table[master_table['CID'] == obj_id]:
-        for spec_type in row['Files'].split(','):
-            file_name = f'{spec_type.lower()}{obj_id}-{row["SID"]}.txt'
-            file_path = str(meta.spectra_dir / file_name)
-            data = Table.read(file_path, format='ascii',
-                              names=['wavelength', 'flux'])
+    for path in meta.spectra_dir.glob(f'*{obj_id}-*.txt'):
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
-            data['spec_type'] = spec_type
-            data['date'] = row['Date']
-            data['telescope'] = row['Telescope']
-            data_tables.append(data)
+        # Get meta data for the current spectrum from the summary table
+        sid = path.stem.split('-')[-1]
+        master_row = master_table[master_table['SID'] == sid]
+        assert len(master_row) == 1
+
+        data['spec_type'] = path.stem.split('-')[0].strip(obj_id)
+        data['date'] = master_row['Date'][0]
+        data['telescope'] = master_row['Telescope'][0]
+        data_tables.append(data)
 
     # Load target meta data from the master table of the photometric data
     global _photometry_master_table

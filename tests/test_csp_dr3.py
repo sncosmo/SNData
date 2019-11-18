@@ -17,26 +17,11 @@ class DataParsing(DataParsingTestBase):
         cls.module = csp.dr3
         cls.module.download_module_data(force=True)
 
-    def test_no_empty_data_tables(self):
-        self._test_no_empty_data_tables(10)
-
-    def test_paper_tables_are_parsed(self):
-        self._test_paper_tables_are_parsed()
-
-    def test_ids_are_sorted(self):
-        self._test_ids_are_sorted()
-
     def test_get_zp(self):
         self._test_get_zp()
 
-    def test_jd_time_format(self):
-        self._test_jd_time_format()
-
-    def test_sncosmo_column_names(self):
-        self._test_sncosmo_column_names()
-
-    def test_sncosmo_registered_band_names(self):
-        self._test_sncosmo_registered_band_names()
+    def test_ids_are_sorted(self):
+        self._test_ids_are_sorted()
 
     def test_instrument_offset(self):
         """Test returned DR3 data encorporates the instrument offset using a
@@ -59,6 +44,24 @@ class DataParsing(DataParsingTestBase):
         # Check error in mag is not changed
         self.assertEqual(formated_data['mag_err'], unformated_data['mag_err'])
 
+    def test_jd_time_format(self):
+        self._test_jd_time_format('time')
+
+    def test_no_empty_data_tables(self):
+        self._test_no_empty_data_tables(10)
+
+    def test_paper_tables_are_parsed(self):
+        self._test_paper_tables_are_parsed()
+
+    def test_sncosmo_column_names(self):
+        self._test_sncosmo_column_names()
+
+    def test_sncosmo_registered_band_names(self):
+        self._test_sncosmo_registered_band_names()
+
+    def test_unique_ids(self):
+        self._test_unique_ids()
+
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""
@@ -67,14 +70,14 @@ class Documentation(DocumentationTestBase):
     def setUpClass(cls):
         cls.module = csp.dr3
 
-    def test_consistent_docs(self):
-        self._test_consistent_docs()
-
     def test_ads_url(self):
         self._test_ads_url_status()
 
+    def test_consistent_docs(self):
+        self._test_consistent_docs()
+
+    def test_has_meta_attributes(self):
+        self._test_has_meta_attributes()
+
     def test_survey_url(self):
         self._test_survey_url_status()
-
-    def test_hase_meta_attributes(self):
-        self._test_hase_meta_attributes()
