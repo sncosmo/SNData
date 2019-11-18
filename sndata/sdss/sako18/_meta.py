@@ -16,7 +16,7 @@ filter_dir = data_dir / 'doi_2010_filters/'
 table_dir = data_dir / 'tables/'  # Paper tables
 smp_dir = data_dir / 'SMP_Data/'  # SMP data files
 snana_dir = data_dir / 'SDSS_dataRelease-snana/'  # SNANA files
-outlier_path = snana_dir / 'SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
+outlier_path = snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
 
 # Define urls for remote data
 filter_url = 'http://www.ioa.s.u-tokyo.ac.jp/~doi/sdss/'

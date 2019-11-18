@@ -18,6 +18,7 @@ def download_module_data(force=False):
         force (bool): Re-Download locally available data (Default: False)
     """
 
+    # Photometry
     if (force or not meta.smp_dir.exists()) \
             and utils.check_url(meta.smp_url):
 
@@ -27,6 +28,7 @@ def download_module_data(force=False):
             out_dir=meta.data_dir,
             mode='r:gz')
 
+    # SNANA files - including files specifying "bad" photometry data points
     if (force or not meta.snana_dir.exists()) \
             and utils.check_url(meta.snana_url):
 
@@ -36,6 +38,11 @@ def download_module_data(force=False):
             out_dir=meta.data_dir,
             mode='r:gz')
 
+        outlier_archive = meta.snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
+        with tarfile.open(str(outlier_archive), mode='r:gz') as data:
+            data.extractall(str(outlier_archive.parent))
+
+    # Paper tables
     if utils.check_url(meta.table_url):
         print(f'Downloading tables...')
 
@@ -47,6 +54,7 @@ def download_module_data(force=False):
                     out_file=out_path
                 )
 
+    # Photometric filters
     if utils.check_url(meta.filter_url):
         print(f'Downloading filters...')
 

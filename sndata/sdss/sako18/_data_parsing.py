@@ -6,7 +6,7 @@
 from functools import lru_cache
 
 import numpy as np
-from astropy.table import Table
+from astropy.table import Column, Table
 
 from . import _meta as meta
 from ... import _integrations as integrations
@@ -33,13 +33,13 @@ def get_available_tables():
 
     table_names = []
     for f in meta.table_dir.glob('*.txt'):
-        table_num = f.stem.strip('_Ttable')
+        table_num = f.stem.strip('Table_data')
         if table_num.isnumeric():
             table_num = int(table_num)
 
         table_names.append(table_num)
 
-    return sorted(table_names)
+    return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
 
 @lru_cache(maxsize=None)
@@ -56,8 +56,15 @@ def load_table(table_id):
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
-    name = 'master_table.txt' if table_id == 'master' else f'Table{table_id}.txt'
-    return Table.read(meta.table_dir / name, format='ascii')
+    if table_id == 'master':
+        table = Table.read(meta.table_dir / 'master_data.txt', format='ascii')
+        table['CID'] = Column(table['CID'], dtype=str)
+
+    else:
+        table = Table.read(
+            meta.table_dir / f'Table{table_id}.txt', format='ascii')
+
+    return table
 
 
 @utils.require_data_path(meta.smp_dir)
