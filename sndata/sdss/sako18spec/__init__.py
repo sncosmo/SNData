@@ -17,11 +17,11 @@ For the photometric data of this data release see the ``sako18`` module.
     where the object type is listed as “Gal” but the file type is listed
     as “SN” - the meaning of which is unclear. The file names for most of
     these observations have a "sn" prefix, indicating they are in fact SNe
-    observations. However, for 16 of these entries the only fits
-    file available matching the object and spectrum Ids has the prefix “gal”.
-    When returning observational data, we use the file name prefix to determine
-    the spectral type ("sn" indicating target observations and "gal"
-    indicating host observations.)
+    observations. However, for 16 of these entries the only file available
+    matching the object and spectrum Ids has the prefix “gal”. When returning
+    observational data, we use the file name prefix to determine the spectral
+    type ("sn" indicating target observations and "gal" indicating
+    host observations.)
 
 Deviations from the standard UI:
   - This module provides spectroscopic data and as such the ``band_names``,
