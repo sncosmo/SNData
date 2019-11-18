@@ -3,18 +3,18 @@
 Slow Start
 ==========
 
-The following is provided's a simple demonstration of the various functionality
-available in **SNData**. For more information, or for usage instructions on a
-specific module, please see that module's documentation page.
+The following is provided as an in depth demonstration of the various
+functionality available in **SNData**. For more information on a specific
+module, please see that module's page in the API documentation.
 
 Importing a Survey
 ------------------
 
-To access data from a specific survey, simply import it from the parent
-package. A summary of each data release, including any deviations from the
-standard UI, can be accessed by calling the builtin ``help`` function. For
-demonstration purposes we will be using the third data release from the
-Carnegie Supernova Survey.
+To access data from a specific survey, import it from the parent package. A
+summary of each data release, including any deviations from the standard UI,
+can be accessed by calling the builtin ``help`` function. For demonstration
+purposes we will be using the third data release from the Carnegie Supernova
+Survey.
 
 .. code-block:: python
    :linenos:
@@ -37,6 +37,10 @@ Carnegie Supernova Survey.
    # The primary publication(s) and NASA ADS link(s) describing the data
    print(dr3.publications)
    print(dr3.ads_url)
+
+   # Photometric data releases include filter names and effective wavelengths
+   print(dr3.band_names)
+   print(dr3.lambda_effective)
 
 
 Downloading Data
@@ -64,6 +68,14 @@ by ``download_module_data``, making it safe to call in an automated pipeline
 environment. This behavior can be disabled by specifying the ``force=True``
 argument.
 
+.. Important:: Survey data is often hosted across multiple websites. As such,
+it is possible the server responsible for hosting a subset of a survey's
+data (e.g. the filter transmission curves) is temporarily offline. In this
+case **SNData** will raise a warning and continue downloading any data that is
+still online. The ``download_module_data`` function can then be re-run once
+the server is back online.
+
+
 Accessing Data
 --------------
 
@@ -85,10 +97,10 @@ table's meta data when available.
    # Don't forget to check the meta data!
    print(data_table.meta)
 
-.. important:: Data tables returned by SNData are formatted for use with the
-   ``sncosmo`` python package. In doing so, the values of the table may be
-   manipulated from the original file data into different units, column names,
-   etc. To disable this feature, specify the ``format_table=False`` argument.
+Data tables returned by SNData are formatted for use with the ``sncosmo``
+python package. In doing so, the values of the table may be manipulated from
+the original file data into different units, column names, etc. To disable
+this feature, specify the ``format_table=False`` argument.
 
 The ``iter_data`` function is also provided for convenience to iterate over
 data for all available objects.
@@ -120,14 +132,38 @@ target with a redshift less than .1:
    reason, filter functions should not be used in an attempt improve runtime
    by reducing I/O operations as it will have no effect.
 
-Data Formatting
----------------
 
-**SNData** is automatically formats data for use with the `SNCosmo`_
-light-curve fitter. To fully take advantage of this, **SNData** is also able to
-register the filter transmission curves for a given survey into the `sncosmo`
-registry (the registry is how sncosmo keeps track of what various filters,
-models, etc. are called).
+Reading Tables
+--------------
+
+Some surveys include summary tables in their data releases. The inclusion of
+tables from published papers is also common.
+
+.. code-block:: python
+   :linenos:
+
+   # Check what tables are available
+   published_tables = dr3.get_available_tables()
+   print(published_tables)
+
+   # Read one of those tables by referencing the table name or number
+   demo_table_name = published_tables[0]
+   demo_table = dr3.load_table(demo_table_name)
+
+
+Note that the ``load_table`` function caches the returned result in memory.
+This improves the speed of successive calls and means you don't have to be
+worried about I/O performance.
+
+
+Registering Filters with SNCosmo
+--------------------------------
+
+**SNData** automatically formats data for use with the `SNCosmo`_ package.
+To fully take advantage of this, **SNData** is also able to register the
+filter transmission curves for a given survey into the `sncosmo` registry
+(the registry is how SNCosmo keeps track of what each filter, model, etc.
+are called).
 
 .. _SNCosmo: https://sncosmo.readthedocs.io/en/v1.8.x/
 
