@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Remove any old builds
+rm -rf build *.egg-info .eggs dist
+
 # Build the package
 python setup.py sdist
 python setup.py bdist_wheel --universal
