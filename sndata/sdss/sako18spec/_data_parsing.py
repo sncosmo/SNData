@@ -63,7 +63,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    return sorted(load_table('master')['CID'])
+    return sorted(set(load_table('master')['CID']))
 
 
 @utils.require_data_path(meta.data_dir)
@@ -102,14 +102,23 @@ def get_data_for_id(obj_id, format_table=True):
             meta.photometry_master_table_path, format='ascii')
 
     phot_record_idx = _photometry_master_table['CID'] == int(obj_id)
-    phot_record = _photometry_master_table[phot_record_idx][0]
+    phot_record = _photometry_master_table[phot_record_idx]
 
     out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
-    out_data.meta['ra'] = phot_record['RA']
-    out_data.meta['dec'] = phot_record['DEC']
-    out_data.meta['z'] = phot_record['zCMB']
-    out_data.meta['z_err'] = phot_record['zerrCMB']
+
+    if phot_record:
+        out_data.meta['ra'] = phot_record['RA'][0]
+        out_data.meta['dec'] = phot_record['DEC'][0]
+        out_data.meta['z'] = phot_record['zCMB'][0]
+        out_data.meta['z_err'] = phot_record['zerrCMB'][0]
+
+    else:
+        out_data.meta['ra'] = None
+        out_data.meta['dec'] = None
+        out_data.meta['z'] = None
+        out_data.meta['z_err'] = None
+
     out_data.meta['dtype'] = 'spectroscopic'
     out_data.meta['comments'] = \
         'z represents CMB corrected redshift of the supernova.'

@@ -8,6 +8,7 @@ import tarfile
 from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
+from warnings import warn
 
 import numpy as np
 import requests
@@ -235,3 +236,14 @@ def factory_delete_module_data(*dirs):
             pass
 
     return delete_module_data
+
+
+def check_url(url, timeout=None):
+    try:
+        _ = requests.get(url, timeout=timeout)
+        return True
+
+    except requests.ConnectionError:
+        warn(f'Could not connect to {url}')
+
+    return False

@@ -18,27 +18,35 @@ def download_module_data(force=False):
         force (bool): Re-Download locally available data (Default: False)
     """
 
-    if force or not meta.smp_dir.exists():
+    if (force or not meta.smp_dir.exists()) \
+            and utils.check_url(meta.smp_url):
+
         print('Downloading SMP data...')
         utils.download_tar(
             url=meta.smp_url,
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if force or not meta.snana_dir.exists():
+    if (force or not meta.snana_dir.exists()) \
+            and utils.check_url(meta.snana_url):
+
         print('Downloading SNANA data...')
         utils.download_tar(
             url=meta.snana_url,
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if force or not meta.master_table_path.exists():
+    if (force or not meta.master_table_path.exists()) \
+            and utils.check_url(meta.master_table_url):
+
         print('Downloading master table...')
         utils.download_file(
             url=meta.master_table_url,
             out_file=meta.master_table_path)
 
-    if force or not meta.filter_dir.exists():
+    if (force or not meta.filter_dir.exists()) \
+            and utils.check_url(meta.filter_url):
+
         print('Downloading filters...')
         for file_name in meta.filter_file_names:
             utils.download_file(

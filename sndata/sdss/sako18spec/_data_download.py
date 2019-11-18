@@ -18,7 +18,9 @@ def download_module_data(force=False):
         force (bool): Re-Download locally available data (Default: False)
     """
 
-    if force or not meta.master_table_path.exists():
+    if (force or not meta.master_table_path.exists()) \
+            and utils.check_url(meta.master_table_url):
+
         print('Downloading master table...')
         utils.download_file(
             url=meta.master_table_url,
@@ -26,21 +28,23 @@ def download_module_data(force=False):
 
     # We download the master table of the photometric data release so
     # that we have access to the ra, dec, and z of each target
-    if force or not meta.photometry_master_table_path.exists():
+    if (force or not meta.photometry_master_table_path.exists()) \
+            and utils.check_url(meta.master_table_url):
+
         print('Downloading target meta data...')
         utils.download_file(
             url=meta.photometry_master_table_url,
             out_file=meta.photometry_master_table_path)
 
-    # Spectral data parsing requires IRAF so we use preparsed data instead
-
-    # if force or not meta.spectra_dir.exists():
+    # if (force or not meta.spectra_dir.exists()) \
+    #         and utils.check_url(meta.spectra_url):
     #     print('Downloading spectra...')
     #     utils.download_tar(
     #         url=meta.spectra_url,
     #         out_dir=meta.data_dir,
     #         mode='r:gz')
 
+    # Spectral data parsing requires IRAF so we use preparsed data instead
     if force or not meta.spectra_dir.exists():
         print('Unzipping spectra...')
         with zipfile.ZipFile(meta.spectra_zip, 'r') as zip_ref:

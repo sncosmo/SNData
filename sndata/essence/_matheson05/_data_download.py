@@ -20,14 +20,18 @@ def download_module_data(force=False):
     """
 
     # Download data tables
-    if force or not meta.vizier_dir.exists():
+    if (force or not meta.vizier_dir.exists()) \
+            and utils.check_url(meta.vizier_url):
+
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.vizier_url,
             out_dir=meta.vizier_dir,
             mode='r:gz')
 
-    if force or not meta.eso_summary_path.exists():
+    if (force or not meta.eso_summary_path.exists()) \
+            and utils.check_url(meta.eso_summary_url):
+
         print('Downloading spectra file list...')
         print(f'Fetching {meta.eso_summary_url}')
         r = requests.get(meta.eso_summary_url)
@@ -42,5 +46,9 @@ def download_module_data(force=False):
     for row in Table.read(meta.eso_summary_path):
         file_path = meta.spectra_dir / (row['ARCFILE'] + '.fits')
         if force or not file_path.exists():
-            url = meta.eso_spectra_url_pattern.format(row['ARCFILE'])
-            utils.download_file(url, file_path)
+            if utils.check_url(meta.table_url):
+                url = meta.eso_spectra_url_pattern.format(row['ARCFILE'])
+                utils.download_file(url, file_path)
+
+            else:
+                break
