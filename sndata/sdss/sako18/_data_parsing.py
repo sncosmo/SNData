@@ -6,7 +6,7 @@
 from functools import lru_cache
 
 import numpy as np
-from astropy.table import Column, Table
+from astropy.table import Table
 
 from . import _meta as meta
 from ... import _integrations as integrations
@@ -26,16 +26,24 @@ def register_filters(force=False):
         integrations.register_filter(fpath, _band_name, force=force)
 
 
-@utils.require_data_path(meta.master_table_path)
+@utils.require_data_path(meta.table_dir)
 def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
 
-    return ['master']
+    table_names = []
+    for f in meta.table_dir.glob('*.txt'):
+        table_num = f.stem.strip('_Ttable')
+        if table_num.isnumeric():
+            table_num = int(table_num)
+
+        table_names.append(table_num)
+
+    return sorted(table_names)
 
 
 @lru_cache(maxsize=None)
-@utils.require_data_path(meta.master_table_path)
+@utils.require_data_path(meta.table_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -45,13 +53,11 @@ def load_table(table_id):
         table_id (int, str): The published table number or table name
     """
 
-    if table_id == 'master':
-        _master_table = Table.read(meta.master_table_path, format='ascii')
-        _master_table['CID'] = Column(_master_table['CID'], dtype=str)
-        return _master_table
-
-    else:
+    if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
+
+    name = 'master_table.txt' if table_id == 'master' else f'Table{table_id}.txt'
+    return Table.read(meta.table_dir / name, format='ascii')
 
 
 @utils.require_data_path(meta.smp_dir)

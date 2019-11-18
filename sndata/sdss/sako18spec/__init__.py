@@ -11,18 +11,6 @@ sources brighter than r ≃ 22.5 mag with no history of variability prior to
 
 For the photometric data of this data release see the ``sako18`` module.
 
-.. important::
-    The ``master`` summary table (i.e. ``load_table('master')``) contains
-    entries which do not match the available data. This includes 105 entries
-    where the object type is listed as “Gal” but the file type is listed
-    as “SN” - the meaning of which is unclear. The file names for most of
-    these observations have a "sn" prefix, indicating they are in fact SNe
-    observations. However, for 16 of these entries the only file available
-    matching the object and spectrum Ids has the prefix “gal”. When returning
-    observational data, we use the file name prefix to determine the spectral
-    type ("sn" indicating target observations and "gal" indicating
-    host observations.)
-
 Deviations from the standard UI:
   - This module provides spectroscopic data and as such the ``band_names``,
     and ``lambda_effective`` attributes are not available.
@@ -43,7 +31,7 @@ from ._data_parsing import register_filters
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
 release = 'sako18'
-survey_url = 'http://data.darkenergysurvey.org/sdsssn/dataRelease/'
+survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
 data_type = 'spectroscopy'
 publications = ('Sako et al. (2018)',)
 ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'

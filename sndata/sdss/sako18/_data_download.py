@@ -36,23 +36,24 @@ def download_module_data(force=False):
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if (force or not meta.master_table_path.exists()) \
-            and utils.check_url(meta.master_table_url):
+    if utils.check_url(meta.table_url):
+        print(f'Downloading tables...')
 
-        print('Downloading master table...')
-        utils.download_file(
-            url=meta.master_table_url,
-            out_file=meta.master_table_path)
+        for file_name in meta.table_names:
+            out_path = meta.table_dir / file_name
+            if force or not out_path.exists():
+                utils.download_file(
+                    url=meta.table_url + file_name,
+                    out_file=out_path
+                )
 
-    if (force or not meta.filter_dir.exists()) \
-            and utils.check_url(meta.filter_url):
+    if utils.check_url(meta.filter_url):
+        print(f'Downloading filters...')
 
-        print('Downloading filters...')
         for file_name in meta.filter_file_names:
-            utils.download_file(
-                url=meta.filter_url + file_name,
-                out_file=meta.filter_dir / file_name)
-
-        outlier_archive = meta.snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
-        with tarfile.open(str(outlier_archive), mode='r:gz') as data:
-            data.extractall(str(outlier_archive.parent))
+            out_path = meta.filter_dir / file_name
+            if force or not out_path.exists():
+                utils.download_file(
+                    url=meta.filter_url + file_name,
+                    out_file=out_path
+                )
