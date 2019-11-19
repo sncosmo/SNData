@@ -7,9 +7,10 @@ import tarfile
 import zipfile
 
 from . import _meta as meta
+from ... import _factory_funcs as factory
 from ... import _utils as utils
 
-delete_module_data = utils.factory_delete_module_data(meta.data_dir)
+delete_module_data = factory.factory_delete_module_data(meta.data_dir)
 
 
 def download_module_data(force=False):

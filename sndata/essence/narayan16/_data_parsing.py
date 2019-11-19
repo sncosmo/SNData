@@ -11,21 +11,8 @@ from astropy.io import ascii
 from astropy.table import Table
 
 from . import _meta as meta
-from ... import _integrations as integrations
+from ... import _factory_funcs as factory
 from ... import _utils as utils
-
-
-@utils.require_data_path(meta.filter_dir)
-def register_filters(force=False):
-    """Register filters for this survey / data release with SNCosmo
-
-    Args:
-        force (bool): Whether to re-register a band if already registered
-    """
-
-    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
-        fpath = meta.filter_dir / _file_name
-        integrations.register_filter(fpath, _band_name, force=force)
 
 
 @utils.require_data_path(meta.vizier_dir)
@@ -137,4 +124,5 @@ def _format_table(data_table):
     return out_table
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+register_filters = factory.factory_register_filters(meta)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)

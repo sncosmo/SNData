@@ -5,6 +5,7 @@
 modules.
 """
 
+import re
 from pathlib import Path
 from unittest import TestCase
 from warnings import warn
@@ -170,9 +171,13 @@ class DocumentationTestBase(TestCase):
 
         for func_name, doc_string in expected_docs.items():
             if func_name not in skip_funcs:
+                # Strip spaces and indentation but not new lines
                 module_func = getattr(self.module, func_name)
+                func_doc = re.sub("  +", "", module_func.__doc__)
+                expected_doc = re.sub("  +", "", doc_string)
+
                 self.assertEqual(
-                    doc_string, module_func.__doc__,
+                    func_doc, expected_doc,
                     f'Wrong docstring for ``{func_name}``')
 
     def _test_survey_url_status(self):

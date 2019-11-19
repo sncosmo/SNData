@@ -11,6 +11,7 @@ from astropy.io import ascii
 from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
+from ... import _factory_funcs as factory
 from ... import _utils as utils
 
 
@@ -157,4 +158,4 @@ def get_data_for_id(obj_id, format_table=True):
     return out_table
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)

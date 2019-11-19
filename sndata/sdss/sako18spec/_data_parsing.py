@@ -7,6 +7,7 @@ from astropy.table import Table, vstack
 
 from .. import sako18
 from ..sako18 import _meta as meta
+from ... import _factory_funcs as factory
 from ... import _utils as utils
 
 # Cache the master table for later use
@@ -104,4 +105,4 @@ def get_data_for_id(obj_id, format_table=True):
     return out_data
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)
