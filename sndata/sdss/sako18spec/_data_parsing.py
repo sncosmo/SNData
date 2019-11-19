@@ -36,8 +36,7 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = meta.spectra_dir.glob('*.txt')
-    return sorted(set(f.stem.split('-')[0].strip('sngal') for f in files))
+    return sorted(load_table(9)['CID'])
 
 
 @utils.require_data_path(meta.spectra_dir)
@@ -63,30 +62,25 @@ def get_data_for_id(obj_id, format_table=True):
     files += list(meta.spectra_dir.glob(f'gal{obj_id}-*.txt'))
     for path in files:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
-        extraction = path.stem.split('-')[0].strip(obj_id)
-        sid = path.stem.split('-')[-1]
+        extraction_type = path.stem.split('-')[0].strip(obj_id)
+        spec_id = path.stem.split('-')[-1]
 
-        summary_row = spectra_summary[spectra_summary['SID'] == sid][0]
-        if extraction == 'gal':
-            type = 'Gal'
-
-        else:
-            type = summary_row['Type'].lower()
+        # Get type of object observed by spectra
+        summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
+        type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
 
         # Get meta data for the current spectrum from the summary table
-        data['extraction'] = path.stem.split('-')[0].strip(str(obj_id))
-        data['sid'] = sid
+        data['sid'] = spec_id
         data['type'] = type
         data['date'] = summary_row['Date']
         data['telescope'] = summary_row['Telescope']
         data_tables.append(data)
 
-    # Load target meta data from the master table of the photometric data
-    phot_record_idx = master_table['CID'] == obj_id
-    phot_record = master_table[phot_record_idx]
-
     out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
+
+    # Add meta data from the master table
+    phot_record = master_table[master_table['CID'] == obj_id]
 
     if phot_record:
         out_data.meta['ra'] = phot_record['RA'][0]
@@ -95,6 +89,7 @@ def get_data_for_id(obj_id, format_table=True):
         out_data.meta['z_err'] = phot_record['zerrCMB'][0]
 
     else:
+        # obj_id = '13046', '13346', '15833', '17134', '17135', '19819', '6471'
         out_data.meta['ra'] = None
         out_data.meta['dec'] = None
         out_data.meta['z'] = None

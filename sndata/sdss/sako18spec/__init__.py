@@ -16,7 +16,12 @@ Deviations from the standard UI:
     and ``lambda_effective`` attributes are not available.
 
 Cuts on returned data:
-  - None
+  - A spectra is included in the data release for object ``15301``, but no
+    information about this spectra is provided in the spectra summary table
+    (Table 9). This spectra is ignored.
+  - Seven spectroscopically observed objects are missing a reported Ra, Dec,
+    and redshift. These include: ``13046``, ``13346``, ``15833``, ``17134``,
+    ``17135``, ``19819``, and ``6471``.
 """
 
 from ..sako18._data_download import delete_module_data
