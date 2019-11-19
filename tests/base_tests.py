@@ -16,7 +16,7 @@ import sncosmo
 import yaml
 
 from sndata import get_zp
-
+from sndata.exceptions import InvalidObjId
 docs_path = Path(__file__).resolve().parent / 'docs.yml'
 with open(docs_path) as ofile:
     try:
@@ -30,6 +30,11 @@ class DataParsingTestBase(TestCase):
     """Generic tests for a given survey"""
 
     module = None
+
+    def _test_bad_object_id_err(self):
+        """Test an InvalidObjId excpetion is raised for a made up Id"""
+
+        self.assertRaises(InvalidObjId, self.module.get_data_for_id, 'fake_id')
 
     def _test_get_zp(self):
         """Test that ``get_zp`` returns the correct zero point"""

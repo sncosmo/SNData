@@ -15,6 +15,9 @@ class DataParsing(DataParsingTestBase):
         cls.module = csp.dr1
         cls.module.download_module_data(force=True)
 
+    def test_bad_object_id_err(self):
+        self._test_bad_object_id_err()
+
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 

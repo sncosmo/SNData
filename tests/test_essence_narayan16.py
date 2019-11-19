@@ -15,6 +15,9 @@ class DataParsing(DataParsingTestBase):
         cls.module = essence.narayan16
         cls.module.download_module_data(force=True)
 
+    def test_bad_object_id_err(self):
+        self._test_bad_object_id_err()
+
     def test_get_zp(self):
         self._test_get_zp()
 

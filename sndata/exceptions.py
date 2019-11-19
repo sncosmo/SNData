@@ -23,3 +23,16 @@ class InvalidObjId(Exception):
             args = (default_message,)
 
         super().__init__(*args, **kwargs)
+
+
+class ObservedDataTypeError(Exception):
+    def __init__(self, *args, **kwargs):
+        default_message = (
+            'This action is not valid for the type of data '
+            'included in the current data release.'
+        )
+
+        if not (args or kwargs):
+            args = (default_message,)
+
+        super().__init__(*args, **kwargs)

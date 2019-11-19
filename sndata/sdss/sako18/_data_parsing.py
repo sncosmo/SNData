@@ -11,6 +11,7 @@ from astropy.table import Column, Table
 from . import _meta as meta
 from ... import _factory_funcs as factory
 from ... import _utils as utils
+from ...exceptions import InvalidObjId
 
 
 @utils.require_data_path(meta.table_dir)
@@ -148,6 +149,9 @@ def get_data_for_id(obj_id, format_table=True):
     Returns:
         An astropy table of data for the given ID
     """
+
+    if obj_id not in get_available_ids():
+        raise InvalidObjId()
 
     # Read in ascii data table for specified object
     file_path = meta.smp_dir / f'SMP_{int(obj_id):06d}.dat'

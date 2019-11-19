@@ -12,6 +12,7 @@ from astropy.table import Table
 from . import _meta as meta
 from ... import _factory_funcs as factory
 from ... import _utils as utils
+from ...exceptions import InvalidObjId
 
 
 @utils.require_data_path(meta.table_dir)
@@ -126,6 +127,9 @@ def get_data_for_id(obj_id, format_table=True):
     Returns:
         An astropy table of data for the given ID
     """
+
+    if obj_id not in get_available_ids():
+        raise InvalidObjId()
 
     # Read data file for target
     file_path = meta.photometry_dir / f'SN{obj_id}_snpy.txt'
