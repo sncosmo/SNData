@@ -13,7 +13,7 @@ class DataParsing(DataParsingTestBase):
     @classmethod
     def setUpClass(cls):
         cls.module = csp.dr1
-        cls.module.download_module_data(force=True)
+        cls.module.download_module_data()
 
     def test_bad_object_id_err(self):
         self._test_bad_object_id_err()
