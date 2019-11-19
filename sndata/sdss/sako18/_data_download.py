@@ -4,6 +4,7 @@
 """This module defines functions for downloading data."""
 
 import tarfile
+import zipfile
 
 from . import _meta as meta
 from ... import _utils as utils
@@ -18,6 +19,7 @@ def download_module_data(force=False):
         force (bool): Re-Download locally available data (Default: False)
     """
 
+    # Photometry
     if (force or not meta.smp_dir.exists()) \
             and utils.check_url(meta.smp_url):
 
@@ -27,6 +29,7 @@ def download_module_data(force=False):
             out_dir=meta.data_dir,
             mode='r:gz')
 
+    # SNANA files - including files specifying "bad" photometry data points
     if (force or not meta.snana_dir.exists()) \
             and utils.check_url(meta.snana_url):
 
@@ -36,23 +39,44 @@ def download_module_data(force=False):
             out_dir=meta.data_dir,
             mode='r:gz')
 
-    if (force or not meta.master_table_path.exists()) \
-            and utils.check_url(meta.master_table_url):
-
-        print('Downloading master table...')
-        utils.download_file(
-            url=meta.master_table_url,
-            out_file=meta.master_table_path)
-
-    if (force or not meta.filter_dir.exists()) \
-            and utils.check_url(meta.filter_url):
-
-        print('Downloading filters...')
-        for file_name in meta.filter_file_names:
-            utils.download_file(
-                url=meta.filter_url + file_name,
-                out_file=meta.filter_dir / file_name)
-
         outlier_archive = meta.snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
         with tarfile.open(str(outlier_archive), mode='r:gz') as data:
             data.extractall(str(outlier_archive.parent))
+
+    # Paper tables
+    if utils.check_url(meta.table_url):
+        print(f'Downloading tables...')
+
+        for file_name in meta.table_names:
+            out_path = meta.table_dir / file_name
+            if force or not out_path.exists():
+                utils.download_file(
+                    url=meta.table_url + file_name,
+                    out_file=out_path
+                )
+
+    # Photometric filters
+    if utils.check_url(meta.filter_url):
+        print(f'Downloading filters...')
+
+        for file_name in meta.filter_file_names:
+            out_path = meta.filter_dir / file_name
+            if force or not out_path.exists():
+                utils.download_file(
+                    url=meta.filter_url + file_name,
+                    out_file=out_path
+                )
+
+    # if (force or not meta.spectra_dir.exists()) \
+    #         and utils.check_url(meta.spectra_url):
+    #     print('Downloading spectra...')
+    #     utils.download_tar(
+    #         url=meta.spectra_url,
+    #         out_dir=meta.data_dir,
+    #         mode='r:gz')
+
+    # Spectral data parsing requires IRAF so we use preparsed data instead
+    if force or not meta.spectra_dir.exists():
+        print('Unzipping spectra...')
+        with zipfile.ZipFile(meta.spectra_zip, 'r') as zip_ref:
+            zip_ref.extractall(meta.data_dir)

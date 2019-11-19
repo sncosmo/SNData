@@ -26,16 +26,24 @@ def register_filters(force=False):
         integrations.register_filter(fpath, _band_name, force=force)
 
 
-@utils.require_data_path(meta.master_table_path)
+@utils.require_data_path(meta.table_dir)
 def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
 
-    return ['master']
+    table_names = []
+    for f in meta.table_dir.glob('*.txt'):
+        table_num = f.stem.strip('Table_data')
+        if table_num.isnumeric():
+            table_num = int(table_num)
+
+        table_names.append(table_num)
+
+    return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
 
 @lru_cache(maxsize=None)
-@utils.require_data_path(meta.master_table_path)
+@utils.require_data_path(meta.table_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
 
@@ -45,13 +53,21 @@ def load_table(table_id):
         table_id (int, str): The published table number or table name
     """
 
+    if table_id not in get_available_tables():
+        raise ValueError(f'Table {table_id} is not available.')
+
     if table_id == 'master':
-        _master_table = Table.read(meta.master_table_path, format='ascii')
-        _master_table['CID'] = Column(_master_table['CID'], dtype=str)
-        return _master_table
+        table = Table.read(meta.table_dir / 'master_data.txt', format='ascii')
 
     else:
-        raise ValueError(f'Table {table_id} is not available.')
+        table = Table.read(
+            meta.table_dir / f'Table{table_id}.txt', format='ascii')
+
+    table['CID'] = Column(table['CID'], dtype=str)
+    if table_id == 9:
+        table['SID'] = Column(table['SID'], dtype=str)
+
+    return table
 
 
 @utils.require_data_path(meta.smp_dir)

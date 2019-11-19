@@ -3,17 +3,20 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from functools import lru_cache
+from astropy.table import Table, vstack
 
-from astropy.table import Column, Table, vstack
-
-from . import _meta as meta
+from .. import sako18
+from ..sako18 import _meta as meta
 from ... import _utils as utils
 
 # Cache the master table for later use
 _photometry_master_table = None
 
+get_available_tables = sako18.get_available_tables
+load_table = sako18.load_table
 
+
+# noinspection PyUnusedLocal
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -26,35 +29,6 @@ def register_filters(force=False):
                      'See the ``sako18`` module for photometric data')
 
 
-@utils.require_data_path(meta.master_table_path)
-def get_available_tables():
-    """Get table numbers for machine readable tables published in the paper
-    for this data release"""
-
-    return ['master']
-
-
-@lru_cache(maxsize=None)
-@utils.require_data_path(meta.master_table_path)
-def load_table(table_id):
-    """Load a table from the data paper for this survey / data
-
-    See ``get_available_tables`` for a list of valid table IDs.
-
-    Args:
-        table_id (int, str): The published table number or table name
-    """
-
-    if table_id == 'master':
-        master_table = Table.read(meta.master_table_path, format='ascii')
-        master_table['CID'] = Column(master_table['CID'], dtype=str)
-        master_table['SID'] = Column(master_table['SID'], dtype=str)
-        return master_table
-
-    else:
-        raise ValueError(f'Table {table_id} is not available.')
-
-
 @utils.require_data_path(meta.spectra_dir)
 def get_available_ids():
     """Return a list of target object IDs for the current survey
@@ -63,10 +37,10 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    files = meta.spectra_dir.glob('*.txt')
-    return sorted(set(f.stem.split('-')[0].strip('sngal') for f in files))
+    return sorted(set(load_table(9)['CID']))
 
 
+# noinspection PyUnusedLocal
 @utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
@@ -82,33 +56,33 @@ def get_data_for_id(obj_id, format_table=True):
     """
 
     master_table = load_table('master')
+    spectra_summary = load_table(9)
 
     # Read in all spectra for the given object Id
     data_tables = []
-    for path in meta.spectra_dir.glob(f'*{obj_id}-*.txt'):
+    files = list(meta.spectra_dir.glob(f'sn{obj_id}-*.txt'))
+    files += list(meta.spectra_dir.glob(f'gal{obj_id}-*.txt'))
+    for path in files:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
+        extraction_type = path.stem.split('-')[0].strip(obj_id)
+        spec_id = path.stem.split('-')[-1]
+
+        # Get type of object observed by spectra
+        summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
+        spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
 
         # Get meta data for the current spectrum from the summary table
-        sid = path.stem.split('-')[-1]
-        master_row = master_table[master_table['SID'] == sid]
-        assert len(master_row) == 1
-
-        data['spec_type'] = path.stem.split('-')[0].strip(obj_id)
-        data['date'] = master_row['Date'][0]
-        data['telescope'] = master_row['Telescope'][0]
+        data['sid'] = spec_id
+        data['type'] = spec_type
+        data['date'] = summary_row['Date']
+        data['telescope'] = summary_row['Telescope']
         data_tables.append(data)
-
-    # Load target meta data from the master table of the photometric data
-    global _photometry_master_table
-    if _photometry_master_table is None:
-        _photometry_master_table = Table.read(
-            meta.photometry_master_table_path, format='ascii')
-
-    phot_record_idx = _photometry_master_table['CID'] == int(obj_id)
-    phot_record = _photometry_master_table[phot_record_idx]
 
     out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
+
+    # Add meta data from the master table
+    phot_record = master_table[master_table['CID'] == obj_id]
 
     if phot_record:
         out_data.meta['ra'] = phot_record['RA'][0]
@@ -117,6 +91,7 @@ def get_data_for_id(obj_id, format_table=True):
         out_data.meta['z_err'] = phot_record['zerrCMB'][0]
 
     else:
+        # obj_id = '13046', '13346', '15833', '17134', '17135', '19819', '6471'
         out_data.meta['ra'] = None
         out_data.meta['dec'] = None
         out_data.meta['z'] = None

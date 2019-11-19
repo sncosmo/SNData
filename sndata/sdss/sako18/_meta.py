@@ -13,16 +13,23 @@ data_dir = _file_dir / 'data'
 
 # Define local paths of published data
 filter_dir = data_dir / 'doi_2010_filters/'
-master_table_path = data_dir / 'master_data.txt'  # Master table
+table_dir = data_dir / 'tables/'  # Paper tables
 smp_dir = data_dir / 'SMP_Data/'  # SMP data files
 snana_dir = data_dir / 'SDSS_dataRelease-snana/'  # SNANA files
-outlier_path = snana_dir / 'SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
+outlier_path = snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
+
+spectra_zip = _file_dir / 'Spectra_txt.zip'
+spectra_dir = data_dir / 'Spectra_txt'  # spectra txt files
 
 # Define urls for remote data
 filter_url = 'http://www.ioa.s.u-tokyo.ac.jp/~doi/sdss/'
-master_table_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/master_data.txt'
-smp_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/SMP_Data.tar.gz'
-snana_url = 'https://data.sdss.org/sas/dr10/boss/papers/supernova/SDSS_dataRelease-snana.tar.gz'
+table_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
+table_names = [
+    'master_data.txt', 'Table2.txt', 'Table9.txt', 'Table11.txt', 'Table12.txt'
+]
+
+smp_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/SMP_Data.tar.gz'
+snana_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/SDSS_dataRelease-snana.tar.gz'
 
 # Filter information
 # Effective wavelengths for SDSS filters ugriz in angstroms

@@ -16,7 +16,9 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    modules = (csp.dr3, csp.dr1, des.sn3yr, sdss.sako18, essence.narayan16)
+    modules = (csp.dr3, csp.dr1, des.sn3yr, sdss.sako18, sdss.sako18spec,
+               essence.narayan16)
+
     for module in modules:
         module.delete_module_data()
 
