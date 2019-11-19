@@ -17,6 +17,7 @@ import yaml
 
 from sndata import get_zp
 from sndata.exceptions import InvalidObjId
+
 docs_path = Path(__file__).resolve().parent / 'docs.yml'
 with open(docs_path) as ofile:
     try:
