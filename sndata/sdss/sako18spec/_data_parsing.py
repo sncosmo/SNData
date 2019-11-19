@@ -16,6 +16,7 @@ get_available_tables = sako18.get_available_tables
 load_table = sako18.load_table
 
 
+# noinspection PyUnusedLocal
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -36,9 +37,10 @@ def get_available_ids():
         A list of object IDs as strings
     """
 
-    return sorted(load_table(9)['CID'])
+    return sorted(set(load_table(9)['CID']))
 
 
+# noinspection PyUnusedLocal
 @utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
@@ -67,11 +69,11 @@ def get_data_for_id(obj_id, format_table=True):
 
         # Get type of object observed by spectra
         summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
-        type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
+        spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
 
         # Get meta data for the current spectrum from the summary table
         data['sid'] = spec_id
-        data['type'] = type
+        data['type'] = spec_type
         data['date'] = summary_row['Date']
         data['telescope'] = summary_row['Telescope']
         data_tables.append(data)
