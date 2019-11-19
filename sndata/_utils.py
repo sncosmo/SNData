@@ -3,7 +3,6 @@
 
 """This module provides utilities used by various submodules."""
 
-import shutil
 import tarfile
 from functools import wraps
 from pathlib import Path, PosixPath
@@ -15,16 +14,29 @@ import requests
 from astropy.time import Time
 from tqdm import tqdm
 
+from .exceptions import NoDownloadedData
 
-class NoDownloadedData(Exception):
-    def __init__(self, *args, **kwargs):
-        default_message = \
-            'Data has not been downloaded for this module / data release.'
 
-        if not (args or kwargs):
-            args = (default_message,)
+def build_pbar(data, verbose):
+    """Cast an iterable into a progress bar
 
-        super().__init__(*args, **kwargs)
+    If verbose is False, return ``data`` unchanged.
+
+    Args:
+        data          (iter): An iterable object
+        verbose (bool, dict): Arguments for tqdm.tqdm
+    """
+
+    if isinstance(verbose, dict):
+        iter_data = tqdm(data, **verbose)
+
+    elif verbose:
+        iter_data = tqdm(data)
+
+    else:
+        iter_data = data
+
+    return iter_data
 
 
 @np.vectorize
@@ -53,25 +65,27 @@ def convert_to_jd(date):
     return t.value
 
 
-def require_data_path(*data_dirs):
-    """Decorator to raise NoDownloadedData exception if given paths don't exist
+def check_url(url, timeout=None):
+    """Return whether a connection can be established to a given URL
+
+    If False, a warning is also raised.
 
     Args:
-        *data_dirs (Path): Path objects to check exists
+        url     (str): The URL to check
+        timeout (int): Optional number of seconds to timeout after
+
+    Returns:
+        A boolean
     """
 
-    def inner(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            for data_dir in data_dirs:
-                if not data_dir.exists():
-                    raise NoDownloadedData()
+    try:
+        _ = requests.get(url, timeout=timeout)
+        return True
 
-            return func(*args, **kwargs)
+    except requests.ConnectionError:
+        warn(f'Could not connect to {url}')
 
-        return wrapper
-
-    return inner
+    return False
 
 
 def download_file(url, out_file):
@@ -130,26 +144,25 @@ def download_tar(url, out_dir, mode=None):
                     data.extract(file_, path=out_dir)
 
 
-def build_pbar(data, verbose):
-    """Cast an iterable into a progress bar
-
-    If verbose is False, return ``data`` unchanged.
+def require_data_path(*data_dirs):
+    """Decorator to raise NoDownloadedData exception if given paths don't exist
 
     Args:
-        data          (iter): An iterable object
-        verbose (bool, dict): Arguments for tqdm.tqdm
+        *data_dirs (Path): Path objects to check exists
     """
 
-    if isinstance(verbose, dict):
-        iter_data = tqdm(data, **verbose)
+    def inner(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for data_dir in data_dirs:
+                if not data_dir.exists():
+                    raise NoDownloadedData()
 
-    elif verbose:
-        iter_data = tqdm(data)
+            return func(*args, **kwargs)
 
-    else:
-        iter_data = data
+        return wrapper
 
-    return iter_data
+    return inner
 
 
 def read_vizier_table_descriptions(readme_path):
@@ -192,70 +205,3 @@ def read_vizier_table_descriptions(readme_path):
             table_descriptions[table_num] = table_desc
 
     return table_descriptions
-
-
-def factory_iter_data(id_func, data_func):
-    def iter_data(verbose=False, format_table=True, filter_func=None):
-        """Iterate through all available targets and yield data tables
-
-        An optional progress bar can be formatted by passing a dictionary of
-        ``tqdm`` arguments. Outputs can be optionally filtered by passing a
-        function ``filter_func`` that accepts a data table and returns a
-        boolean.
-
-        Args:
-            verbose  (bool, dict): Optionally display progress bar while iterating
-            format_table   (bool): Format data for ``SNCosmo`` (Default: True)
-            filter_func    (func): An optional function to filter outputs by
-
-        Yields:
-            Astropy tables
-        """
-
-        if filter_func is None:
-            filter_func = lambda x: x
-
-        iterable = build_pbar(id_func(), verbose)
-        for obj_id in iterable:
-            data_table = data_func(obj_id, format_table=format_table)
-            if filter_func(data_table):
-                yield data_table
-
-    return iter_data
-
-
-def factory_delete_module_data(*dirs):
-    def delete_module_data():
-        """Delete any data for the current survey / data release"""
-
-        try:
-            for data_dir in dirs:
-                shutil.rmtree(data_dir)
-
-        except FileNotFoundError:
-            pass
-
-    return delete_module_data
-
-
-def check_url(url, timeout=None):
-    """Return whether a connection can be established to a given URL
-
-    If False, a warning is also raised.
-
-    Args:
-        url     (str): The URL to check
-        timeout (int): Optional number of seconds to timeout after
-
-    Returns:
-        A boolean
-    """
-
-    try:
-        _ = requests.get(url, timeout=timeout)
-        return True
-
-    except requests.ConnectionError:
-        warn(f'Could not connect to {url}')
-
-    return False

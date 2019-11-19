@@ -11,7 +11,9 @@ from astropy.io import ascii
 from astropy.table import Column, Table, vstack
 
 from . import _meta as meta
+from ... import _factory_funcs as factory
 from ... import _utils as utils
+from ...exceptions import InvalidObjId
 
 
 def register_filters(force=False):
@@ -133,6 +135,9 @@ def get_data_for_id(obj_id, format_table=True):
         An astropy table of data for the given ID
     """
 
+    if obj_id not in get_available_ids():
+        raise InvalidObjId()
+
     out_table = Table(
         names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
                'telescope', 'instrument'],
@@ -157,4 +162,4 @@ def get_data_for_id(obj_id, format_table=True):
     return out_table
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)

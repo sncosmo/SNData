@@ -3,28 +3,23 @@
 
 """Tests for the ``csp.dr3`` module."""
 
+from unittest import TestCase
+
 import numpy as np
 
 from sndata import csp
 from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
-class DataParsing(DataParsingTestBase):
-    """Tests for the csp.dr3 module"""
+class SurveyTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.module = csp.dr3
-        cls.module.download_module_data(force=True)
-
-    def test_get_zp(self):
-        self._test_get_zp()
-
-    def test_ids_are_sorted(self):
-        self._test_ids_are_sorted()
+        cls.module.download_module_data()
 
     def test_instrument_offset(self):
-        """Test returned DR3 data encorporates the instrument offset using a
+        """Test returned DR3 data includes the instrument offset using a
          single data point from 2005el.
          """
 
@@ -33,16 +28,34 @@ class DataParsing(DataParsingTestBase):
             y_data = data[data['band'] == band]
             return y_data[y_data['time'] == time]
 
-        unformated_data = get_test_point('Y', '2005el', format_table=False)
-        formated_data = get_test_point('csp_dr3_Y', '2005el')
+        unformatted_data = get_test_point('Y', '2005el', format_table=False)
+        formatted_data = get_test_point('csp_dr3_Y', '2005el')
 
         # Check magnitude offset from natural to AB mag
-        offset = np.round(formated_data['mag'] - unformated_data['mag'], 4)
+        offset = np.round(formatted_data['mag'] - unformatted_data['mag'], 4)
         Yband_offset = 0.63  # From Krisciunas et al. 2017
         self.assertEqual(offset, Yband_offset)
 
         # Check error in mag is not changed
-        self.assertEqual(formated_data['mag_err'], unformated_data['mag_err'])
+        self.assertEqual(formatted_data['mag_err'], unformatted_data['mag_err'])
+
+
+class DataParsing(DataParsingTestBase):
+    """Tests for the csp.dr3 module"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.module = csp.dr3
+        cls.module.download_module_data()
+
+    def test_bad_object_id_err(self):
+        self._test_bad_object_id_err()
+
+    def test_get_zp(self):
+        self._test_get_zp()
+
+    def test_ids_are_sorted(self):
+        self._test_ids_are_sorted()
 
     def test_jd_time_format(self):
         self._test_jd_time_format('time')

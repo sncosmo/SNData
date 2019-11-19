@@ -5,6 +5,7 @@
 modules.
 """
 
+import re
 from pathlib import Path
 from unittest import TestCase
 from warnings import warn
@@ -15,6 +16,7 @@ import sncosmo
 import yaml
 
 from sndata import get_zp
+from sndata.exceptions import InvalidObjId
 
 docs_path = Path(__file__).resolve().parent / 'docs.yml'
 with open(docs_path) as ofile:
@@ -29,6 +31,11 @@ class DataParsingTestBase(TestCase):
     """Generic tests for a given survey"""
 
     module = None
+
+    def _test_bad_object_id_err(self):
+        """Test an InvalidObjId excpetion is raised for a made up Id"""
+
+        self.assertRaises(InvalidObjId, self.module.get_data_for_id, 'fake_id')
 
     def _test_get_zp(self):
         """Test that ``get_zp`` returns the correct zero point"""
@@ -170,9 +177,13 @@ class DocumentationTestBase(TestCase):
 
         for func_name, doc_string in expected_docs.items():
             if func_name not in skip_funcs:
+                # Strip spaces and indentation but not new lines
                 module_func = getattr(self.module, func_name)
+                func_doc = re.sub("  +", "", module_func.__doc__)
+                expected_doc = re.sub("  +", "", doc_string)
+
                 self.assertEqual(
-                    doc_string, module_func.__doc__,
+                    func_doc, expected_doc,
                     f'Wrong docstring for ``{func_name}``')
 
     def _test_survey_url_status(self):

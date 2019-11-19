@@ -7,23 +7,12 @@ from functools import lru_cache
 
 import numpy as np
 from astropy.io import ascii
+from astropy.table import Table
 
 from . import _meta as meta
-from ... import _integrations as integrations
+from ... import _factory_funcs as factory
 from ... import _utils as utils
-
-
-@utils.require_data_path(meta.filter_dir)
-def register_filters(force=False):
-    """Register filters for this survey / data release with SNCosmo
-
-    Args:
-        force (bool): Whether to re-register a band if already registered
-    """
-
-    for _file_name, _band_name in zip(meta.filter_file_names, meta.band_names):
-        filter_path = meta.filter_dir / _file_name
-        integrations.register_filter(filter_path, _band_name, force=force)
+from ...exceptions import InvalidObjId
 
 
 @utils.require_data_path(meta.table_dir)
@@ -32,7 +21,7 @@ def get_available_tables():
     for this data release"""
 
     file_list = meta.table_dir.glob('*.dat')
-    return sorted(int(table_path.stem.strip('table')) for table_path in file_list)
+    return sorted(int(path.stem.strip('table')) for path in file_list)
 
 
 @lru_cache(maxsize=None)
@@ -85,6 +74,46 @@ def _get_zp_for_bands(band):
     return np.array(meta.zero_point)[sorter[indices]]
 
 
+def parse_snoopy_data(path):
+    """Return data from a snoopy file as an astropy table
+
+    Args:
+        path (str): The file path of a snoopy input file
+
+    Returns:
+        An astropy table with columns 'time', 'band', 'mag', and 'mag_err'
+    """
+
+    out_table = Table(
+        names=['time', 'band', 'mag', 'mag_err'],
+        dtype=[float, object, float, float]
+    )
+
+    with open(path) as ofile:
+        # Get meta data from first line
+        name, z, ra, dec = ofile.readline().split()
+        out_table.meta['obj_id'] = name
+        out_table.meta['ra'] = float(ra)
+        out_table.meta['dec'] = float(dec)
+        out_table.meta['z'] = float(z)
+        out_table.meta['z_err'] = None
+        out_table.meta['comments'] = None
+
+        # Read photometric data from the rest of the file
+        band = None
+        for line in ofile.readlines():
+            line_list = line.split()
+            if line.startswith('filter'):
+                band = line_list[1]
+                continue
+
+            time, mag, mag_err = line_list
+            out_table.add_row([time, band, mag, mag_err])
+
+    out_table['time'] = utils.convert_to_jd(out_table['time'])
+    return out_table
+
+
 @utils.require_data_path(meta.photometry_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID
@@ -99,9 +128,12 @@ def get_data_for_id(obj_id, format_table=True):
         An astropy table of data for the given ID
     """
 
+    if obj_id not in get_available_ids():
+        raise InvalidObjId()
+
     # Read data file for target
     file_path = meta.photometry_dir / f'SN{obj_id}_snpy.txt'
-    data_table = integrations.parse_snoopy_data(file_path)
+    data_table = parse_snoopy_data(file_path)
     data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
     if format_table:
@@ -120,4 +152,5 @@ def get_data_for_id(obj_id, format_table=True):
     return data_table
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+register_filters = factory.factory_register_filters(meta)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)

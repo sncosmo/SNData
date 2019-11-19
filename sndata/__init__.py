@@ -7,6 +7,7 @@ surveys.
 
 from . import csp, des, essence, sdss
 from ._combine_data import CombinedDataset
+from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
 __version__ = '0.7.3'
 __author__ = 'Daniel Perrefort'
@@ -16,8 +17,10 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    modules = (csp.dr3, csp.dr1, des.sn3yr, sdss.sako18, sdss.sako18spec,
-               essence.narayan16)
+    modules = (
+        csp.dr3, csp.dr1, des.sn3yr, essence.narayan16,
+        sdss.sako18, sdss.sako18spec,
+    )
 
     for module in modules:
         module.delete_module_data()
@@ -39,11 +42,12 @@ def get_zp(band_name):
     modules_dict = {'csp': csp, 'des': des, 'sdss': sdss, 'essence': essence}
     module = getattr(modules_dict[survey.lower()], release.lower())
     if not hasattr(module, 'band_names'):
-        raise ValueError(
+        raise _ObservedDataTypeError(
             'Survey {} {} does not have registered photometric band passes.')
 
     bands = list(module.band_names)
     zp = module._meta.zero_point
+
     try:
         i = bands.index(band_name)
 

@@ -7,7 +7,9 @@ from astropy.table import Table, vstack
 
 from .. import sako18
 from ..sako18 import _meta as meta
+from ... import _factory_funcs as factory
 from ... import _utils as utils
+from ...exceptions import InvalidObjId
 
 # Cache the master table for later use
 _photometry_master_table = None
@@ -54,6 +56,9 @@ def get_data_for_id(obj_id, format_table=True):
     Returns:
         An astropy table of data for the given ID
     """
+
+    if obj_id not in get_available_ids():
+        raise InvalidObjId()
 
     master_table = load_table('master')
     spectra_summary = load_table(9)
@@ -104,4 +109,4 @@ def get_data_for_id(obj_id, format_table=True):
     return out_data
 
 
-iter_data = utils.factory_iter_data(get_available_ids, get_data_for_id)
+iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)
