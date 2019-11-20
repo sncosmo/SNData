@@ -46,11 +46,12 @@ def download_module_data(force=False):
 
     # Paper tables
     if utils.check_url(meta.table_url):
-        print(f'Downloading tables...')
-
-        for file_name in meta.table_names:
+        for i, file_name in enumerate(meta.table_names):
             out_path = meta.table_dir / file_name
             if force or not out_path.exists():
+                if i == 0:
+                    print(f'Downloading tables...')
+
                 utils.download_file(
                     url=meta.table_url + file_name,
                     out_file=out_path
@@ -58,11 +59,12 @@ def download_module_data(force=False):
 
     # Photometric filters
     if utils.check_url(meta.filter_url):
-        print(f'Downloading filters...')
-
-        for file_name in meta.filter_file_names:
+        for i, file_name in enumerate(meta.filter_file_names):
             out_path = meta.filter_dir / file_name
             if force or not out_path.exists():
+                if i == 0:
+                    print(f'Downloading filters...')
+
                 utils.download_file(
                     url=meta.filter_url + file_name,
                     out_file=out_path

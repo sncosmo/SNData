@@ -37,6 +37,6 @@ survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
 release = 'sako18'
 survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
-data_type = 'spectroscopy'
+data_type = 'spectroscopic'
 publications = ('Sako et al. (2018)',)
 ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'
