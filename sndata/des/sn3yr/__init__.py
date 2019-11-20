@@ -28,7 +28,7 @@ survey_name = 'Dark Energy Survey'
 survey_abbrev = 'DES'
 release = 'sn3yr'
 survey_url = 'https://des.ncsa.illinois.edu/'
-data_type = 'photometry'
+data_type = 'photometric'
 publications = (
     'Burke et al. 2017',
     'Brout et al. 2019',
