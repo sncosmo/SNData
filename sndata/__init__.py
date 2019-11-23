@@ -9,7 +9,7 @@ from . import csp, des, essence, sdss
 from ._combine_data import CombinedDataset
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
-__version__ = '0.8.2'
+__version__ = '0.8.3'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
