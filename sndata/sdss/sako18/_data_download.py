@@ -42,7 +42,7 @@ def download_module_data(force=False):
 
     # Tables from the published paper
     print_tables = True  # Whether to print the status
-    if check_url(meta.table_url):
+    if check_url(meta.base_url):
         for file_name in meta.table_names:
 
             out_path = meta.table_dir / file_name
@@ -52,7 +52,7 @@ def download_module_data(force=False):
                     print_tables = False
 
                 download_file(
-                    url=meta.table_url + file_name,
+                    url=meta.base_url + file_name,
                     out_file=out_path
                 )
 
@@ -72,6 +72,7 @@ def download_module_data(force=False):
                     out_file=out_path
                 )
 
+    # Fits file with spectra
     if (force or not meta.spectra_dir.exists()) and check_url(meta.spectra_url):
         print('Downloading spectra...')
         download_tar(
