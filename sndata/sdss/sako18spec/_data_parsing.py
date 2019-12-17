@@ -103,7 +103,6 @@ def get_data_for_id(obj_id, format_table=True):
         out_data.meta['z_err'] = None
 
     out_data.meta['dtype'] = 'spectroscopic'
-    out_data.meta['spec_id'] = spec_id
     out_data.meta['comments'] = \
         'z represents CMB corrected redshift of the supernova.'
 
