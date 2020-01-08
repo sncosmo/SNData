@@ -3,7 +3,9 @@
 
 """This module provides utilities used by various submodules."""
 
+import functools
 import tarfile
+from copy import deepcopy
 from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
@@ -15,6 +17,36 @@ from astropy.time import Time
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
+
+
+def lru_copy_cache(maxsize=128, typed=False, copy=True):
+    """Decorator to cache the return of a function
+
+    Similar to ``functools.lru_cache``, but allows a copy of the cached value
+    to be returned, thus preventing mutation of the cache.
+
+    Args:
+        maxsize (int): Maximum size of the cache
+        typed  (bool): Cache objects of different types separately
+        copy   (bool): Return a copy of the cached item
+
+    Returns:
+        A decorator
+    """
+
+    if not copy:
+        return functools.lru_cache(maxsize, typed)
+
+    def decorator(f):
+        cached_func = functools.lru_cache(maxsize, typed)(f)
+
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            return deepcopy(cached_func(*args, **kwargs))
+
+        return wrapper
+
+    return decorator
 
 
 def build_pbar(data, verbose):

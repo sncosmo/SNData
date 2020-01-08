@@ -3,7 +3,6 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from functools import lru_cache
 from os import path as _path
 
 import numpy as np
@@ -24,7 +23,7 @@ def get_available_tables():
     return [6]
 
 
-@lru_cache(maxsize=None)
+@utils.lru_copy_cache(maxsize=None)
 @utils.require_data_path(meta.vizier_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
