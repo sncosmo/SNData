@@ -6,4 +6,3 @@ pyyaml
 requests
 tqdm
 sncosmo
-urllib
