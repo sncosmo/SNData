@@ -106,10 +106,10 @@ def _read_file(path):
 
     # Add remaining columns. These values are constant for a single file
     # (i.e. a single spectrum) but vary across files (across spectra)
-    _, _, wrange, telescope, instrument = path.stem.split('_')
+    _, _, w_range, telescope, instrument = path.stem.split('_')
     date_col = Column(data=np.full(len(data), obs_date), name='date')
     epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
-    wr_col = Column(data=np.full(len(data), wrange), name='wavelength_range')
+    wr_col = Column(data=np.full(len(data), w_range), name='wavelength_range')
     tel_col = Column(data=np.full(len(data), telescope), name='telescope')
     inst_col = Column(data=np.full(len(data), instrument), name='instrument')
     data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])

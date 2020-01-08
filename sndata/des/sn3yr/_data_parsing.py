@@ -17,6 +17,7 @@ def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
 
+    # noinspection SpellCheckingInspection
     return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
 
@@ -34,6 +35,7 @@ def load_table(table_id):
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
+    # noinspection SpellCheckingInspection
     data = Table.read(
         str(meta.fits_dir / table_id),
         format='ascii',
@@ -110,8 +112,10 @@ def get_data_for_id(obj_id, format_table=True):
     if obj_id not in get_available_ids():
         raise InvalidObjId()
 
-    # Read in ascci data table for specified object
+    # Read in ascii data table for specified object
     file_path = meta.photometry_dir / f'des_{int(obj_id):08d}.dat'
+
+    # noinspection SpellCheckingInspection
     data = Table.read(
         file_path, format='ascii',
         data_start=27, data_end=-1,

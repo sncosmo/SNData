@@ -12,7 +12,7 @@ from . import _utils as utils
 
 
 def _reduce_id_mapping(id_list):
-    """Combine a list of sets by unioning any sets with shared elements
+    """Combine a list of sets by combining any sets with shared elements
 
     Args
         id_list (list[tuple[str]]): List of object IDs to join
@@ -264,7 +264,7 @@ class CombinedDataset:
 
         if len(obj_ids) <= 1:
             raise ValueError(
-                'Object IDs can only be joined in stes of 2 or more.')
+                'Object IDs can only be joined in sets of 2 or more.')
 
         self._joined_ids.append(set(obj_ids))
         self._joined_ids = _reduce_id_mapping(self._joined_ids)
@@ -278,7 +278,7 @@ class CombinedDataset:
 
         if len(obj_ids) <= 1:
             raise ValueError(
-                'Object IDs can only be joined in stes of 2 or more.')
+                'Object IDs can only be joined in sets of 2 or more.')
 
         obj_ids = set(obj_ids)
         for obj_id_set in self._joined_ids:
