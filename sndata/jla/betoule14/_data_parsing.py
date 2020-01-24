@@ -3,6 +3,8 @@
 
 """This module defines functions for accessing locally available data files."""
 
+from warnings import warn
+
 from astropy.io import ascii
 from astropy.io import fits
 from astropy.table import Table
@@ -11,6 +13,20 @@ from . import _meta as meta
 from ... import _factory_funcs as factory
 from ... import _utils as utils
 from ...exceptions import InvalidObjId
+
+
+# Todo: This will never run because of the decorator.
+#  Built in bands don't need to be downloaded
+@utils.require_data_path(meta.filter_dir)
+def register_filters(force=False):
+    """Register filters for this survey / data release with SNCosmo
+
+    Args:
+        force (bool): Whether to re-register a band if already registered
+    """
+
+    warn('Filters for the JLA analysis (Betoule et al. 2014) '
+         'are already built into SNCosmo')
 
 
 @utils.require_data_path(meta.table_dir)
@@ -129,5 +145,4 @@ def get_data_for_id(obj_id, format_table=True):
     return out_table
 
 
-register_filters = factory.factory_register_filters(meta)
 iter_data = factory.factory_iter_data(get_available_ids, get_data_for_id)
