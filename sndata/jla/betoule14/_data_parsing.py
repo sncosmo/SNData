@@ -64,7 +64,7 @@ def get_available_ids():  # Todo: allow selection of a subset
     """
 
     file_list = meta.photometry_dir.glob('*.list')
-    return sorted(str(f).split('-')[-1].strip('.list') for f in file_list)
+    return sorted(str(f).split('-')[-1][:-5] for f in file_list)
 
 
 @utils.require_data_path(meta.photometry_dir)
@@ -94,18 +94,25 @@ def get_data_for_id(obj_id, format_table=True):
             meta_data[split_line[0]] = split_line[1]
             line = infile.readline()
 
-    # Initialize data as an astropy table
-    names = ['Date', 'Flux', 'Fluxerr', 'ZP', 'Filter', 'MagSys']
-    dtype = [float, float, float, float, 'U30', 'U10']
-    out_table = Table.read(infile, names=names, dtype=dtype, comment='#|@')
+        # Initialize data as an astropy table
+        names = ['Date', 'Flux', 'Fluxerr', 'ZP', 'Filter', 'MagSys']
+        out_table = Table.read(
+            infile.readlines(),
+            names=names,
+            comment='#|@',
+            format='ascii.csv',
+            delimiter=' ')
 
     # Set sncosmo format
     if format_table:
         out_table.rename_column('Date', 'time')
         out_table.rename_column('Flux', 'flux')
         out_table.rename_column('Fluxerr', 'fluxerr')
-        out_table.rename_column('Filter', 'filter')
-        out_table.rename_column('Magsys', 'sys')
+        out_table.rename_column('Filter', 'band')
+        out_table.rename_column('ZP', 'zp')
+        out_table.rename_column('MagSys', 'zpsys')
+
+        out_table['time'] = utils.convert_to_jd(out_table['time'])
 
     # Add package standard metadata
     out_table.meta['obj_id'] = obj_id
