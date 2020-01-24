@@ -27,5 +27,3 @@ Function Documentation
 
 .. autofunction:: get_zp
 .. autofunction:: delete_all_data
-.. autoclass:: sndata.CombinedDataset
-   :members:

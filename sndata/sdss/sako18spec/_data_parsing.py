@@ -60,9 +60,6 @@ def get_data_for_id(obj_id, format_table=True):
     if obj_id not in get_available_ids():
         raise InvalidObjId()
 
-    master_table = load_table('master')
-    spectra_summary = load_table(9)
-
     # Read in all spectra for the given object Id
     data_tables = []
     files = list(meta.spectra_dir.glob(f'sn{obj_id}-*.txt'))
@@ -73,6 +70,7 @@ def get_data_for_id(obj_id, format_table=True):
         spec_id = path.stem.split('-')[-1]
 
         # Get type of object observed by spectra
+        spectra_summary = load_table(9)
         summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
         spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
 
@@ -87,6 +85,7 @@ def get_data_for_id(obj_id, format_table=True):
     out_data.meta['obj_id'] = obj_id
 
     # Add meta data from the master table
+    master_table = load_table('master')
     phot_record = master_table[master_table['CID'] == obj_id]
 
     if phot_record:
@@ -96,14 +95,14 @@ def get_data_for_id(obj_id, format_table=True):
         out_data.meta['z_err'] = phot_record['zerrCMB'][0]
 
     else:
-        # obj_id = '13046', '13346', '15833', '17134', '17135', '19819', '6471'
+        # Known cases include the following object ids:
+        # '13046', '13346', '15833', '17134', '17135', '19819', '6471'
         out_data.meta['ra'] = None
         out_data.meta['dec'] = None
         out_data.meta['z'] = None
         out_data.meta['z_err'] = None
 
     out_data.meta['dtype'] = 'spectroscopic'
-    out_data.meta['spec_id'] = spec_id
     out_data.meta['comments'] = \
         'z represents CMB corrected redshift of the supernova.'
 

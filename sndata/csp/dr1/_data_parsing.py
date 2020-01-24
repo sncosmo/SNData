@@ -3,7 +3,6 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +15,7 @@ from ... import _utils as utils
 from ...exceptions import InvalidObjId
 
 
+# noinspection PyUnusedLocal
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -40,7 +40,7 @@ def get_available_tables():
     return sorted(table_nums)
 
 
-@lru_cache(maxsize=None)
+@utils.lru_copy_cache(maxsize=None)
 @utils.require_data_path(meta.table_dir)
 def load_table(table_id):
     """Load a table from the data paper for this survey / data
@@ -106,10 +106,10 @@ def _read_file(path):
 
     # Add remaining columns. These values are constant for a single file
     # (i.e. a single spectrum) but vary across files (across spectra)
-    _, _, wrange, telescope, instrument = path.stem.split('_')
+    _, _, w_range, telescope, instrument = path.stem.split('_')
     date_col = Column(data=np.full(len(data), obs_date), name='date')
     epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
-    wr_col = Column(data=np.full(len(data), wrange), name='wavelength_range')
+    wr_col = Column(data=np.full(len(data), w_range), name='wavelength_range')
     tel_col = Column(data=np.full(len(data), telescope), name='telescope')
     inst_col = Column(data=np.full(len(data), instrument), name='instrument')
     data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
@@ -120,7 +120,7 @@ def _read_file(path):
     return max_date, redshift, data
 
 
-# noinspection PyUnboundLocalVariable
+# noinspection PyUnusedLocal
 @utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
     """Returns data for a given object ID

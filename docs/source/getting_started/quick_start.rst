@@ -30,7 +30,8 @@ For a more in depth overview, see the :ref:`SlowStart`.
    demo_id = object_ids[0]
    dr3.get_data_for_id(demo_id)
 
-   # Data is auto-formatted for use with the SNCosmo package. To disable this:
+   # Data is auto-formatted to be compatible with the SNCosmo package.
+   # To disable this:
    dr3.get_data_for_id(demo_id, format_table=False)
 
    # For convenience you can iterate over all tables

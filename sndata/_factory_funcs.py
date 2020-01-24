@@ -14,17 +14,17 @@ from . import _utils as utils
 from ._utils import build_pbar
 
 
-def _register_filter(file_path, filt_name, force=False):
+def _register_filter(file_path, filter_name, force=False):
     """Registers filter profiles with sncosmo if not already registered
 
     Assumes the file at ``file_path`` is a two column, white space delimited
     ascii table.
 
     Args:
-        file_path (str): Path of an ascii table with wavelength (Angstrom)
-                          and transmission columns
-        filt_name (str): The name of the registered filter.
-        force    (bool): Whether to re-register a band if already registered
+        file_path   (str): Path of an ascii table with wavelength (Angstrom)
+                            and transmission columns
+        filter_name (str): The name of the registered filter.
+        force      (bool): Whether to re-register a band if already registered
     """
 
     # Get set of registered builtin and custom band passes
@@ -35,10 +35,10 @@ def _register_filter(file_path, filt_name, force=False):
         k[0] for k in sncosmo.bandpasses._BANDPASSES._instances)
 
     # Register the new bandpass
-    if filt_name not in available_bands:
-        filt_data = np.genfromtxt(file_path).T
-        band = sncosmo.Bandpass(filt_data[0], filt_data[1])
-        band.name = filt_name
+    if filter_name not in available_bands:
+        filter_data = np.genfromtxt(file_path).T
+        band = sncosmo.Bandpass(filter_data[0], filter_data[1])
+        band.name = filter_name
         sncosmo.register(band, force=force)
 
 

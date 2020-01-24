@@ -146,6 +146,20 @@ class DataParsingTestBase(TestCase):
         is_unique = len(np.unique(obj_ids)) == len(obj_ids)
         self.assertTrue(is_unique)
 
+    def _test_cache_not_mutated(self):
+        """Test mutating returned tables does not mutate them in the cache"""
+
+        table_id = self.module.get_available_tables()[0]
+        original_table = self.module.load_table(table_id)
+        original_table_len = len(original_table)
+        original_table.remove_row(0)
+
+        new_table = self.module.load_table(table_id)
+
+        self.assertEqual(
+            original_table_len, len(new_table),
+            'Table length was mutated in memory')
+
 
 class DocumentationTestBase(TestCase):
     """Generic tests for a given survey

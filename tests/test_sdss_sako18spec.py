@@ -33,6 +33,9 @@ class DataParsing(DataParsingTestBase):
     def test_unique_ids(self):
         self._test_unique_ids()
 
+    def test_cache_not_mutated(self):
+        self._test_cache_not_mutated()
+
 
 class Documentation(DocumentationTestBase):
     """Tests for the des.SN3YR module"""
