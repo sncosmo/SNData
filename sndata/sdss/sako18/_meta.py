@@ -18,7 +18,8 @@ table_dir = data_dir / 'tables/'  # Tables from the published paper
 smp_dir = data_dir / 'SMP_Data/'  # SMP data files (photometric light-curves)
 snana_dir = data_dir / 'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
 outlier_path = snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
-spectra_dir = data_dir / 'Spectra'  # spectra fits files
+spectra_dir = data_dir / 'Spectra_txt'  # spectra files
+spectra_zip = _file_dir / 'Spectra_txt.zip'  # compressed spectra files
 
 # Define urls and file names for remote data
 filter_url = 'http://www.ioa.s.u-tokyo.ac.jp/~doi/sdss/'

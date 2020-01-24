@@ -42,37 +42,6 @@ def get_available_ids():
     return sorted(set(load_table(9)['CID']))
 
 
-def read_fits_file(obj_id, path):
-    """Read data from a single fits file
-
-    Args:
-        obj_id (str): The object ID for supernova candidate measured in the file
-        path   (str): The path of the file to read
-
-    Returns:
-        An astropy table
-    """
-
-    # Todo: Change this line to read from the fits file
-    data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
-
-    # Get type of object observed by spectra and ensure consistent formatting
-    spectra_summary = load_table(9)
-    spec_id = path.stem.split('-')[-1]
-
-    summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
-    extraction_type = path.stem.split('-')[0].strip(obj_id)
-    spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
-
-    # Get meta data for the current spectrum from the summary table
-    data['sid'] = spec_id
-    data['type'] = spec_type
-    data['date'] = summary_row['Date']
-    data['telescope'] = summary_row['Telescope']
-
-    return data
-
-
 # noinspection PyUnusedLocal
 @utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
@@ -92,9 +61,27 @@ def get_data_for_id(obj_id, format_table=True):
         raise InvalidObjId()
 
     # Read in all spectra for the given object Id
+    data_tables = []
     files = list(meta.spectra_dir.glob(f'sn{obj_id}-*.txt'))
-    files.extend(meta.spectra_dir.glob(f'gal{obj_id}-*.txt'))
-    out_data = vstack(read_fits_file(obj_id, path) for path in files)
+    files += list(meta.spectra_dir.glob(f'gal{obj_id}-*.txt'))
+    for path in files:
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
+        extraction_type = path.stem.split('-')[0].strip(obj_id)
+        spec_id = path.stem.split('-')[-1]
+
+        # Get type of object observed by spectra
+        spectra_summary = load_table(9)
+        summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
+        spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
+
+        # Get meta data for the current spectrum from the summary table
+        data['sid'] = spec_id
+        data['type'] = spec_type
+        data['date'] = summary_row['Date']
+        data['telescope'] = summary_row['Telescope']
+        data_tables.append(data)
+
+    out_data = vstack(data_tables)
     out_data.meta['obj_id'] = obj_id
 
     # Add meta data from the master table
