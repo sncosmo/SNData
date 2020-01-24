@@ -23,7 +23,7 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-# Todo: from ._meta import band_names, lambda_effective
+from ._meta import band_names, lambda_effective
 
 survey_name = 'Joint Light-curve Analysis'
 survey_abbrev = 'JLA'
