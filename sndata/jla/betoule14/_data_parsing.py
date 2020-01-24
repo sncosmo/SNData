@@ -18,10 +18,10 @@ def get_available_tables():
     """Get table numbers for machine readable tables published in the paper
     for this data release"""
 
-    dat_file_list = list(meta.table_dir.glob('tablef*.dat'))
-    fits_file_list = list(meta.table_dir.glob('tablef*.fit'))
+    dat_file_list = list(meta.table_dir.glob('table*.dat'))
+    fits_file_list = list(meta.table_dir.glob('table*.fit'))
     file_list = dat_file_list + fits_file_list
-    return sorted([int(str(f).strip('.datfit')[-1]) for f in file_list])
+    return sorted([str(f).rstrip('.datfit')[-2:] for f in file_list])
 
 
 @utils.lru_copy_cache(maxsize=None)
@@ -38,20 +38,24 @@ def load_table(table_id):
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
-    # Tables 2 and 4 are fits files
-    if table_id in (2, 4):
-        with fits.open(meta.table_dir / f'tablef2fit') as hdulist:
-            return Table(hdulist[0].data)
+    # Tables 2 is a fits file
+    if table_id == 'f2':
+        with fits.open(meta.table_dir / f'table{table_id}.fit') as hdulist:
+            data = Table(hdulist[0].data)
+
+        description = 'Covariance matrix of the binned distance modulus'
+        data.meta['description'] = description
+        return data
 
     # Remaining tables should be .dat files
     readme_path = meta.table_dir / 'ReadMe'
-    table_path = meta.table_dir / f'tablef{table_id}.dat'
+    table_path = meta.table_dir / f'table{table_id}.dat'
     if table_id not in get_available_tables():
         raise ValueError(f'Table {table_id} is not available.')
 
     data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
     description_dict = utils.read_vizier_table_descriptions(readme_path)
-    data.meta['description'] = description_dict[f'f{table_id}']
+    data.meta['description'] = description_dict[f'{table_id}']
     return data
 
 
