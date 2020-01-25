@@ -5,7 +5,7 @@
 surveys.
 """
 
-from . import csp, des, essence, sdss
+from . import csp, des, essence, jla, sdss
 from ._combine_data import CombinedDataset
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
@@ -39,7 +39,14 @@ def get_zp(band_name):
     """
 
     survey, release, *_ = band_name.split('_')
-    modules_dict = {'csp': csp, 'des': des, 'sdss': sdss, 'essence': essence}
+    modules_dict = {
+        'csp': csp,
+        'des': des,
+        'sdss': sdss,
+        'essence': essence,
+        'jla': jla
+    }
+
     module = getattr(modules_dict[survey.lower()], release.lower())
     if not hasattr(module, 'band_names'):
         raise _ObservedDataTypeError(
