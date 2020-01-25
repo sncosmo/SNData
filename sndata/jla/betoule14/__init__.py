@@ -8,6 +8,12 @@ and SNLS collaborations. The data set includes several low-redshift samples
 SNLS (0.2 <z < 1) and totals 740 spectroscopically confirmed type Ia
 supernovae with high quality light curves. (Source: Betoule et al. 2014)
 
+This data set includes observations taken in the pre 2015 MegaCam filter set
+used by the Canada-France-Hawaii Telescope (CFHT). These filters were measured
+at multiple positions by both the observing team and manufacturer. Transmission
+functions registered by this module represent the average transmission across
+the filter as reported by the manufacturer.
+
 Deviations from the standard UI:
   - None
 
