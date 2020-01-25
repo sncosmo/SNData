@@ -3,6 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
+import numpy as np
 import sncosmo
 from astropy.io import ascii
 from astropy.io import fits
@@ -14,12 +15,17 @@ from ... import _utils as utils
 from ...exceptions import InvalidObjId
 
 
+@utils.require_data_path(meta.filter_path)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
     Args:
         force (bool): Whether to re-register a band if already registered
     """
+
+    data_arr = np.genfromtxt(meta.filter_path, skip_header=1)
+    filt_table = Table(data_arr, names=['wave', 'u', 'g', 'r', 'i', 'z'])
+    filt_table['wave'] *= 10  # Convert nm to angstroms
 
     # Bands are already registered in sncosmo under a different name.
     # We register them using the package standardized name
@@ -28,15 +34,15 @@ def register_filters(force=False):
 
         # MEGACAMPSF are radius dependant
         if 'MEGACAMPSF' in built_in_name:
-            built_in_band = sncosmo.get_bandpass(built_in_name, 0)
+            trans = filt_table[built_in_name[-1].lower()]
+            new_band = sncosmo.Bandpass(filt_table['wave'], trans)
 
         else:
             built_in_band = sncosmo.get_bandpass(built_in_name)
+            new_band = sncosmo.Bandpass(built_in_band.wave, built_in_band.trans)
 
-        new_band = sncosmo.Bandpass(built_in_band.wave, built_in_band.trans)
         new_band.name = new_band_name
         sncosmo.register(new_band, force=force)
-
 
 
 @utils.require_data_path(meta.table_dir)
@@ -86,7 +92,7 @@ def load_table(table_id):
 
 
 @utils.require_data_path(meta.photometry_dir)
-def get_available_ids():  # Todo: allow selection of a subset
+def get_available_ids():
     """Return a list of target object IDs for the current survey
 
     Returns:
@@ -143,6 +149,7 @@ def get_data_for_id(obj_id, format_table=True):
         out_table.rename_column('MagSys', 'zpsys')
 
         out_table['time'] = utils.convert_to_jd(out_table['time'])
+        out_table['band'] = ['jla_betoule14_' + b for b in out_table['band']]
 
     # Add package standard metadata
     out_table.meta['obj_id'] = obj_id

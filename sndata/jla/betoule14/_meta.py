@@ -13,10 +13,12 @@ data_dir = _file_dir / 'data'
 # Define local paths of published data
 photometry_dir = data_dir / 'jla_light_curves'  # Photometry data
 table_dir = data_dir / 'tables'  # Vizier tables
+filter_path = data_dir / 'cfht_filters.txt'
 
 # Define urls for remote data
 photometry_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/jla_light_curves.tgz'
 table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/A+A/568/A22'
+filter_url = 'http://www.cfht.hawaii.edu/Instruments/Imaging/Megacam/data.MegaPrime/MegaCam_Filters_data_SAGEM.txt'
 
 band_names = [
     'jla_betoule14_4SHOOTER2::B',

@@ -32,3 +32,8 @@ def download_module_data(force=False):
             url=meta.photometry_url,
             out_dir=meta.data_dir,
             mode='r:gz')
+
+    # Download Filters
+    if (force or not meta.filter_path.exists()) and utils.check_url(meta.filter_url):
+        print('Downloading filters...')
+        utils.download_file(url=meta.filter_url, out_file=meta.filter_path)
