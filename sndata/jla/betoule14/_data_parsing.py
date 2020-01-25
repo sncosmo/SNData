@@ -3,8 +3,7 @@
 
 """This module defines functions for accessing locally available data files."""
 
-from warnings import warn
-
+import sncosmo
 from astropy.io import ascii
 from astropy.io import fits
 from astropy.table import Table
@@ -15,9 +14,6 @@ from ... import _utils as utils
 from ...exceptions import InvalidObjId
 
 
-# Todo: This will never run because of the decorator.
-#  Built in bands don't need to be downloaded
-@utils.require_data_path(meta.filter_dir)
 def register_filters(force=False):
     """Register filters for this survey / data release with SNCosmo
 
@@ -25,8 +21,22 @@ def register_filters(force=False):
         force (bool): Whether to re-register a band if already registered
     """
 
-    warn('Filters for the JLA analysis (Betoule et al. 2014) '
-         'are already built into SNCosmo')
+    # Bands are already registered in sncosmo under a different name.
+    # We register them using the package standardized name
+    for new_band_name in meta.band_names:
+        built_in_name = new_band_name.split('_')[-1]
+
+        # MEGACAMPSF are radius dependant
+        if 'MEGACAMPSF' in built_in_name:
+            built_in_band = sncosmo.get_bandpass(built_in_name, 0)
+
+        else:
+            built_in_band = sncosmo.get_bandpass(built_in_name)
+
+        new_band = sncosmo.Bandpass(built_in_band.wave, built_in_band.trans)
+        new_band.name = new_band_name
+        sncosmo.register(new_band, force=force)
+
 
 
 @utils.require_data_path(meta.table_dir)

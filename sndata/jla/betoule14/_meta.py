@@ -12,7 +12,6 @@ data_dir = _file_dir / 'data'
 
 # Define local paths of published data
 photometry_dir = data_dir / 'jla_light_curves'  # Photometry data
-filter_dir = data_dir / 'filters'  # Filters transmission curves
 table_dir = data_dir / 'tables'  # Vizier tables
 
 # Define urls for remote data
