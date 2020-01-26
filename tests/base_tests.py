@@ -14,6 +14,7 @@ import numpy as np
 import requests
 import sncosmo
 import yaml
+from requests.exceptions import ConnectionError
 
 from sndata import get_zp
 from sndata.exceptions import InvalidObjId
@@ -143,7 +144,8 @@ class DataParsingTestBase(TestCase):
         """Test all object Ids are unique"""
 
         obj_ids = self.module.get_available_ids()
-        unique_elements, counts_elements = np.unique(obj_ids, return_counts=True)
+        unique_elements, counts_elements = np.unique(obj_ids,
+                                                     return_counts=True)
         duplicates = unique_elements[counts_elements > 1]
         is_empty = len(duplicates) == 0
         self.assertTrue(is_empty, f'Duplicate Ids: {duplicates}')
@@ -178,7 +180,7 @@ class DocumentationTestBase(TestCase):
             stat_code = requests.get(
                 self.module.ads_url, timeout=15).status_code
 
-        except TimeoutError:
+        except (TimeoutError, ConnectionError):
             stat_code = 0
 
         if not stat_code == 200:
@@ -209,7 +211,7 @@ class DocumentationTestBase(TestCase):
             stat_code = requests.get(
                 self.module.survey_url, timeout=15).status_code
 
-        except TimeoutError:
+        except (TimeoutError, ConnectionError):
             stat_code = 0
 
         if not stat_code == 200:
