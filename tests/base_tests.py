@@ -143,8 +143,10 @@ class DataParsingTestBase(TestCase):
         """Test all object Ids are unique"""
 
         obj_ids = self.module.get_available_ids()
-        is_unique = len(np.unique(obj_ids)) == len(obj_ids)
-        self.assertTrue(is_unique)
+        unique_elements, counts_elements = np.unique(obj_ids, return_counts=True)
+        duplicates = unique_elements[counts_elements > 1]
+        is_empty = len(duplicates) == 0
+        self.assertTrue(is_empty, f'Duplicate Ids: {duplicates}')
 
     def _test_cache_not_mutated(self):
         """Test mutating returned tables does not mutate them in the cache"""

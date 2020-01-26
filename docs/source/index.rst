@@ -54,26 +54,29 @@ data release may have from the rest of the package. In general you should:
 Available Data
 --------------
 
-+------------------------------------------------------+---------------+------------------------+
-| Survey Name                                          | Data Type     | Data Release           |
-+======================================================+===============+========================+
-|                                                      | Spectroscopic | `DR1`_                 |
-+ Carnegie Supernova Project                           +---------------+------------------------+
-|                                                      | Photometric   | `DR3`_                 |
-+------------------------------------------------------+---------------+------------------------+
-| Dark Energy Survey                                   | Photometric   | `SN3YR`_               |
-+------------------------------------------------------+---------------+------------------------+
-+ Equation of State: Supernovae Trace Cosmic Expansion | Photometric   | `Narayan et al. 2016`_ |
-+------------------------------------------------------+---------------+------------------------+
-|                                                      | Photometric   | `Sako et al. 2018`_    |
-+ Sloan Digital Sky Survey                             +---------------+------------------------+
-|                                                      | Spectroscopic | `Sako et al. 2018`_    |
-+------------------------------------------------------+---------------+------------------------+
++------------------------------------------------------+---------------+--------------------------+
+| Survey Name                                          | Data Type     | Data Release             |
++======================================================+===============+==========================+
+|                                                      | Spectroscopic | `DR1`_                   |
++ Carnegie Supernova Project                           +---------------+--------------------------+
+|                                                      | Photometric   | `DR3`_                   |
++------------------------------------------------------+---------------+--------------------------+
+| Dark Energy Survey                                   | Photometric   | `SN3YR`_                 |
++------------------------------------------------------+---------------+--------------------------+
++ Equation of State: Supernovae Trace Cosmic Expansion | Photometric   | `Narayan et al. 2016`_   |
++------------------------------------------------------+---------------+--------------------------+
++ Joint Light-Curve Analysis                           | Photometric   | `Betoule et al. (2014)`_ |
++------------------------------------------------------+---------------+--------------------------+
+|                                                      | Photometric   | `Sako et al. 2018`_      |
++ Sloan Digital Sky Survey                             +---------------+--------------------------+
+|                                                      | Spectroscopic | `Sako et al. 2018`_      |
++------------------------------------------------------+---------------+--------------------------+
 
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
 .. _SN3YR: https://des.ncsa.illinois.edu/releases/sn
 .. _Narayan et al. 2016: http://www.ctio.noao.edu/essence/
+.. _Betoule et al. (2014): https://ui.adsabs.harvard.edu/abs/2014A%26A...568A..22B/abstract
 .. _Sako et al. 2018: http://data.darkenergysurvey.org/sdsssn/dataRelease/
 
 
@@ -102,4 +105,5 @@ Available Data
    module_docs/csp
    module_docs/des
    module_docs/essence
+   module_docs/jla
    module_docs/sdss
