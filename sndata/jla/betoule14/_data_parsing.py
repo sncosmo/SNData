@@ -127,7 +127,7 @@ def get_data_for_id(obj_id, format_table=True):
         line = infile.readline()
         while line.startswith('@'):
             split_line = line.lstrip('@').split(' ')
-            meta_data[split_line[0]] = split_line[1]
+            meta_data[split_line[0]] = split_line[1].rstrip()
             line = infile.readline()
 
         # Initialize data as an astropy table
@@ -152,11 +152,20 @@ def get_data_for_id(obj_id, format_table=True):
         out_table['band'] = ['jla_betoule14_' + b for b in out_table['band']]
 
     # Add package standard metadata
+    ra = meta_data.pop('RA', None)
+    dec = meta_data.pop('DEC', None)
+    ra = float(ra) if ra is not None else ra
+    dec = float(dec) if dec is not None else dec
+
     out_table.meta['obj_id'] = obj_id
-    out_table.meta['ra'] = None
-    out_table.meta['dec'] = None  # Todo
-    out_table.meta['z'] = float(meta_data['Z_HELIO'])
+    out_table.meta['ra'] = ra
+    out_table.meta['dec'] = dec
+    out_table.meta['z'] = float(meta_data.pop('Z_HELIO'))
     out_table.meta['z_err'] = None
+    out_table.meta.update(meta_data)
+
+    out_table.meta.pop('comments')
+    out_table.meta.pop('SN')
     out_table.meta['comments'] = 'z represents the heliocentric redshift'
 
     return out_table
