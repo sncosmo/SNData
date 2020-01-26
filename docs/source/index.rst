@@ -23,14 +23,13 @@ SNData
    +--------------------------------------------+
 
 
-**SNData** provides access to spectroscopic and photometric data published by
-a variety of supernova (SN) surveys. It is designed to support the development
-of scalable analysis pipelines that translate with minimal effort between
-different data sets or to a combination of multiple data sets. A summary of
-accessible data sets is provided below. Access to additional surveys is added
-upon request or as needed for individual research projects undertaken by the
-developer(s). To request an additional survey / data release, please raise an
-issue on `GitHub`_.
+**SNData** provides access to data releases published by a variety of
+supernova (SN) surveys. It is designed to support the development of scalable
+analysis pipelines that translate with minimal effort between and across data
+sets. A summary of accessible data is provided below. Access to additional
+surveys is added upon request or as needed for individual research projects
+undertaken by the developers. To request an additional survey / data release,
+please raise an issue on `GitHub`_.
 
 .. _GitHub: https://github.com/djperrefort/sndata
 
