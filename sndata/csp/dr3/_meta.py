@@ -3,10 +3,12 @@
 
 """This module specifies file meta and urls used by this submodule."""
 
+import os
 from pathlib import Path
 
-_file_dir = Path(__file__).resolve().parent
-data_dir = _file_dir / 'data'
+_data_dir = os.environ.get('SNDATA_DIR', __file__)
+_base_dir = Path(_data_dir).resolve().parent
+data_dir = _base_dir / 'data'
 
 # Define local paths of published data
 photometry_dir = data_dir / 'DR3'  # DR3 Light Curves
