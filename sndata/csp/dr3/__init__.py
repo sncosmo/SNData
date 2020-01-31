@@ -27,12 +27,14 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names, lambda_effective
-
-survey_name = 'Carnegie Supernova Project'
-survey_abbrev = 'CSP'
-release = 'dr3'
-survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
-data_type = 'photometric'
-publications = ('Krisciunas et al. 2017',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'
+from ._meta import (
+    ads_url,
+    band_names,
+    data_type,
+    lambda_effective,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
+)

@@ -22,12 +22,14 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names, lambda_effective
-
-survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
-survey_abbrev = 'ESSENCE'
-release = 'narayan16'
-survey_url = 'http://www.ctio.noao.edu/essence/'
-data_type = 'photometric'
-publications = ('Narayan et al. 2016',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2016ApJS..224....3N/abstract'
+from ._meta import (
+    ads_url,
+    band_names,
+    data_type,
+    lambda_effective,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
+)

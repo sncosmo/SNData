@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""This module specifies file meta and urls used by this submodule."""
+"""This file specifies file meta and urls used by the parent module."""
 
 import os
 from itertools import product
@@ -10,9 +10,21 @@ from urllib.parse import urljoin
 
 import numpy as np
 
+from ... import _utils as utils
+
+# General metadata
+survey_name = 'Sloan Digital Sky Survey'
+survey_abbrev = 'SDSS'
+release = 'sako18'
+survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
+data_type = 'photometric'
+publications = ('Sako et al. (2018)',)
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'
+
+
 _file_dir = Path(__file__).resolve().parent
 if 'SNDATA_DIR' in os.environ:
-    data_dir = Path(os.environ['SNDATA_DIR']).resolve() / 'data'
+    data_dir = utils.create_data_dir(survey_name, release)
 
 else:
     data_dir = _file_dir / 'data'

@@ -1,13 +1,24 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""This module specifies file meta and urls used by this submodule."""
+"""This file specifies file meta and urls used by the parent module."""
 
 import os
 from pathlib import Path
 
+from ... import _utils as utils
+
+# General metadata
+survey_name = 'Carnegie Supernova Project'
+survey_abbrev = 'CSP'
+release = 'dr3'
+survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
+data_type = 'photometric'
+publications = ('Krisciunas et al. 2017',)
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'
+
 if 'SNDATA_DIR' in os.environ:
-    data_dir = Path(os.environ['SNDATA_DIR']).resolve() / 'data'
+    data_dir = utils.create_data_dir(survey_name, release)
 
 else:
     data_dir = Path(__file__).resolve().parent / 'data'
