@@ -14,7 +14,6 @@ from warnings import warn
 
 import numpy as np
 import requests
-from astropy.time import Time
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
@@ -83,19 +82,16 @@ def convert_to_jd(date):
         The time value in JD format
     """
 
-    snoopy_offset = 52999.5
+    snoopy_offset = 53000
     mjd_offset = 2400000.5
-    date_format = 'mjd'
 
     if date < snoopy_offset:
         date += snoopy_offset
 
-    elif date > mjd_offset:
-        date_format = 'jd'
+    if date < mjd_offset:
+        date += mjd_offset
 
-    t = Time(date, format=date_format)
-    t.format = 'jd'
-    return t.value
+    return date
 
 
 def check_url(url, timeout=None):
