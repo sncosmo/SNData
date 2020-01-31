@@ -8,9 +8,11 @@ from pathlib import Path
 
 import numpy as np
 
-_data_dir = os.environ.get('SNDATA_DIR', __file__)
-_base_dir = Path(_data_dir).resolve().parent
-data_dir = _base_dir / 'data'
+if 'SNDATA_DIR' in os.environ:
+    data_dir = Path(os.environ['SNDATA_DIR']).resolve() / 'data'
+
+else:
+    data_dir = Path(__file__).resolve().parent / 'data'
 
 # Define local paths of published data
 photometry_dir = data_dir / 'jla_light_curves'  # Photometry data

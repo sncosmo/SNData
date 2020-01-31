@@ -10,10 +10,12 @@ from urllib.parse import urljoin
 
 import numpy as np
 
-_data_dir = os.environ.get('SNDATA_DIR', __file__)
-_base_dir = Path(_data_dir).resolve().parent
 _file_dir = Path(__file__).resolve().parent
-data_dir = _base_dir / 'data'
+if 'SNDATA_DIR' in os.environ:
+    data_dir = Path(os.environ['SNDATA_DIR']).resolve() / 'data'
+
+else:
+    data_dir = _file_dir / 'data'
 
 # Define local paths of downloaded data
 filter_dir = data_dir / 'doi_2010_filters/'  # Transmission filters
