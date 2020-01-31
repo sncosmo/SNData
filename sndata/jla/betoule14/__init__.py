@@ -29,12 +29,14 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names, lambda_effective
-
-survey_name = 'Joint Light-curve Analysis'
-survey_abbrev = 'JLA'
-release = 'betoule14'
-survey_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/ReadMe.html'
-data_type = 'photometric'
-publications = ('Betoule et al. (2014)',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2014A%26A...568A..22B/abstract'
+from ._meta import (
+    ads_url,
+    band_names,
+    data_type,
+    lambda_effective,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
+)

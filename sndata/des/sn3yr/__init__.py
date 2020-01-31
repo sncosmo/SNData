@@ -22,17 +22,14 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names, lambda_effective
-
-survey_name = 'Dark Energy Survey'
-survey_abbrev = 'DES'
-release = 'sn3yr'
-survey_url = 'https://des.ncsa.illinois.edu/'
-data_type = 'photometric'
-publications = (
-    'Burke et al. 2017',
-    'Brout et al. 2019',
-    'Brout et al. 2018-SYS'
+from ._meta import (
+    ads_url,
+    band_names,
+    data_type,
+    lambda_effective,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
 )
-
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'

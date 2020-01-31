@@ -47,3 +47,9 @@ package, install each dependency from ``requirements.txt`` and then try again.
 
 .. _pip package manager: https://pip.pypa.io/en/stable/
 .. _GitHub: https://github.com/djperrefort/sndata
+
+Configuring Data Storage
+------------------------
+
+By default data downloaded by **sndata** is stored in the installation directory. This can be changed to a custom
+directory by specifying the value `SNDATA_DIR` in your environment (i.e., in you `.bash_profile` or `.bashrc` file).

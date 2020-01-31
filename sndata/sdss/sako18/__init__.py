@@ -27,12 +27,14 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-from ._meta import band_names, lambda_effective
-
-survey_name = 'Sloan Digital Sky Survey'
-survey_abbrev = 'SDSS'
-release = 'sako18'
-survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
-data_type = 'photometric'
-publications = ('Sako et al. (2018)',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'
+from ._meta import (
+    ads_url,
+    band_names,
+    data_type,
+    lambda_effective,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
+)

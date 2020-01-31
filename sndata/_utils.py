@@ -4,6 +4,7 @@
 """This module provides utilities used by various submodules."""
 
 import functools
+import os
 import tarfile
 from copy import deepcopy
 from functools import wraps
@@ -237,3 +238,24 @@ def read_vizier_table_descriptions(readme_path):
             table_descriptions[table_num] = table_desc
 
     return table_descriptions
+
+
+def create_data_dir(survey_name, release):
+    """Create the data directory for a given survey and release
+
+    Directories are created in ``environ['SNDATA_DIR']`` using lowercase names
+    and underscores instead of spaces.
+
+    Args:
+        survey_name (str): The name of a survey (e.g., csp)
+        release     (str): The name of a data release from the survey (e.g., dr3)
+
+    Returns:
+        A Path object representing the created directory
+    """
+
+    safe_survey = survey_name.lower().replace(' ', '_')
+    safe_release = release.lower().replace(' ', '_')
+    path = Path(os.environ['SNDATA_DIR']).resolve() / safe_survey / safe_release
+    path.mkdir(parents=True, exist_ok=True)
+    return path

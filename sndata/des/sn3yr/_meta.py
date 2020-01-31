@@ -1,14 +1,32 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Download any data files that do not exist locally and define file paths to
-the local data for use by the parent module.
-"""
+"""This file specifies file meta and urls used by the parent module."""
 
+import os
 from pathlib import Path
 
-_file_dir = Path(__file__).resolve().parent
-data_dir = _file_dir / 'data'
+from ... import _utils as utils
+
+# General metadata
+survey_name = 'Dark Energy Survey'
+survey_abbrev = 'DES'
+release = 'sn3yr'
+survey_url = 'https://des.ncsa.illinois.edu/'
+data_type = 'photometric'
+publications = (
+    'Burke et al. 2017',
+    'Brout et al. 2019',
+    'Brout et al. 2018-SYS'
+)
+
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2019ApJ...874..106B/abstract'
+
+if 'SNDATA_DIR' in os.environ:
+    data_dir = utils.create_data_dir(survey_name, release)
+
+else:
+    data_dir = Path(__file__).resolve().parent / 'data'
 
 # Define local paths of published data
 filter_dir = data_dir / '01-FILTERS' / 'DECam'

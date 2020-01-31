@@ -1,14 +1,28 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""Download any data files that do not exist locally and define file paths to
-the local data for use by the parent module.
-"""
+"""This file specifies file meta and urls used by the parent module."""
 
+import os
 from pathlib import Path
 
-_file_dir = Path(__file__).resolve().parent
-data_dir = _file_dir / 'data'
+from ... import _utils as utils
+
+# General metadata
+survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
+survey_abbrev = 'ESSENCE'
+release = 'narayan16'
+survey_url = 'http://www.ctio.noao.edu/essence/'
+data_type = 'photometric'
+publications = ('Narayan et al. 2016',)
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2016ApJS..224....3N/abstract'
+
+if 'SNDATA_DIR' in os.environ:
+    data_dir = utils.create_data_dir(survey_name, release)
+
+else:
+    data_dir = Path(__file__).resolve().parent / 'data'
+
 
 # Define local paths of published data
 vizier_dir = data_dir / 'vizier'

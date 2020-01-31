@@ -23,11 +23,12 @@ from ._data_parsing import get_data_for_id
 from ._data_parsing import iter_data
 from ._data_parsing import load_table
 from ._data_parsing import register_filters
-
-survey_name = 'Carnegie Supernova Project'
-survey_abbrev = 'CSP'
-release = 'dr1'
-survey_url = 'https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1'
-data_type = 'spectroscopic'
-publications = ('Folatelli et al. 2013',)
-ads_url = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'
+from ._meta import (
+    ads_url,
+    data_type,
+    publications,
+    release,
+    survey_abbrev,
+    survey_name,
+    survey_url
+)

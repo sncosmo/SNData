@@ -1,14 +1,30 @@
 #!/usr/bin/env python3.7
 # -*- coding: UTF-8 -*-
 
-"""This module specifies file meta and urls used by this submodule."""
+"""This file specifies file meta and urls used by the parent module."""
 
+import os
 from pathlib import Path
 
 import numpy as np
 
-_file_dir = Path(__file__).resolve().parent
-data_dir = _file_dir / 'data'
+from ... import _utils as utils
+
+# General metadata
+survey_name = 'Joint Light-curve Analysis'
+survey_abbrev = 'JLA'
+release = 'betoule14'
+survey_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/ReadMe.html'
+data_type = 'photometric'
+publications = ('Betoule et al. (2014)',)
+ads_url = 'https://ui.adsabs.harvard.edu/abs/2014A%26A...568A..22B/abstract'
+
+if 'SNDATA_DIR' in os.environ:
+    data_dir = utils.create_data_dir(survey_name, release)
+
+else:
+    data_dir = Path(__file__).resolve().parent / 'data'
+
 
 # Define local paths of published data
 photometry_dir = data_dir / 'jla_light_curves'  # Photometry data
