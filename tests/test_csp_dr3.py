@@ -23,10 +23,10 @@ class SurveyTests(TestCase):
          single data point from 2005el.
          """
 
-        def get_test_point(band, obj_id='2005el', time=2453640.80, **kwargs):
+        def get_test_point(band, obj_id='2005el', **kwargs):
             data = csp.dr3.get_data_for_id(obj_id, **kwargs)
             y_data = data[data['band'] == band]
-            return y_data[y_data['time'] == time]
+            return y_data[0]
 
         unformatted_data = get_test_point('Y', '2005el', format_table=False)
         formatted_data = get_test_point('csp_dr3_Y', '2005el')
