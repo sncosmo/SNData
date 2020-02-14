@@ -11,7 +11,7 @@ from ... import _utils as utils
 # General metadata
 survey_name = 'Supernova Legacy Survey'
 survey_abbrev = 'SNLS'
-release = 'baland09'
+release = 'balland09'
 survey_url = 'http://supernovae.in2p3.fr/~balland/VltRelease/'
 data_type = 'spectroscopic'
 publications = ('Balland et al. 2009',)
