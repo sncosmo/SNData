@@ -61,6 +61,7 @@ class CreateDataDir(TestCase):
         del environ['SNDATA_DIR']
         environ.update(cls.old_environ)
 
+    # Todo: Fail on Mac OS
     def test_directories_are_created(self):
         """Test the function creates subdirectories with the expected naming structure"""
 
@@ -71,14 +72,6 @@ class CreateDataDir(TestCase):
 
         self.assertEqual(expected_path, created_path, 'Directory does not match expected name')
         self.assertTrue(created_path.exists(), 'Directory does not exist')
-
-    def test_dir_are_lowercase(self):
-        """Test directories are lowercase irrespective of the argument cases"""
-
-        survey_name = 'UPPER_CASE_SURVEY'
-        release_name = 'UPPER_CASE_RELEASE'
-        created_path = utils.create_data_dir(survey_name, release_name)
-        self.assertTrue(str(created_path).islower(), 'Directory path is not lowercase')
 
     def test_spaces_stripped_from_names(self):
         """Test spaces are stripped before creatign the directories"""

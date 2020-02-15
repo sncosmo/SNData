@@ -75,7 +75,6 @@ def get_available_ids():
     return sorted(set(ids))
 
 
-# Todo: Double check the ra / dec conversion
 def _get_balland_meta(obj_id):
     """Get the ra, dec, redshift and redshift error for a Balland09 SN
 
@@ -91,12 +90,11 @@ def _get_balland_meta(obj_id):
     ra_deg = Angle(ra_hourangle, unit='hourangle').to('deg')
 
     sign = -1 if object_data['DE-'] == '-' else 1
-    dec_hourangle = (
-        sign * object_data['DEd'],
-        object_data['DEm'],
-        object_data['DEs']
+    dec_deg = (
+        sign * object_data['DEd'] +  # Already in degrees
+        object_data['DEm'] / 60 +  # arcmin to degrees
+        object_data['DEs'] / 60 / 60  # arcesc to degrees
     )
-    dec_deg = Angle(dec_hourangle, unit='hourangle').to('deg')
 
     # Get redshift
     table2 = load_table(2)
