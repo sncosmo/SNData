@@ -102,7 +102,7 @@ def _get_balland_meta(obj_id):
     z = object_data['z']
     z_err = object_data['e_z']
 
-    return ra_deg.value, dec_deg.value, z, z_err
+    return ra_deg.value, dec_deg, z, z_err
 
 
 # noinspection PyUnusedLocal
