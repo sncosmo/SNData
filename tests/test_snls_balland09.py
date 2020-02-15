@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""Tests for the ``csp.dr1`` module."""
+"""Tests for the ``snls.balland09`` module."""
 
 from sndata import snls
 from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
-    """Tests for the csp.dr1 module"""
+    """Tests for the snls.balland09 module"""
 
     @classmethod
     def setUpClass(cls):
@@ -35,7 +35,7 @@ class DataParsing(DataParsingTestBase):
 
 
 class Documentation(DocumentationTestBase):
-    """Tests for the des.SN3YR module"""
+    """Tests for the snls.balland09 module"""
 
     @classmethod
     def setUpClass(cls):
