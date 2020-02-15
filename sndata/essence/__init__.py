@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 """The ``essence`` module provides access to data from the Equation of State:

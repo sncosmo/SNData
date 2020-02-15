@@ -70,6 +70,8 @@ Available Data
 + Sloan Digital Sky Survey                             +--------------------------+---------------+
 |                                                      | `Sako et al. 2018`_      | Spectroscopic |
 +------------------------------------------------------+--------------------------+---------------+
++ Supernova Legacy Survey                              | `Balland et al. (2009)`_ | Spectroscopic |
++------------------------------------------------------+--------------------------+---------------+
 
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
@@ -77,7 +79,7 @@ Available Data
 .. _Narayan et al. 2016: http://www.ctio.noao.edu/essence/
 .. _Betoule et al. (2014): https://ui.adsabs.harvard.edu/abs/2014A%26A...568A..22B/abstract
 .. _Sako et al. 2018: http://data.darkenergysurvey.org/sdsssn/dataRelease/
-
+.. _Balland et al. (2009): https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
 
 .. toctree::
    :hidden:
@@ -106,3 +108,4 @@ Available Data
    module_docs/essence
    module_docs/jla
    module_docs/sdss
+   module_docs/snls

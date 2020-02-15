@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 """This module provides generic tests that are applicable to a variety of
@@ -34,7 +34,7 @@ class DataParsingTestBase(TestCase):
     module = None
 
     def _test_bad_object_id_err(self):
-        """Test an InvalidObjId excpetion is raised for a made up Id"""
+        """Test an InvalidObjId exception is raised for a made up Id"""
 
         self.assertRaises(InvalidObjId, self.module.get_data_for_id, 'fake_id')
 
@@ -84,19 +84,17 @@ class DataParsingTestBase(TestCase):
             lim (int): Maximum number of tables to check (default: All tables)
         """
 
-        passed_data = False
+        i = -1
         for i, input_table in enumerate(self.module.iter_data()):
             if i >= lim:
                 return
 
-            passed_data = True
             obj_id = input_table.meta['obj_id']
-
             self.assertTrue(
                 input_table,
                 msg=f'Empty table for obj_id {obj_id}.')
 
-        if not passed_data:
+        if i < 0:
             self.fail('No data yielded')
 
     def _test_paper_tables_are_parsed(self):
@@ -144,8 +142,7 @@ class DataParsingTestBase(TestCase):
         """Test all object Ids are unique"""
 
         obj_ids = self.module.get_available_ids()
-        unique_elements, counts_elements = np.unique(obj_ids,
-                                                     return_counts=True)
+        unique_elements, counts_elements = np.unique(obj_ids, return_counts=True)
         duplicates = unique_elements[counts_elements > 1]
         is_empty = len(duplicates) == 0
         self.assertTrue(is_empty, f'Duplicate Ids: {duplicates}')

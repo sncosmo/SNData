@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 """The ``csp`` module provides access to data from the Carnegie Supernova

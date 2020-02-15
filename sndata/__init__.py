@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 """This package provides access to supernova light-curve data from various
@@ -9,7 +9,7 @@ from . import csp, des, essence, jla, sdss
 from ._combine_data import CombinedDataset
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
-__version__ = '0.9.3'
+__version__ = '0.9.4'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 

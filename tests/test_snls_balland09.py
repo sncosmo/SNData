@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""Tests for the ``csp.dr1`` module."""
+"""Tests for the ``snls.balland09`` module."""
 
-from sndata import csp
+from sndata import snls
 from .base_tests import DataParsingTestBase, DocumentationTestBase
 
 
 class DataParsing(DataParsingTestBase):
-    """Tests for the csp.dr1 module"""
+    """Tests for the snls.balland09 module"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = csp.dr1
+        cls.module = snls.balland09
         cls.module.download_module_data()
 
     def test_bad_object_id_err(self):
@@ -20,9 +20,6 @@ class DataParsing(DataParsingTestBase):
 
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
-
-    def test_jd_time_format(self):
-        self._test_jd_time_format('date')
 
     def test_no_empty_data_tables(self):
         self._test_no_empty_data_tables(10)
@@ -38,11 +35,11 @@ class DataParsing(DataParsingTestBase):
 
 
 class Documentation(DocumentationTestBase):
-    """Tests for the des.SN3YR module"""
+    """Tests for the snls.balland09 module"""
 
     @classmethod
     def setUpClass(cls):
-        cls.module = csp.dr1
+        cls.module = snls.balland09
 
     def test_ads_url(self):
         self._test_ads_url_status()

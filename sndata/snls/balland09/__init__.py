@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module provides access to data from the first public data release of
-the Dark Energy Survey Supernova Program, DES-SN3YR. It includes griz light
-curves of 251 supernovae from the first 3 years of the Dark Energy Survey
-Supernova Program’s (DES-SN) spectroscopically classified sample.
-(Source: Brout et al. 2019)
+"""This module provides access to to the three year data release of the
+Supernova Legacy Survey (SNLS) performed by The Canada-France-Hawaï Telescope
+(CFHT). It includes 139 spectra of 124 Type Ia supernovae that range from
+z = 0.149 to z = 1.031 and have an average redshift of z = 0.63 +/- 0.02.
+(Source: Balland et al. 2009)
+
 
 Deviations from the standard UI:
   - None
@@ -24,9 +25,7 @@ from ._data_parsing import load_table
 from ._data_parsing import register_filters
 from ._meta import (
     ads_url,
-    band_names,
     data_type,
-    lambda_effective,
     publications,
     release,
     survey_abbrev,
