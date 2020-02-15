@@ -30,21 +30,21 @@ def download_module_data(force=False):
     fix_balland09_cds_readme(meta.table_dir / 'ReadMe')
 
     # Download spectra
-    spec_urls = meta.phase_spectra_url, meta.snonly_spectra_url
-    names = 'combined', 'supernova only'
-    for spectra_url, data_name in zip(spec_urls, names):
-        if (force or not meta.spectra_dir.exists()) and utils.check_url(spectra_url):
-            print(f'Downloading {data_name} spectra...')
-            utils.download_tar(
-                url=spectra_url,
-                out_dir=meta.spectra_dir,
-                mode='r:gz')
+    if (force or not meta.spectra_dir.exists()):
+        spec_urls = meta.phase_spectra_url, meta.snonly_spectra_url
+        names = 'combined', 'supernova only'
+
+        for spectra_url, data_name in zip(spec_urls, names):
+             if utils.check_url(spectra_url):
+                print(f'Downloading {data_name} spectra...')
+                utils.download_tar(
+                    url=spectra_url,
+                    out_dir=meta.spectra_dir,
+                    mode='r:gz')
 
 
 def fix_balland09_cds_readme(readme_path):
-    """Fix typos in the balland CDS Readme so it is machine parsable
-
-    Argument is modified in-place
+    """Fix typos in the Balland 2009 CDS Readme so it is machine parsable
 
     Args:
         readme_path: Path of the README file to fix

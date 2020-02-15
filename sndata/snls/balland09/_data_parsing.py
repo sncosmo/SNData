@@ -5,6 +5,7 @@
 
 from pathlib import Path
 
+from astropy.coordinates import Angle
 from astropy.io import ascii
 from astropy.table import Table, vstack
 
@@ -74,6 +75,38 @@ def get_available_ids():
     return sorted(set(ids))
 
 
+# Todo: Double check the ra / dec conversion
+def _get_balland_meta(obj_id):
+    """Get the ra, dec, redshift and redshift error for a Balland09 SN
+
+    Args:
+        obj_id (str): The Id of the Supernova
+    """
+
+    # Get Coordinates
+    table1 = load_table(1)
+    object_data = table1[table1['SN'] == obj_id][0]
+
+    ra_hourangle = (object_data['RAh'], object_data['RAm'], object_data['RAs'])
+    ra_deg = Angle(ra_hourangle, unit='hourangle').to('deg')
+
+    sign = -1 if object_data['DE-'] == '-' else 1
+    dec_hourangle = (
+        sign * object_data['DEd'],
+        object_data['DEm'],
+        object_data['DEs']
+    )
+    dec_deg = Angle(dec_hourangle, unit='hourangle').to('deg')
+
+    # Get redshift
+    table2 = load_table(2)
+    object_data = table2[table2['SN'] == obj_id][0]
+    z = object_data['z']
+    z_err = object_data['e_z']
+
+    return ra_deg.value, dec_deg.value, z, z_err
+
+
 # noinspection PyUnusedLocal
 @utils.require_data_path(meta.spectra_dir)
 def get_data_for_id(obj_id, format_table=True):
@@ -94,6 +127,7 @@ def get_data_for_id(obj_id, format_table=True):
 
     tables = []
     for fpath in meta.spectra_dir.glob(f'*_{obj_id}_*_Balland_etal_09.dat'):
+        # Todo: Add date of observation
         data_table = Table.read(
             fpath,
             names=['index', 'wavelength', 'flux', 'fluxerr'],
@@ -105,18 +139,17 @@ def get_data_for_id(obj_id, format_table=True):
         data_table['type'] = fpath.name.split('_')[0].lower()
         tables.append(data_table)
 
+    ra, dec, z, z_err = _get_balland_meta(obj_id)
     out_table = vstack(tables)
 
-    # Meta data from file
-    # meta = out_table.meta['comments']
-    out_table.meta = dict(
-        obj_id=obj_id
-    )
+    out_table.meta['obj_id'] = obj_id
+    out_table.meta['ra'] = ra
+    out_table.meta['dec'] = dec
+    out_table.meta['z'] = z
+    out_table.meta['z_err'] = z_err
 
-    # out_table.meta['ra'] =
-    # out_table.meta['dec'] =
-    # out_table.meta['z'] = int(meta[2].split()[-1])
-    # out_table.meta['z_err'] = None
+    out_table.meta.pop('comments')
+    out_table.meta['comments'] = ''
 
     return out_table
 
