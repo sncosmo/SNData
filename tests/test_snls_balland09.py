@@ -21,9 +21,6 @@ class DataParsing(DataParsingTestBase):
     def test_ids_are_sorted(self):
         self._test_ids_are_sorted()
 
-    def test_jd_time_format(self):
-        self._test_jd_time_format('date')
-
     def test_no_empty_data_tables(self):
         self._test_no_empty_data_tables(10)
 
