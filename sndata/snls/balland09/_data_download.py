@@ -18,22 +18,31 @@ def download_module_data(force=False):
     """
 
     # Download data tables
-    if (force or not meta.table_dir.exists()) \
-            and utils.check_url(meta.table_url):
+    if (force or not meta.table_dir.exists()) and utils.check_url(
+            meta.table_url):
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.table_url,
             out_dir=meta.table_dir,
             mode='r:gz')
 
+        # Fix error where Fract column is padded with `---` and does not parse
+        table_2_path = meta.table_dir / 'table2.dat'
+        with open(table_2_path) as data_in:
+            old_lines = data_in.readlines()
+
+        new_lines = [line.replace('---', '   ') for line in old_lines]
+        with open(table_2_path, 'w') as data_out:
+            data_out.writelines(new_lines)
+
     # Download spectra
     spec_urls = meta.phase_spectra_url, meta.snonly_spectra_url
     names = 'combined', 'supernova only'
     for spectra_url, data_name in zip(spec_urls, names):
-        if (force or not meta.spectra_dir.exists()) \
-                and utils.check_url(spectra_url):
+        if (force or not meta.spectra_dir.exists()) and utils.check_url(
+                spectra_url):
             print(f'Downloading {data_name} spectra...')
             utils.download_tar(
                 url=spectra_url,
-                out_dir=meta.data_dir,
+                out_dir=meta.spectra_dir,
                 mode='r:gz')
