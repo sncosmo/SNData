@@ -109,9 +109,10 @@ def get_data_for_id(obj_id, format_table=True):
 
     # Meta data from file
     # meta = out_table.meta['comments']
-    del out_table.meta
+    out_table.meta = dict(
+        obj_id=obj_id
+    )
 
-    out_table.meta['obj_id'] = obj_id
     # out_table.meta['ra'] =
     # out_table.meta['dec'] =
     # out_table.meta['z'] = int(meta[2].split()[-1])

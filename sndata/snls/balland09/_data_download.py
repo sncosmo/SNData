@@ -3,6 +3,8 @@
 
 """This module defines functions for downloading data."""
 
+import os
+
 from . import _meta as meta
 from ... import _factory_funcs as factory
 from ... import _utils as utils
@@ -18,31 +20,42 @@ def download_module_data(force=False):
     """
 
     # Download data tables
-    if (force or not meta.table_dir.exists()) and utils.check_url(
-            meta.table_url):
+    if (force or not meta.table_dir.exists()) and utils.check_url(meta.table_url):
         print('Downloading data tables...')
         utils.download_tar(
             url=meta.table_url,
             out_dir=meta.table_dir,
             mode='r:gz')
 
-        # Fix error where Fract column is padded with `---` and does not parse
-        table_2_path = meta.table_dir / 'table2.dat'
-        with open(table_2_path) as data_in:
-            old_lines = data_in.readlines()
-
-        new_lines = [line.replace('---', '   ') for line in old_lines]
-        with open(table_2_path, 'w') as data_out:
-            data_out.writelines(new_lines)
+    fix_balland09_cds_readme(meta.table_dir / 'ReadMe')
 
     # Download spectra
     spec_urls = meta.phase_spectra_url, meta.snonly_spectra_url
     names = 'combined', 'supernova only'
     for spectra_url, data_name in zip(spec_urls, names):
-        if (force or not meta.spectra_dir.exists()) and utils.check_url(
-                spectra_url):
+        if (force or not meta.spectra_dir.exists()) and utils.check_url(spectra_url):
             print(f'Downloading {data_name} spectra...')
             utils.download_tar(
                 url=spectra_url,
                 out_dir=meta.spectra_dir,
                 mode='r:gz')
+
+
+def fix_balland09_cds_readme(readme_path):
+    """Fix typos in the balland CDS Readme so it is machine parsable
+
+    Argument is modified in-place
+
+    Args:
+        readme_path: Path of the README file to fix
+    """
+
+    # The downloaded files in this case are readonly, so we change permissions
+    os.chmod(readme_path, 438)
+
+    with open(readme_path, 'r+') as data_in:
+        lines = data_in.readlines()
+        lines[112] = lines[112].replace('? ', '?=- ')
+
+        data_in.seek(0)
+        data_in.writelines(lines)
