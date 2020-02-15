@@ -127,16 +127,15 @@ def get_data_for_id(obj_id, format_table=True):
 
     tables = []
     for fpath in meta.spectra_dir.glob(f'*_{obj_id}_*_Balland_etal_09.dat'):
-        # Todo: Add date of observation
         data_table = Table.read(
             fpath,
-            names=['index', 'wavelength', 'flux', 'fluxerr'],
+            names=['pixel', 'wavelength', 'flux', 'fluxerr'],
             format='ascii.basic',
             comment='[#]|[@]'
         )
 
-        data_table.remove_columns('index')
         data_table['type'] = fpath.name.split('_')[0].lower()
+        data_table['phase'] = float(data_table.meta['comments'][7].split()[-1])
         tables.append(data_table)
 
     ra, dec, z, z_err = _get_balland_meta(obj_id)
