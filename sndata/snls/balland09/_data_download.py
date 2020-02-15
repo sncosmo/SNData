@@ -35,7 +35,7 @@ def download_module_data(force=False):
         names = 'combined', 'supernova only'
 
         for spectra_url, data_name in zip(spec_urls, names):
-             if utils.check_url(spectra_url):
+            if utils.check_url(spectra_url):
                 print(f'Downloading {data_name} spectra...')
                 utils.download_tar(
                     url=spectra_url,

@@ -1,7 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-# Todo: docstring for balland09
+"""This module provides access to to the three year data release of the
+Supernova Legacy Survey (SNLS) performed by The Canada-France-Hawaï Telescope
+(CFHT). It includes 139 spectra of 124 Type Ia supernovae that range from
+z = 0.149 to z = 1.031 and have an average redshift of z = 0.63 +/- 0.02.
+(Source: Balland et al. 2009)
+
+
+Deviations from the standard UI:
+  - None
+
+Cuts on returned data:
+  - None
+"""
 
 from ._data_download import delete_module_data
 from ._data_download import download_module_data
