@@ -106,3 +106,4 @@ Available Data
    module_docs/essence
    module_docs/jla
    module_docs/sdss
+   module_docs/snls
