@@ -157,7 +157,7 @@ def get_data_for_id(obj_id, format_table=True):
     out_table.meta['dec'] = None
     out_table.meta['z'] = redshift
     out_table.meta['z_err'] = None
-    out_table.meta.move_to_end('comments')
+    del out_table.meta['comments']
 
     return out_table
 

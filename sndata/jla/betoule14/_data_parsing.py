@@ -164,9 +164,8 @@ def get_data_for_id(obj_id, format_table=True):
     out_table.meta['z_err'] = None
     out_table.meta.update(meta_data)
 
-    out_table.meta.pop('comments')
-    out_table.meta.pop('SN')
-    out_table.meta['comments'] = 'z represents the heliocentric redshift'
+    del out_table.meta['comments']
+    del out_table.meta['SN']
 
     return out_table
 
