@@ -6,7 +6,7 @@ Project (CSP). It includes data from the first (DR1) and third (DR3) data
 releases. For more information on CSP see https://csp.obs.carnegiescience.edu .
 """
 
-from . import dr1, dr3
+from ._dr1 import DR1
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'

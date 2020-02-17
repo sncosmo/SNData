@@ -14,6 +14,7 @@ from warnings import warn
 
 import numpy as np
 import requests
+import sncosmo
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
@@ -252,6 +253,35 @@ def create_data_dir(survey_name, release):
 
     safe_survey = survey_name.lower().replace(' ', '_')
     safe_release = release.lower().replace(' ', '_')
-    path = Path(os.environ['SNDATA_DIR']).resolve() / safe_survey / safe_release
+    path = Path(
+        os.environ['SNDATA_DIR']).resolve() / safe_survey / safe_release
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def register_filter(file_path, filter_name, force=False):
+    """Registers filter profiles with sncosmo if not already registered
+
+    Assumes the file at ``file_path`` is a two column, white space delimited
+    ascii table.
+
+    Args:
+        file_path   (str): Path of an ascii table with wavelength (Angstrom)
+                            and transmission columns
+        filter_name (str): The name of the registered filter.
+        force      (bool): Whether to re-register a band if already registered
+    """
+
+    # Get set of registered builtin and custom band passes
+    available_bands = set(
+        k[0] for k in sncosmo.bandpasses._BANDPASSES._loaders)
+
+    available_bands.update(
+        k[0] for k in sncosmo.bandpasses._BANDPASSES._instances)
+
+    # Register the new bandpass
+    if filter_name not in available_bands:
+        filter_data = np.genfromtxt(file_path).T
+        band = sncosmo.Bandpass(filter_data[0], filter_data[1])
+        band.name = filter_name
+        sncosmo.register(band, force=force)

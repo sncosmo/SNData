@@ -18,7 +18,7 @@ long_description = (
 )
 
 # Get package version
-init_path = Path(__file__).resolve().parent / 'sndata/__init__.py'
+init_path = Path(__file__).resolve().parent / 'sndata/_dr1.py'
 with open(init_path, 'r') as f:
     s = f.read()
 
