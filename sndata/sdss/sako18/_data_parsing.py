@@ -171,9 +171,8 @@ def get_data_for_id(obj_id, format_table=True):
     data.meta['z'] = table_meta_data['zCMB'][0]
     data.meta['z_err'] = table_meta_data['zerrCMB'][0]
     data.meta['dtype'] = 'photometric'
-    data.meta['comments'] = \
-        'z represents CMB corrected redshift of the supernova.'
     data.meta['classification'] = table_meta_data['Classification'][0]
+    del data.meta['comments']
 
     outlier_list = get_outliers().get(obj_id, [])
     if outlier_list:

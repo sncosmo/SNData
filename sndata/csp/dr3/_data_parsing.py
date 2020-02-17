@@ -95,7 +95,6 @@ def parse_snoopy_data(path):
         out_table.meta['dec'] = float(dec)
         out_table.meta['z'] = float(z)
         out_table.meta['z_err'] = None
-        out_table.meta['comments'] = None
 
         # Read photometric data from the rest of the file
         band = None

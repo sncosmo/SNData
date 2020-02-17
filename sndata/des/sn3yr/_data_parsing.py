@@ -133,10 +133,7 @@ def get_data_for_id(obj_id, format_table=True):
         data.meta['z'] = float(table_meta_data[13].split()[1])
         data.meta['z_err'] = float(table_meta_data[13].split()[3])
         data.meta['dtype'] = 'photometric'
-        data.meta['comments'] = \
-            'z represents CMB corrected redshift of the supernova.'
-
-        data.meta.move_to_end('comments')
+        del data.meta['comments']
 
     if format_table:
         data = _format_sncosmo_table(data)

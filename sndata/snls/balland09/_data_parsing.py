@@ -144,9 +144,7 @@ def get_data_for_id(obj_id, format_table=True):
     out_table.meta['dec'] = dec
     out_table.meta['z'] = z
     out_table.meta['z_err'] = z_err
-
-    out_table.meta.pop('comments')
-    out_table.meta['comments'] = ''
+    del out_table.meta['comments']
 
     return out_table
 

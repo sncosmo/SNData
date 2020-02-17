@@ -95,7 +95,7 @@ def get_data_for_id(obj_id, format_table=True):
     data_table.meta['obj_id'] = data_table.meta.pop('objid')
 
     # Remove column names from table comments
-    data_table.meta['comments'].pop()
+    del data_table.meta['comments']
 
     if format_table:
         data_table = _format_table(data_table)
