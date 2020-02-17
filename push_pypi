@@ -7,14 +7,8 @@ rm -rf build *.egg-info .eggs dist
 python setup.py sdist
 python setup.py bdist_wheel --universal
 
-read -p "Ready to upload to PyPi. Proceed? (y/n)
-" -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    # Upload package and remove local build files
-    twine upload dist/*
-fi
+# Upload package and remove local build files
+twine upload dist/*
 
 echo "Removing build files..."
 rm -rf build *.egg-info .eggs dist
