@@ -68,7 +68,7 @@ class Balland09(DataRelease):
     # General metadata (Required)
     survey_name = 'Supernova Legacy Survey'
     survey_abbrev = 'SNLS'
-    release = 'balland09'
+    release = 'Balland09'
     survey_url = 'http://supernovae.in2p3.fr/~balland/VltRelease/'
     data_type = 'spectroscopic'
     publications = ('Balland et al. 2009',)

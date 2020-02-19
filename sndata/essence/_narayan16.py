@@ -75,7 +75,7 @@ class Narayan16(DataRelease):
     # General metadata
     survey_name = 'Equation of State: Supernovae trace Cosmic Expansion'
     survey_abbrev = 'ESSENCE'
-    release = 'narayan16'
+    release = 'Narayan16'
     survey_url = 'http://www.ctio.noao.edu/essence/'
     data_type = 'photometric'
     publications = ('Narayan et al. 2016',)

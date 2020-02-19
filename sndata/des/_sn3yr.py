@@ -73,7 +73,7 @@ class SN3YR(DataRelease):
     # General metadata (Required)
     survey_name = 'Dark Energy Survey'
     survey_abbrev = 'DES'
-    release = 'sn3yr'
+    release = 'SN3YR'
     survey_url = 'https://des.ncsa.illinois.edu/'
     data_type = 'photometric'
     publications = (

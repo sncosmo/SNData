@@ -57,7 +57,7 @@ class Sako18Spec(DataRelease):
     # General metadata
     survey_name = 'Sloan Digital Sky Survey'
     survey_abbrev = 'SDSS'
-    release = 'sako18spec'
+    release = 'Sako18Spec'
     survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
     data_type = 'photometric'
     publications = ('Sako et al. (2018)',)

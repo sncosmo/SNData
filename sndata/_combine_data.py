@@ -60,10 +60,10 @@ class CombinedDataset:
         # Data access modules for each combined data release
         self._data_modules = dict()
         for module in set(data_sets):
-            _, survey, release = module.__name__.split('.')
-            self._data_modules[':'.join((survey, release))] = module
+            module_id = f'{module.survey_abbrev}:{module.release}'
+            self._data_modules[module_id] = module
 
-        self.data_type = ', '.join(set(ds.data_type for ds in data_sets))
+        self.data_type = tuple(set(ds.data_type for ds in data_sets))
         self._joined_ids = []
         self._obj_id_dataframe = None
 
@@ -75,10 +75,9 @@ class CombinedDataset:
         # Create a DataFrame of combined object IDs
         obj_id_dataframe = None
         for data_module in self._data_modules.values():
-            _, survey, release = data_module.__name__.split('.')
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
-            id_df.insert(0, 'release', release)
-            id_df.insert(0, 'survey', survey)
+            id_df.insert(0, 'release', data_module.release)
+            id_df.insert(0, 'survey', data_module.survey_abbrev)
 
             if obj_id_dataframe is None:
                 obj_id_dataframe = id_df

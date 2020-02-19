@@ -12,6 +12,7 @@ from .. import _utils as utils
 from .._base import DataRelease
 from ..exceptions import InvalidObjId
 
+
 class Betoule14(DataRelease):
     """The ``Betoule14`` module provides access to light-curves used in a joint
     analysis of type Ia supernova (SN Ia) observations obtained by the SDSS-II
@@ -57,7 +58,7 @@ class Betoule14(DataRelease):
     # General metadata
     survey_name = 'Joint Light-curve Analysis'
     survey_abbrev = 'JLA'
-    release = 'betoule14'
+    release = 'Betoule14'
     survey_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/ReadMe.html'
     data_type = 'photometric'
     publications = ('Betoule et al. (2014)',)

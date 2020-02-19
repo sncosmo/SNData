@@ -131,7 +131,7 @@ class DR3(DataRelease):
 
     survey_name = 'Carnegie Supernova Project'
     survey_abbrev = 'CSP'
-    release = 'dr3'
+    release = 'DR3'
     survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
     data_type = 'photometric'
     publications = ('Krisciunas et al. 2017',)

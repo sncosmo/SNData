@@ -6,7 +6,7 @@ surveys.
 """
 
 from . import csp, des, essence, jla, sdss
-# from ._combine_data import CombinedDataset
+from ._combine_data import CombinedDataset
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
 __version__ = '0.9.5'
