@@ -99,9 +99,6 @@ class DataParsingTestBase(TestCase):
         """
 
         table_names = self.test_class.get_available_tables()
-        self.assertGreater(
-            len(table_names), 0, f'No tables available for survey')
-
         err_msg = 'Empty table number {}'
         for table in table_names:
             try:

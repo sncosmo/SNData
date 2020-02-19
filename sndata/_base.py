@@ -6,9 +6,10 @@
 import os
 import shutil
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
 import numpy as np
+from astropy.io import ascii
 from astropy.table import Table
 
 from . import _utils as utils
@@ -53,32 +54,61 @@ class DataRelease:
             force: Re-register a band if already registered (Default: False)
         """
 
+        # Raise error if there are no filters to register
         if self.data_type != 'photometric':
             msg = 'Filters are only available for photometric data releases.'
             raise ObservedDataTypeError(msg)
 
-        for _file_name, _band_name in zip(
-                self._filter_file_names, self.band_names):
+        # Raise error if data is not downloaded
+        utils.require_data_path(self._filter_dir)
+
+        bandpass_data = zip(self._filter_file_names, self.band_names)
+        for _file_name, _band_name in bandpass_data:
             filter_path = self._filter_dir / _file_name
             utils.register_filter(filter_path, _band_name, force=force)
 
-    def get_available_tables(self) -> List[Union[str, int]]:
+    def get_available_tables(self):
         """Get available Ids for tables published by the paper for this data
         release"""
 
-        return self._get_available_tables()
+        # Raise error if the data release has no associated tables
+        if not hasattr(self, '_table_dir'):
+            return []
+
+        # Raise error if data is not downloaded
+        utils.require_data_path(self._table_dir)
+
+        # Find avaialible tables - assume standard Vizier naming scheme
+        table_nums = []
+        for f in self._table_dir.rglob('table*.dat'):
+            table_number = f.stem.lstrip('table')
+            table_nums.append(int(table_number))
+
+        return sorted(table_nums)
 
     @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[int, str]) -> Table:
+    def load_table(self, table_id):
         """Return a table from the data paper for this survey / data
-
-        See ``get_available_tables`` for a list of valid table IDs.
 
         Args:
             table_id: The published table number or table name
         """
 
-        return self._load_table(table_id)
+        # Raise error if the data release has no associated tables
+        if not hasattr(self, '_table_dir'):
+            raise RuntimeError('Tables are not availible for this data release.')
+
+        # Raise error if data is not downloaded
+        if table_id not in self.get_available_tables():
+            raise ValueError(f'Table {table_id} is not available.')
+
+        readme_path = self._table_dir / 'ReadMe'
+        table_path = self._table_dir / f'table{table_id}.dat'
+
+        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
+        data.meta['description'] = description
+        return data
 
     def get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey
@@ -102,8 +132,8 @@ class DataRelease:
             An astropy table of data for the given ID
         """
 
-        if obj_id not in self.get_available_ids():
-            raise InvalidObjId()
+        if obj_id not in self._get_available_ids():
+            raise InvalidObjId(f'Object Id not available: {obj_id}')
 
         return self._get_data_for_id(obj_id, format_table)
 
@@ -128,6 +158,7 @@ class DataRelease:
             Astropy tables
         """
 
+        # Default to returning only non-empty tables
         if filter_func is None:
             filter_func = lambda x: x
 

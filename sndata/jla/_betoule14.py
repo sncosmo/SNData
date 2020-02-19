@@ -10,7 +10,7 @@ from astropy.table import Table
 
 from .. import _utils as utils
 from .._base import DataRelease
-
+from ..exceptions import InvalidObjId
 
 class Betoule14(DataRelease):
     """The ``Betoule14`` module provides access to light-curves used in a joint
@@ -182,14 +182,14 @@ class Betoule14(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self.photometry_dir = self.data_dir / 'jla_light_curves'  # Photometry data
-        self.table_dir = self.data_dir / 'tables'  # Vizier tables
-        self.filter_path = self.data_dir / 'cfht_filters.txt'
+        self._photometry_dir = self.data_dir / 'jla_light_curves'  # Photometry data
+        self._table_dir = self.data_dir / 'tables'  # Vizier tables
+        self._filter_path = self.data_dir / 'cfht_filters.txt'
 
         # Define urls for remote data
-        self.photometry_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/jla_light_curves.tgz'
-        self.table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/A+A/568/A22'
-        self.filter_url = 'http://www.cfht.hawaii.edu/Instruments/Imaging/Megacam/data.MegaPrime/MegaCam_Filters_data_SAGEM.txt'
+        self._photometry_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/jla_light_curves.tgz'
+        self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/A+A/568/A22'
+        self._filter_url = 'http://www.cfht.hawaii.edu/Instruments/Imaging/Megacam/data.MegaPrime/MegaCam_Filters_data_SAGEM.txt'
 
     def register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo
@@ -198,7 +198,8 @@ class Betoule14(DataRelease):
             force: Re-register a band if already registered (Default: False)
         """
 
-        data_arr = np.genfromtxt(self.filter_path, skip_header=1)
+        utils.require_data_path(self._filter_path)
+        data_arr = np.genfromtxt(self._filter_path, skip_header=1)
         filt_table = Table(data_arr, names=['wave', 'u', 'g', 'r', 'i', 'z'])
         filt_table['wave'] *= 10  # Convert nm to angstroms
 
@@ -220,16 +221,17 @@ class Betoule14(DataRelease):
             new_band.name = new_band_name
             sncosmo.register(new_band, force=force)
 
-    def _get_available_tables(self):
+    def get_available_tables(self):
         """Get available Ids for tables published by the paper for this data
         release"""
 
-        dat_file_list = list(self.table_dir.glob('table*.dat'))
-        fits_file_list = list(self.table_dir.glob('table*.fit'))
+        utils.require_data_path(self._table_dir)
+        dat_file_list = list(self._table_dir.glob('table*.dat'))
+        fits_file_list = list(self._table_dir.glob('table*.fit'))
         file_list = dat_file_list + fits_file_list
         return sorted([str(f).rstrip('.datfit')[-2:] for f in file_list])
 
-    def _load_table(self, table_id):
+    def load_table(self, table_id):
         """Return a table from the data paper for this survey / data
 
         Args:
@@ -241,7 +243,7 @@ class Betoule14(DataRelease):
 
         # Tables 2 is a fits file
         if table_id == 'f2':
-            with fits.open(self.table_dir / f'table{table_id}.fit') as hdulist:
+            with fits.open(self._table_dir / f'table{table_id}.fit') as hdulist:
                 data = Table(hdulist[0].data)
 
             description = 'Covariance matrix of the binned distance modulus'
@@ -249,8 +251,8 @@ class Betoule14(DataRelease):
             return data
 
         # Remaining tables should be .dat files
-        readme_path = self.table_dir / 'ReadMe'
-        table_path = self.table_dir / f'table{table_id}.dat'
+        readme_path = self._table_dir / 'ReadMe'
+        table_path = self._table_dir / f'table{table_id}.dat'
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
         description_dict = utils.read_vizier_table_descriptions(readme_path)
         data.meta['description'] = description_dict[f'{table_id}']
@@ -259,7 +261,8 @@ class Betoule14(DataRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        file_list = self.photometry_dir.glob('*.list')
+        utils.require_data_path(self._photometry_dir)
+        file_list = self._photometry_dir.glob('*.list')
         return sorted(str(f).split('-')[-1][:-5] for f in file_list)
 
     # noinspection PyUnusedLocal
@@ -274,9 +277,12 @@ class Betoule14(DataRelease):
             An astropy table of data for the given ID
         """
 
+        if obj_id not in self.get_available_ids():
+            raise InvalidObjId()
+
         # Get target meta data
         meta_data = dict()
-        path = self.photometry_dir / f'lc-{obj_id}.list'
+        path = self._photometry_dir / f'lc-{obj_id}.list'
         with open(path) as infile:
             line = infile.readline()
             while line.startswith('@'):
@@ -332,25 +338,25 @@ class Betoule14(DataRelease):
         """
 
         # Download data tables
-        if (force or not self.table_dir.exists()) \
-                and utils.check_url(self.table_url):
+        if (force or not self._table_dir.exists()) \
+                and utils.check_url(self._table_url):
             print('Downloading data tables...')
             utils.download_tar(
-                url=self.table_url,
-                out_dir=self.table_dir,
+                url=self._table_url,
+                out_dir=self._table_dir,
                 mode='r:gz')
 
         # Download Photometry
-        if (force or not self.photometry_dir.exists()) \
-                and utils.check_url(self.photometry_url):
+        if (force or not self._photometry_dir.exists()) \
+                and utils.check_url(self._photometry_url):
             print('Downloading photometry...')
             utils.download_tar(
-                url=self.photometry_url,
+                url=self._photometry_url,
                 out_dir=self.data_dir,
                 mode='r:gz')
 
         # Download Filters
-        if (force or not self.filter_path.exists()) \
-                and utils.check_url(self.filter_url):
+        if (force or not self._filter_path.exists()) \
+                and utils.check_url(self._filter_url):
             print('Downloading filters...')
-            utils.download_file(url=self.filter_url, out_file=self.filter_path)
+            utils.download_file(url=self._filter_url, out_file=self._filter_path)

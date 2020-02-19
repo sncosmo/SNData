@@ -7,11 +7,10 @@ from pathlib import Path
 from typing import Union
 
 import numpy as np
-from astropy.io import ascii
 from astropy.table import Column, Table, vstack
 
-from sndata import _utils as utils
-from sndata._base import DataRelease
+from .. import _utils as utils
+from .._base import DataRelease
 
 
 def _read_file(path: Union[str, Path]):
@@ -30,14 +29,11 @@ def _read_file(path: Union[str, Path]):
     # There are three columns instead of two
     path = Path(path)
     if path.stem == 'SN07bc_070409_b01_BAA_IM':
-        data = Table.read(
-            path, format='ascii', names=['wavelength', 'flux', '_'])
-
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux', '_'])
         data.remove_column('_')
 
     else:
-        data = Table.read(
-            path, format='ascii', names=['wavelength', 'flux'])
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
     # Get various data from the table meta data
     file_comments = data.meta['comments']
@@ -58,7 +54,6 @@ def _read_file(path: Union[str, Path]):
 
     # Ensure dates are in JD format
     data['date'] = utils.convert_to_jd(data['date'])
-
     return max_date, redshift, data
 
 
@@ -116,50 +111,10 @@ class DR1(DataRelease):
         self._spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJ/773/53'
 
-    # noinspection PyUnusedLocal
-    def register_filters(self, force=False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered
-        """
-
-        raise ValueError(
-            f'{self.release} {self.survey_abbrev} is a spectroscopic '
-            'data release and has no filters to register.'
-        )
-
-    def get_available_tables(self):
-        """Get available Ids for tables published by the paper for this data
-        release"""
-
-        table_nums = []
-        for f in self._table_dir.rglob('table*.dat'):
-            table_number = f.stem.lstrip('table')
-            table_nums.append(int(table_number))
-
-        return sorted(table_nums)
-
-    def _load_table(self, table_id):
-        """Return a table from the data paper for this survey / data
-
-        Args:
-            table_id: The published table number or table name
-        """
-
-        readme_path = self._table_dir / 'ReadMe'
-        table_path = self._table_dir / f'table{table_id}.dat'
-        if not table_path.exists:
-            raise ValueError(f'Table {table_id} is not available.')
-
-        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
-        data.meta['description'] = description
-        return data
-
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
+        utils.require_data_path(self._spectra_dir)
         files = self._spectra_dir.glob('SN*.dat')
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))

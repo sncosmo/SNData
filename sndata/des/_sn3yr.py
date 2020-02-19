@@ -3,6 +3,8 @@
 
 """This module defines the DES SN3YR API"""
 
+from typing import Union
+
 import numpy as np
 from astropy.table import Table
 
@@ -113,14 +115,15 @@ class SN3YR(DataRelease):
             'DECam_z.dat',
             'DECam_Y.dat')
 
-    def _get_available_tables(self):
+    def get_available_tables(self):
         """Get available Ids for tables published by the paper for this data
         release"""
 
         # noinspection SpellCheckingInspection
         return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
-    def _load_table(self, table_id):
+    @utils.lru_copy_cache(maxsize=None)
+    def load_table(self, table_id: Union[str, int]):
         """Return a table from the data paper for this survey / data
 
         Args:

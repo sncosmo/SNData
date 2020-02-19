@@ -6,7 +6,6 @@
 from pathlib import Path
 
 import numpy as np
-from astropy.io import ascii
 from astropy.table import Table
 
 from .. import _utils as utils
@@ -14,11 +13,11 @@ from .._base import DataRelease
 from ..exceptions import InvalidObjId
 
 
-def _format_table(data_table):
+def _format_table(data_table: Table):
     """Format a data table for use with SNCosmo
 
     Args:
-        data_table (Table): A data table returned by ``get_data_for_id``
+        data_table: A data table returned by ``get_data_for_id``
 
     Returns:
         The same data in a new table following the SNCosmo data model
@@ -90,8 +89,8 @@ class Narayan16(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self._vizier_dir = self.data_dir / 'vizier'
-        self._photometry_dir = self._vizier_dir / 'lcs'
+        self._table_dir = self.data_dir / 'vizier'
+        self._photometry_dir = self._table_dir / 'lcs'
         self._filter_dir = self.data_dir / 'filters'
 
         # Define urls for remote data
@@ -100,32 +99,10 @@ class Narayan16(DataRelease):
         self._i_filter_url = 'https://www.noao.edu/kpno/mosaic/filters/asc6028.f287.r04.txt'
         self._filter_file_names = ('R_band.dat', 'I_band.dat')
 
-    def _get_available_tables(self):
-        """Get available Ids for tables published by the paper for this data
-        release"""
-
-        return [6]
-
-    def _load_table(self, table_id):
-        """Return a table from the data paper for this survey / data
-
-        Args:
-            table_id: The published table number or table name
-        """
-
-        if table_id not in self.get_available_tables():
-            raise ValueError(f'Table {table_id} is not available.')
-
-        readme_path = self._vizier_dir / 'ReadMe'
-        table_path = self._vizier_dir / f'table{table_id}.dat'
-        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
-        data.meta['description'] = description
-        return data
-
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
+        utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.dat')
         return sorted(Path(f).name.split('.')[0] for f in files)
 
@@ -179,12 +156,12 @@ class Narayan16(DataRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        if (force or not self._vizier_dir.exists()) \
+        if (force or not self._table_dir.exists()) \
                 and utils.check_url(self._table_url):
             print('Downloading tables and photometry...')
             utils.download_tar(
                 url=self._table_url,
-                out_dir=self._vizier_dir,
+                out_dir=self._table_dir,
                 mode='r:gz')
 
         if (force or not self._filter_dir.exists()) \
