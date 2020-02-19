@@ -1,4 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+
+"""This module defines the base class of the data access API."""
+
+import os
 import shutil
+from pathlib import Path
+from typing import List, Union
+
+import numpy as np
+from astropy.table import Table
 
 from . import _utils as utils
 from .exceptions import InvalidObjId
@@ -7,11 +18,38 @@ from .exceptions import InvalidObjId
 class DataRelease:
     """Base class for enforcing a standard API"""
 
-    def register_filters(self, force=False):
+    @classmethod
+    def _find_or_create_data_dir(cls):
+        """Define and create a directory to store downloaded data files"""
+
+        safe_survey = cls.survey_name.lower().replace(' ', '_')
+        safe_release = cls.release.lower().replace(' ', '_')
+
+        if 'SNDATA_DIR' in os.environ:
+            base_dir = Path(os.environ['SNDATA_DIR']).resolve()
+
+        else:
+            base_dir = Path(__file__).resolve().parent / 'data'
+
+        cls.data_dir = base_dir / safe_survey / safe_release
+        cls.data_dir.mkdir(parents=True, exist_ok=True)
+
+    def get_zp_for_band(self, band: str):
+        """Get the zeropoint for a given band name
+
+        Args:
+            band: The name of the bandpass
+        """
+
+        sorter = np.argsort(self.band_names)
+        indices = np.searchsorted(self.band_names, band, sorter=sorter)
+        return np.array(self.zero_point)[sorter[indices]]
+
+    def register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo
 
         Args:
-            force (bool): Whether to re-register a band if already registered
+            force: Re-register a band if already registered (Default: False)
         """
 
         for _file_name, _band_name in zip(
@@ -19,25 +57,25 @@ class DataRelease:
             filter_path = self.filter_dir / _file_name
             utils.register_filter(filter_path, _band_name, force=force)
 
-    def get_available_tables(self):
-        """Get table numbers for machine readable tables published in the paper
-        for this data release"""
+    def get_available_tables(self) -> List[Union[str, int]]:
+        """Get available Ids for tables published by the paper for this data
+        release"""
 
         return self._get_available_tables()
 
     @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id):
-        """Load a table from the data paper for this survey / data
+    def load_table(self, table_id: Union[int, str]) -> Table:
+        """Return a table from the data paper for this survey / data
 
         See ``get_available_tables`` for a list of valid table IDs.
 
         Args:
-            table_id (int, str): The published table number or table name
+            table_id: The published table number or table name
         """
 
         return self._load_table(table_id)
 
-    def get_available_ids(self):
+    def get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey
 
         Returns:
@@ -46,14 +84,14 @@ class DataRelease:
 
         return self._get_available_ids()
 
-    def get_data_for_id(self, obj_id, format_table=True):
+    def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         See ``get_available_ids()`` for a list of available ID values.
 
         Args:
-            obj_id        (str): The ID of the desired object
-            format_table (bool): Format for use with ``sncosmo`` (Default: True)
+            obj_id: The ID of the desired object
+            format_table: Format for use with ``sncosmo`` (Default: True)
 
         Returns:
             An astropy table of data for the given ID
@@ -64,7 +102,11 @@ class DataRelease:
 
         return self._get_data_for_id(obj_id, format_table)
 
-    def iter_data(self, verbose=False, format_table=True, filter_func=None):
+    def iter_data(
+            self,
+            verbose: bool = False,
+            format_table: bool = True,
+            filter_func: bool = None) -> Table:
         """Iterate through all available targets and yield data tables
 
         An optional progress bar can be formatted by passing a dictionary of
@@ -73,9 +115,9 @@ class DataRelease:
         boolean.
 
         Args:
-            verbose  (bool, dict): Optionally display progress bar while iterating
-            format_table   (bool): Format data for ``SNCosmo`` (Default: True)
-            filter_func    (func): An optional function to filter outputs by
+            verbose: Optionally display progress bar while iterating
+            format_table: Format data for ``SNCosmo`` (Default: True)
+            filter_func: An optional function to filter outputs by
 
         Yields:
             Astropy tables

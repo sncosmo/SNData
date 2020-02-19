@@ -3,8 +3,8 @@
 
 """This module defines the CSP DR1 API"""
 
-import os
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 from astropy.io import ascii
@@ -14,16 +14,16 @@ from sndata import _utils as utils
 from sndata._base import DataRelease
 
 
-def _read_file(path):
+def _read_file(path: Union[str, Path]):
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:
         path (str or Path): Path of file to read
 
     Returns:
-        The data of maximum for the observed target
-        The redshift of the target
-        An astropy table with file data and meta data
+        - The data of maximum for the observed target
+        - The redshift of the target
+        - An astropy table with file data and meta data
     """
 
     # Handle the single file with a different data model:
@@ -70,11 +70,30 @@ class DR1(DataRelease):
     after the time of B-band maximum light. (Source: Folatelli et al. 2013)
 
     Deviations from the standard UI:
-      - This module provides spectroscopic data and as such the ``band_names``,
-        and ``lambda_effective`` attributes are not available.
+        - This module provides spectroscopic data and as such the
+          ``band_names``, and ``lambda_effective`` attributes are not
+          available.
 
     Cuts on returned data:
-      - None
+        - None
+
+    Attributes:
+        - survey_name
+        - release
+        - survey_abbrev
+        - survey_url
+        - data_type
+        - publications
+        - ads_url
+
+    Methods:
+        - delete_module_data
+        - download_module_data
+        - get_available_ids
+        - get_available_tables
+        - get_data_for_id
+        - iter_data
+        - load_table
     """
 
     # General metadata
@@ -87,13 +106,8 @@ class DR1(DataRelease):
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'
 
     def __init__(self):
-        if 'SNDATA_DIR' in os.environ:
-            self.data_dir = utils.create_data_dir(self.survey_name, self.release)
-
-        else:
-            self.data_dir = Path(__file__).resolve().parent / 'data'
-
         # Define local paths of published data
+        self._find_or_create_data_dir()
         self.spectra_dir = self.data_dir / 'CSP_spectra_DR1'  # DR1 spectra
         self.table_dir = self.data_dir / 'tables'  # DR3 paper tables
 
@@ -102,11 +116,11 @@ class DR1(DataRelease):
         self.table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJ/773/53'
 
     # noinspection PyUnusedLocal
-    def _register_filters(self, force=False):
+    def register_filters(self, force=False):
         """Register filters for this survey / data release with SNCosmo
 
         Args:
-            force (bool): Whether to re-register a band if already registered
+            force: Re-register a band if already registered
         """
 
         raise ValueError(
@@ -114,10 +128,9 @@ class DR1(DataRelease):
             'data release and has no filters to register.'
         )
 
-    #@utils.require_data_path(self.table_dir)
-    def _get_available_tables(self):
-        """Get table numbers for machine readable tables published in the paper
-        for this data release"""
+    def get_available_tables(self):
+        """Get available Ids for tables published by the paper for this data
+        release"""
 
         table_nums = []
         for f in self.table_dir.rglob('table*.dat'):
@@ -126,14 +139,11 @@ class DR1(DataRelease):
 
         return sorted(table_nums)
 
-    #@utils.require_data_path(self.table_dir)
     def _load_table(self, table_id):
-        """Load a table from the data paper for this survey / data
-
-        See ``get_available_tables`` for a list of valid table IDs.
+        """Return a table from the data paper for this survey / data
 
         Args:
-            table_id (int, str): The published table number or table name
+            table_id: The published table number or table name
         """
 
         readme_path = self.table_dir / 'ReadMe'
@@ -141,35 +151,25 @@ class DR1(DataRelease):
         if not table_path.exists:
             raise ValueError(f'Table {table_id} is not available.')
 
-        data = ascii.read(str(table_path), format='cds',
-                          readme=str(readme_path))
-        description = utils.read_vizier_table_descriptions(readme_path)[
-            table_id]
+        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description
         return data
 
-    #@utils.require_data_path(self.spectra_dir)
     def _get_available_ids(self):
-        """Return a list of target object IDs for the current survey
-
-        Returns:
-            A list of object IDs as strings
-        """
+        """Return a list of target object IDs for the current survey"""
 
         files = self.spectra_dir.glob('SN*.dat')
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))
 
     # noinspection PyUnusedLocal
-    #@utils.require_data_path(self.spectra_dir)
-    def _get_data_for_id(self, obj_id, format_table=True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
         """Returns data for a given object ID
 
-        See ``get_available_ids()`` for a list of available ID values.
-
         Args:
-            obj_id        (str): The ID of the desired object
-            format_table (bool): Format for use with ``sncosmo`` (Default: True)
+            obj_id: The ID of the desired object
+            format_table: Format for use with ``sncosmo`` (Default: True)
 
         Returns:
             An astropy table of data for the given ID
@@ -198,11 +198,11 @@ class DR1(DataRelease):
 
             return out_table
 
-    def download_module_data(self, force=False):
+    def download_module_data(self, force: bool = False):
         """Download data for the current survey / data release
 
         Args:
-            force (bool): Re-Download locally available data (Default: False)
+            force: Re-Download locally available data (Default: False)
         """
 
         # Download data tables

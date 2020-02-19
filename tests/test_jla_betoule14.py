@@ -4,7 +4,7 @@
 """Tests for the jla.betoule14 module"""
 
 from sndata import jla
-from .base_tests import DataParsingTestBase, DocumentationTestBase
+from .base_tests import DataParsingTestBase
 
 
 class DataParsing(DataParsingTestBase):
@@ -12,8 +12,8 @@ class DataParsing(DataParsingTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = jla.betoule14
-        cls.module.download_module_data()
+        cls.test_class = jla.betoule14
+        cls.test_class.download_module_data()
 
     def test_bad_object_id_err(self):
         self._test_bad_object_id_err()
@@ -44,23 +44,3 @@ class DataParsing(DataParsingTestBase):
 
     def test_cache_not_mutated(self):
         self._test_cache_not_mutated()
-
-
-class Documentation(DocumentationTestBase):
-    """Tests for the jla.betoule14 module"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.module = jla.betoule14
-
-    def test_ads_url(self):
-        self._test_ads_url_status()
-
-    def test_consistent_docs(self):
-        self._test_consistent_docs()
-
-    def test_has_meta_attributes(self):
-        self._test_has_meta_attributes()
-
-    def test_survey_url(self):
-        self._test_survey_url_status()

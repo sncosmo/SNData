@@ -7,6 +7,7 @@ releases. For more information on CSP see https://csp.obs.carnegiescience.edu .
 """
 
 from ._dr1 import DR1
+from ._dr3 import DR3
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'

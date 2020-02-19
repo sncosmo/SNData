@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module provides utilities used by various submodules."""
+"""This module provides general utilities."""
 
 import functools
-import os
 import tarfile
 from copy import deepcopy
-from functools import wraps
 from pathlib import Path, PosixPath
 from tempfile import TemporaryFile
+from typing import Union
 from warnings import warn
 
 import numpy as np
@@ -20,16 +19,16 @@ from tqdm import tqdm
 from .exceptions import NoDownloadedData
 
 
-def lru_copy_cache(maxsize=128, typed=False, copy=True):
+def lru_copy_cache(maxsize: int = 128, typed: bool = False, copy: bool = True):
     """Decorator to cache the return of a function
 
     Similar to ``functools.lru_cache``, but allows a copy of the cached value
     to be returned, thus preventing mutation of the cache.
 
     Args:
-        maxsize (int): Maximum size of the cache
-        typed  (bool): Cache objects of different types separately
-        copy   (bool): Return a copy of the cached item
+        maxsize: Maximum size of the cache
+        typed: Cache objects of different types separately (Default: False)
+        copy: Return a copy of the cached item (Default: True)
 
     Returns:
         A decorator
@@ -50,14 +49,14 @@ def lru_copy_cache(maxsize=128, typed=False, copy=True):
     return decorator
 
 
-def build_pbar(data, verbose):
+def build_pbar(data: iter, verbose: Union[bool, dict]):
     """Cast an iterable into a progress bar
 
     If verbose is False, return ``data`` unchanged.
 
     Args:
-        data          (iter): An iterable object
-        verbose (bool, dict): Arguments for tqdm.tqdm
+        data: An iterable object
+        verbose: Arguments for tqdm.tqdm
     """
 
     if isinstance(verbose, dict):
@@ -73,11 +72,11 @@ def build_pbar(data, verbose):
 
 
 @np.vectorize
-def convert_to_jd(date):
+def convert_to_jd(date: float):
     """Convert MJD and Snoopy dates into JD
 
     Args:
-        date (float): Time stamp in JD, MJD, or SNPY format
+        date: Time stamp in JD, MJD, or SNPY format
 
     Returns:
         The time value in JD format
@@ -95,14 +94,14 @@ def convert_to_jd(date):
     return date
 
 
-def check_url(url, timeout=None):
+def check_url(url: str, timeout: int = None):
     """Return whether a connection can be established to a given URL
 
     If False, a warning is also raised.
 
     Args:
-        url     (str): The URL to check
-        timeout (int): Optional number of seconds to timeout after
+        url: The URL to check
+        timeout: Optional number of seconds to timeout after
 
     Returns:
         A boolean
@@ -118,12 +117,12 @@ def check_url(url, timeout=None):
     return False
 
 
-def download_file(url, out_file):
+def download_file(url: str, out_file: str):
     """Download data to a file
 
     Args:
-        url      (str): URL of the file to download
-        out_file (str): The file path to write to or a file object
+        url: URL of the file to download
+        out_file: The file path to write to or a file object
     """
 
     print(f'Fetching {url}')
@@ -143,13 +142,13 @@ def download_file(url, out_file):
         out_file.close()
 
 
-def download_tar(url, out_dir, mode=None):
+def download_tar(url: str, out_dir: str, mode: str = None):
     """Download and unzip a .tar.gz file to a given output path
 
     Args:
-        url     (str): URL of the file to download
-        out_dir (str): The directory to unzip file contents to
-        mode    (str): Compression mode (Default: r:gz)
+        url: URL of the file to download
+        out_dir: The directory to unzip file contents to
+        mode: Compression mode (Default: r:gz)
     """
 
     out_dir = Path(out_dir)
@@ -174,32 +173,23 @@ def download_tar(url, out_dir, mode=None):
                     data.extract(file_, path=out_dir)
 
 
-def require_data_path(*data_dirs):
-    """Decorator to raise NoDownloadedData exception if given paths don't exist
+def require_data_path(*data_dirs: Path):
+    """Raise NoDownloadedData exception if given paths don't exist
 
     Args:
-        *data_dirs (Path): Path objects to check exists
+        *data_dirs: Path objects to check exists
     """
 
-    def inner(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            for data_dir in data_dirs:
-                if not data_dir.exists():
-                    raise NoDownloadedData()
-
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return inner
+    for data_dir in data_dirs:
+        if not data_dir.exists():
+            raise NoDownloadedData()
 
 
-def read_vizier_table_descriptions(readme_path):
+def read_vizier_table_descriptions(readme_path: str):
     """Returns the table descriptions from a vizier readme file
 
     Args:
-        readme_path (str): Path of the file to read
+        readme_path: Path of the file to read
 
     Returns:
         A dictionary {<Table number (int)>: <Table description (str)>}
@@ -237,39 +227,16 @@ def read_vizier_table_descriptions(readme_path):
     return table_descriptions
 
 
-def create_data_dir(survey_name, release):
-    """Create the data directory for a given survey and release
-
-    Directories are created in ``environ['SNDATA_DIR']`` using lowercase names
-    and underscores instead of spaces.
-
-    Args:
-        survey_name (str): The name of a survey (e.g., csp)
-        release     (str): The name of a data release from the survey (e.g., dr3)
-
-    Returns:
-        A Path object representing the created directory
-    """
-
-    safe_survey = survey_name.lower().replace(' ', '_')
-    safe_release = release.lower().replace(' ', '_')
-    path = Path(
-        os.environ['SNDATA_DIR']).resolve() / safe_survey / safe_release
-    path.mkdir(parents=True, exist_ok=True)
-    return path
-
-
-def register_filter(file_path, filter_name, force=False):
+def register_filter(file_path: str, filter_name: str, force: bool = False):
     """Registers filter profiles with sncosmo if not already registered
 
     Assumes the file at ``file_path`` is a two column, white space delimited
     ascii table.
 
     Args:
-        file_path   (str): Path of an ascii table with wavelength (Angstrom)
-                            and transmission columns
-        filter_name (str): The name of the registered filter.
-        force      (bool): Whether to re-register a band if already registered
+        file_path: Path of ascii table with wavelength (Ang) and transmission
+        filter_name: The name of the registered filter.
+        force: Whether to re-register a band if already registered
     """
 
     # Get set of registered builtin and custom band passes

@@ -21,8 +21,8 @@ class Combined(DataParsingTestBase):
     @classmethod
     def setUpClass(cls):
         cls.joined_surveys = (csp.dr3, des.sn3yr)
-        cls.module = CombinedDataset(*cls.joined_surveys)
-        cls.module.download_module_data()
+        cls.test_class = CombinedDataset(*cls.joined_surveys)
+        cls.test_class.download_module_data()
 
     def test_obj_id_dataframe(self):
         """Test for expected data releases in object id DataFrame"""

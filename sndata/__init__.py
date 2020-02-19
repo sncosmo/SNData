@@ -5,9 +5,10 @@
 surveys.
 """
 
-#from . import csp, des, essence, jla, sdss
-#from ._combine_data import CombinedDataset
-#from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
+# from . import csp, des, essence, jla, sdss
+# from ._combine_data import CombinedDataset
+from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
+from . import csp
 
 __version__ = '0.9.5'
 __author__ = 'Daniel Perrefort'
@@ -18,8 +19,7 @@ def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
     modules = (
-        csp.dr3, csp.dr1, des.sn3yr, essence.narayan16,
-        sdss.sako18, sdss.sako18spec,
+        csp.DR1(),
     )
 
     for module in modules:
