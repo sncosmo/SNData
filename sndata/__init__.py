@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This package provides access to supernova light-curve data from various
-surveys.
+"""The ``sndata`` package provides access to supernova light-curve data from
+various surveys while maintaining a consistent data access interface. Each
+available survey is represented by a dedicated submodule. Each available
+data release is represented by a dedicated class.
 """
 
 from . import csp, des, essence, jla, sdss

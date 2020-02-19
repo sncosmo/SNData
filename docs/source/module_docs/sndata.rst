@@ -12,6 +12,7 @@ Submodules
    des
    essence
    sdss
+   snls
 
 Attribute Summaries
 ^^^^^^^^^^^^^^^^^^^
