@@ -5,23 +5,13 @@
 modules.
 """
 
-from pathlib import Path
 from unittest import TestCase
 
 import numpy as np
 import sncosmo
-import yaml
 
 from sndata import get_zp
 from sndata.exceptions import InvalidObjId
-
-docs_path = Path(__file__).resolve().parent / 'docs.yml'
-with open(docs_path) as ofile:
-    try:
-        expected_docs = yaml.load(ofile, Loader=yaml.FullLoader)
-
-    except AttributeError:  # Support older yaml versions
-        expected_docs = yaml.load(ofile)
 
 
 class DataParsingTestBase(TestCase):
