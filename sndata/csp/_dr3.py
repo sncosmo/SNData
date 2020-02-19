@@ -249,7 +249,7 @@ class DR3(DataRelease):
             data_table['mag'] += offsets
 
             # Add flux values
-            data_table['zp'] = self._get_zp_for_bands(data_table['band'])
+            data_table['zp'] = self.get_zp_for_band(data_table['band'])
             data_table['zpsys'] = np.full(len(data_table), 'ab')
             data_table['flux'] = 10 ** ((data_table['mag'] - data_table['zp']) / -2.5)
             data_table['fluxerr'] = np.log(10) * data_table['flux'] * data_table['mag_err'] / 2.5

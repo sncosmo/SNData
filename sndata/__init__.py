@@ -40,26 +40,12 @@ def get_zp(band_name):
 
     survey, release, *_ = band_name.split('_')
     modules_dict = {
-        'csp': csp,
-        'des': des,
-        'sdss': sdss,
-        'essence': essence,
-        'jla': jla
+        'csp': csp
     }
 
-    module = getattr(modules_dict[survey.lower()], release.lower())
-    if not hasattr(module, 'band_names'):
+    data_class = getattr(modules_dict[survey.lower()], release.upper())
+    if not hasattr(data_class, 'band_names'):
         raise _ObservedDataTypeError(
             'Survey {} {} does not have registered photometric band passes.')
 
-    bands = list(module.band_names)
-    zp = module._meta.zero_point
-
-    try:
-        i = bands.index(band_name)
-
-    except ValueError:
-        raise ValueError(
-            f'Could not find band name {band_name} in {module.band_names}')
-
-    return zp[i]
+    return data_class.get_zp_for_band(band_name)

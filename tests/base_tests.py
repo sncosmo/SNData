@@ -38,7 +38,7 @@ class DataParsingTestBase(TestCase):
         """Test that ``get_zp`` returns the correct zero point"""
 
         returned_zp = [get_zp(b) for b in self.test_class.band_names]
-        actual_zp = self.test_class._meta.zero_point
+        actual_zp = self.test_class.zero_point
         self.assertSequenceEqual(actual_zp, returned_zp)
 
     def _test_ids_are_sorted(self):

@@ -22,7 +22,7 @@ class DataRelease:
     def _find_or_create_data_dir(cls):
         """Define and create a directory to store downloaded data files"""
 
-        safe_survey = cls.survey_name.lower().replace(' ', '_')
+        safe_survey = cls.survey_abbrev.lower().replace(' ', '_')
         safe_release = cls.release.lower().replace(' ', '_')
 
         if 'SNDATA_DIR' in os.environ:
@@ -34,16 +34,17 @@ class DataRelease:
         cls.data_dir = base_dir / safe_survey / safe_release
         cls.data_dir.mkdir(parents=True, exist_ok=True)
 
-    def get_zp_for_band(self, band: str):
+    @classmethod
+    def get_zp_for_band(cls, band: str):
         """Get the zeropoint for a given band name
 
         Args:
             band: The name of the bandpass
         """
 
-        sorter = np.argsort(self.band_names)
-        indices = np.searchsorted(self.band_names, band, sorter=sorter)
-        return np.array(self.zero_point)[sorter[indices]]
+        sorter = np.argsort(cls.band_names)
+        indices = np.searchsorted(cls.band_names, band, sorter=sorter)
+        return np.array(cls.zero_point)[sorter[indices]]
 
     def register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo

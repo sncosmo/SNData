@@ -15,8 +15,7 @@ class SurveyTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.module = csp.dr3
-        cls.module.download_module_data()
+        csp.DR3().download_module_data()
 
     def test_instrument_offset(self):
         """Test returned DR3 data includes the instrument offset using a
@@ -24,7 +23,7 @@ class SurveyTests(TestCase):
          """
 
         def get_test_point(band, obj_id='2005el', **kwargs):
-            data = csp.dr3.get_data_for_id(obj_id, **kwargs)
+            data = csp.DR3().get_data_for_id(obj_id, **kwargs)
             y_data = data[data['band'] == band]
             return y_data[0]
 
