@@ -44,7 +44,7 @@ def get_zp(band_name):
         'dr3': csp.DR3,
         'sn3yr': des.SN3YR,
         'narayan16': essence.Narayan16,
-        'betoule14': jla.Betoule14
+        'betoule14': jla.Betoule14,
     }
 
     data_class = modules_dict[release]

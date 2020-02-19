@@ -12,7 +12,7 @@ class DataParsing(DataParsingTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = snls.balland09
+        cls.test_class = snls.Balland09()
         cls.test_class.download_module_data()
 
     def test_bad_object_id_err(self):

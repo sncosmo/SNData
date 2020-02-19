@@ -5,7 +5,7 @@
 Survey. It includes data from the data release of Balland et al. 2009.
 """
 
-from . import balland09
+from ._balland09 import Balland09
 
 survey_name = 'Supernova Legacy Survey'
 survey_abbrev = 'SNLS'
