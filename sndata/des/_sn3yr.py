@@ -6,8 +6,8 @@
 import numpy as np
 from astropy.table import Table
 
-from sndata import _utils as utils
-from sndata._base import DataRelease
+from .. import _utils as utils
+from .._base import DataRelease
 from ..exceptions import InvalidObjId
 
 
