@@ -14,17 +14,8 @@ Submodules
    sdss
    snls
 
-Attribute Summaries
+Top Level Functions
 ^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-
-   CombinedDataset
-   delete_all_data
-   get_zp
-
-Function Documentation
-^^^^^^^^^^^^^^^^^^^^^^
 
 .. autofunction:: get_zp
 .. autofunction:: delete_all_data
