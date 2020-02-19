@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+
 """Read IRAF (echelle) spectrum in multispec format from a FITS file.
 
 History:
     Created by Rick White based on my IDL readechelle.pro, 2012 August 15
-    Converted from Python2 to Python 3 by Daniel Perrefort in January 2020
+    Converted from Python2 to Python 3 by Daniel Perrefort in 2020 January
 """
 
 import numpy as np

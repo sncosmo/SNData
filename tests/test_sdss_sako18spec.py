@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""Tests for the ``csp.dr1`` module."""
+"""Tests for the ``sdss.Sako18Spec`` class."""
 
 from sndata import sdss
 from .base_tests import DataParsingTestBase
@@ -12,7 +12,7 @@ class DataParsing(DataParsingTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = sdss.sako18spec
+        cls.test_class = sdss.Sako18Spec()
         cls.test_class.download_module_data()
 
     def test_bad_object_id_err(self):

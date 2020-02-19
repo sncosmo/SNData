@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module defines the SDSS Sako18 API"""
+"""This module defines the SDSS Sako18 API for photometric data"""
 
 import tarfile
-import zipfile
 from itertools import product
 from urllib.parse import urljoin
 
@@ -63,13 +62,23 @@ def _format_sncosmo_table(data_table):
 
 
 class Sako18(DataRelease):
-    """<Describe the data set> (Source: <Cite a publication>)
+    """The ``Sako18`` class provides access to the **photometric** data release
+    of the Sloan Digital Sky Survey-II (SDSS-II) Supernova Survey conducted
+    between 2005 and 2007. Light curves are presented for 10,258 variable and
+    transient sources discovered through repeat ugriz imaging of SDSS Stripe
+    82, a 300 deg2 area along the celestial equator. This data release is
+    comprised of all transient sources brighter than r ≃ 22.5 mag with no
+    history of variability prior to 2004. (Source: Sako et al. 2018)
+
+    For the spectroscopic data of this data release see the ``sako18spec``
+    module.
 
     Deviations from the standard UI:
         - None
 
     Cuts on returned data:
-        - None
+        - Data points manually marked as outliers by the SDSS research time
+          are not included in returned data tables.
 
     Attributes:
         - survey_name
@@ -124,8 +133,6 @@ class Sako18(DataRelease):
         self._smp_dir = self.data_dir / 'SMP_Data/'  # SMP data files (photometric light-curves)
         self._snana_dir = self.data_dir / 'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
         self._outlier_path = self._snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
-        self._spectra_dir = self.data_dir / 'Spectra_txt'  # spectra files
-        self._spectra_zip = self.data_dir / 'Spectra_txt.zip'  # compressed spectra files
 
         self._filter_file_names = tuple(f'{b}{c}.dat' for b, c in product('ugriz', '123456'))
         self._table_names = 'master_data.txt', 'Table2.txt', 'Table9.txt', 'Table11.txt', 'Table12.txt'
@@ -136,7 +143,6 @@ class Sako18(DataRelease):
         self._base_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
         self._smp_url = urljoin(self._base_url, 'SMP_Data.tar.gz')
         self._snana_url = urljoin(self._base_url, 'SDSS_dataRelease-snana.tar.gz')
-        self._spectra_url = urljoin(self._base_url, 'Spectra.tar.gz')
 
     def get_available_tables(self):
         """Get table numbers for machine readable tables published in the paper
@@ -316,17 +322,3 @@ class Sako18(DataRelease):
                         url=self._filter_url + file_name,
                         out_file=out_path
                     )
-
-        # if (force or not meta.spectra_dir.exists()) \
-        #         and utils.check_url(meta.spectra_url):
-        #     print('Downloading spectra...')
-        #     utils.download_tar(
-        #         url=meta.spectra_url,
-        #         out_dir=meta.data_dir,
-        #         mode='r:gz')
-
-        # Spectral data parsing requires IRAF so we use preparsed data instead
-        if force or not self._spectra_dir.exists():
-            print('Unzipping spectra...')
-            with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
-                zip_ref.extractall(self.data_dir)

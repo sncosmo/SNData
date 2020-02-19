@@ -8,6 +8,7 @@ by separate modules. For more information on SDSS see https://www.sdss.org .
 """
 
 from ._sako18 import Sako18
+from ._sako18spec import Sako18Spec
 
 survey_name = 'Sloan Digital Sky Survey'
 survey_abbrev = 'SDSS'
