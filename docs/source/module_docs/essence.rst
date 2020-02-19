@@ -3,11 +3,11 @@ Equation of State: Supernovae trace Cosmic Expansion (ESSENCE)
 
 .. automodule:: sndata.essence
 
-+---------------------+-------------+---------------+-----------------------------+
-| Data Release        | Module Name | Data Type     | Publication                 |
-+=====================+=============+===============+=============================+
-| Narayan et al. 2016 | narayan16   | photometric   | `Narayan et al. (2016)`_    |
-+---------------------+-------------+---------------+-----------------------------+
++--------------+---------------+-----------------------------+
+| Data Release | Data Type     | Publication                 |
++==============+===============+=============================+
+| Narayan16    | photometric   | `Narayan et al. (2016)`_    |
++--------------+---------------+-----------------------------+
 
 .. Matheson module not fully integrated
  | Matheson et a. 2005 | matheson05  | Spectroscopic | `Matheson et al. (2005)`_   |

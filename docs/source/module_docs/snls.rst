@@ -3,11 +3,11 @@ Supernova Legacy Survey SNLS
 
 .. automodule:: sndata.snls
 
-+--------------+-----------------+---------------+----------------------------+
-| Data Release | Module Name     | Data Type     | Publication                |
-+==============+=================+===============+============================+
-| Balland 2009 | snls.balland09  | Spectroscopic | `Balland et al. (2009)`_   |
-+--------------+-----------------+---------------+----------------------------+
++--------------+---------------+----------------------------+
+| Data Release | Data Type     | Publication                |
++==============+===============+============================+
+| Balland09    | Spectroscopic | `Balland et al. (2009)`_   |
++--------------+---------------+----------------------------+
 
 
 .. _Balland et al. (2009): https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
