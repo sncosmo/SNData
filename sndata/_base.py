@@ -54,7 +54,7 @@ class DataRelease:
         """
 
         for _file_name, _band_name in zip(
-                self.filter_file_names, self.band_names):
+                self._filter_file_names, self.band_names):
             filter_path = self.filter_dir / _file_name
             utils.register_filter(filter_path, _band_name, force=force)
 

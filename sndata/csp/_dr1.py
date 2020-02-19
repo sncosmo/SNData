@@ -108,12 +108,12 @@ class DR1(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self.spectra_dir = self.data_dir / 'CSP_spectra_DR1'  # DR1 spectra
-        self.table_dir = self.data_dir / 'tables'  # DR3 paper tables
+        self._spectra_dir = self.data_dir / 'CSP_spectra_DR1'  # DR1 spectra
+        self._table_dir = self.data_dir / 'tables'  # DR3 paper tables
 
         # Define urls for remote data
-        self.spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
-        self.table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJ/773/53'
+        self._spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
+        self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJ/773/53'
 
     # noinspection PyUnusedLocal
     def register_filters(self, force=False):
@@ -133,7 +133,7 @@ class DR1(DataRelease):
         release"""
 
         table_nums = []
-        for f in self.table_dir.rglob('table*.dat'):
+        for f in self._table_dir.rglob('table*.dat'):
             table_number = f.stem.lstrip('table')
             table_nums.append(int(table_number))
 
@@ -146,8 +146,8 @@ class DR1(DataRelease):
             table_id: The published table number or table name
         """
 
-        readme_path = self.table_dir / 'ReadMe'
-        table_path = self.table_dir / f'table{table_id}.dat'
+        readme_path = self._table_dir / 'ReadMe'
+        table_path = self._table_dir / f'table{table_id}.dat'
         if not table_path.exists:
             raise ValueError(f'Table {table_id} is not available.')
 
@@ -159,7 +159,7 @@ class DR1(DataRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        files = self.spectra_dir.glob('SN*.dat')
+        files = self._spectra_dir.glob('SN*.dat')
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))
 
@@ -181,7 +181,7 @@ class DR1(DataRelease):
             dtype=[float, float, float, float, 'U3', 'U3', 'U2']
         )
 
-        files = self.spectra_dir.rglob(f'SN{obj_id[2:]}_*.dat')
+        files = self._spectra_dir.rglob(f'SN{obj_id[2:]}_*.dat')
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
@@ -206,21 +206,21 @@ class DR1(DataRelease):
         """
 
         # Download data tables
-        if (force or not self.table_dir.exists()) \
-                and utils.check_url(self.table_url):
+        if (force or not self._table_dir.exists()) \
+                and utils.check_url(self._table_url):
 
             print('Downloading data tables...')
             utils.download_tar(
-                url=self.table_url,
-                out_dir=self.table_dir,
+                url=self._table_url,
+                out_dir=self._table_dir,
                 mode='r:gz')
 
         # Download spectra
-        if (force or not self.spectra_dir.exists()) \
-                and utils.check_url(self.spectra_url):
+        if (force or not self._spectra_dir.exists()) \
+                and utils.check_url(self._spectra_url):
 
             print('Downloading spectra...')
             utils.download_tar(
-                url=self.spectra_url,
+                url=self._spectra_url,
                 out_dir=self.data_dir,
                 mode='r:gz')

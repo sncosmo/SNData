@@ -146,17 +146,17 @@ class DR3(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self.photometry_dir = self.data_dir / 'DR3'  # DR3 Light Curves
-        self.filter_dir = self.data_dir / 'filters'  # DR3 Filters
-        self.table_dir = self.data_dir / 'tables'  # DR3 paper tables
+        self._photometry_dir = self.data_dir / 'DR3'  # DR3 Light Curves
+        self._filter_dir = self.data_dir / 'filters'  # DR3 Filters
+        self._table_dir = self.data_dir / 'tables'  # DR3 paper tables
 
         # Define urls for remote data
-        self.photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
-        self.filter_url = 'https://csp.obs.carnegiescience.edu/data/'
-        self.table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211'
+        self._photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
+        self._filter_url = 'https://csp.obs.carnegiescience.edu/data/'
+        self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/AJ/154/211'
 
         # Filter information
-        self.filter_file_names = (
+        self._filter_file_names = (
             'u_tel_ccd_atm_ext_1.2.dat',  # u
             'g_tel_ccd_atm_ext_1.2.dat',  # g
             'r_tel_ccd_atm_ext_1.2_new.dat',  # r
@@ -174,7 +174,7 @@ class DR3(DataRelease):
             'H_texas_DUP_atm.dat'  # Hdw
         )
 
-        self.instrument_offsets = {
+        self._instrument_offsets = {
             'csp_dr3_u': -0.06,
             'csp_dr3_g': -0.02,
             'csp_dr3_r': -0.01,
@@ -196,7 +196,7 @@ class DR3(DataRelease):
         """Get available Ids for tables published by the paper for this data
         release"""
 
-        file_list = self.table_dir.glob('*.dat')
+        file_list = self._table_dir.glob('*.dat')
         return sorted(int(path.stem.strip('table')) for path in file_list)
 
     def _load_table(self, table_id):
@@ -206,8 +206,8 @@ class DR3(DataRelease):
             table_id: The published table number or table name
         """
 
-        readme_path = self.table_dir / 'ReadMe_formatted'
-        table_path = self.table_dir / f'table{table_id}.dat'
+        readme_path = self._table_dir / 'ReadMe_formatted'
+        table_path = self._table_dir / f'table{table_id}.dat'
         if table_id not in self.get_available_tables():
             raise ValueError(f'Table {table_id} is not available.')
 
@@ -219,7 +219,7 @@ class DR3(DataRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        files = self.photometry_dir.glob('*.txt')
+        files = self._photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True):
@@ -237,7 +237,7 @@ class DR3(DataRelease):
             raise InvalidObjId()
 
         # Read data file for target
-        file_path = self.photometry_dir / f'SN{obj_id}_snpy.txt'
+        file_path = self._photometry_dir / f'SN{obj_id}_snpy.txt'
         data_table = parse_snoopy_data(file_path)
         data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
@@ -245,7 +245,7 @@ class DR3(DataRelease):
             # Convert band names to package standard
             data_table['band'] = 'csp_dr3_' + data_table['band']
 
-            offsets = np.array([self.instrument_offsets[b] for b in data_table['band']])
+            offsets = np.array([self._instrument_offsets[b] for b in data_table['band']])
             data_table['mag'] += offsets
 
             # Add flux values
@@ -264,37 +264,37 @@ class DR3(DataRelease):
         """
 
         # Download data tables
-        if (force or not self.table_dir.exists()) \
-                and utils.check_url(self.table_url):
+        if (force or not self._table_dir.exists()) \
+                and utils.check_url(self._table_url):
             print('Downloading data tables...')
             utils.download_tar(
-                url=self.table_url,
-                out_dir=self.table_dir,
+                url=self._table_url,
+                out_dir=self._table_dir,
                 mode='r:gz')
 
             # Fix formatting of CDS Readme
-            with open(self.table_dir / 'ReadMe') as ofile:
+            with open(self._table_dir / 'ReadMe') as ofile:
                 lines = ofile.readlines()
 
             fix_cds_readme(lines)
-            with open(self.table_dir / 'ReadMe_formatted', 'w') as ofile:
+            with open(self._table_dir / 'ReadMe_formatted', 'w') as ofile:
                 ofile.writelines(lines)
 
         # Download photometry
-        if (force or not self.photometry_dir.exists()) \
-                and utils.check_url(self.photometry_url):
+        if (force or not self._photometry_dir.exists()) \
+                and utils.check_url(self._photometry_url):
             print('Downloading photometry...')
             utils.download_tar(
-                url=self.photometry_url,
+                url=self._photometry_url,
                 out_dir=self.data_dir,
                 mode='r:gz')
 
         # Download filters
-        if (force or not self.filter_dir.exists()) \
-                and utils.check_url(self.filter_url):
+        if (force or not self._filter_dir.exists()) \
+                and utils.check_url(self._filter_url):
 
             print('Downloading filters...')
-            for file_name in self.filter_file_names:
+            for file_name in self._filter_file_names:
                 utils.download_file(
-                    url=self.filter_url + file_name,
-                    out_file=self.filter_dir / file_name)
+                    url=self._filter_url + file_name,
+                    out_file=self._filter_dir / file_name)

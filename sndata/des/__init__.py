@@ -7,7 +7,7 @@ first 3 years of spectroscopically classified supernovae (SNe).
 For more information on DES see https://des.ncsa.illinois.edu .
 """
 
-from . import sn3yr
+from ._sn3yr import SN3YR
 
 survey_name = 'Dark Energy Survey'
 survey_abbrev = 'DES'

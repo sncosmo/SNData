@@ -8,7 +8,7 @@ from sndata._base import DataRelease
 
 
 class DataReleaseName(DataRelease):
-    """<Describe the data set>
+    """<Describe the data set> (Source: <Cite a publication>)
 
     Deviations from the standard UI:
         - None
@@ -52,11 +52,11 @@ class DataReleaseName(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self.table_dir = self.data_dir / 'tables'  # Paper tables
-        self.spectra_dir = self.data_dir / 'spectra'
+        self._table_dir = self.data_dir / 'tables'  # Paper tables
+        self._spectra_dir = self.data_dir / 'spectra'
 
         # Define urls for remote data
-        self.data_url = 'some.url.gov'
+        self._data_url = 'some.url.gov'
 
     def register_filters(self, force=False):
         """Register filters for this survey / data release with SNCosmo
@@ -111,19 +111,19 @@ class DataReleaseName(DataRelease):
         """
 
         # Example for downloading uncompressed files
-        if (force or not self.table_dir.exists()) \
-                and utils.check_url(self.data_url):
+        if (force or not self._table_dir.exists()) \
+                and utils.check_url(self._data_url):
             print('Downloading data tables...')
             utils.download_tar(
-                url=self.data_url,
-                out_dir=self.table_dir,
+                url=self._data_url,
+                out_dir=self._table_dir,
                 mode='r:gz')
 
         # Example for downloading .tar.gz files
-        if (force or not self.spectra_dir.exists())\
-                and utils.check_url(self.data_url):
+        if (force or not self._spectra_dir.exists())\
+                and utils.check_url(self._data_url):
             print('Downloading something else...')
             utils.download_tar(
-                url=self.data_url,
+                url=self._data_url,
                 out_dir=self.data_dir,
                 mode='r:gz')
