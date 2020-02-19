@@ -39,11 +39,11 @@ def _format_table(data_table):
 
 
 class Narayan16(DataRelease):
-    """The Narayan16 class provides access to photometric data for 213 Type Ia
-    supernovae discovered by the ESSENCE survey at redshifts 0.1 <= z <= 0.81
-    between 2002 and 2008. It includes R and I band photometry measured from
-    images obtained using the MOSAIC II camera at the CTIO Blanco telescope.
-    (Source: Narayan et al. 2016)
+    """The ``Narayan16`` class provides access to photometric data for 213
+    Type Ia supernovae discovered by the ESSENCE survey at redshifts
+    0.1 <= z <= 0.81 between 2002 and 2008. It includes R and I band photometry
+    measured from images obtained using the MOSAIC II camera at the CTIO
+    Blanco telescope. (Source: Narayan et al. 2016)
 
     Deviations from the standard UI:
         - None

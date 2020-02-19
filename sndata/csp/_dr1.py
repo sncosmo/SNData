@@ -63,11 +63,12 @@ def _read_file(path: Union[str, Path]):
 
 
 class DR1(DataRelease):
-    """The DR1 class provides access to spectra from the first release of optical
-    spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by the Carnegie
-    Supernova Project. It includes 604 previously unpublished spectra of 93 SNe Ia.
-    The observations cover a range of phases from 12 days before to over 150 days
-    after the time of B-band maximum light. (Source: Folatelli et al. 2013)
+    """The ``DR1`` class provides access to spectra from the first release of
+    optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
+    the Carnegie Supernova Project. It includes 604 previously unpublished
+    spectra of 93 SNe Ia. The observations cover a range of phases from 12 days
+    before to over 150 days after the time of B-band maximum light.
+    (Source: Folatelli et al. 2013)
 
     Deviations from the standard UI:
         - This module provides spectroscopic data and as such the
