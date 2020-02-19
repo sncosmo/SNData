@@ -59,6 +59,9 @@ class Narayan16(DataRelease):
         - data_type
         - publications
         - ads_url
+        - band_names
+        - zero_point
+        - lambda_effective
 
     Methods:
         - delete_module_data

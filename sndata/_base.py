@@ -12,7 +12,7 @@ import numpy as np
 from astropy.table import Table
 
 from . import _utils as utils
-from .exceptions import InvalidObjId
+from .exceptions import InvalidObjId, ObservedDataTypeError
 
 
 class DataRelease:
@@ -52,6 +52,10 @@ class DataRelease:
         Args:
             force: Re-register a band if already registered (Default: False)
         """
+
+        if self.data_type != 'photometric':
+            msg = 'Filters are only available for photometric data releases.'
+            raise ObservedDataTypeError(msg)
 
         for _file_name, _band_name in zip(
                 self._filter_file_names, self.band_names):
