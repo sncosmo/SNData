@@ -72,24 +72,6 @@ class DR1(DataRelease):
 
     Cuts on returned data:
         - None
-
-    Attributes:
-        - survey_name
-        - release
-        - survey_abbrev
-        - survey_url
-        - data_type
-        - publications
-        - ads_url
-
-    Methods:
-        - delete_module_data
-        - download_module_data
-        - get_available_ids
-        - get_available_tables
-        - get_data_for_id
-        - iter_data
-        - load_table
     """
 
     # General metadata

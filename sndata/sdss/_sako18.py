@@ -79,27 +79,6 @@ class Sako18(DataRelease):
     Cuts on returned data:
         - Data points manually marked as outliers by the SDSS research time
           are not included in returned data tables.
-
-    Attributes:
-        - survey_name
-        - release
-        - survey_abbrev
-        - survey_url
-        - data_type
-        - publications
-        - ads_url
-        - band_names
-        - zero_point
-        - lambda_effective
-
-    Methods:
-        - delete_module_data
-        - download_module_data
-        - get_available_ids
-        - get_available_tables
-        - get_data_for_id
-        - iter_data
-        - load_table
     """
 
     # General metadata

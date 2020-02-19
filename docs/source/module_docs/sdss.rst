@@ -18,65 +18,13 @@ Sloan Digital Sky Survey (SDSS)
 Sako 2018 (Photometric)
 -----------------------
 
-.. automodule:: sndata.sdss.sako18
-
-.. py:currentmodule:: sndata.sdss.sako18
-
-Attribute Summaries
-^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-
-    delete_module_data
-    download_module_data
-    get_available_ids
-    get_available_tables
-    get_data_for_id
-    iter_data
-    load_table
-    register_filters
-
-Function Documentation
-^^^^^^^^^^^^^^^^^^^^^^
-
-.. autofunction:: delete_module_data
-.. autofunction:: download_module_data
-.. autofunction:: get_available_ids
-.. autofunction:: get_available_tables
-.. autofunction:: get_data_for_id
-.. autofunction:: iter_data
-.. autofunction:: load_table
-.. autofunction:: register_filters
+.. autoclass:: sndata.sdss.Sako18
+   :members:
+   :inherited-members:
 
 Sako 2018 (Spectroscopic)
 -------------------------
 
-.. automodule:: sndata.sdss.sako18spec
-
-.. py:currentmodule:: sndata.sdss.sako18spec
-
-Attribute Summaries
-^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-
-    delete_module_data
-    download_module_data
-    get_available_ids
-    get_available_tables
-    get_data_for_id
-    iter_data
-    load_table
-    register_filters
-
-Function Documentation
-^^^^^^^^^^^^^^^^^^^^^^
-
-.. autofunction:: delete_module_data
-.. autofunction:: download_module_data
-.. autofunction:: get_available_ids
-.. autofunction:: get_available_tables
-.. autofunction:: get_data_for_id
-.. autofunction:: iter_data
-.. autofunction:: load_table
-.. autofunction:: register_filters
+.. autoclass:: sndata.sdss.Sako18Spec
+   :members:
+   :inherited-members:
