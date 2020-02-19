@@ -5,10 +5,9 @@
 surveys.
 """
 
-# from . import csp, des, essence, jla, sdss
+from . import csp, des, essence, jla, sdss
 # from ._combine_data import CombinedDataset
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
-from . import csp, des, essence, jla
 
 __version__ = '0.9.5'
 __author__ = 'Daniel Perrefort'
@@ -45,6 +44,7 @@ def get_zp(band_name):
         'sn3yr': des.SN3YR,
         'narayan16': essence.Narayan16,
         'betoule14': jla.Betoule14,
+        'sako18': sdss.Sako18
     }
 
     data_class = modules_dict[release]

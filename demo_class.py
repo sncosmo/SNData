@@ -24,6 +24,9 @@ class DataReleaseName(DataRelease):
         - data_type
         - publications
         - ads_url
+        - band_names  # Remove if the data release is spectroscopic
+        - zero_point  # Remove if the data release is spectroscopic
+        - lambda_effective  # Remove if the data release is spectroscopic
 
     Methods:
         - delete_module_data
@@ -57,31 +60,6 @@ class DataReleaseName(DataRelease):
 
         # Define urls for remote data
         self._data_url = 'some.url.gov'
-
-    def register_filters(self, force=False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered
-        """
-
-        pass
-
-    def _get_available_tables(self):
-        """Get available Ids for tables published by the paper for this data
-        release"""
-
-        table_nums = []
-        return sorted(table_nums)  # The returned Id's should be sorted
-
-    def _load_table(self, table_id):
-        """Return a table from the data paper for this survey / data
-
-        Args:
-            table_id: The published table number or table name
-        """
-
-        pass
 
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
@@ -127,3 +105,29 @@ class DataReleaseName(DataRelease):
                 url=self._data_url,
                 out_dir=self.data_dir,
                 mode='r:gz')
+
+    # For special cases
+    def register_filters(self, force=False):
+        """Register filters for this survey / data release with SNCosmo
+
+        Args:
+            force: Re-register a band if already registered
+        """
+
+        pass
+
+    def get_available_tables(self):
+        """Get available Ids for tables published by the paper for this data
+        release"""
+
+        table_nums = []
+        return sorted(table_nums)  # The returned Id's should be sorted
+
+    def load_table(self, table_id):
+        """Return a table from the data paper for this survey / data
+
+        Args:
+            table_id: The published table number or table name
+        """
+
+        pass

@@ -132,7 +132,7 @@ class DataRelease:
             An astropy table of data for the given ID
         """
 
-        if obj_id not in self._get_available_ids():
+        if obj_id not in self.get_available_ids():
             raise InvalidObjId(f'Object Id not available: {obj_id}')
 
         return self._get_data_for_id(obj_id, format_table)
