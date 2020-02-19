@@ -83,7 +83,16 @@ def fix_cds_readme(lines):
 
 
 class DR3(DataRelease):
-    """Describe the data set
+    """The DR3 class provides access to data from the third data release of
+    the Carnegie Supernova Project (CSP) which includes natural-system optical
+    (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that
+    were observed in 2004-2009 as part of the first stage of the Carnegie
+    Supernova Project (CSP-I). The sample consists of 123 Type Ia SNe, 5 Type
+    Iax SNe, 2 super-Chandrasekhar SN candidates, 2 Type Ia SNe interacting
+    with circumstellar matter, and 2 SN 2006bt-like events. The redshifts of
+    the objects range from z=0.0037 to 0.0835; the median redshift is 0.0241.
+    For 120 (90%) of these SNe, near-infrared photometry was obtained.
+    (Source: Krisciunas et al. 2017)
 
     Deviations from the standard UI:
         - None
@@ -183,16 +192,6 @@ class DR3(DataRelease):
             'csp_dr3_Hdw': 1.34
         }
 
-    # noinspection PyUnusedLocal
-    def _register_filters(self, force=False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered
-        """
-
-        pass
-
     def _get_available_tables(self):
         """Get available Ids for tables published by the paper for this data
         release"""
@@ -223,7 +222,6 @@ class DR3(DataRelease):
         files = self.photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
-    # noinspection PyUnusedLocal
     def _get_data_for_id(self, obj_id: str, format_table: bool = True):
         """Returns data for a given object ID
 
