@@ -4,6 +4,7 @@
 """This module defines the Essence Narayan16 API"""
 
 from pathlib import Path
+from typing import List
 
 import numpy as np
 from astropy.table import Table
@@ -13,7 +14,7 @@ from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
-def _format_table(data_table: Table):
+def _format_table(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
@@ -80,7 +81,7 @@ class Narayan16(PhotometricRelease):
         self._i_filter_url = 'https://www.noao.edu/kpno/mosaic/filters/asc6028.f287.r04.txt'
         self._filter_file_names = ('R_band.dat', 'I_band.dat')
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         utils.require_data_path(self._photometry_dir)
@@ -88,7 +89,7 @@ class Narayan16(PhotometricRelease):
         return sorted(Path(f).name.split('.')[0] for f in files)
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

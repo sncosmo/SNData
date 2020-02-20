@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 
 from astropy.coordinates import Angle
-from astropy.io import ascii
 from astropy.table import Table, vstack
 
 from .. import _utils as utils
@@ -76,11 +75,11 @@ class Balland09(SpectroscopicRelease):
         ids = (Path(f).name.split('_')[1] for f in files)
         return sorted(set(ids))
 
-    def _get_balland_meta(self, obj_id):
+    def _get_balland_meta(self, obj_id: str) -> Table:
         """Get the ra, dec, redshift and redshift error for a Balland09 SN
 
         Args:
-            obj_id (str): The Id of the Supernova
+            obj_id: The Id of the Supernova
         """
 
         # Get Coordinates
@@ -106,7 +105,7 @@ class Balland09(SpectroscopicRelease):
         return ra_deg.value, dec_deg, z, z_err
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

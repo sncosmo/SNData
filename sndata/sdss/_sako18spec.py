@@ -4,6 +4,7 @@
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
 import zipfile
+from typing import List, Union
 from urllib.parse import urljoin
 
 from astropy.table import Column, Table, vstack
@@ -59,7 +60,7 @@ class Sako18Spec(SpectroscopicRelease):
         self._base_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
         self._spectra_url = urljoin(self._base_url, 'Spectra.tar.gz')
 
-    def get_available_tables(self):
+    def get_available_tables(self) -> List[str]:
         """Get table numbers for machine readable tables published in the paper
         for this data release"""
 
@@ -76,13 +77,13 @@ class Sako18Spec(SpectroscopicRelease):
         return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
     @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id):
+    def load_table(self, table_id: Union[int, str]) -> Table:
         """Load a table from the data paper for this survey / data
 
         See ``get_available_tables`` for a list of valid table IDs.
 
         Args:
-            table_id (int, str): The published table number or table name
+            table_id: The published table number or table name
         """
 
         if table_id not in self.get_available_tables():
@@ -101,13 +102,13 @@ class Sako18Spec(SpectroscopicRelease):
 
         return table
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         return sorted(set(self.load_table(9)['CID']))
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

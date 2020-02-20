@@ -3,6 +3,7 @@
 
 """This module defines the DES SN3YR API"""
 
+from typing import List
 from typing import Union
 
 import numpy as np
@@ -13,11 +14,11 @@ from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
-def _format_sncosmo_table(data_table):
+def _format_sncosmo_table(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
-        data_table (Table): A data table returned by ``get_data_for_id``
+        data_table: A SN3YR table to format
 
     Returns:
         The same data in a new table following the SNCosmo data model
@@ -96,7 +97,7 @@ class SN3YR(PhotometricRelease):
             'DECam_z.dat',
             'DECam_Y.dat')
 
-    def get_available_tables(self):
+    def get_available_tables(self) -> List[str]:
         """Get available Ids for tables published by the paper for this data
         release"""
 
@@ -138,7 +139,7 @@ class SN3YR(PhotometricRelease):
 
         return data
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         # Load list of all target IDs
@@ -147,7 +148,7 @@ class SN3YR(PhotometricRelease):
         return sorted(f.lstrip('des_').rstrip('.dat') for f in file_list)
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

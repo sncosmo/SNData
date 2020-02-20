@@ -4,6 +4,7 @@
 """This module defines the CSP DR3 API"""
 
 import os
+from typing import List
 
 import numpy as np
 from astropy.table import Table
@@ -183,14 +184,14 @@ class DR3(PhotometricRelease):
             'csp_dr3_Hdw': 1.34
         }
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

@@ -3,6 +3,8 @@
 
 """This module defines the JLA Betoule14 API"""
 
+from typing import List
+
 import numpy as np
 import sncosmo
 from astropy.io import ascii, fits
@@ -203,7 +205,7 @@ class Betoule14(PhotometricRelease):
             new_band.name = new_band_name
             sncosmo.register(new_band, force=force)
 
-    def get_available_tables(self):
+    def get_available_tables(self) -> List[str]:
         """Get available Ids for tables published by the paper for this data
         release"""
 
@@ -213,7 +215,7 @@ class Betoule14(PhotometricRelease):
         file_list = dat_file_list + fits_file_list
         return sorted([str(f).rstrip('.datfit')[-2:] for f in file_list])
 
-    def load_table(self, table_id):
+    def load_table(self, table_id: str) -> Table:
         """Return a table from the data paper for this survey / data
 
         Args:
@@ -248,7 +250,7 @@ class Betoule14(PhotometricRelease):
         return sorted(str(f).split('-')[-1][:-5] for f in file_list)
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:

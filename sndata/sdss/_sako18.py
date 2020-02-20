@@ -5,6 +5,7 @@
 
 import tarfile
 from itertools import product
+from typing import List, Union
 from urllib.parse import urljoin
 
 import numpy as np
@@ -16,12 +17,12 @@ from ..exceptions import InvalidObjId
 
 
 @np.vectorize
-def _construct_band_name(filter_id, ccd_id):
+def _construct_band_name(filter_id: int, ccd_id: int) -> str:
     """Return the sncosmo band name given filter and CCD ID
 
     Args:
-        filter_id (int): Filter index 1 through 5 for 'ugriz'
-        ccd_id    (int): Column number 1 through 6
+        filter_id: Filter index 1 through 5 for 'ugriz'
+        ccd_id: Column number 1 through 6
 
     Args:
         The name of the filter registered with sncosmo
@@ -30,11 +31,11 @@ def _construct_band_name(filter_id, ccd_id):
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
-def _format_sncosmo_table(data_table):
+def _format_sncosmo_table(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
-        data_table (Table): A data table returned by ``get_data_for_id``
+        data_table: A data table returned by ``get_data_for_id``
 
     Returns:
         The same data in a new table following the SNCosmo data model
@@ -74,7 +75,8 @@ class Sako18(PhotometricRelease):
     module.
 
     Deviations from the standard UI:
-        - None
+        - The ``get_outliers`` method returns a dictionary of observations
+          visually flagged by the SDSS team as outliers.
 
     Cuts on returned data:
         - Data points manually marked as outliers by the SDSS research time
@@ -126,7 +128,7 @@ class Sako18(PhotometricRelease):
         self._smp_url = urljoin(self._base_url, 'SMP_Data.tar.gz')
         self._snana_url = urljoin(self._base_url, 'SDSS_dataRelease-snana.tar.gz')
 
-    def get_available_tables(self):
+    def get_available_tables(self) -> List[str]:
         """Get table numbers for machine readable tables published in the paper
         for this data release"""
 
@@ -143,7 +145,7 @@ class Sako18(PhotometricRelease):
         return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
     @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id):
+    def load_table(self, table_id: Union[int, str]) -> Table:
         """Load a table from the data paper for this survey / data
 
         See ``get_available_tables`` for a list of valid table IDs.
@@ -177,7 +179,7 @@ class Sako18(PhotometricRelease):
 
         return sorted(self.load_table('master')['CID'])
 
-    def get_outliers(self):
+    def get_outliers(self) -> dict:
         """Return a dictionary of data points marked by SDSS II as outliers
 
         Returns:
@@ -198,7 +200,7 @@ class Sako18(PhotometricRelease):
         return out_dict
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:
