@@ -13,7 +13,7 @@ from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
-
+from datetime import datetime
 log = logging.getLogger(__name__)
 
 
@@ -29,8 +29,7 @@ class Sako18Spec(SpectroscopicRelease):
     For the photometric data of this data release see the ``sako18`` module.
 
     Deviations from the standard UI:
-        - This module provides spectroscopic data and as such the
-          ``band_names`` and ``lambda_effective`` attributes are not available.
+        - None
 
     Cuts on returned data:
         - A spectrum is included in the data release for object ``15301``, but
@@ -140,8 +139,16 @@ class Sako18Spec(SpectroscopicRelease):
             # Get meta data for the current spectrum from the summary table
             data['sid'] = spec_id
             data['type'] = spec_type
-            data['date'] = summary_row['Date']
             data['telescope'] = summary_row['Telescope']
+
+            # Determine observed date in JD
+            observed_date = summary_row['Date']
+            if format_table:
+                date_with_timezone = summary_row['Date'] + '+0000'
+                date = datetime.strptime(date_with_timezone, '%Y-%m-%d%z')
+                observed_date = date.timestamp()
+
+            data['date'] = observed_date
             data_tables.append(data)
 
         out_data = vstack(data_tables)
