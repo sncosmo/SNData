@@ -116,4 +116,3 @@ Available Data
 
    package_api/sndata
    package_api/base_classes
-   package_api/custom_classes
