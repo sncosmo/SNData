@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module defines the base class of the data access API."""
+"""This module defines parent classes used by the data access API to define
+basic data handling and to enforce a consistent user interface. For an example
+on how to use these classes to create custom data access module for a new
+survey / data release, see the :ref:`CustomClasses` section of the docs."""
 
 import shutil
 from typing import List, Union

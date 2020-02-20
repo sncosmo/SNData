@@ -1,5 +1,5 @@
-Supernova Legacy Survey SNLS
-============================
+Supernova Legacy Survey (SNLS)
+==============================
 
 .. automodule:: sndata.snls
 

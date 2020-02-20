@@ -10,7 +10,7 @@ import numpy as np
 from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
-from ..base import SpectroscopicRelease
+from ..base_classes import SpectroscopicRelease
 
 
 def _read_file(path: Union[str, Path]) -> Tuple[float, float, Table]:

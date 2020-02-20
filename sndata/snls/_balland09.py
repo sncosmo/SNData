@@ -10,7 +10,7 @@ from astropy.coordinates import Angle
 from astropy.table import Table, vstack
 
 from .. import _utils as utils
-from ..base import SpectroscopicRelease
+from ..base_classes import SpectroscopicRelease
 from ..exceptions import InvalidObjId
 
 

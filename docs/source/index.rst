@@ -100,12 +100,20 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Module API Docs:
+   :caption: Module Docs:
 
-   module_docs/sndata
    module_docs/csp
    module_docs/des
    module_docs/essence
    module_docs/jla
    module_docs/sdss
    module_docs/snls
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: Top Level API:
+
+   package_api/sndata
+   package_api/base_classes
+   package_api/custom_classes

@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
-from ..base import SpectroscopicRelease
+from ..base_classes import SpectroscopicRelease
 
 
 class Sako18Spec(SpectroscopicRelease):

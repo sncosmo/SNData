@@ -10,7 +10,7 @@ import numpy as np
 from astropy.table import Table
 
 from sndata import _utils as utils
-from sndata.base import PhotometricRelease
+from sndata.base_classes import PhotometricRelease
 
 
 def parse_snoopy_data(path: str):
