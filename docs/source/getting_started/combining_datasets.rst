@@ -39,7 +39,7 @@ The resulting object provides the same user interface as the rest of the
 
     # Get data for a single object
     demo_id = list_of_ids[0]
-    data_table = get_data_for_id(demo_id)
+    data_table = combined_data.get_data_for_id(demo_id)
     print(data_table)
 
     # Iterate over data for all objects in the combined data set

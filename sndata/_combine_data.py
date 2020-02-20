@@ -350,7 +350,7 @@ class CombinedDataset:
 
         if len(obj_ids) <= 1:
             raise ValueError(
-                'Object IDs can only be joined in sets of 2 or more.')
+                'Object IDs can only be separated in sets of 2 or more.')
 
         obj_ids = set(obj_ids)
         for obj_id_set in self._joined_ids:

@@ -41,7 +41,8 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
         expected_obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
         expected_return = vstack(
             (expected_obj0_data, expected_obj1_data),
-            metadata_conflicts='silent')
+            metadata_conflicts='silent'
+        )
 
         # Join IDs and make sure we get the combined data from get_data_for_id
         # sorted operations are only to make unittest reports neater
@@ -54,7 +55,7 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
         )
 
         # Check we get the original data after seperating ids
-        self.test_class.separate_ids(test_ids[0])
+        self.test_class.separate_ids(*test_ids[0])
         obj0_data = self.test_class.get_data_for_id(test_ids[0], True)
         obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
         self.assertListEqual(
