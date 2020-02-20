@@ -16,4 +16,3 @@ class Betoule14(TestCase, template_tests.PhotometricDataParsing):
     def setUpClass(cls):
         cls.test_class = jla.Betoule14()
         cls.test_class.download_module_data()
-

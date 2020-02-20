@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-from os import environ
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import numpy as np

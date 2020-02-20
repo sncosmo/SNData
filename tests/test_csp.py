@@ -17,7 +17,6 @@ class DR1(TestCase, template_tests.SpectroscopicDataParsing):
     def setUpClass(cls):
         cls.test_class = csp.DR1()
         cls.test_class.download_module_data()
-        cls.date_col_name = 'date'
 
 
 class DR3(TestCase, template_tests.PhotometricDataParsing):
@@ -26,7 +25,6 @@ class DR3(TestCase, template_tests.PhotometricDataParsing):
     def setUpClass(cls):
         cls.test_class = csp.DR3()
         cls.test_class.download_module_data()
-
 
     def test_instrument_offsets_ar_applied(self):
         """Test returned DR3 data includes the instrument offset using a

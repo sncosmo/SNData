@@ -18,7 +18,6 @@ class Sako18(TestCase, template_tests.PhotometricDataParsing):
         cls.test_class.download_module_data()
 
 
-
 class Sako18Spec(TestCase, template_tests.SpectroscopicDataParsing):
     """Generic tests for a given survey"""
 
@@ -26,4 +25,3 @@ class Sako18Spec(TestCase, template_tests.SpectroscopicDataParsing):
     def setUpClass(cls):
         cls.test_class = sdss.Sako18Spec()
         cls.test_class.download_module_data()
-        cls.date_col_name = 'date'
