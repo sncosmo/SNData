@@ -5,25 +5,27 @@
 
 import logging
 from copy import copy
+from typing import List, Tuple, Union
 
 import pandas as pd
-from astropy.table import vstack
+from astropy.table import Table, vstack
 
 from . import _utils as utils
 from . import csp, des, essence, jla, sdss
 from .exceptions import InvalidObjId, ObservedDataTypeError
 
+CombinedID = Tuple[str]
 log = logging.getLogger(__name__)
 
 
 # Todo: Test this function with a dedicated unit test
-def get_zp(band_name):
+def get_zp(band_name: str) -> float:
     """Return the zero point used by sndata for a given bandpass
 
     bandpass names are case sensitive.
 
     Args:
-        band_name (str): The name of the sndata bandpass
+        band_name: The name of the sndata bandpass
 
     Returns:
         The zero point as a float
@@ -47,11 +49,11 @@ def get_zp(band_name):
     return data_class.get_zp_for_band(band_name)
 
 
-def _reduce_id_mapping(id_list):
+def _reduce_id_mapping(id_list: List[CombinedID]) -> list:
     """Combine a list of sets by combining any sets with shared elements
 
     Args
-        id_list (list[tuple[str]]): List of object IDs to join
+        id_list: List of object IDs to join
 
     Returns:
         A list of combined sets
@@ -115,7 +117,7 @@ class CombinedDataset:
         self._obj_id_dataframe = None
 
     @property
-    def _obj_ids(self):
+    def _obj_ids(self) -> pd.DataFrame:
         if self._obj_id_dataframe is not None:
             return self._obj_id_dataframe
 
@@ -137,7 +139,7 @@ class CombinedDataset:
         return self._obj_id_dataframe
 
     @property
-    def band_names(self):
+    def band_names(self) -> Tuple[str]:
         """Assuming all the combined data releases are photometric
         return the unique bandpass names
         """
@@ -151,14 +153,14 @@ class CombinedDataset:
         return tuple(sorted(all_band_names))
 
     @property
-    def zero_point(self):
+    def zero_point(self) -> Tuple[float]:
         return tuple(get_zp(b) for b in self.band_names)
 
-    def download_module_data(self, force=False):
+    def download_module_data(self, force: bool = False):
         """Download data for all combined surveys / data releases
 
         Args:
-            force (bool): Re-Download locally available data (Default: False)
+            force: Re-Download locally available data (Default: False)
         """
 
         for name, module in self._data_releases.items():
@@ -171,7 +173,7 @@ class CombinedDataset:
         for module in self._data_releases.values():
             module.delete_module_data()
 
-    def get_available_ids(self):
+    def get_available_ids(self) -> List[CombinedID]:
         """Return a table of object IDs available in the combined data set"""
 
         data_order = ['obj_id', 'release', 'survey']
@@ -179,11 +181,11 @@ class CombinedDataset:
             zip(*[self._obj_ids[c].values.tolist() for c in data_order])
         )
 
-    def register_filters(self, force:bool=False):
+    def register_filters(self, force: bool = False):
         """Register filters for the combined data with SNCosmo
 
         Args:
-            force: Whether to re-register a band if already registered (Default: False)
+            force: Re-register a band if already registered (Default: False)
         """
 
         for data_class in self._data_releases.values():
@@ -194,12 +196,13 @@ class CombinedDataset:
                 raise utils.NoDownloadedData(
                     f'No data downloaded for {data_class.__name__}')
 
-    def _get_data_single_id(self, obj_id, format_table=True):
+    def _get_data_single_id(
+            self, obj_id: Tuple[str], format_table: bool = True) -> Table:
         """Return data for a given object ID
 
         Args:
-            obj_id   (tuple[str]): The ID of the desired object
-            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
+            obj_id: The ID of the desired object
+            format_table: Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -214,22 +217,20 @@ class CombinedDataset:
         if len(id_data) == 0:
             raise InvalidObjId(f'Unrecognized object ID: {obj_id}')
 
-        module_key = \
-            f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
-
+        module_key = f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
         data_module = self._data_releases[module_key]
-        return data_module.get_data_for_id(
-            obj_id[0], format_table=format_table)
+        return data_module.get_data_for_id(obj_id[0], format_table=format_table)
 
-    def _get_data_id_list(self, obj_id_list, format_table=True):
+    def _get_data_id_list(
+            self, obj_id_list: List[CombinedID], format_table: bool = True):
         """Return data for a list of object ID
 
         Data tables for individual object IDs are vertically stacked. Meta
         data for each individual obj_id is stored in the combined
 
         Args:
-            obj_id_list (list[tuple[str]]): The ID of the desired object
-            format_table          (bool): Format data for SNCosmo.fit_lc (Default: False)
+            obj_id_list: The ID of the desired object
+            format_table: Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -257,7 +258,8 @@ class CombinedDataset:
 
         return combined_table
 
-    def get_data_for_id(self, obj_id, format_table=True):
+    def get_data_for_id(
+            self, obj_id: CombinedID, format_table: bool = True) -> Table:
         """Return data for a given object ID
 
         See ``get_available_ids()`` for a table of available ID values. Object
@@ -276,8 +278,13 @@ class CombinedDataset:
 
         return self._get_data_single_id(obj_id, format_table)
 
-    def iter_data(self, survey=None, release=None, verbose=False,
-                  format_table=True, filter_func=None):
+    def iter_data(
+            self,
+            survey: str = None,
+            release: str = None,
+            verbose: Union[bool, dict] = False,
+            format_table: bool = True,
+            filter_func: callable = None) -> Table:
         """Iterate through all available targets and yield data tables
 
         An optional progress bar can be formatted by passing a dictionary of tqdm
@@ -285,11 +292,11 @@ class CombinedDataset:
         ``filter_func`` that accepts a data table and returns a boolean.
 
         Args:
-            survey          (str): Only include data from a given survey (Default: None)
-            release         (str): Only include data from a given data release (Default: None)
-            verbose  (bool, dict): Optionally display progress bar while iterating (Default: False)
-            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
-            filter_func    (func): An optional function to filter outputs by
+            survey: Only include data from a given survey (Default: None)
+            release: Only include data from a given data release (Default: None)
+            verbose: Optionally display progress bar while iterating (Default: False)
+            format_table: Format data for SNCosmo.fit_lc (Default: False)
+            filter_func: An optional function to filter outputs by
 
         Yields:
             Astropy tables
@@ -311,7 +318,7 @@ class CombinedDataset:
             if filter_func(data):
                 yield data
 
-    def get_joined_ids(self):
+    def get_joined_ids(self) -> List[CombinedID]:
         """Return a list of joined object IDs
 
         Return:
@@ -320,11 +327,11 @@ class CombinedDataset:
 
         return copy(self._joined_ids)
 
-    def join_ids(self, *obj_ids):
-        """Join a list of object ID values to indicate the same object
+    def join_ids(self, *obj_ids: CombinedID):
+        """Join object ID values to indicate the same object
 
         Args:
-            obj_ids (list[tuple[str]]): List of object IDs to join
+            obj_ids: Object IDs to join
         """
 
         if len(obj_ids) <= 1:
@@ -334,11 +341,11 @@ class CombinedDataset:
         self._joined_ids.append(set(obj_ids))
         self._joined_ids = _reduce_id_mapping(self._joined_ids)
 
-    def separate_ids(self, obj_ids):
-        """Separate a list of object IDs so they are no longer joined to other IDs
+    def separate_ids(self, *obj_ids: CombinedID):
+        """Separate object IDs so they are no longer joined to other IDs
 
         Args:
-            obj_ids (tuple[str]): List of object IDs to separate
+            obj_ids: List of object IDs to separate
         """
 
         if len(obj_ids) <= 1:
