@@ -4,6 +4,7 @@
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
 import zipfile
+from pathlib import Path
 from typing import List, Union
 from urllib.parse import urljoin
 
@@ -53,7 +54,7 @@ class Sako18Spec(SpectroscopicRelease):
         # Local paths
         self._table_dir = self._data_dir / 'tables/'  # Tables from the published paper
         self._spectra_dir = self._data_dir / 'Spectra_txt'  # spectra files
-        self._spectra_zip = self._data_dir / 'Spectra_txt.zip'  # compressed spectra files
+        self._spectra_zip = Path(__file__).parent / 'Spectra_txt.zip'  # compressed spectra files
         self._table_names = 'master_data.txt', 'Table2.txt', 'Table9.txt', 'Table11.txt', 'Table12.txt'
 
         # Define urls and file names for remote data
