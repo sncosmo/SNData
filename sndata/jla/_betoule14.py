@@ -9,11 +9,11 @@ from astropy.io import ascii, fits
 from astropy.table import Table
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
-class Betoule14(DataRelease):
+class Betoule14(PhotometricRelease):
     """The ``Betoule14`` module provides access to light-curves used in a joint
     analysis of type Ia supernova (SN Ia) observations obtained by the SDSS-II
     and SNLS collaborations. The data set includes several low-redshift samples
@@ -39,7 +39,6 @@ class Betoule14(DataRelease):
     survey_abbrev = 'JLA'
     release = 'Betoule14'
     survey_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/ReadMe.html'
-    data_type = 'photometric'
     publications = ('Betoule et al. (2014)',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2014A%26A...568A..22B/abstract'
 
@@ -160,11 +159,14 @@ class Betoule14(DataRelease):
     )
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._photometry_dir = self.data_dir / 'jla_light_curves'  # Photometry data
-        self._table_dir = self.data_dir / 'tables'  # Vizier tables
-        self._filter_path = self.data_dir / 'cfht_filters.txt'
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._photometry_dir = self._data_dir / 'jla_light_curves'  # Photometry data
+        self._table_dir = self._data_dir / 'tables'  # Vizier tables
+        self._filter_path = self._data_dir / 'cfht_filters.txt'
 
         # Define urls for remote data
         self._photometry_url = 'http://supernovae.in2p3.fr/sdss_snls_jla/jla_light_curves.tgz'
@@ -332,7 +334,7 @@ class Betoule14(DataRelease):
             print('Downloading photometry...')
             utils.download_tar(
                 url=self._photometry_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
         # Download Filters

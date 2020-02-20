@@ -9,7 +9,7 @@ import numpy as np
 from astropy.table import Table
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -37,7 +37,7 @@ def _format_table(data_table: Table):
     return out_table
 
 
-class Narayan16(DataRelease):
+class Narayan16(PhotometricRelease):
     """The ``Narayan16`` class provides access to photometric data for 213
     Type Ia supernovae discovered by the ESSENCE survey at redshifts
     0.1 <= z <= 0.81 between 2002 and 2008. It includes R and I band photometry
@@ -56,7 +56,6 @@ class Narayan16(DataRelease):
     survey_abbrev = 'ESSENCE'
     release = 'Narayan16'
     survey_url = 'http://www.ctio.noao.edu/essence/'
-    data_type = 'photometric'
     publications = ('Narayan et al. 2016',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2016ApJS..224....3N/abstract'
 
@@ -66,11 +65,14 @@ class Narayan16(DataRelease):
     zero_point = tuple(27.5 for _ in band_names)
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._table_dir = self.data_dir / 'vizier'
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._table_dir = self._data_dir / 'vizier'
         self._photometry_dir = self._table_dir / 'lcs'
-        self._filter_dir = self.data_dir / 'filters'
+        self._filter_dir = self._data_dir / 'filters'
 
         # Define urls for remote data
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJS/224/3'

@@ -4,10 +4,10 @@
 """This module defines the <INSERT DATA RELEASE NAME> API"""
 
 from sndata import _utils as utils
-from sndata._base import DataRelease
+from sndata.base import SpectroscopicRelease
 
 
-class DataReleaseName(DataRelease):
+class DataReleaseName(SpectroscopicRelease):
     """<Describe the data set> (Source: <Cite a publication>)
 
     Deviations from the standard UI:
@@ -55,8 +55,8 @@ class DataReleaseName(DataRelease):
     def __init__(self):
         # Define local paths of published data
         self._find_or_create_data_dir()
-        self._table_dir = self.data_dir / 'tables'  # Paper tables
-        self._spectra_dir = self.data_dir / 'spectra'
+        self._table_dir = self._data_dir / 'tables'  # Paper tables
+        self._spectra_dir = self._data_dir / 'spectra'
 
         # Define urls for remote data
         self._data_url = 'some.url.gov'
@@ -103,7 +103,7 @@ class DataReleaseName(DataRelease):
             print('Downloading something else...')
             utils.download_tar(
                 url=self._data_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
     # For special cases

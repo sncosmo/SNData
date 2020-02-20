@@ -9,10 +9,10 @@ from urllib.parse import urljoin
 from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import SpectroscopicRelease
 
 
-class Sako18Spec(DataRelease):
+class Sako18Spec(SpectroscopicRelease):
     """The ``Sako18Spec`` class provides access to the **spectroscopic** data
     release of the Sloan Digital Sky Survey-II (SDSS-II) Supernova Survey
     conducted between 2005 and 2007. Light curves are presented for 10,258
@@ -41,16 +41,18 @@ class Sako18Spec(DataRelease):
     survey_abbrev = 'SDSS'
     release = 'Sako18Spec'
     survey_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
-    data_type = 'photometric'
     publications = ('Sako et al. (2018)',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract'
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._table_dir = self.data_dir / 'tables/'  # Tables from the published paper
-        self._spectra_dir = self.data_dir / 'Spectra_txt'  # spectra files
-        self._spectra_zip = self.data_dir / 'Spectra_txt.zip'  # compressed spectra files
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._table_dir = self._data_dir / 'tables/'  # Tables from the published paper
+        self._spectra_dir = self._data_dir / 'Spectra_txt'  # spectra files
+        self._spectra_zip = self._data_dir / 'Spectra_txt.zip'  # compressed spectra files
         self._table_names = 'master_data.txt', 'Table2.txt', 'Table9.txt', 'Table11.txt', 'Table12.txt'
 
         # Define urls and file names for remote data
@@ -196,4 +198,4 @@ class Sako18Spec(DataRelease):
         if force or not self._spectra_dir.exists():
             print('Unzipping spectra...')
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
-                zip_ref.extractall(self.data_dir)
+                zip_ref.extractall(self._data_dir)

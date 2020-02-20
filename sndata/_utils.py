@@ -4,6 +4,7 @@
 """This module provides general utilities."""
 
 import functools
+import os
 import tarfile
 from copy import deepcopy
 from pathlib import Path, PosixPath
@@ -17,6 +18,33 @@ import sncosmo
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
+
+
+def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
+    """Determine the directory where data files are stored for a data release
+
+    If the directory does not exist, create it.
+
+    Args:
+        survey_abbrev: Abbreviation of the survey to load data for (e.g., CSP)
+        release: Name of the data release from the survey (e.g., DR1)
+
+    Returns:
+        The path of the directory where
+    """
+
+    safe_survey = survey_abbrev.lower().replace(' ', '_')
+    safe_release = release.lower().replace(' ', '_')
+
+    if 'SNDATA_DIR' in os.environ:
+        base_dir = Path(os.environ['SNDATA_DIR']).resolve()
+
+    else:
+        base_dir = Path(__file__).resolve().parent / 'data'
+
+    data_dir = base_dir / safe_survey / safe_release
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return data_dir
 
 
 def lru_copy_cache(maxsize: int = 128, typed: bool = False, copy: bool = True):
@@ -185,7 +213,7 @@ def require_data_path(*data_dirs: Path):
             raise NoDownloadedData()
 
 
-def read_vizier_table_descriptions(readme_path: str):
+def read_vizier_table_descriptions(readme_path: Union[Path, str]):
     """Returns the table descriptions from a vizier readme file
 
     Args:

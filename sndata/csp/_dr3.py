@@ -9,7 +9,7 @@ import numpy as np
 from astropy.table import Table
 
 from sndata import _utils as utils
-from sndata._base import DataRelease
+from sndata.base import PhotometricRelease
 
 
 def parse_snoopy_data(path: str):
@@ -89,7 +89,7 @@ def fix_dr3_readme(readme_path: str):
         readme.writelines(lines)
 
 
-class DR3(DataRelease):
+class DR3(PhotometricRelease):
     """The ``DR3`` class provides access to data from the third data release of
     the Carnegie Supernova Project (CSP) which includes natural-system optical
     (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that
@@ -112,7 +112,6 @@ class DR3(DataRelease):
     survey_abbrev = 'CSP'
     release = 'DR3'
     survey_url = 'https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released'
-    data_type = 'photometric'
     publications = ('Krisciunas et al. 2017',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2017AJ....154..278K/abstract'
 
@@ -133,11 +132,14 @@ class DR3(DataRelease):
         12383.2, 16282.8)
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._photometry_dir = self.data_dir / 'DR3'  # DR3 Light Curves
-        self._filter_dir = self.data_dir / 'filters'  # DR3 Filters
-        self._table_dir = self.data_dir / 'tables'  # DR3 paper tables
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._photometry_dir = self._data_dir / 'DR3'  # DR3 Light Curves
+        self._filter_dir = self._data_dir / 'filters'  # DR3 Filters
+        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
 
         # Define urls for remote data
         self._photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
@@ -244,7 +246,7 @@ class DR3(DataRelease):
             print('Downloading photometry...')
             utils.download_tar(
                 url=self._photometry_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
         # Download filters

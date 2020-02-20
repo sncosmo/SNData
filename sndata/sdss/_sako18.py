@@ -11,7 +11,7 @@ import numpy as np
 from astropy.table import Column, Table
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -61,7 +61,7 @@ def _format_sncosmo_table(data_table):
     return out_table
 
 
-class Sako18(DataRelease):
+class Sako18(PhotometricRelease):
     """The ``Sako18`` class provides access to the **photometric** data release
     of the Sloan Digital Sky Survey-II (SDSS-II) Supernova Survey conducted
     between 2005 and 2007. Light curves are presented for 10,258 variable and
@@ -105,12 +105,15 @@ class Sako18(DataRelease):
     )
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._filter_dir = self.data_dir / 'doi_2010_filters/'  # Transmission filters
-        self._table_dir = self.data_dir / 'tables/'  # Tables from the published paper
-        self._smp_dir = self.data_dir / 'SMP_Data/'  # SMP data files (photometric light-curves)
-        self._snana_dir = self.data_dir / 'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._filter_dir = self._data_dir / 'doi_2010_filters/'  # Transmission filters
+        self._table_dir = self._data_dir / 'tables/'  # Tables from the published paper
+        self._smp_dir = self._data_dir / 'SMP_Data/'  # SMP data files (photometric light-curves)
+        self._snana_dir = self._data_dir / 'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
         self._outlier_path = self._snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
 
         self._filter_file_names = tuple(f'{b}{c}.dat' for b, c in product('ugriz', '123456'))
@@ -254,7 +257,7 @@ class Sako18(DataRelease):
             print('Downloading SMP data...')
             utils.download_tar(
                 url=self._smp_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
         # SNANA files - including files specifying "bad" photometry data points
@@ -262,7 +265,7 @@ class Sako18(DataRelease):
             print('Downloading SNANA data...')
             utils.download_tar(
                 url=self._snana_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
             # Unzip file listing "bad" photometry

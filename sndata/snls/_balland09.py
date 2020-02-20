@@ -11,7 +11,7 @@ from astropy.io import ascii
 from astropy.table import Table, vstack
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import SpectroscopicRelease
 from ..exceptions import InvalidObjId
 
 
@@ -33,7 +33,7 @@ def fix_balland09_cds_readme(readme_path):
         data_in.writelines(lines)
 
 
-class Balland09(DataRelease):
+class Balland09(SpectroscopicRelease):
     """The ``Ballan09`` class  provides access to to the three year data 
     release of the Supernova Legacy Survey (SNLS) performed by the 
     Canada-France-Hawaï Telescope (CFHT). It includes 139 spectra of 124 
@@ -52,15 +52,17 @@ class Balland09(DataRelease):
     survey_abbrev = 'SNLS'
     release = 'Balland09'
     survey_url = 'http://supernovae.in2p3.fr/~balland/VltRelease/'
-    data_type = 'spectroscopic'
     publications = ('Balland et al. 2009',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract'
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._spectra_dir = self.data_dir / 'spectra'  # DR1 spectra
-        self._table_dir = self.data_dir / 'tables'  # DR3 paper tables
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._spectra_dir = self._data_dir / 'spectra'  # DR1 spectra
+        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
 
         # Define urls for remote data
         self._phase_spectra_url = 'http://supernovae.in2p3.fr/~balland/VltRelease/PHASE_spec_Balland09.tar.gz'

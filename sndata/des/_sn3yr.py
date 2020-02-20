@@ -9,7 +9,7 @@ import numpy as np
 from astropy.table import Table
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -35,7 +35,7 @@ def _format_sncosmo_table(data_table):
     return out_table
 
 
-class SN3YR(DataRelease):
+class SN3YR(PhotometricRelease):
     """The ``SN3YR`` class provides access to data from the first public data
     release of the Dark Energy Survey Supernova Program, DES-SN3YR. It includes
     griz light curves of 251 supernovae from the first 3 years of the Dark
@@ -54,7 +54,6 @@ class SN3YR(DataRelease):
     survey_abbrev = 'DES'
     release = 'SN3YR'
     survey_url = 'https://des.ncsa.illinois.edu/'
-    data_type = 'photometric'
     publications = (
         'Burke et al. 2017',
         'Brout et al. 2019',
@@ -75,11 +74,14 @@ class SN3YR(DataRelease):
     lambda_effective = (5270, 6590, 7890, 9760, 10030)
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._filter_dir = self.data_dir / '01-FILTERS' / 'DECam'
-        self._photometry_dir = self.data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
-        self._fits_dir = self.data_dir / '04-BBCFITS'
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._filter_dir = self._data_dir / '01-FILTERS' / 'DECam'
+        self._photometry_dir = self._data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
+        self._fits_dir = self._data_dir / '04-BBCFITS'
 
         # Define urls for remote data
         _des_url = 'http://desdr-server.ncsa.illinois.edu/despublic/sn_files/y3/tar_files/'
@@ -199,7 +201,7 @@ class SN3YR(DataRelease):
             print('Downloading filters...')
             utils.download_tar(
                 url=self._filter_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
         if (force or not self._photometry_dir.exists()) \
@@ -207,7 +209,7 @@ class SN3YR(DataRelease):
             print('Downloading photometry...')
             utils.download_tar(
                 url=self._photometry_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
 
         if (force or not self._fits_dir.exists()) \
@@ -215,5 +217,5 @@ class SN3YR(DataRelease):
             print('Downloading Light-Curve Fits...')
             utils.download_tar(
                 url=self._fits_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')

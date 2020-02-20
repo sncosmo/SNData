@@ -4,16 +4,16 @@
 """This module defines the CSP DR1 API"""
 
 from pathlib import Path
-from typing import Union
+from typing import List, Union, Tuple
 
 import numpy as np
 from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
-from .._base import DataRelease
+from ..base import SpectroscopicRelease
 
 
-def _read_file(path: Union[str, Path]):
+def _read_file(path: Union[str, Path]) -> Tuple[float, float, Table]:
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:
@@ -57,7 +57,7 @@ def _read_file(path: Union[str, Path]):
     return max_date, redshift, data
 
 
-class DR1(DataRelease):
+class DR1(SpectroscopicRelease):
     """The ``DR1`` class provides access to spectra from the first release of
     optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
     the Carnegie Supernova Project. It includes 604 previously unpublished
@@ -66,9 +66,7 @@ class DR1(DataRelease):
     (Source: Folatelli et al. 2013)
 
     Deviations from the standard UI:
-        - This module provides spectroscopic data and as such the
-          ``band_names``, and ``lambda_effective`` attributes are not
-          available.
+        - None
 
     Cuts on returned data:
         - None
@@ -79,21 +77,23 @@ class DR1(DataRelease):
     release = 'DR1'
     survey_abbrev = 'CSP'
     survey_url = 'https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1'
-    data_type = 'spectroscopic'
     publications = ('Folatelli et al. 2013',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2013ApJ...773...53F/abstract'
 
     def __init__(self):
-        # Define local paths of published data
-        self._find_or_create_data_dir()
-        self._spectra_dir = self.data_dir / 'CSP_spectra_DR1'  # DR1 spectra
-        self._table_dir = self.data_dir / 'tables'  # DR3 paper tables
+        """Define local and remote paths of data"""
+
+        super().__init__()
+
+        # Local paths
+        self._spectra_dir = self._data_dir / 'CSP_spectra_DR1'  # DR1 spectra
+        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
 
         # Define urls for remote data
         self._spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJ/773/53'
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         utils.require_data_path(self._spectra_dir)
@@ -102,7 +102,7 @@ class DR1(DataRelease):
         return sorted(set(ids))
 
     # noinspection PyUnusedLocal
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True):
+    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:
@@ -146,7 +146,6 @@ class DR1(DataRelease):
         # Download data tables
         if (force or not self._table_dir.exists()) \
                 and utils.check_url(self._table_url):
-
             print('Downloading data tables...')
             utils.download_tar(
                 url=self._table_url,
@@ -156,9 +155,8 @@ class DR1(DataRelease):
         # Download spectra
         if (force or not self._spectra_dir.exists()) \
                 and utils.check_url(self._spectra_url):
-
             print('Downloading spectra...')
             utils.download_tar(
                 url=self._spectra_url,
-                out_dir=self.data_dir,
+                out_dir=self._data_dir,
                 mode='r:gz')
