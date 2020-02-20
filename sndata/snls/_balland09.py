@@ -132,7 +132,6 @@ class Balland09(SpectroscopicRelease):
                 comment='[#]|[@]'
             )
 
-            # Todo: Convert phase to JD
             data_table['type'] = fpath.name.split('_')[0].lower()
             data_table['phase'] = float(data_table.meta['comments'][7].split()[-1])
             tables.append(data_table)

@@ -16,7 +16,7 @@ from .exceptions import InvalidObjId, ObservedDataTypeError
 log = logging.getLogger(__name__)
 
 
-# Todo: Test this function
+# Todo: Test this function with a dedicated unit test
 def get_zp(band_name):
     """Return the zero point used by sndata for a given bandpass
 
