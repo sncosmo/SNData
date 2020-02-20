@@ -24,14 +24,15 @@ object.
 
     combined_data = CombinedDataset(csp.DR3(), des.SN3YR())
 
-    # Download all data for the combined data releases
-    combined_data.download_module_data()
 
 The resulting object provides the same user interface as the rest of the
 **SNData** package, including having the same method names:
 
 .. code-block:: python
    :linenos:
+
+    # Download all data for the combined data releases
+    combined_data.download_module_data()
 
     # Get a list of available objects
     list_of_ids = combined_data.get_available_ids()
