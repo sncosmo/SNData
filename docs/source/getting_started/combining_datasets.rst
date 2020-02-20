@@ -108,9 +108,6 @@ There are a handful of meta data features provided for individual data releases
 that are not supported for combined data sets. The following attributes
 do not exist for ``CombinedDataset`` objects:
 
-- ``survey_name``
-- ``survey_abbrev``
-- ``survey_url``
-- ``publications``
-- ``ads_url``
+- ``get_vailable_tables``
+- ``load_tables``
 
