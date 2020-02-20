@@ -10,6 +10,7 @@ import pandas as pd
 from astropy.table import vstack
 
 from . import _utils as utils
+from .exceptions import InvalidObjId
 
 log = logging.getLogger(__name__)
 
@@ -150,7 +151,7 @@ class CombinedDataset:
             ]
 
         if len(id_data) == 0:
-            raise ValueError(f'Unrecognized object ID: {obj_id}')
+            raise InvalidObjId(f'Unrecognized object ID: {obj_id}')
 
         module_key = \
             f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"

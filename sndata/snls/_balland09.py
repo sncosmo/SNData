@@ -6,6 +6,7 @@
 import logging
 import os
 from pathlib import Path
+from typing import Tuple
 
 from astropy.coordinates import Angle
 from astropy.table import Table, vstack
@@ -78,7 +79,7 @@ class Balland09(SpectroscopicRelease):
         ids = (Path(f).name.split('_')[1] for f in files)
         return sorted(set(ids))
 
-    def _get_balland_meta(self, obj_id: str) -> Table:
+    def _get_balland_meta(self, obj_id: str) -> Tuple[float]:
         """Get the ra, dec, redshift and redshift error for a Balland09 SN
 
         Args:
@@ -131,6 +132,7 @@ class Balland09(SpectroscopicRelease):
                 comment='[#]|[@]'
             )
 
+            # Todo: Convert phase to JD
             data_table['type'] = fpath.name.split('_')[0].lower()
             data_table['phase'] = float(data_table.meta['comments'][7].split()[-1])
             tables.append(data_table)

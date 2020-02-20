@@ -12,10 +12,10 @@ from astropy.table import vstack
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
-from .base_tests import DataParsingTestBase
+from . import template_tests
 
 
-class Combined(DataParsingTestBase):
+class Combined(TestCase, template_tests.PhotometricDataParsing):
     """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
 
     @classmethod
@@ -23,6 +23,7 @@ class Combined(DataParsingTestBase):
         cls.joined_surveys = (csp.DR3(), des.SN3YR())
         cls.test_class = CombinedDataset(*cls.joined_surveys)
         cls.test_class.download_module_data()
+
 
     def test_obj_id_dataframe(self):
         """Test for expected data releases in object id DataFrame"""
@@ -68,12 +69,6 @@ class Combined(DataParsingTestBase):
             sorted(obj1_data.as_array().tolist()),
             'Incorrect data for second ID after joining.'
         )
-
-    def test_ids_are_sorted(self):
-        self._test_ids_are_sorted()
-
-    def test_no_empty_data_tables(self):
-        self._test_no_empty_data_tables(10)
 
 
 class MapReduction(TestCase):

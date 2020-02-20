@@ -22,7 +22,7 @@ object.
 
     from sndata import CombinedDataset, csp, des
 
-    combined_data = CombinedDataset(csp.dr3, des.sn3yr)
+    combined_data = CombinedDataset(csp.DR3(), des.SN3YR())
 
     # Download all data for the combined data releases
     combined_data.download_module_data()
