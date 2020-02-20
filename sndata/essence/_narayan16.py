@@ -30,7 +30,7 @@ def _format_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = data_table['JD']
+    out_table['time'] = utils.convert_to_jd(data_table['MJD'])
     out_table['band'] = ['csp_dr3_' + band for band in data_table['Passband']]
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
@@ -106,27 +106,31 @@ class Narayan16(PhotometricRelease):
         if obj_id not in self.get_available_ids():
             raise InvalidObjId()
 
+        # Get photometric data
         path = self._photometry_dir / f'{obj_id}.W6yr.clean.nn2.Wstd.dat'
         data_table = Table.read(
             path, format='ascii',
-            names=['Observation', 'MJD', 'Passband', 'Flux', 'Fluxerr_lo',
-                   'Fluxerr_hi']
+            names=['Observation', 'MJD', 'Passband', 'Flux', 'Fluxerr_lo', 'Fluxerr_hi']
         )
 
-        data_table['JD'] = utils.convert_to_jd(data_table['MJD'])
-
         # Get meta data
-        with open(path) as infile:
-            keys = infile.readline().lstrip('# ').split()
-            vals = infile.readline().lstrip('# ').split()
-
-        for k, v in zip(keys, vals):
-            data_table.meta[k] = v
-
-        # Enforce uniformity across package
-        data_table.meta['obj_id'] = data_table.meta.pop('objid')
-
-        # Remove column names from table comments
+        table_6 = self.load_table(6)
+        object_metadata = table_6[table_6['ESSENCE'] == obj_id][0]
+        ra, dec = utils.hourangle_to_degrees(
+            rah=object_metadata['RAh'],
+            ram=object_metadata['RAm'],
+            ras=object_metadata['RAs'],
+            dec_sign=object_metadata['DE-'],
+            decd=object_metadata['DEd'],
+            decm=object_metadata['DEm'],
+            decs=object_metadata['DEs']
+        )
+        
+        data_table.meta['obj_id'] = obj_id
+        data_table.meta['ra'] = ra
+        data_table.meta['dec'] = dec
+        data_table.meta['z'] = object_metadata['zSNID']
+        data_table.meta['z_err'] = object_metadata['e_zSNID']
         del data_table.meta['comments']
 
         if format_table:

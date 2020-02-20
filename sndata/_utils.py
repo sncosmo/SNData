@@ -44,8 +44,10 @@ def hourangle_to_degrees(
         decs: Dec arcsec
     """
 
-    ra = Angle((rah, ram, ras), unit='hourangle').to('deg')
+    # Convert Right Ascension
+    ra = Angle((rah, ram, ras), unit='hourangle').to('deg').value
 
+    # Convert Declination
     sign = -1 if dec_sign == '-' else 1
     dec = (
             sign * decd +  # Already in degrees
