@@ -146,9 +146,11 @@ class Sako18Spec(SpectroscopicRelease):
             if format_table:
                 date_with_timezone = summary_row['Date'] + '+0000'
                 date = datetime.strptime(date_with_timezone, '%Y-%m-%d%z')
-                observed_date = date.timestamp()
+                data['time'] = date.timestamp()
 
-            data['date'] = observed_date
+            else:
+                data['date'] = observed_date
+
             data_tables.append(data)
 
         out_data = vstack(data_tables)

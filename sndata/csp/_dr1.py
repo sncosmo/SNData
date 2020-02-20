@@ -104,7 +104,6 @@ class DR1(SpectroscopicRelease):
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))
 
-    # noinspection PyUnusedLocal
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
@@ -137,7 +136,10 @@ class DR1(SpectroscopicRelease):
             out_table.meta['z_err'] = None
             del out_table.meta['comments']
 
-            return out_table
+        if format_table:
+            out_table.rename_column('date', 'time')
+
+        return out_table
 
     def download_module_data(self, force: bool = False):
         """Download data for the current survey / data release
