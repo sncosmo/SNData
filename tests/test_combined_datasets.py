@@ -5,7 +5,7 @@
 sets
 """
 
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from astropy.table import vstack
 
@@ -23,7 +23,6 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
         cls.joined_surveys = (csp.DR3(), des.SN3YR())
         cls.test_class = CombinedDataset(*cls.joined_surveys)
         cls.test_class.download_module_data()
-
 
     def test_obj_id_dataframe(self):
         """Test for expected data releases in object id DataFrame"""
@@ -69,6 +68,14 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
             sorted(obj1_data.as_array().tolist()),
             'Incorrect data for second ID after joining.'
         )
+
+    @skip('Table functionality not supported by combined data sets')
+    def test_cache_not_mutated(self):
+        pass
+
+    @skip('Table functionality not supported by combined data sets')
+    def test_paper_tables_are_parsed(self):
+        pass
 
 
 class MapReduction(TestCase):

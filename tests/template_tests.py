@@ -63,10 +63,9 @@ class SpectroscopicDataParsing:
         """Test all object Ids are unique"""
 
         obj_ids = self.test_class.get_available_ids()
-        unique_elements, counts_elements = np.unique(obj_ids, return_counts=True)
-        duplicates = unique_elements[counts_elements > 1]
-        is_empty = len(duplicates) == 0
-        self.assertTrue(is_empty, f'Duplicate Ids: {duplicates}')
+        unique_elements, count = np.unique(obj_ids, return_counts=True, axis=0)
+        duplicates = unique_elements[count > 1]
+        self.assertTrue(len(duplicates) == 0, f'Duplicate Ids: {duplicates}')
 
     def test_cache_not_mutated(self):
         """Test mutating returned tables does not mutate them in the cache"""

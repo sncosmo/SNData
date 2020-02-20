@@ -10,9 +10,41 @@ import pandas as pd
 from astropy.table import vstack
 
 from . import _utils as utils
-from .exceptions import InvalidObjId
+from . import csp, des, essence, jla, sdss
+from .exceptions import InvalidObjId, ObservedDataTypeError
 
 log = logging.getLogger(__name__)
+
+
+# Todo: Test this function
+def get_zp(band_name):
+    """Return the zero point used by sndata for a given bandpass
+
+    bandpass names are case sensitive.
+
+    Args:
+        band_name (str): The name of the sndata bandpass
+
+    Returns:
+        The zero point as a float
+    """
+
+    survey, release, *_ = band_name.split('_')
+    modules_dict = {
+        'dr1': csp.DR1,
+        'dr3': csp.DR3,
+        'sn3yr': des.SN3YR,
+        'narayan16': essence.Narayan16,
+        'betoule14': jla.Betoule14,
+        'sako18': sdss.Sako18
+    }
+
+    data_class = modules_dict[release]
+    if not hasattr(data_class, 'band_names'):
+        raise ObservedDataTypeError(
+            'Survey {} {} does not have registered photometric band passes.')
+
+    return data_class.get_zp_for_band(band_name)
 
 
 def _reduce_id_mapping(id_list):
@@ -61,14 +93,25 @@ class CombinedDataset:
 
     def __init__(self, *data_sets):
 
-        # Data access modules for each combined data release
-        self._data_modules = dict()
+        # Enforce same metadata attributes as a single data release
+        self.survey_name = tuple(ds.survey_name for ds in data_sets)
+        self.survey_abbrev = tuple(ds.survey_abbrev for ds in data_sets)
+        self.release = tuple(ds.release for ds in data_sets)
+        self.survey_url = tuple(ds.survey_url for ds in data_sets)
+        self.data_type = tuple(ds.data_type for ds in data_sets)
+        self.publications = tuple(ds.publications for ds in data_sets)
+        self.ads_url = tuple(ds.ads_url for ds in data_sets)
+
+        # Store data access classes for each data release
+        self._data_releases = dict()
         for module in set(data_sets):
             module_id = f'{module.survey_abbrev}:{module.release}'
-            self._data_modules[module_id] = module
+            self._data_releases[module_id] = module
 
-        self.data_type = tuple(set(ds.data_type for ds in data_sets))
         self._joined_ids = []
+
+        # To store combined table of all object ids
+        # We don't load the table at init in case some data isn't downloaded
         self._obj_id_dataframe = None
 
     @property
@@ -78,7 +121,7 @@ class CombinedDataset:
 
         # Create a DataFrame of combined object IDs
         obj_id_dataframe = None
-        for data_module in self._data_modules.values():
+        for data_module in self._data_releases.values():
             id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
             id_df.insert(0, 'release', data_module.release)
             id_df.insert(0, 'survey', data_module.survey_abbrev)
@@ -93,6 +136,24 @@ class CombinedDataset:
         self._obj_id_dataframe = obj_id_dataframe
         return self._obj_id_dataframe
 
+    @property
+    def band_names(self):
+        """Assuming all the combined data releases are photometric
+        return the unique bandpass names
+        """
+
+        # This will raise an error if any data releases are spectroscopic
+        # That is OK!
+        all_band_names = set()
+        for release in self._data_releases.values():
+            all_band_names.update(release.band_names)
+
+        return tuple(sorted(all_band_names))
+
+    @property
+    def zero_point(self):
+        return tuple(get_zp(b) for b in self.band_names)
+
     def download_module_data(self, force=False):
         """Download data for all combined surveys / data releases
 
@@ -100,14 +161,14 @@ class CombinedDataset:
             force (bool): Re-Download locally available data (Default: False)
         """
 
-        for name, module in self._data_modules.items():
+        for name, module in self._data_releases.items():
             log.info(f'Downloading data for {name}')
             module.download_module_data(force=force)
 
     def delete_module_data(self):
         """Delete any data for all combined surveys / data releases"""
 
-        for module in self._data_modules.values():
+        for module in self._data_releases.values():
             module.delete_module_data()
 
     def get_available_ids(self):
@@ -118,20 +179,20 @@ class CombinedDataset:
             zip(*[self._obj_ids[c].values.tolist() for c in data_order])
         )
 
-    def register_filters(self, force=False):
+    def register_filters(self, force:bool=False):
         """Register filters for the combined data with SNCosmo
 
         Args:
-            force (bool): Whether to re-register a band if already registered (Default: False)
+            force: Whether to re-register a band if already registered (Default: False)
         """
 
-        for module in self._data_modules.values():
+        for data_class in self._data_releases.values():
             try:
-                module.register_filters(force=force)
+                data_class.register_filters(force=force)
 
             except utils.NoDownloadedData:
                 raise utils.NoDownloadedData(
-                    f'No data downloaded for {module.__name__}')
+                    f'No data downloaded for {data_class.__name__}')
 
     def _get_data_single_id(self, obj_id, format_table=True):
         """Return data for a given object ID
@@ -156,7 +217,7 @@ class CombinedDataset:
         module_key = \
             f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
 
-        data_module = self._data_modules[module_key]
+        data_module = self._data_releases[module_key]
         return data_module.get_data_for_id(
             obj_id[0], format_table=format_table)
 
