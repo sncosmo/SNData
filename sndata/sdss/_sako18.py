@@ -3,6 +3,7 @@
 
 """This module defines the SDSS Sako18 API for photometric data"""
 
+import logging
 import tarfile
 from itertools import product
 from typing import List, Union
@@ -14,6 +15,8 @@ from astropy.table import Column, Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
+
+log = logging.getLogger(__name__)
 
 
 @np.vectorize
@@ -256,7 +259,7 @@ class Sako18(PhotometricRelease):
 
         # Photometry
         if (force or not self._smp_dir.exists()) and utils.check_url(self._smp_url):
-            print('Downloading SMP data...')
+            log.info('Downloading SMP data...')
             utils.download_tar(
                 url=self._smp_url,
                 out_dir=self._data_dir,
@@ -264,7 +267,7 @@ class Sako18(PhotometricRelease):
 
         # SNANA files - including files specifying "bad" photometry data points
         if (force or not self._snana_dir.exists()) and utils.check_url(self._snana_url):
-            print('Downloading SNANA data...')
+            log.info('Downloading SNANA data...')
             utils.download_tar(
                 url=self._snana_url,
                 out_dir=self._data_dir,
@@ -276,32 +279,23 @@ class Sako18(PhotometricRelease):
                 data.extractall(str(outlier_archive.parent))
 
         # Tables from the published paper
-        print_tables = True  # Whether to print the status
         if utils.check_url(self._base_url):
             for file_name in self._table_names:
 
                 out_path = self._table_dir / file_name
                 if force or not out_path.exists():
-                    if print_tables:
-                        print(f'Downloading tables...')
-                        print_tables = False
-
+                    log.info(f'Downloading {file_name}...')
                     utils.download_file(
                         url=self._base_url + file_name,
                         out_file=out_path
                     )
 
         # Photometric filters
-        print_photometric = True
         if utils.check_url(self._filter_url):
             for file_name in self._filter_file_names:
-
                 out_path = self._filter_dir / file_name
                 if force or not out_path.exists():
-                    if print_photometric:
-                        print(f'Downloading filters...')
-                        print_photometric = False
-
+                    log.info(f'Downloading {file_name}...')
                     utils.download_file(
                         url=self._filter_url + file_name,
                         out_file=out_path

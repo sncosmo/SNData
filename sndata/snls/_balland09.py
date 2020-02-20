@@ -3,6 +3,7 @@
 
 """This module defines the SNLS Balland09 API"""
 
+import logging
 import os
 from pathlib import Path
 
@@ -12,6 +13,8 @@ from astropy.table import Table, vstack
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
 from ..exceptions import InvalidObjId
+
+log = logging.getLogger(__name__)
 
 
 def fix_balland09_cds_readme(readme_path):
@@ -154,7 +157,7 @@ class Balland09(SpectroscopicRelease):
         # Download data tables
         if (force or not self._table_dir.exists()) and utils.check_url(
                 self._table_url):
-            print('Downloading data tables...')
+            log.info('Downloading data tables...')
             utils.download_tar(
                 url=self._table_url,
                 out_dir=self._table_dir,
@@ -169,7 +172,7 @@ class Balland09(SpectroscopicRelease):
 
             for spectra_url, data_name in zip(spec_urls, names):
                 if utils.check_url(spectra_url):
-                    print(f'Downloading {data_name} spectra...')
+                    log.info(f'Downloading {data_name} spectra...')
                     utils.download_tar(
                         url=spectra_url,
                         out_dir=self._spectra_dir,

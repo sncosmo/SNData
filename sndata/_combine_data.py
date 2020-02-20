@@ -3,12 +3,15 @@
 
 """This module handles combining data from different data sets."""
 
+import logging
 from copy import copy
 
 import pandas as pd
 from astropy.table import vstack
 
 from . import _utils as utils
+
+log = logging.getLogger(__name__)
 
 
 def _reduce_id_mapping(id_list):
@@ -97,7 +100,7 @@ class CombinedDataset:
         """
 
         for name, module in self._data_modules.items():
-            print(f'Downloading data for {name}')
+            log.info(f'Downloading data for {name}')
             module.download_module_data(force=force)
 
     def delete_module_data(self):
@@ -174,7 +177,8 @@ class CombinedDataset:
         combined_table = self._get_data_single_id(first_id, format_table)
         combined_table.meta = {
             first_id: combined_table.meta,
-            'obj_id': [first_id]}
+            'obj_id': [first_id]
+        }
 
         del combined_table.meta[first_id]['obj_id']
 

@@ -7,8 +7,6 @@ available survey is represented by a dedicated submodule. Each available
 data release is represented by a dedicated class.
 """
 
-import shutil
-
 from . import _utils
 from . import csp, des, essence, jla, sdss
 from ._combine_data import CombinedDataset
@@ -22,8 +20,18 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    data_dir = _utils.find_and_create_data_dir()
-    shutil.rmtree(data_dir)
+    data_classes = (
+        csp.DR1(),
+        csp.DR1(),
+        des.SN3YR(),
+        essence.Narayan16(),
+        jla.Betoule14(),
+        sdss.Sako18(),
+        sdss.Sako18Spec()
+    )
+
+    for data_class in data_classes:
+        data_class.delete_module_data()
 
 
 def get_zp(band_name):

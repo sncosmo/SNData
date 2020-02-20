@@ -4,6 +4,7 @@
 """This module provides general utilities."""
 
 import functools
+import logging
 import os
 import tarfile
 from copy import deepcopy
@@ -18,6 +19,8 @@ import sncosmo
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
+
+log = logging.getLogger(__name__)
 
 
 def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
@@ -153,7 +156,7 @@ def download_file(url: str, out_file: str):
         out_file: The file path to write to or a file object
     """
 
-    print(f'Fetching {url}')
+    log.info(f'Fetching {url}')
 
     # Establish remote connection
     response = requests.get(url)

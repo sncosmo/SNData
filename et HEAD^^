@@ -1,0 +1,1712 @@
+[33mcommit d4066c7cfd8aba9b4a28b682ce73e64ec35afbfb[m[33m ([m[1;36mHEAD -> [m[1;32mmove_to_ood[m[33m)[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 10:21:06 2020 -0500
+
+    Fixes some failing tests
+
+[33mcommit 66382cdccec3f958b57534e0bad54583ffd3e17d[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 10:17:01 2020 -0500
+
+    Replaces print with log
+
+[33mcommit 2dad2a3b541ee6bdcf0d02c118ff4d34b7a69738[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 10:09:53 2020 -0500
+
+    Outlines more docs
+
+[33mcommit 375ea66e449f2eb5b317a7d5f225f8087ef1b19e[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 09:46:11 2020 -0500
+
+    Fixes bug in delete_all_data
+
+[33mcommit c592b88e4b8db0ab34e8cff8f99066c6cf6fcbba[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 09:44:07 2020 -0500
+
+    Moves compressed SDSS spectra into SDSS module
+
+[33mcommit 57999682e6772a63a5f5f1ca610363f49134d39a[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 09:41:34 2020 -0500
+
+    Updates pep484 docs
+
+[33mcommit 525c4b9343f4962045747ef92a6b968a36d806e6[m[33m ([m[1;31morigin/move_to_ood[m[33m)[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Feb 20 09:26:50 2020 -0500
+
+    Breaks DataRelease class into multiple classes
+
+[33mcommit 81d72583444caaf1e2bfadfd8aa0242142ea8674[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 18:06:00 2020 -0500
+
+    Removes outdated testing code
+
+[33mcommit 72f811138d0aa2d39f584413801287df34e1d5a7[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 18:03:31 2020 -0500
+
+    Removes unneeded text from top level API docs
+
+[33mcommit ea2a5fae9b6714405da546e7b6771f1ef03424bd[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 18:02:06 2020 -0500
+
+    Removes links from survey docs
+
+[33mcommit 6af31ba547e4a7fda00e998415c748513f09aa64[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 18:00:15 2020 -0500
+
+    deletes tests/docs.yml
+
+[33mcommit 78e27d817b7ffd25e5c6c9184a53e59e782b2a9a[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 17:59:47 2020 -0500
+
+    Adds package level docs
+
+[33mcommit deae70e372245dcaf508ccdc7e9c0cf8ef64e1ac[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 17:54:29 2020 -0500
+
+    Adds release names back into summary tables
+
+[33mcommit d03ac75199529f1a454249183cd8efe012e75f8d[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 17:40:17 2020 -0500
+
+    Simplifies data release summary tables
+
+[33mcommit df387a351b095fe63ab83bef91d49ee899986a09[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 17:33:28 2020 -0500
+
+    Updates docstring and auto docs
+
+[33mcommit 3f5345cb8173aeff6b85473b7ad5f4871b381e0f[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 17:04:03 2020 -0500
+
+    Fixes init path in setup.py
+
+[33mcommit d6b6ace3937b61081cf643280e29343c41a44224[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 16:48:35 2020 -0500
+
+    Fixes CombindedDataset tests
+
+[33mcommit 1f1abba970d559ff4c2b6346e46f2e8f09a31cf0[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 15:59:28 2020 -0500
+
+    Moves Sako18Spec to OOD
+
+[33mcommit 906af72da0817807b7d361cc41db1c54efcd5da7[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 13:44:39 2020 -0500
+
+    Moves Sako18 to OOD
+
+[33mcommit 8ac75ab14a8265e3863eaa1a951c2bb3937541b9[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 10:52:21 2020 -0500
+
+    Moves more logic into parent base class
+
+[33mcommit b92e3d1c59ac204f1ce33078a6023b7f12db59bd[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 09:23:51 2020 -0500
+
+    Doc updates
+
+[33mcommit bc3fde8cd2669d1199960fab1ed584c38a978b17[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 09:14:51 2020 -0500
+
+    Moves Balland09 to OOD
+
+[33mcommit ec789a514c7fd65303db793006351bd251e6f5da[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 08:57:02 2020 -0500
+
+    JLA moves to OOD
+
+[33mcommit dac8143a932ec4f3e69363c44d162d48c4870ab7[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 08:48:39 2020 -0500
+
+    Docstring edits
+
+[33mcommit a703c4694f1472ac60557ea71b4699553e2bc0c3[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 08:40:22 2020 -0500
+
+    Converts Essence to OOD
+
+[33mcommit 9bd6308094ac6a34d595a739db708d02bb10adce[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 08:23:01 2020 -0500
+
+    Moves SN3YR to OOD
+
+[33mcommit 9f64885849259ba2eb707e454aa758ba4b578713[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 08:08:41 2020 -0500
+
+    Fixes CSP failing tests
+
+[33mcommit 5ff634316737ec545771e82c18d3fcee940aefaf[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 07:45:54 2020 -0500
+
+    DR3 updates
+
+[33mcommit 1fe1ebd64192ad540f378249510c9c447f875768[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Feb 19 07:41:40 2020 -0500
+
+    Moves CSP to OOD
+
+[33mcommit ef503dcf3ef1b3a29ec400b6daf4778c7d4be800[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Feb 17 09:05:28 2020 -0500
+
+    Starts porting CSP DR1 to OOD
+
+[33mcommit 28aaf03072270e53a8c588efa7ed6ec63447b8ff[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Feb 17 08:06:34 2020 -0500
+
+    Updates .gitignore
+
+[33mcommit fdaf25b2755b83273e776ad388730bfb5e8c6ffe[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Feb 16 21:38:40 2020 -0500
+
+    Removes prompt for twine upload
+
+[33mcommit d16d14f1a2464eb7fd40949840d3f570bb68c319[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Sun Feb 16 21:34:34 2020 -0500
+
+    Removes comments from meta data (#32)
+
+[33mcommit b0b0c0fdb0dbdc134ee3f7fff3107a441173f99e[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Sat Feb 15 18:08:18 2020 -0500
+
+    Add SNLS 3 year spectra (#31)
+    
+    * Adds preliminary code for SNLS
+    
+    * Adds tests for balland09
+    
+    * Updates shebang lines
+    
+    * Adds basic data parsing for Balland09
+    
+    * Adds basic snls docs
+    
+    * Adds SNLS to homepage table
+    
+    * Fixes cds parsing
+    
+    * Adds meta data
+    
+    * Adds docstring
+    
+    * Adds phase to balland tables
+    
+    * Removes test for JD format
+    
+    * Docstring fixes
+    
+    * Version bump
+    
+    * Fixes wrong units in ra / dec calculation
+    
+    * Quick typo fix
+
+[33mcommit 864869039ba4c1776e2b68531c649b4ffa90502c[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Jan 31 13:37:21 2020 -0500
+
+    Test utils (#30)
+    
+    * Adds tests for some utils and exceptions
+    
+    * Minor version bump [ci-skip]
+
+[33mcommit 817f9bc5184e48048605fd7ed498df85126029e2[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Jan 31 12:00:21 2020 -0500
+
+    Add custom data path (#29)
+    
+    * Allows data dir to be set in the environment
+    
+    * Adds python 3.8 to travis config
+
+[33mcommit 184154b636ce2a39daa7988fd9acd3c4ebe5eebf[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jan 26 18:54:20 2020 -0500
+
+    Minor grammatical edits to package descritption in the docs
+
+[33mcommit bad49c9556da0dc3753f62bc62ba297b9056ed4c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jan 26 18:47:51 2020 -0500
+
+    Allows url tests to pass despite connection errors
+
+[33mcommit f06c2f928981d64c8ee3da8d012ffbaaa5e866cb[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Sun Jan 26 10:52:44 2020 -0700
+
+    Jla metadata (#28)
+    
+    * Adds more metadata to JLA tables
+    
+    * Minor docs reformatting
+    
+    * Minor version bump
+
+[33mcommit 3fe5bf564b9d4634dc549ba8f18f9d549abea96d[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Sat Jan 25 19:22:05 2020 -0700
+
+    Adds light-curves using in the JLA (Betoule+ 2014) (#27)
+    
+    Adds JLA data under ‘sndata.jla.betoule14’
+
+[33mcommit 80b14843e7cb7a4e96c6047ecccb61135f83388e[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Jan 24 11:19:20 2020 -0700
+
+    Parse sdss fits (#25)
+    
+    * Code organization
+    
+    * Removes spec_id from sdss spectra meta data
+    
+    * Fixes bug where cached tables were mutated
+    
+    * Minor formatting and spelling fixes
+    
+    * Removes urllib from requirments
+    
+    * Adds rick white iraf parsing code
+
+[33mcommit 5bd13fceb7e6926ed056afa59b6119b947ae9754[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Nov 23 17:31:12 2019 -0500
+
+    Adds sid to spec meta data
+
+[33mcommit 3c2af1e4a72d2ea4b1d19baa0f9288fa61885d62[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Nov 20 14:24:07 2019 -0500
+
+    Fixes typos in data_type attributes
+
+[33mcommit dde06acbcb3413354f2dafe55f09918bb2b2067b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Nov 20 13:04:50 2019 -0500
+
+    Doesn't print SDSS status when no data is downloaded
+
+[33mcommit cc967d9e0e744a631ce05e15ff108999ca61e6b0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Nov 19 09:56:53 2019 -0500
+
+    Version bump to 0.8.0
+
+[33mcommit 57bac3f233fe5cd98435b2874af402711d933156[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Tue Nov 19 09:56:10 2019 -0500
+
+    Code organization (#24)
+    
+    * Moves factory functions and exceptions into dedicated modules
+    
+    * Raises custom error for invalid object ID
+    
+    * No longer requires force download for tests
+    
+    * Updates manifest
+
+[33mcommit 5b9fb951d335a4c708ef9ea1c58890c087e50556[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Tue Nov 19 08:43:25 2019 -0500
+
+    Uses 2018 SDSS release instead of 2014 (#23)
+    
+    * Updates sako18 and sako18spec modules to use new release website
+    
+    * Simplifies sako18spec module by relying on sako18 module
+    
+    * Code cleanup and pep8
+
+[33mcommit 7add4ca4e7ad7e0e3e1d88b84bdae5a3d4236b91[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Nov 18 13:21:12 2019 -0500
+
+    Use file names to determine available Ids instead of master table for `sako18spec` (#22)
+    
+    * Gets object ids from file names instead of master
+    
+    * Updates docstring
+    
+    * Organizes tests
+    
+    * Removes JD format test for sako18spec
+
+[33mcommit fe49b743dc68c65a2328c6505f0c4d804d8b3a4c[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Nov 18 10:12:55 2019 -0500
+
+    Allow partial downloads (#21)
+    
+    * Skips downloads if connection cannot be established
+    
+    * Removes any old builds before building new PyPi distribution
+    
+    * Makes path requirements more specific
+    
+    * Updates docs
+    
+    * Deletes data before running tests
+    
+    * Version bump
+
+[33mcommit 8b6b61c603cec6e695b7e5d07a59b89ad47e08ae[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Nov 14 22:23:51 2019 -0500
+
+    Adds manifest file
+
+[33mcommit 92413f991b03f0f01b447a62cae10438607fe241[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Nov 14 22:08:51 2019 -0500
+
+    Improve docs (#20)
+    
+    * Adds coveralls to travis config
+    
+    * Adds pytest-cov install in travis setup
+    
+    * Adds coverage install for travis
+    
+    * Adds coverage badge to Readme
+    
+    * Adds more installs to travis
+    
+    * Adds more badges to docs and Readme
+    
+    * Updates license
+    
+    * Removes integrated services from docs
+    
+    * Removes accidental copy-paste from Readme [ci skip]
+    
+    * Updates doc intro
+    
+    * Adds developer notes and slow start documents
+    
+    * Adds text to quick and slow start.
+    
+    * Removes developers sction
+    
+    * Fixes import error
+    
+    * Adds rtd config file
+    
+    * Removes prompt and line numbers from bash commands
+    
+    * Fixes malformed table
+    
+    * Removes extra leading space in quick start code
+    
+    * Removes all leading spaces in getting started
+    
+    * Adds sako18spec docs
+    
+    * Minor docstring formatting edits
+    
+    * Updates sdss docstring
+    
+    * Adds link from quick start to slow start
+    
+    * Minor grammar edit
+    
+    * Fixes broken link
+    
+    * Fixes indentation of rst bullet list
+    
+    * Adds missing code block
+    
+    * Adds explenation of meta data
+
+[33mcommit 24cd7a42dd4813d1f121746b7adf7304d9c4512e[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Nov 14 16:06:32 2019 -0500
+
+    Add more metadata (#19)
+    
+    * Standardizes meta data for tables returned by all modules
+    
+    * Docstring updates
+    
+    * Reduces IO operations in `load_table` by caching returns
+
+[33mcommit 0e915accd468a89ea58257eaecf0e0bfcdaf3a8b[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Nov 14 10:35:26 2019 -0500
+
+    Sako18 spectroscopy (#18)
+    
+    * Adds sako18spec module
+    
+    * Version bump
+
+[33mcommit 337c85106ef342d564a1687ef549445cf59bed97[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Sep 20 16:38:13 2019 -0400
+
+    Ui changes and fix for incorrect magnitude system in CSP data (#17)
+    
+    * Fixes incorrect .5 offset in snoopy date format
+    
+    * Adds instrument offsets to dr3 formatted data
+    
+    * Makes sncosmo formatting the default
+    
+    * Doc updates
+    
+    * Makes UI and formatting a little more consistent across the package
+    
+    * Updates tests
+    
+    * Adds 15-second timeout to requests
+    
+    * Version bump
+    
+    * Removes a forgotten print statement
+
+[33mcommit f463e98af8a01dbe2341ca53094105027d0d9ab9[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Tue Sep 3 10:10:53 2019 -0400
+
+    Uniform time format (#16)
+    
+    * Enforces JD time format for all CSP data tables
+    
+    * Seperates tests for different modules into different files
+    
+    * Fixes sncosmo formatting for essence tables
+    
+    * Fixes permission error preventing overwrite when force redownloading data
+
+[33mcommit ac6c17a7d67dc9068a68728b36b57ae7a6d3c8a3[m
+Merge: 4b0bb90 498dffb
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Aug 12 14:45:18 2019 -0700
+
+    Merge pull request #14 from djperrefort/add_zp_functions
+    
+    Add zp functions
+
+[33mcommit 498dffbe8dd23bcd43a60d7a3564077f1499b23e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Aug 12 14:40:59 2019 -0700
+
+    Updates docs
+
+[33mcommit c64119c0250d0deda80bf69b605657cea55e78d1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Aug 12 14:17:07 2019 -0700
+
+    Adds missing zero point information
+
+[33mcommit 4086d2bf4fd9bb629f615c3ed03b050b64f315b9[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Aug 8 16:45:46 2019 -0400
+
+    Adds tests for zero points
+
+[33mcommit 4f989dfe0fc7b1fd19f5fbac32ea7c51157e7a4b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Aug 8 13:44:12 2019 -0400
+
+    Adds get_zp function
+
+[33mcommit 4b0bb907ba936ae5b0242a66b86a41f7084a00e0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 30 18:33:54 2019 -0400
+
+    Changes CSP time values to MJD
+
+[33mcommit f1976489948c1014a993a42e3e1937a43c5787c7[m
+Merge: f3444ef facd78f
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 19 10:58:04 2019 +0200
+
+    Merge pull request #13 from djperrefort/csp_dr3_band_names
+    
+    Fixes error in the naming of bandpasses for CSP DR3. Also adds the release attribute to submodules.
+
+[33mcommit facd78f5f3075f21e6777b602acb18d01c89a879[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 19 10:53:56 2019 +0200
+
+    Version bump
+
+[33mcommit 15c7c37769d3c813449a3310b31815e5669f1d02[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 19 10:52:52 2019 +0200
+
+    Adds release attribute to modules
+
+[33mcommit e2061010c64b0b23f7feb587ea7a0922ff887550[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 19 10:52:28 2019 +0200
+
+    Fixes band name assignment
+
+[33mcommit f3444ef9e09cb773acf49e8f77cae7b2f6fe9fa1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 21:35:01 2019 -0400
+
+    Minor typo fix in docs
+
+[33mcommit d24671262451abbb7526591c88abf5b6a1287f4c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 21:20:59 2019 -0400
+
+    Fixes git file tracking
+
+[33mcommit 272c9ac9c88726eccc593cbe3850e3ca9472e10b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 21:12:54 2019 -0400
+
+    Fixes package name in docs
+
+[33mcommit 6961c23c9aea84111f0346d80c23398f840c1434[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 21:02:31 2019 -0400
+
+    Version bump
+
+[33mcommit 876a4bb69943e9135dbb51eb62366273f27b8d63[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 21:00:07 2019 -0400
+
+    Makes package name lowercase
+
+[33mcommit 970f70d124bab5f2d400a91bb7e468efe2b8febd[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 20:55:46 2019 -0400
+
+    Minor doc updates
+
+[33mcommit 02e270fe8b3f95dbf57a13556e0eab14cb2ef3e5[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 20:20:19 2019 -0400
+
+    Namespace fixes
+
+[33mcommit 5e7bd291c418525c802087f718ece8bdd27bc981[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 20:15:06 2019 -0400
+
+    Removes table filtering test
+
+[33mcommit 601c471a745924415c39cecd211d0f874d853aed[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 20:06:29 2019 -0400
+
+    Some bug fixes
+
+[33mcommit c000eed4111dad1461a88bc7a9139812a7cd2d67[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 19:51:58 2019 -0400
+
+    Lazy loads joined object IDs
+
+[33mcommit cf280df912c9fbc9d071d3a892c4c8eff92efe5f[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 8 19:22:49 2019 -0400
+
+    Adds more tests for combining data sets
+
+[33mcommit 14761ee8223282303b90ded484d3a5df96eb3577[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jul 7 16:52:03 2019 -0400
+
+    Outlines additional tests for CombinedDataset class (fails)
+
+[33mcommit 71da59f1f6de1a5a27f4a396a9ae6e1947b8d38e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jul 7 16:43:35 2019 -0400
+
+    Docstring fix
+
+[33mcommit bd6afb0e8f5134a28e2cfe877707ae8299a3654f[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jul 7 16:35:09 2019 -0400
+
+    Removes unneeded else statement
+
+[33mcommit 61e58a7989c2915d41a9610e1bfbd7e501e0c030[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jul 7 16:32:19 2019 -0400
+
+    Fixes bug in iter data test
+
+[33mcommit 33fd87913fbc7729c4ca119a29f12b6a20ebe118[m
+Merge: c7e031c 03dad86
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jul 6 14:29:53 2019 -0400
+
+    Merge branch 'master' into combine_data
+
+[33mcommit c7e031cca2c12f504e2ccbdd3deb10aa1609b340[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jul 6 14:13:00 2019 -0400
+
+    Version bump [ci skip]
+
+[33mcommit d35bc46f472f9441b8770d46407b744922c353ab[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jul 6 14:10:50 2019 -0400
+
+    Adds test for _reduce_id_mapping function
+
+[33mcommit b143f946ca6ced274028653abb8eaf33193fc8b2[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jul 6 13:57:53 2019 -0400
+
+    Fixes shebang line typo
+
+[33mcommit 81d2a45b690cb2a6b1c9501a86aacc5baa4a9d9d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jul 6 13:56:47 2019 -0400
+
+    Finishes Combined Data quick start
+
+[33mcommit 7b14c4c985b79775f302188c1a6098e8a1a63a4a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 5 17:25:02 2019 -0400
+
+    Progress on updating docs
+
+[33mcommit 1837737bf89bed7da182863049d6358bb5bec59e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 5 14:45:40 2019 -0400
+
+    Docstring edits
+
+[33mcommit 1349aed2367c496b46855dd869b11c50007dd032[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jul 5 14:44:49 2019 -0400
+
+    Adds ability to join ID values
+
+[33mcommit 03dad86c55586883ff9ddfe0d4a8ae94140a6a27[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jul 3 10:34:51 2019 -0400
+
+    Fixes missing default kwarg value
+
+[33mcommit b8177cedc2b2536d08e32736365e4b48628163fc[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 2 21:49:56 2019 -0400
+
+    Simplifies table on doc index [ci skip]
+
+[33mcommit bf3426344a44a667bf3ed63fe48b74ac8df375a8[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 2 21:34:52 2019 -0400
+
+    Starts updating sphinx docs
+
+[33mcommit fa49abb0619c7a3d67f910407d58fbeeee1c9df4[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 2 21:21:23 2019 -0400
+
+    Fixes overwritten namespace issue
+
+[33mcommit 921a39bf4c320adf05da5addb72f51ada4916a46[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 2 21:20:43 2019 -0400
+
+    Adds tests for combined data sets
+
+[33mcommit b716d57af1e8f32cf9be44154bd9591396bc88d3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jul 2 20:25:30 2019 -0400
+
+    Simplifies obj_id handeling
+
+[33mcommit f816abc0249b76e227ac23fae9cfbe94014a15a3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 21:42:43 2019 -0400
+
+    Adds logic for parsing combined data
+
+[33mcommit 307937c20930af1efafb386653b38ab1d05a6bfc[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 13:45:53 2019 -0400
+
+    Builds some of the outlined logic for Combined_Dataset
+
+[33mcommit 531cfe62bfc003b6f444a3ebf1cbebcc622e1afd[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 08:26:40 2019 -0400
+
+    Raises warning instead of error when NED is unreacable
+
+[33mcommit 4844475e8fc2888a73d4a9b9c5959a200ea47926[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 08:03:13 2019 -0400
+
+    Adds outline for Combined_dataset class
+
+[33mcommit 73856a0105ff780711f4be57a3f1081978d22141[m
+Merge: 5ccf52a 436d86c
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 08:02:01 2019 -0400
+
+    Merge pull request #12 from djperrefort/add_essence
+    
+    Add data from the ESSENCE survey
+
+[33mcommit 436d86ce831bb5d5b63cd37e12b18381aa382b0f[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 07:27:03 2019 -0400
+
+    Removes old tests
+
+[33mcommit 91349644765e141c014d0b859a86b0133d6dd8e3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 07:18:41 2019 -0400
+
+    Spelling error [ci skip]
+
+[33mcommit 529e2271ae13c4e49d9fac7936d11bb162787330[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 07:14:25 2019 -0400
+
+    Version bump
+
+[33mcommit 6805ae6e2b4731f422bb7549034c74e5c3f8b65c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 07:10:17 2019 -0400
+
+    Makes the matheson module private
+
+[33mcommit d4b0cca35b464c3381e3fd870d5d5ed42294327d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jul 1 07:05:56 2019 -0400
+
+    Addresses interupted download use case
+
+[33mcommit 9d3ae446a07bec142609f4b8cd5e6d9f4e277bce[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 22:27:15 2019 -0400
+
+    Fixes typo on doc link [ci skip]
+
+[33mcommit c903fd71893dc826d591cc8ded7a6e421724dedb[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 22:24:39 2019 -0400
+
+    Replaces Foley 2009 with Matheson 2005
+
+[33mcommit 65f332c03f698ef2125a251cf316a72e1967eebe[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 11:30:09 2019 -0400
+
+    Adds todos
+
+[33mcommit faa266ba30d3d40d92c534a1cf2dc36650345fe2[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 11:27:14 2019 -0400
+
+    Fixes failing tests
+
+[33mcommit 94a2026b292a919116d082648ffb55ccb45a8643[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 11:14:08 2019 -0400
+
+    Fixes import error
+
+[33mcommit 274474d509c7ec73d1130cf0711d11e1ca421896[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 11:09:53 2019 -0400
+
+    Udates docs discussion on SNCosmo
+
+[33mcommit a69a9711d68c769b543f7ddc633cdf904e4e7db2[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 11:01:17 2019 -0400
+
+    Updates to new SNCosmo integration UI
+
+[33mcommit 003367f95fe2192db17dce839f8e7a9c66cc520c[m
+Merge: e6c2280 5ccf52a
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 10:56:43 2019 -0400
+
+    Merge branch 'master' into add_essence
+
+[33mcommit 5ccf52a09d210728d182a75413aa728ac3467b1e[m
+Merge: 026a21d 0736971
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 10:55:36 2019 -0400
+
+    Merge pull request #11 from djperrefort/sncosmo_ui_edits
+    
+    Sncosmo ui edits
+
+[33mcommit 0736971d1dc552044ab67162dbd7ffa0ed51213b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 10:51:38 2019 -0400
+
+    Version bump
+
+[33mcommit c3508e58901e17836aeaccf9df9ac0226c0fbb12[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 10:37:14 2019 -0400
+
+    Fixes failing docs test
+
+[33mcommit 1253b27cd9052439019df5f8c76f46c1c4a8c232[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sun Jun 30 10:22:20 2019 -0400
+
+    Defines delete_module_data using factory function
+
+[33mcommit 88d7e927960fd1046828eeb99f52ceff63bf7b67[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 17:53:24 2019 -0400
+
+    Defines iter_data using a factory function
+
+[33mcommit fa8c956baba586a3b29acad8a5d6bdf8f17182b3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 17:48:32 2019 -0400
+
+    Removes get_sncosmo_input function
+
+[33mcommit e6c2280555981ded4ed6abceb6d4a3d412a83087[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 17:35:35 2019 -0400
+
+    Adds todos
+
+[33mcommit 457cd6282822762162aeb38c7eb4d1a904fbde41[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 17:08:04 2019 -0400
+
+    Fixes typo in output path names
+
+[33mcommit 507eff8ea87fa45577dfe44ced7bd16c934a894a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 16:23:15 2019 -0400
+
+    Updates docs [ci skip]
+
+[33mcommit a2e290693383039c031a5f4382e74d15e84e3a3a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 16:06:35 2019 -0400
+
+    Fixes typo in vizier directory path
+
+[33mcommit 392bfc61d54005fea652f215b4ced9f68ced1973[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 16:06:01 2019 -0400
+
+    Adds file parsing for foley09
+
+[33mcommit 4a104ed2305dd7f84ba636dcc76fc74452278225[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 15:49:06 2019 -0400
+
+    Updates todos
+
+[33mcommit 3b4448006d4a0b978747b904cefb407ab474109a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 15:46:05 2019 -0400
+
+    Adds essence spectra to foley09 download function
+
+[33mcommit 3af57e1832795de5c83df086c7335a7cc337e4c8[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 12:28:12 2019 -0400
+
+    Initial work on adding Essence spectra
+
+[33mcommit b05f75364dd60ec8450bc9a6cf4113a2df628852[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 08:57:53 2019 -0400
+
+    Adds doc tests for Essence
+
+[33mcommit f44c64a2f72c1da9ed8775dc8d6cae6f90ff07b7[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 08:55:41 2019 -0400
+
+    Fixes readme parsing for tables with string names
+
+[33mcommit 3ecbe0466dd5a11b41daa64761abdb820414d45d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 08:47:24 2019 -0400
+
+    Adds tests for essence data
+
+[33mcommit 43afb84b9996789aaca9b9f665d08224c59ab608[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat Jun 29 08:41:21 2019 -0400
+
+    Adds Essence Data
+
+[33mcommit 026a21dcaf84320bde5af39a13c12fb9cf77cbf3[m
+Merge: 95dead0 b77d1cd
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 20:34:31 2019 +0100
+
+    Merge pull request #10 from djperrefort/doc_updates
+    
+    Doc updates
+
+[33mcommit b77d1cdb3d45e223d972ca712d79cc9ef8572189[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 15:16:24 2019 -0400
+
+    Reduces limit further (to 10)
+
+[33mcommit 00c6a0fa64ec39777b17e360d00d7d62911a5ecd[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 15:12:09 2019 -0400
+
+    Shortens tests by limiting inspected tables
+
+[33mcommit 8c0c70dc04477ed7d770cc7a7787b0e85767c2d1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 15:05:30 2019 -0400
+
+    Stops enforcing sncosmo formatting for CSP DR3
+
+[33mcommit 5731193a2a9952f3289a8ac490f33f160249a4ba[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 15:02:57 2019 -0400
+
+    Updates docstring test for new docs
+
+[33mcommit 1b7e46d9d2afc750aaf3ad92ac14bdcf3764fdeb[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 14:46:16 2019 -0400
+
+    More documentation updates
+
+[33mcommit d17ae6c5977aaaecfe8397cf8a0c7cd3512af1d7[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 14:37:47 2019 -0400
+
+    Updates documentation
+
+[33mcommit 40f7d431074dcbc49677cdc813fa8428eff61e03[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 14:37:35 2019 -0400
+
+    Fixes bug when downloading data
+
+[33mcommit ef71b255f208e67926fd71c6eba302a49c0cc68c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 12:25:59 2019 -0400
+
+    Fixes broken link
+
+[33mcommit a50b1fb063724d424fc3741881cfde477b257376[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 12:11:29 2019 -0400
+
+    Moves sncosmo to install requires
+
+[33mcommit 6b381a61d0fd61f658fad1465c2af7cc7db64dd7[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 11:18:50 2019 -0400
+
+    Moves shutil import out of function
+
+[33mcommit afe5a46fe5ae4ce2109099dc3cc0a9f02c3a0f92[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 11:16:53 2019 -0400
+
+    Tries forcing numpy to install first in RTD
+
+[33mcommit 219625977c6ce55f1e5280850b975a2784bb88c0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 11:13:29 2019 -0400
+
+    Adds path argument to rtd yaml
+
+[33mcommit 884b27d94ce53a762a2ecb269695c22ec84faa9e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 11:11:34 2019 -0400
+
+    Adds .readthedocs.yml
+
+[33mcommit 806fc90026db53b354a6460be37f153e07ac7eb3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 10:38:49 2019 -0400
+
+    Removes TODOs
+
+[33mcommit 61784200684ff834be0b14b798f7b96613dd712d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 10:36:49 2019 -0400
+
+    Removes data deletion test
+
+[33mcommit 3c91ac45e8cd4857f51736ea94f26fe1a614b769[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 10:33:15 2019 -0400
+
+    Fixes CSP DR3 table parsing
+
+[33mcommit 2093d4cd7fa00063f4098054a9bb1628a8c93eaa[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 28 10:01:23 2019 -0400
+
+    Uses require_data_path decorator to replace duplicate code
+
+[33mcommit 68e8582bd9b7db8f0455b75ae6d5c3c37cc09267[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 26 19:38:35 2019 +0100
+
+    pep8
+
+[33mcommit cccb1730fadf6c475b5fc1f0a82f563f94261598[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 26 19:37:06 2019 +0100
+
+    Adds require_data_path decorator to _utils.py
+
+[33mcommit e8aa4975ae0594976d9b75ff5d5158d34889f54e[m
+Author: Daniel Perrefort <djp81@diu.phyast.pitt.edu>
+Date:   Mon Jun 24 18:02:46 2019 -0400
+
+    Fixes CDS parsing for CSP DR3 Table 2
+
+[33mcommit 0295d0a200d6480f986e44ff9c41c7fd5e67333e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 23:02:27 2019 -0400
+
+    Adds custom error: NoDownloadedData
+
+[33mcommit 0e3defcbf80ff7f53d4f04f0bda289fd15ddeecd[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 22:56:58 2019 -0400
+
+    Adds table descriptions to meta data for vizier tables
+
+[33mcommit 39f7e1aecc2850e379ee7d3d5e8df8f2364d8bb0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 22:32:35 2019 -0400
+
+    Adds __license__ to package
+
+[33mcommit bbd4792547367c7c723cc008f182a9f43cc177f7[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 15:33:16 2019 -0400
+
+    Version bump
+
+[33mcommit 549cb2c9e79f6824df6b67c100538e234cbca582[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 15:30:17 2019 -0400
+
+    Adds tests for module urls
+
+[33mcommit 1c1fde0acd2e6e7a6e30b78c89f6e6f74ddad848[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 14:51:04 2019 -0400
+
+    Updates module docs with data descriptions
+
+[33mcommit 95dead0a62b1ad355efb8e59d47a237fea87dbf1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 14:21:02 2019 -0400
+
+    Fixes typo in table formatting
+
+[33mcommit 3e8cdd7e12d3e46ced8a1a03b5119144a19e7c55[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 14:10:30 2019 -0400
+
+    Adds docs build status to README
+
+[33mcommit 6898e313218713abc70aab3acdb11617e3ebcf0c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 00:39:48 2019 -0400
+
+    Fixes sako id sorting
+
+[33mcommit 8cbd9fc97f64389746b026a939273fc7d29ea585[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 12 00:11:52 2019 -0400
+
+    Adds tests for sorted ids and consistent documentation
+
+[33mcommit 77b74939a71e1c372b7e12ffbb3fa67bcca640d0[m
+Merge: a212c95 1c60cc6
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 15:34:55 2019 -0400
+
+    Merge pull request #9 from djperrefort/des_tables
+    
+    Adds accessed to published fit results for DES
+
+[33mcommit 1c60cc692d6172c368cb7c71691be39f29a1fcc4[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 15:18:12 2019 -0400
+
+    0.0.11 -> 0.1.0
+
+[33mcommit 513bcfa86a9d2936c71a94e8fef10897b724e7db[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 15:17:20 2019 -0400
+
+    Updates tests
+
+[33mcommit 5123c1d9ad296395d71a7570954d1edd7837cb5f[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 15:08:25 2019 -0400
+
+    Adds tables for DES published LC fits
+
+[33mcommit a212c956d7d5c2cf31a1aecb9a9647af601fa262[m
+Merge: 5514277 146de49
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 13:02:01 2019 -0400
+
+    Merge pull request #8 from djperrefort/sncosmo_2.0
+    
+    Updates requirements for compatibility with SNCosmo 2.0
+
+[33mcommit 146de49b7ee8ce1ecd6e0b4db1fd2701800d5161[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:49:19 2019 -0400
+
+    Version bump [ci skip]
+
+[33mcommit 8dc0e456d2db6aa7369d9c5840ad3e23241e1d3b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:46:43 2019 -0400
+
+    ENforces numpy >= 1.16.4
+
+[33mcommit e704464bd149bae08cc1c826c288779146bb1a41[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:32:17 2019 -0400
+
+    Removes scipy requirement
+
+[33mcommit b2e6766ebcb1dd243c33cec6cab08fd74b36cb5d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:24:20 2019 -0400
+
+    Removes scipy version restriction
+
+[33mcommit 4b680c87d37e6b2d7acd889c79b91cf10908172c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:23:42 2019 -0400
+
+    Updates install instructions [ci skip]
+
+[33mcommit 5265ee451e59abe9e6b4b9e67c76439b0131be00[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:20:00 2019 -0400
+
+    Adds installation instructions to travis yml
+
+[33mcommit 8a5e1dac0a6c15b754a3d8a931ee8360509a846d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 12:06:50 2019 -0400
+
+    Adds all requirements to requirements.txt
+
+[33mcommit 5514277a9d5ff77d17bc157b2a317edaf95e85aa[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 11:37:24 2019 -0400
+
+    Enforces sncosmo==1.8.2
+
+[33mcommit 4b0fe414702108eee9a3d104571fcfdbecb05d13[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 11:32:04 2019 -0400
+
+    Adds cython to requirements
+
+[33mcommit 8987d3e71f1be354788916d6f2a7ef47b061cf36[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 10 11:25:24 2019 -0400
+
+    Fixes typo in CSP DR3 meta data item obj_id
+
+[33mcommit 5c96ebae406f31bd4689d86390550990cc487ec0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 7 12:04:37 2019 -0400
+
+    Adds link to OSC in docs
+
+[33mcommit e80fba4e43487f4edc1e8b8244d1db792e6ff74d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri Jun 7 12:00:58 2019 -0400
+
+    Fixes missing imports
+
+[33mcommit 223fb9a876a403c09fc0c491ff9178caf8a27b42[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 17:03:08 2019 -0400
+
+    Fixes typo in sako year
+
+[33mcommit 67dc8a01f8a976084c7ee6b9059cd2cf24134c03[m
+Merge: ed80e87 06a558b
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:59:13 2019 -0400
+
+    Merge pull request #7 from djperrefort/add_osc
+    
+    Add osc
+
+[33mcommit 06a558b0766779085bc4ab7f8a1616e6838fca17[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:38:56 2019 -0400
+
+    Adds get_sncosmo_input to SNData.csp.dr1
+
+[33mcommit ba5d0820c38d9f4762066f40dd74fab2d77f7b32[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:34:56 2019 -0400
+
+    Adds OSC to docs
+
+[33mcommit dce2cc74b75a524eb93be543cc4b60489ac7cdc1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:27:45 2019 -0400
+
+    sako14 -> sako18
+
+[33mcommit 47fb68d5d9b7be2ba36701f6ee50c99264fda8f0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:25:06 2019 -0400
+
+    Shortens runtime of tests by limiting number of inspected tables
+
+[33mcommit a2d0e0bd9e45a01bfb2fe88f2d50c1c5b2058cf2[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 16:20:52 2019 -0400
+
+    Moves integrations to dedicated file
+
+[33mcommit 571c22e87dd90c3f0dabe33c8a4e57a2380084fb[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 15:45:39 2019 -0400
+
+    Adds functions to query OSC
+
+[33mcommit ed80e8740c3400204cdc7c2c680c974d54dc872a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu Jun 6 08:40:35 2019 -0400
+
+    Minor bug fixes
+
+[33mcommit 9733dee4801ffd4ebd9582a23b5e797a6665fdef[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Wed Jun 5 13:30:23 2019 -0400
+
+    Bug fixes for data download and filter registration
+
+[33mcommit 0974577f71e1647a8edabe01d9cbd90a5516cbe3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 23:46:25 2019 -0400
+
+    Updates docs
+
+[33mcommit b070bc0d13bcd1cfe2c06b3b497738fbc6479e37[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 23:36:30 2019 -0400
+
+    Adds  argument to  function
+
+[33mcommit 8f845f4b8691ab1ff437aebb3254add9038b46a6[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 16:13:58 2019 -0400
+
+    Updates docs
+
+[33mcommit 9d1c27ebdfa721e68d9476d5d7e56605aa32c1fe[m
+Merge: 0a00045 981077f
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:58:32 2019 -0400
+
+    Merge pull request #6 from djperrefort/add_filter_funcs
+    
+    Add data table filtering and NED queries
+
+[33mcommit 981077f5a78c4609a09436246e5c391e5a41487a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:44:31 2019 -0400
+
+    Adds query_ned_coords function
+
+[33mcommit 04c58384239f4be9e92d78a309bd64d3461823fb[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:23:30 2019 -0400
+
+    Removes redundent connection from dowload functions
+
+[33mcommit 1332b8d26824369bbbb54969b3a6675c685ff783[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:17:28 2019 -0400
+
+    Adds tests for filter functions
+
+[33mcommit 3e717a4ddcbb56c67d4dc674a65f0f56db59d2e6[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:06:32 2019 -0400
+
+    Adds build files to .gitignore
+
+[33mcommit 37fb2c9f89d5d2e6cd6d2f8c25dbad6f313a8809[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:05:43 2019 -0400
+
+    Version bump
+
+[33mcommit f2113b7e0502d0ed729658ce5b790abaaf20edd9[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue Jun 4 15:04:57 2019 -0400
+
+    Adds filter_func arg to iter_data functions
+
+[33mcommit 0a00045e0f872f3305c5d2c4e1236e0132ca8d2d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:45:15 2019 -0400
+
+    Updates RTD version number
+
+[33mcommit a1642ab48b382ae2e5fd198c334e383d5381ca38[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:42:35 2019 -0400
+
+    Adds http prefix to project url
+
+[33mcommit a828829abdb76894fd45dcff5d7bb944ccaf35b5[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:33:42 2019 -0400
+
+    Minor grammatical edit
+
+[33mcommit 329a13f66a1935f89b28584c9106d751c31aa215[m
+Merge: cff98cb 2bccdc3
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:30:20 2019 -0400
+
+    Merge pull request #5 from djperrefort/add_read_the_docs
+    
+    Adds online documentation
+
+[33mcommit 2bccdc354fe3e8473cea2bd5280b982f7a5cf80c[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:26:28 2019 -0400
+
+    Makes minimum python >= 3.6
+
+[33mcommit dc93cab729de0219e237bc1dfde399609f659d10[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:21:18 2019 -0400
+
+    Adds travis badges and updates readme
+
+[33mcommit 730458b183249231241ec21d4917f2ae91aa6174[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 19:18:24 2019 -0400
+
+    Moves sncosmo to install_requires
+
+[33mcommit 3f0c2a0b167ecd78629f5a6f2fca4137aacf4a28[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 18:52:44 2019 -0400
+
+    Removes built docs
+
+[33mcommit d61b8e7d502f76a81e6da3fa6e2e53d16bda7dce[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 18:40:56 2019 -0400
+
+    First full draft of docs
+
+[33mcommit 3069ae164d480bdce46a74da728290bba6f46921[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 11:15:44 2019 -0400
+
+    Adds prliminary docs
+
+[33mcommit 7a12a58b09cb74066e07f74f50fc30db80d1d4f6[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 11:15:31 2019 -0400
+
+    Adds docs / url to setup.py
+
+[33mcommit be215dd0bbb112edb89f211febcbcf23ff4cc879[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 11:15:23 2019 -0400
+
+    Adds script to push pypi
+
+[33mcommit cff98cbbac5a448c39cc86f7de42cbf00042d5fd[m
+Merge: 95ece86 0750385
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 11:14:53 2019 -0400
+
+    Merge pull request #4 from djperrefort/csp
+    
+    Add CSP DR1
+
+[33mcommit 075038549cb0be6dcd424897a962a1fafbeb6119[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 10:13:54 2019 -0400
+
+    Addresses failing tests
+
+[33mcommit bad2313b43881acdf95358da17411ce533a85cf0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 09:53:38 2019 -0400
+
+    Removes fit data from DES
+
+[33mcommit ee4250989a4b1758c810a2213ce1eeb2211f7946[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Mon Jun 3 09:53:28 2019 -0400
+
+    Fixes band name for registered filters
+
+[33mcommit db06b25a459243b7224019de2b4b8a7ee5dd0a77[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 16:35:40 2019 -0400
+
+    Changes lookup index for sdss master table
+
+[33mcommit 7b25b7784f64388606f52a62d71432356a4b6006[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 16:27:35 2019 -0400
+
+    Adds back DES data
+
+[33mcommit c7794682cb18e5322c9cc79c7fdbb72f07e63be7[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 15:09:24 2019 -0400
+
+    Ignores CSP DR3 tables 2 and 3
+
+[33mcommit 8fb674be8e17ecb05dc372bb8b9a5a0cb20d94a4[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 14:32:10 2019 -0400
+
+    Replaces error with fail in table parsing test
+
+[33mcommit 6a70727407bc40f5547612e4e481e73999617659[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 14:27:17 2019 -0400
+
+    Fixes sdss data download
+
+[33mcommit 7808a5420f1a8ceb759eed2e69eb2223bffd1c59[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 12:46:43 2019 -0400
+
+    Fixes bug downloading incorrect filter data
+
+[33mcommit 9f17e6ee44dc1538c81f243df362d9be2c565619[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 12:37:21 2019 -0400
+
+    Enforces sorting of table numbers
+
+[33mcommit 8e3087f4bb9cae7b187996ab3a330089fad4ce12[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 12:31:14 2019 -0400
+
+    Removes name parameter from test classes
+
+[33mcommit 02af0f301653fc04fdf4cec1bc0ad7273289a5d3[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 12:27:56 2019 -0400
+
+    Adds tests for table parsing
+
+[33mcommit d117b29b923796ea70fd2c5808708d75e80fb7a0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 12:02:19 2019 -0400
+
+    Fixes CSP DR1 file parsing
+
+[33mcommit 964fc5f8e3fcaa0da31aa1eee7ded6390243ace1[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 11:36:03 2019 -0400
+
+    Reorganizes tests
+
+[33mcommit 3919a799126f8dc2ff1e469e3bb2e88a77e4569d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 11:23:03 2019 -0400
+
+    Makes get_sncosmo_input part of the standard UI
+
+[33mcommit 83d456ad0f0f4b8796c23158361a8f20385d5c7f[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 11:12:50 2019 -0400
+
+    Starts unifying SDSS.sako14 UI
+
+[33mcommit 26d84ba4c51d39bc3e6b5b00854b1af3eb1fbcde[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 10:44:22 2019 -0400
+
+    Adds back test suite
+
+[33mcommit 115974fbcfbef9d00bcaa2c264f7bd88c51c3f32[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Fri May 31 10:12:25 2019 -0400
+
+    Adds csp DR1 data
+
+[33mcommit d6f4a97ef8a48f151a3d2990a1992520681225a2[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 21:21:24 2019 -0400
+
+    Removes tests
+
+[33mcommit 95959c3d2b9e41b48e1b581a98b6e509cae29d97[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 21:20:33 2019 -0400
+
+    Organizational edits
+
+[33mcommit 3d43fe30a9c25871a844f5542bc3f41c4adfd728[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 21:02:07 2019 -0400
+
+    Adds back the sdss data
+
+[33mcommit c5013671e15678bcc97853a90acc08c4b68971e0[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 20:24:41 2019 -0400
+
+    Makes data downloading manual
+
+[33mcommit a7361283ae405ca2597e1445455316cb6bc9d12a[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 14:22:29 2019 -0400
+
+    Organizational edits
+
+[33mcommit e50ae40e0964d209e70f44ba50eb09aeae8103ce[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 14:15:03 2019 -0400
+
+    Fixes file parsing error
+
+[33mcommit 56b67968e1123af83663a70f3373453b7579b3f5[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 14:13:30 2019 -0400
+
+    Adds load_table function
+
+[33mcommit e65701724bd67df950ebc6cd7b8f47766bfbda29[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 14:10:50 2019 -0400
+
+    Pep8
+
+[33mcommit f36ef98f652f04ad1f02f4c136fbde9416f00a2e[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Thu May 23 14:09:51 2019 -0400
+
+    Refactors DR3 into its own submodule
+
+[33mcommit 95ece8649856ef9c01fa64d39d7752cac74a6f21[m
+Author: Daniel Perrefort <djperrefort@pitt.edu>
+Date:   Tue May 21 09:39:54 2019 -0400
+
+    Update README.md
+
+[33mcommit 290f71249b933b85155e7442f66c8c199293a589[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue May 21 09:29:53 2019 -0400
+
+    Adds missing kwarg
+
+[33mcommit 7628bfff3ec2e95d83ef8de9c668b27374e1ac7d[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue May 21 09:22:17 2019 -0400
+
+    Renames bandpass registration prefix to SND
+
+[33mcommit 55bbdaebd7a44044d365c8c70694575823c4c435[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue May 21 09:14:01 2019 -0400
+
+    Adds readme
+
+[33mcommit 8e59ac0eac1a2c5e0d302ff7809a8d4e3e6045e5[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Tue May 21 09:10:31 2019 -0400
+
+    Adds license
+
+[33mcommit cf6cda084a0053bfbb6c81935f474567b99f685b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 23:32:13 2019 -0400
+
+    Adds missing data file
+
+[33mcommit d7ca98e215e8b9e624f71f3a947d33cb3ae55e14[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 23:28:44 2019 -0400
+
+    Enforces scipy==1.2.1
+
+[33mcommit 8ce33feafec5d2ef1ea9ca645aaf0d622c9c5a80[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 23:14:17 2019 -0400
+
+    Adds scipy to requirements
+
+[33mcommit 38282d4ea75ab5c1ca8e14379b32d48313998b75[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 23:07:09 2019 -0400
+
+    Adds setup files
+
+[33mcommit 460bcd7555580424e16ff966d39bf9aa4ca5bc8b[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 23:01:57 2019 -0400
+
+    Adds tests
+
+[33mcommit b9632e4c62bc95ff8c249fb82c133fbd408ff445[m
+Author: djperrefort <djperrefort@pitt.edu>
+Date:   Sat May 18 22:49:20 2019 -0400
+
+    Adds initial project code

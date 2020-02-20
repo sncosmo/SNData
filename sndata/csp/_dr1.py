@@ -3,14 +3,17 @@
 
 """This module defines the CSP DR1 API"""
 
+import logging
 from pathlib import Path
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
+
+log = logging.getLogger(__name__)
 
 
 def _read_file(path: Union[str, Path]) -> Tuple[float, float, Table]:
@@ -146,7 +149,7 @@ class DR1(SpectroscopicRelease):
         # Download data tables
         if (force or not self._table_dir.exists()) \
                 and utils.check_url(self._table_url):
-            print('Downloading data tables...')
+            log.info('Downloading data tables...')
             utils.download_tar(
                 url=self._table_url,
                 out_dir=self._table_dir,
@@ -155,7 +158,7 @@ class DR1(SpectroscopicRelease):
         # Download spectra
         if (force or not self._spectra_dir.exists()) \
                 and utils.check_url(self._spectra_url):
-            print('Downloading spectra...')
+            log.info('Downloading spectra...')
             utils.download_tar(
                 url=self._spectra_url,
                 out_dir=self._data_dir,

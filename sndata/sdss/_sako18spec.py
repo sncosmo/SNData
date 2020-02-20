@@ -3,6 +3,7 @@
 
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
+import logging
 import zipfile
 from pathlib import Path
 from typing import List, Union
@@ -12,6 +13,8 @@ from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
+
+log = logging.getLogger(__name__)
 
 
 class Sako18Spec(SpectroscopicRelease):
@@ -173,16 +176,12 @@ class Sako18Spec(SpectroscopicRelease):
         """
 
         # Tables from the published paper
-        print_tables = True  # Whether to print the status
         if utils.check_url(self._base_url):
             for file_name in self._table_names:
 
                 out_path = self._table_dir / file_name
                 if force or not out_path.exists():
-                    if print_tables:
-                        print(f'Downloading tables...')
-                        print_tables = False
-
+                    log.info(f'Downloading {file_name}...')
                     utils.download_file(
                         url=self._base_url + file_name,
                         out_file=out_path
@@ -190,7 +189,7 @@ class Sako18Spec(SpectroscopicRelease):
 
         # if (force or not meta.spectra_dir.exists()) \
         #         and utils.check_url(meta.spectra_url):
-        #     print('Downloading spectra...')
+        #     log.info('Downloading spectra...')
         #     utils.download_tar(
         #         url=meta.spectra_url,
         #         out_dir=meta.data_dir,
@@ -198,6 +197,6 @@ class Sako18Spec(SpectroscopicRelease):
 
         # Spectral data parsing requires IRAF so we use preparsed data instead
         if force or not self._spectra_dir.exists():
-            print('Unzipping spectra...')
+            log.info('Unzipping spectra...')
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
                 zip_ref.extractall(self._data_dir)
