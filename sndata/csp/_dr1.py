@@ -16,7 +16,7 @@ from ..base_classes import SpectroscopicRelease
 log = logging.getLogger(__name__)
 
 
-def _read_file(path: Union[str, Path]) -> Tuple[float, float, Table]:
+def _read_file(path: Union[str, Path]) -> (float, float, Table):
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:

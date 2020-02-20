@@ -16,11 +16,43 @@ from warnings import warn
 import numpy as np
 import requests
 import sncosmo
+from astropy.coordinates import Angle
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
 
 log = logging.getLogger(__name__)
+
+
+def hourangle_to_degrees(
+        rah: float,
+        ram: float,
+        ras: float,
+        dec_sign: str,
+        decd: float,
+        decm: float,
+        decs: float) -> (float, float):
+    """Convert from hour angle to degrees
+
+    Args:
+        rah: RA hours
+        ram: RA arcminutes
+        ras: RA arcseconds
+        dec_sign: Sign of the declination ('+' or '-')
+        decd: Dec degrees
+        decm: Dec arcmin
+        decs: Dec arcsec
+    """
+
+    ra = Angle((rah, ram, ras), unit='hourangle').to('deg')
+
+    sign = -1 if dec_sign == '-' else 1
+    dec = (
+            sign * decd +  # Already in degrees
+            decm / 60 +  # arcmin to degrees
+            decs / 60 / 60  # arcesc to degrees
+    )
+    return ra, dec
 
 
 def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
