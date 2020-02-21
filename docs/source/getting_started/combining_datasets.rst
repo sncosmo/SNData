@@ -22,10 +22,8 @@ object.
 
     from sndata import CombinedDataset, csp, des
 
-    combined_data = CombinedDataset(csp.dr3, des.sn3yr)
+    combined_data = CombinedDataset(csp.DR3(), des.SN3YR())
 
-    # Download all data for the combined data releases
-    combined_data.download_module_data()
 
 The resulting object provides the same user interface as the rest of the
 **SNData** package, including having the same method names:
@@ -33,12 +31,15 @@ The resulting object provides the same user interface as the rest of the
 .. code-block:: python
    :linenos:
 
+    # Download all data for the combined data releases
+    combined_data.download_module_data()
+
     # Get a list of available objects
     list_of_ids = combined_data.get_available_ids()
 
     # Get data for a single object
     demo_id = list_of_ids[0]
-    data_table = get_data_for_id(demo_id)
+    data_table = combined_data.get_data_for_id(demo_id)
     print(data_table)
 
     # Iterate over data for all objects in the combined data set
@@ -108,9 +109,6 @@ There are a handful of meta data features provided for individual data releases
 that are not supported for combined data sets. The following attributes
 do not exist for ``CombinedDataset`` objects:
 
-- ``survey_name``
-- ``survey_abbrev``
-- ``survey_url``
-- ``publications``
-- ``ads_url``
+- ``get_vailable_tables``
+- ``load_tables``
 

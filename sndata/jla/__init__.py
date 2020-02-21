@@ -6,7 +6,7 @@ Joint Light-Curve Analysis project. It includes recalibrated light-curves
 of type Ia supernova (SN Ia) from the SDSS-II and SNLS collaborations.
 """
 
-from . import betoule14
+from ._betoule14 import Betoule14
 
 survey_name = 'Joint Light-Curve Analysis'
 survey_abbrev = 'JLA'

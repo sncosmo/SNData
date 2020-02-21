@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This package provides access to supernova light-curve data from various
-surveys.
+"""The ``sndata`` package provides access to supernova light-curve data from
+various surveys while maintaining a consistent data access interface. Each
+available survey is represented by a dedicated submodule. Each available
+data release is represented by a dedicated class.
 """
 
 from . import csp, des, essence, jla, sdss
-from ._combine_data import CombinedDataset
+from ._combine_data import CombinedDataset, get_zp
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
-__version__ = '0.9.5'
+__version__ = '0.10.0'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
@@ -17,49 +19,18 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    modules = (
-        csp.dr3, csp.dr1, des.sn3yr, essence.narayan16,
-        sdss.sako18, sdss.sako18spec,
+    data_classes = (
+        csp.DR1(),
+        csp.DR1(),
+        des.SN3YR(),
+        essence.Narayan16(),
+        jla.Betoule14(),
+        sdss.Sako18(),
+        sdss.Sako18Spec()
     )
 
-    for module in modules:
-        module.delete_module_data()
+    for data_class in data_classes:
+        data_class.delete_module_data()
 
 
-def get_zp(band_name):
-    """Return the zero point used by sndata for a given bandpass
 
-    bandpass names are case sensitive.
-
-    Args:
-        band_name (str): The name of the sndata bandpass
-
-    Returns:
-        The zero point as a float
-    """
-
-    survey, release, *_ = band_name.split('_')
-    modules_dict = {
-        'csp': csp,
-        'des': des,
-        'sdss': sdss,
-        'essence': essence,
-        'jla': jla
-    }
-
-    module = getattr(modules_dict[survey.lower()], release.lower())
-    if not hasattr(module, 'band_names'):
-        raise _ObservedDataTypeError(
-            'Survey {} {} does not have registered photometric band passes.')
-
-    bands = list(module.band_names)
-    zp = module._meta.zero_point
-
-    try:
-        i = bands.index(band_name)
-
-    except ValueError:
-        raise ValueError(
-            f'Could not find band name {band_name} in {module.band_names}')
-
-    return zp[i]

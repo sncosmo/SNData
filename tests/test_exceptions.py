@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from sndata.exceptions import NoDownloadedData, InvalidObjId, ObservedDataTypeError
+from sndata.exceptions import InvalidObjId, NoDownloadedData, ObservedDataTypeError
 
 
 class NonEmptyDefaultMessage(TestCase):

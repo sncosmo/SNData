@@ -5,30 +5,30 @@
 sets
 """
 
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from astropy.table import vstack
 
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
-from .base_tests import DataParsingTestBase
+from . import template_tests
 
 
-class Combined(DataParsingTestBase):
+class Combined(TestCase, template_tests.PhotometricDataParsing):
     """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
 
     @classmethod
     def setUpClass(cls):
-        cls.joined_surveys = (csp.dr3, des.sn3yr)
-        cls.module = CombinedDataset(*cls.joined_surveys)
-        cls.module.download_module_data()
+        cls.joined_surveys = (csp.DR3(), des.SN3YR())
+        cls.test_class = CombinedDataset(*cls.joined_surveys)
+        cls.test_class.download_module_data()
 
     def test_obj_id_dataframe(self):
         """Test for expected data releases in object id DataFrame"""
 
-        expected = set(s.survey_abbrev.lower() for s in self.joined_surveys)
-        actual = set(self.module._obj_ids['survey'])
+        expected = set(s.survey_abbrev for s in self.joined_surveys)
+        actual = set(self.test_class._obj_ids['survey'])
         self.assertEqual(expected, actual)
 
     def test_id_joining(self):
@@ -36,17 +36,18 @@ class Combined(DataParsingTestBase):
 
         # Get data for two individual IDs and manual vstack them to get
         # the combined data
-        test_ids = [('2004dt', 'dr3', 'csp'), ('2004ef', 'dr3', 'csp')]
-        expected_obj0_data = self.module.get_data_for_id(test_ids[0], True)
-        expected_obj1_data = self.module.get_data_for_id(test_ids[1], True)
+        test_ids = [('2004dt', 'DR3', 'CSP'), ('2004ef', 'DR3', 'CSP')]
+        expected_obj0_data = self.test_class.get_data_for_id(test_ids[0], True)
+        expected_obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
         expected_return = vstack(
             (expected_obj0_data, expected_obj1_data),
-            metadata_conflicts='silent')
+            metadata_conflicts='silent'
+        )
 
         # Join IDs and make sure we get the combined data from get_data_for_id
         # sorted operations are only to make unittest reports neater
-        self.module.join_ids(*test_ids)
-        actual_return = self.module.get_data_for_id(test_ids[0], True)
+        self.test_class.join_ids(*test_ids)
+        actual_return = self.test_class.get_data_for_id(test_ids[0], True)
         self.assertListEqual(
             sorted(expected_return.as_array().tolist()),
             sorted(actual_return.as_array().tolist()),
@@ -54,9 +55,9 @@ class Combined(DataParsingTestBase):
         )
 
         # Check we get the original data after seperating ids
-        self.module.separate_ids(test_ids[0])
-        obj0_data = self.module.get_data_for_id(test_ids[0], True)
-        obj1_data = self.module.get_data_for_id(test_ids[1], True)
+        self.test_class.separate_ids(*test_ids[0])
+        obj0_data = self.test_class.get_data_for_id(test_ids[0], True)
+        obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
         self.assertListEqual(
             sorted(expected_obj0_data.as_array().tolist()),
             sorted(obj0_data.as_array().tolist()),
@@ -69,11 +70,13 @@ class Combined(DataParsingTestBase):
             'Incorrect data for second ID after joining.'
         )
 
-    def test_ids_are_sorted(self):
-        self._test_ids_are_sorted()
+    @skip('Table functionality not supported by combined data sets')
+    def test_cache_not_mutated(self):
+        pass
 
-    def test_no_empty_data_tables(self):
-        self._test_no_empty_data_tables(10)
+    @skip('Table functionality not supported by combined data sets')
+    def test_paper_tables_are_parsed(self):
+        pass
 
 
 class MapReduction(TestCase):

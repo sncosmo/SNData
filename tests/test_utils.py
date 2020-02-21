@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-from os import environ
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import numpy as np
 
 from sndata import _utils as utils
+from sndata.exceptions import NoDownloadedData
 
 
 class ConvertToJD(TestCase):
@@ -45,38 +44,17 @@ class ConvertToJD(TestCase):
             'Incorrect date for JD format')
 
 
-class CreateDataDir(TestCase):
+class CheckUrl(TestCase):
     """Tests for the ``convert_to_jd`` function"""
 
-    @classmethod
-    def setUpClass(cls):
-        """Create a temporary directory and add it to the environment"""
-        cls.test_dir = TemporaryDirectory()
-        cls.old_environ = environ.copy()
-        environ['SNDATA_DIR'] = cls.test_dir.name
+    def test_offline_url_warning(self):
+        fake_url = 'https://www.thisurllisfake.com/'
+        self.assertWarns(Warning, utils.check_url, fake_url)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.test_dir.cleanup()
-        del environ['SNDATA_DIR']
-        environ.update(cls.old_environ)
 
-    # Todo: Fail on Mac OS
-    def test_directories_are_created(self):
-        """Test the function creates subdirectories with the expected naming structure"""
+class RequireDataPath(TestCase):
+    """Tests for the ``require_data_path`` function"""
 
-        survey_name = 'dummy_survey'
-        release_name = 'dummy_release'
-        expected_path = Path(self.test_dir.name) / survey_name / release_name
-        created_path = utils.create_data_dir(survey_name, release_name)
-
-        self.assertEqual(expected_path, created_path, 'Directory does not match expected name')
-        self.assertTrue(created_path.exists(), 'Directory does not exist')
-
-    def test_spaces_stripped_from_names(self):
-        """Test spaces are stripped before creatign the directories"""
-
-        survey_name = 'survey with spaces'
-        release_name = 'release with spaces'
-        created_path = utils.create_data_dir(survey_name, release_name)
-        self.assertFalse(' ' in str(created_path), 'Directory name has spaces')
+    def test_missing_dir_raises_error(self):
+        fake_dir = Path('./This_dir_is_fake')
+        self.assertRaises(NoDownloadedData, utils.require_data_path, fake_dir)

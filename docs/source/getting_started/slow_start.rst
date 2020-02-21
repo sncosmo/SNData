@@ -19,7 +19,10 @@ Survey.
 .. code-block:: python
    :linenos:
 
-   from sndata.csp import dr3
+   from sndata.csp import DR3
+
+   # At instantiation, the DR3 class determines where the data is located on your machine
+   dr3 = DR3()
 
    # Information about the parent survey
    print(dr3.survey_name)

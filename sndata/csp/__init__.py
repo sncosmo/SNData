@@ -3,10 +3,11 @@
 
 """The ``csp`` module provides access to data from the Carnegie Supernova
 Project (CSP). It includes data from the first (DR1) and third (DR3) data
-releases. For more information on CSP see https://csp.obs.carnegiescience.edu .
+releases.
 """
 
-from . import dr1, dr3
+from ._dr1 import DR1
+from ._dr3 import DR3
 
 survey_name = 'Carnegie Supernova Project'
 survey_abbrev = 'CSP'

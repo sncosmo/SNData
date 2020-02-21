@@ -9,9 +9,12 @@ For a more in depth overview, see the :ref:`SlowStart`.
    :linenos:
 
    # All data releases are available as `sndata.survey_name.release_name`
-   from sndata.csp import dr3
+   from sndata.csp import DR3
 
-   # Start by downloading data to your machine. Note:
+   # Start by creating an instance of the data release
+   dr3 = DR3()
+
+   # Download data to your machine. Note:
    # If it is already downloaded, this function call won't do anything.
    dr3.download_module_data()
 
