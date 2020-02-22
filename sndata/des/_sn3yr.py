@@ -83,9 +83,9 @@ class SN3YR(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._filter_dir = self._data_dir / '01-FILTERS' / 'DECam'
-        self._photometry_dir = self._data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
-        self._fits_dir = self._data_dir / '04-BBCFITS'
+        self._filter_dir = self._data_dir / 'filters' / '01-FILTERS' / 'DECam'
+        self._photometry_dir = self._data_dir / 'photometry' / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
+        self._fits_dir = self._data_dir / 'fit_tables' / '04-BBCFITS'
 
         # Define urls for remote data
         _des_url = 'http://desdr-server.ncsa.illinois.edu/despublic/sn_files/y3/tar_files/'
@@ -200,26 +200,26 @@ class SN3YR(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        if (force or not self._filter_dir.exists()) \
-                and utils.check_url(self._filter_url):
-            log.info('Downloading filters...')
-            utils.download_tar(
-                url=self._filter_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading filters...')
+        utils.download_tar(
+            url=self._filter_url,
+            out_dir=self._data_dir / 'filters',
+            mode='r:gz',
+            force=force
+        )
 
-        if (force or not self._photometry_dir.exists()) \
-                and utils.check_url(self._photometry_url):
-            log.info('Downloading photometry...')
-            utils.download_tar(
-                url=self._photometry_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading photometry...')
+        utils.download_tar(
+            url=self._photometry_url,
+            out_dir=self._data_dir / 'photometry',
+            mode='r:gz',
+            force=force
+        )
 
-        if (force or not self._fits_dir.exists()) \
-                and utils.check_url(self._fits_url):
-            log.info('Downloading Light-Curve Fits...')
-            utils.download_tar(
-                url=self._fits_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading Light-Curve Fits...')
+        utils.download_tar(
+            url=self._fits_url,
+            out_dir=self._data_dir / 'fit_tables',
+            mode='r:gz',
+            force=force
+        )

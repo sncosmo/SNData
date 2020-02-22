@@ -5,6 +5,7 @@
 
 import logging
 import zipfile
+from datetime import datetime
 from pathlib import Path
 from typing import List, Union
 from urllib.parse import urljoin
@@ -13,7 +14,7 @@ from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
-from datetime import datetime
+
 log = logging.getLogger(__name__)
 
 
@@ -184,17 +185,13 @@ class Sako18Spec(SpectroscopicRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        # Tables from the published paper
-        if utils.check_url(self._base_url):
-            for file_name in self._table_names:
-
-                out_path = self._table_dir / file_name
-                if force or not out_path.exists():
-                    log.info(f'Downloading {file_name}...')
-                    utils.download_file(
-                        url=self._base_url + file_name,
-                        out_file=out_path
-                    )
+        log.info(f'Downloading tables...')
+        for file_name in self._table_names:
+            utils.download_file(
+                url=self._base_url + file_name,
+                path=self._table_dir / file_name,
+                force=force
+            )
 
         # if (force or not meta.spectra_dir.exists()) \
         #         and utils.check_url(meta.spectra_url):

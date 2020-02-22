@@ -125,7 +125,7 @@ class Narayan16(PhotometricRelease):
             decm=object_metadata['DEm'],
             decs=object_metadata['DEs']
         )
-        
+
         data_table.meta['obj_id'] = obj_id
         data_table.meta['ra'] = ra
         data_table.meta['dec'] = dec
@@ -145,21 +145,23 @@ class Narayan16(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading tables and photometry...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        log.info('Downloading tables and photometry...')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            mode='r:gz',
+            force=force
+        )
 
-        if (force or not self._filter_dir.exists()) \
-                and utils.check_url(self._i_filter_url):
-            log.info('Downloading tables and photometry...')
-            utils.download_file(
-                url=self._i_filter_url,
-                out_file=self._filter_dir / 'I_band.dat')
+        log.info('Downloading filters...')
+        utils.download_file(
+            url=self._i_filter_url,
+            path=self._filter_dir / 'I_band.dat',
+            force=force
+        )
 
-            utils.download_file(
-                url=self._r_filter_url,
-                out_file=self._filter_dir / 'R_band.dat')
+        utils.download_file(
+            url=self._r_filter_url,
+            path=self._filter_dir / 'R_band.dat',
+            force=force
+        )

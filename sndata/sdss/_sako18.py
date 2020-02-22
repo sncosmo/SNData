@@ -258,45 +258,42 @@ class Sako18(PhotometricRelease):
         """
 
         # Photometry
-        if (force or not self._smp_dir.exists()) and utils.check_url(self._smp_url):
-            log.info('Downloading SMP data...')
-            utils.download_tar(
+        log.info('Downloading SMP data...')
+        utils.download_tar(
                 url=self._smp_url,
                 out_dir=self._data_dir,
-                mode='r:gz')
+                mode='r:gz',
+                force=force
+        )
 
         # SNANA files - including files specifying "bad" photometry data points
-        if (force or not self._snana_dir.exists()) and utils.check_url(self._snana_url):
-            log.info('Downloading SNANA data...')
-            utils.download_tar(
-                url=self._snana_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading SNANA data...')
+        utils.download_tar(
+            url=self._snana_url,
+            out_dir=self._data_dir,
+            mode='r:gz',
+            force=force
+        )
 
-            # Unzip file listing "bad" photometry
-            outlier_archive = self._snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
+        # Unzip file listing "bad" photometry
+        outlier_archive = self._snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
+        if outlier_archive.exists():
+            log.info('Unzipping SNANA data...')
             with tarfile.open(str(outlier_archive), mode='r:gz') as data:
                 data.extractall(str(outlier_archive.parent))
 
-        # Tables from the published paper
-        if utils.check_url(self._base_url):
-            for file_name in self._table_names:
+        log.info(f'Downloading tables...')
+        for file_name in self._table_names:
+            utils.download_file(
+                url=self._base_url + file_name,
+                path=self._table_dir / file_name,
+                force=force
+            )
 
-                out_path = self._table_dir / file_name
-                if force or not out_path.exists():
-                    log.info(f'Downloading {file_name}...')
-                    utils.download_file(
-                        url=self._base_url + file_name,
-                        out_file=out_path
-                    )
-
-        # Photometric filters
-        if utils.check_url(self._filter_url):
-            for file_name in self._filter_file_names:
-                out_path = self._filter_dir / file_name
-                if force or not out_path.exists():
-                    log.info(f'Downloading {file_name}...')
-                    utils.download_file(
-                        url=self._filter_url + file_name,
-                        out_file=out_path
-                    )
+        log.info(f'Downloading filters...')
+        for file_name in self._filter_file_names:
+            utils.download_file(
+                url=self._filter_url + file_name,
+                path=self._filter_dir / file_name,
+                force=force
+            )

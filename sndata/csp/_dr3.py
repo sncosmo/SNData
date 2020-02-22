@@ -58,8 +58,6 @@ def parse_snoopy_data(path: str):
 def fix_dr3_readme(readme_path: str):
     """Fix typos in the DR3 CDS Readme so it is machine parsable
 
-    Argument is modified in-place
-
     Args:
         readme_path: Path of the README file to fix
     """
@@ -141,9 +139,9 @@ class DR3(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._photometry_dir = self._data_dir / 'DR3'  # DR3 Light Curves
-        self._filter_dir = self._data_dir / 'filters'  # DR3 Filters
-        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
+        self._photometry_dir = self._data_dir / 'photometry' / 'DR3'
+        self._filter_dir = self._data_dir / 'filters'
+        self._table_dir = self._data_dir / 'tables'
 
         # Define urls for remote data
         self._photometry_url = 'https://csp.obs.carnegiescience.edu/data/CSP_Photometry_DR3.tgz'
@@ -232,33 +230,32 @@ class DR3(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading data tables...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        log.info('Downloading data tables...')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            mode='r:gz',
+            force=force
+        )
 
-            # Fix formatting of CDS Readme
-            fix_dr3_readme(self._table_dir / 'ReadMe')
+        # Fix formatting of CDS Readme
+        readme_path = self._table_dir / 'ReadMe'
+        if readme_path.exists():
+            fix_dr3_readme(readme_path)
 
         # Download photometry
-        if (force or not self._photometry_dir.exists()) \
-                and utils.check_url(self._photometry_url):
-            log.info('Downloading photometry...')
-            utils.download_tar(
-                url=self._photometry_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading photometry...')
+        utils.download_tar(
+            url=self._photometry_url,
+            out_dir=self._data_dir / 'photometry',
+            mode='r:gz',
+            force=force
+        )
 
-        # Download filters
-        if (force or not self._filter_dir.exists()) \
-                and utils.check_url(self._filter_url):
-
-            log.info('Downloading filters...')
-            for file_name in self._filter_file_names:
-                utils.download_file(
-                    url=self._filter_url + file_name,
-                    out_file=self._filter_dir / file_name)
+        log.info('Downloading filters...')
+        for file_name in self._filter_file_names:
+            utils.download_file(
+                url=self._filter_url + file_name,
+                path=self._filter_dir / file_name,
+                force=force
+            )

@@ -5,10 +5,9 @@
 
 import logging
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Union
 
-import numpy as np
-from astropy.table import Column, Table, vstack
+from astropy.table import Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
@@ -48,12 +47,11 @@ def _read_file(path: Union[str, Path]) -> (float, float, Table):
     # Add remaining columns. These values are constant for a single file
     # (i.e. a single spectrum) but vary across files (across spectra)
     _, _, w_range, telescope, instrument = path.stem.split('_')
-    date_col = Column(data=np.full(len(data), obs_date), name='date')
-    epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
-    wr_col = Column(data=np.full(len(data), w_range), name='wavelength_range')
-    tel_col = Column(data=np.full(len(data), telescope), name='telescope')
-    inst_col = Column(data=np.full(len(data), instrument), name='instrument')
-    data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
+    data['date'] = obs_date
+    data['epoch'] = epoch
+    data['wavelength_range'] = w_range
+    data['telescope'] = telescope
+    data['instrument'] = instrument
 
     # Ensure dates are in JD format
     data['date'] = utils.convert_to_jd(data['date'])
@@ -89,8 +87,8 @@ class DR1(SpectroscopicRelease):
         super().__init__()
 
         # Local paths
-        self._spectra_dir = self._data_dir / 'CSP_spectra_DR1'  # DR1 spectra
-        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
+        self._spectra_dir = self._data_dir / 'spectra' / 'CSP_spectra_DR1'
+        self._table_dir = self._data_dir / 'tables'
 
         # Define urls for remote data
         self._spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
@@ -129,12 +127,13 @@ class DR1(SpectroscopicRelease):
             max_date, redshift, spectral_data = _read_file(path)
             out_table = vstack([out_table, spectral_data])
 
-            out_table.meta['obj_id'] = obj_id
-            out_table.meta['ra'] = None
-            out_table.meta['dec'] = None
-            out_table.meta['z'] = redshift
-            out_table.meta['z_err'] = None
-            del out_table.meta['comments']
+        # Add meta data
+        out_table.meta['obj_id'] = obj_id
+        out_table.meta['ra'] = None
+        out_table.meta['dec'] = None
+        out_table.meta['z'] = redshift
+        out_table.meta['z_err'] = None
+        del out_table.meta['comments']
 
         if format_table:
             out_table.rename_column('date', 'time')
@@ -148,20 +147,19 @@ class DR1(SpectroscopicRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading data tables...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        log.info('Downloading data tables...')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            mode='r:gz',
+            force=force
+        )
 
         # Download spectra
-        if (force or not self._spectra_dir.exists()) \
-                and utils.check_url(self._spectra_url):
-            log.info('Downloading spectra...')
-            utils.download_tar(
-                url=self._spectra_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        log.info('Downloading spectra...')
+        utils.download_tar(
+            url=self._spectra_url,
+            out_dir=self._data_dir / 'spectra',
+            mode='r:gz',
+            force=force
+        )

@@ -142,26 +142,26 @@ class Balland09(SpectroscopicRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) and utils.check_url(
-                self._table_url):
-            log.info('Downloading data tables...')
+        log.info('Downloading data tables...')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            mode='r:gz',
+            force=force
+        )
+
+        readme_path = self._table_dir / 'ReadMe'
+        if readme_path.exists():
+            fix_balland09_cds_readme(readme_path)
+
+        # Download both kinds of spectra
+        spec_urls = self._phase_spectra_url, self._snonly_spectra_url
+        names = 'combined', 'supernova only'
+        for spectra_url, data_name in zip(spec_urls, names):
+            log.info(f'Downloading {data_name} spectra...')
             utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
-
-        fix_balland09_cds_readme(self._table_dir / 'ReadMe')
-
-        # Download spectra
-        if (force or not self._spectra_dir.exists()):
-            spec_urls = self._phase_spectra_url, self._snonly_spectra_url
-            names = 'combined', 'supernova only'
-
-            for spectra_url, data_name in zip(spec_urls, names):
-                if utils.check_url(spectra_url):
-                    log.info(f'Downloading {data_name} spectra...')
-                    utils.download_tar(
-                        url=spectra_url,
-                        out_dir=self._spectra_dir,
-                        mode='r:gz')
+                url=spectra_url,
+                out_dir=self._spectra_dir,
+                mode='r:gz',
+                force=force
+            )
