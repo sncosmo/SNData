@@ -10,7 +10,6 @@ from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryFile
 from typing import TextIO, Union
-from astropy.utils.console import ProgressBarOrSpinner
 
 import numpy as np
 import requests
