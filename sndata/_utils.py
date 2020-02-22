@@ -10,7 +10,7 @@ from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryFile
 from typing import TextIO, Union
-from warnings import warn
+from astropy.utils.console import ProgressBarOrSpinner
 
 import numpy as np
 import requests
@@ -190,6 +190,7 @@ def download_file(
         file_obj = open(path, 'wb')
 
     # Establish remote connection
+    print(f'Fetching {url}')
     response = requests.get(url, timeout=timeout)
     response.raise_for_status()
     file_obj.write(response.content)
