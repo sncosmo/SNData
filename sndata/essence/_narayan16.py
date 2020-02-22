@@ -140,7 +140,7 @@ class Narayan16(PhotometricRelease):
 
         Args:
             force: Re-Download locally available data
-            timeout: Seconds before raising timeout for individual files
+            timeout: Seconds before timeout for individual files/archives
         """
 
         utils.download_tar(

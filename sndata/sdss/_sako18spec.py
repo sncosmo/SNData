@@ -180,7 +180,7 @@ class Sako18Spec(SpectroscopicRelease):
 
         Args:
             force: Re-Download locally available data
-            timeout: Seconds before raising timeout for individual files
+            timeout: Seconds before timeout for individual files/archives
         """
 
         for file_name in self._table_names:
