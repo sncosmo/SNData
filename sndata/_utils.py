@@ -159,7 +159,7 @@ def convert_to_jd(date: float):
     return date
 
 
-def check_url(url: str, timeout: int = None):
+def check_url(url: str, timeout: int = 20):
     """Return whether a connection can be established to a given URL
 
     If False, a warning is also raised.
@@ -208,7 +208,7 @@ def download_file(
         file_obj = open(path, 'wb')
 
     # Establish remote connection
-    response = requests.get(url)
+    response = requests.get(url, timeout=60)
     response.raise_for_status()
     file_obj.write(response.content)
 
