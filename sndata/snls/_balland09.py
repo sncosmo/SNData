@@ -132,11 +132,12 @@ class Balland09(SpectroscopicRelease):
 
         return out_table
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before raising timeout for individual files
         """
 
         utils.download_tar(
@@ -158,5 +159,6 @@ class Balland09(SpectroscopicRelease):
                 url=spectra_url,
                 out_dir=self._spectra_dir,
                 mode='r:gz',
-                force=force
+                force=force,
+                timeout=timeout
             )

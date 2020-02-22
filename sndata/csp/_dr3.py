@@ -220,18 +220,20 @@ class DR3(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before raising timeout for individual files
         """
 
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             mode='r:gz',
-            force=force
+            force=force,
+            timeout=timeout
         )
 
         # Fix formatting of CDS Readme
@@ -244,12 +246,14 @@ class DR3(PhotometricRelease):
             url=self._photometry_url,
             out_dir=self._data_dir / 'photometry',
             mode='r:gz',
-            force=force
+            force=force,
+            timeout=timeout
         )
 
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,
                 path=self._filter_dir / file_name,
-                force=force
+                force=force,
+                timeout=timeout
             )

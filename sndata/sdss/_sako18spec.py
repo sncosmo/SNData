@@ -175,18 +175,20 @@ class Sako18Spec(SpectroscopicRelease):
         out_data.meta['dtype'] = 'spectroscopic'
         return out_data
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before raising timeout for individual files
         """
 
         for file_name in self._table_names:
             utils.download_file(
                 url=self._base_url + file_name,
                 path=self._table_dir / file_name,
-                force=force
+                force=force,
+                timeout=timeout
             )
 
         # if (force or not meta.spectra_dir.exists()) \

@@ -159,31 +159,12 @@ def convert_to_jd(date: float):
     return date
 
 
-def check_url(url: str, timeout: int = 20):
-    """Return whether a connection can be established to a given URL
-
-    If False, a warning is also raised.
-
-    Args:
-        url: The URL to check
-        timeout: Optional number of seconds to timeout after
-
-    Returns:
-        A boolean
-    """
-
-    try:
-        _ = requests.get(url, timeout=timeout)
-        return True
-
-    except requests.ConnectionError:
-        warn(f'Could not connect to {url}')
-
-    return False
-
-
 def download_file(
-        url: str, path: str = None, file_obj: TextIO = None, force: bool = False):
+        url: str,
+        path: str = None,
+        file_obj: TextIO = None,
+        force: bool = False,
+        timeout: float = 15):
     """Download content from a url to a file
 
     If ``path`` is specified but already exists, skip the download by default.
@@ -193,6 +174,7 @@ def download_file(
         path: The path or file stream to write to
         file_obj: Optionally write to a file like object instead of path
         force: Re-Download locally available data (Default: False)
+        timeout: Seconds before raising timeout error (Default: 15)
     """
 
     if file_obj is None:
@@ -201,14 +183,14 @@ def download_file(
 
         # Skip download if file already exists or url unavailable
         path = Path(path)
-        if not ((force or not path.exists()) and check_url(url)):
+        if not (force or not path.exists()):
             return
 
         path.parent.mkdir(parents=True, exist_ok=True)
         file_obj = open(path, 'wb')
 
     # Establish remote connection
-    response = requests.get(url, timeout=60)
+    response = requests.get(url, timeout=timeout)
     response.raise_for_status()
     file_obj.write(response.content)
 
@@ -216,7 +198,12 @@ def download_file(
         file_obj.close()
 
 
-def download_tar(url: str, out_dir: str, mode: str = None, force: bool = False):
+def download_tar(
+        url: str,
+        out_dir: str,
+        mode: str = None,
+        force: bool = False,
+        timeout: float = 15):
     """Download and unzip a .tar.gz file to a given output directory
 
     If ``out_dir`` already exists, skip the download by default.
@@ -226,17 +213,18 @@ def download_tar(url: str, out_dir: str, mode: str = None, force: bool = False):
         out_dir: The directory to unzip file contents to
         mode: Compression mode (Default: r:gz)
         force: Re-Download locally available data (Default: False)
+        timeout: Seconds before raising timeout error (Default: 15)
     """
 
     out_dir = Path(out_dir)
 
     # Skip download if file already exists or url unavailable
-    if not ((force or not out_dir.exists()) and check_url(url)):
+    if not (force or not out_dir.exists()):
         return
 
     # Download data to file and decompress
     with TemporaryFile() as temp_file:
-        download_file(url, file_obj=temp_file)
+        download_file(url, file_obj=temp_file, timeout=timeout)
 
         # Writing to the file moves us to the end of the file
         # We move back to the beginning so we can decompress the data
