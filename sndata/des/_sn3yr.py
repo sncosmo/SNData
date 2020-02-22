@@ -3,7 +3,6 @@
 
 """This module defines the DES SN3YR API"""
 
-import logging
 from typing import List
 from typing import Union
 
@@ -13,8 +12,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 def _format_sncosmo_table(data_table: Table) -> Table:
@@ -200,7 +197,6 @@ class SN3YR(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info('Downloading filters...')
         utils.download_tar(
             url=self._filter_url,
             out_dir=self._data_dir / 'filters',
@@ -208,7 +204,6 @@ class SN3YR(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading photometry...')
         utils.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir / 'photometry',
@@ -216,7 +211,6 @@ class SN3YR(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading Light-Curve Fits...')
         utils.download_tar(
             url=self._fits_url,
             out_dir=self._data_dir / 'fit_tables',

@@ -3,7 +3,6 @@
 
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
-import logging
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -14,8 +13,6 @@ from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
-
-log = logging.getLogger(__name__)
 
 
 class Sako18Spec(SpectroscopicRelease):
@@ -185,7 +182,6 @@ class Sako18Spec(SpectroscopicRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info(f'Downloading tables...')
         for file_name in self._table_names:
             utils.download_file(
                 url=self._base_url + file_name,
@@ -195,7 +191,6 @@ class Sako18Spec(SpectroscopicRelease):
 
         # if (force or not meta.spectra_dir.exists()) \
         #         and utils.check_url(meta.spectra_url):
-        #     log.info('Downloading spectra...')
         #     utils.download_tar(
         #         url=meta.spectra_url,
         #         out_dir=meta.data_dir,
@@ -203,6 +198,5 @@ class Sako18Spec(SpectroscopicRelease):
 
         # Spectral data parsing requires IRAF so we use preparsed data instead
         if force or not self._spectra_dir.exists():
-            log.info('Unzipping spectra...')
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
                 zip_ref.extractall(self._data_dir)

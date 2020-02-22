@@ -3,7 +3,6 @@
 
 """This module defines the JLA Betoule14 API"""
 
-import logging
 from typing import List
 
 import numpy as np
@@ -14,8 +13,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 class Betoule14(PhotometricRelease):
@@ -324,7 +321,6 @@ class Betoule14(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info('Downloading data tables...')
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
@@ -332,7 +328,6 @@ class Betoule14(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading photometry...')
         utils.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir / 'photometry',
@@ -340,7 +335,6 @@ class Betoule14(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading filters...')
         utils.download_file(
             url=self._filter_url,
             path=self._filter_path,

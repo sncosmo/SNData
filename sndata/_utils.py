@@ -4,7 +4,6 @@
 """This module provides general utilities."""
 
 import functools
-import logging
 import os
 import tarfile
 from copy import deepcopy
@@ -20,8 +19,6 @@ from astropy.coordinates import Angle
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
-
-log = logging.getLogger(__name__)
 
 
 def hourangle_to_degrees(
@@ -211,7 +208,6 @@ def download_file(
         file_obj = open(path, 'wb')
 
     # Establish remote connection
-    log.info(f'Fetching {url}')
     response = requests.get(url)
     response.raise_for_status()
     file_obj.write(response.content)

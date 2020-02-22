@@ -3,7 +3,6 @@
 
 """This module defines the SDSS Sako18 API for photometric data"""
 
-import logging
 import tarfile
 from itertools import product
 from typing import List, Union
@@ -15,8 +14,6 @@ from astropy.table import Column, Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 @np.vectorize
@@ -258,7 +255,6 @@ class Sako18(PhotometricRelease):
         """
 
         # Photometry
-        log.info('Downloading SMP data...')
         utils.download_tar(
                 url=self._smp_url,
                 out_dir=self._data_dir,
@@ -267,7 +263,6 @@ class Sako18(PhotometricRelease):
         )
 
         # SNANA files - including files specifying "bad" photometry data points
-        log.info('Downloading SNANA data...')
         utils.download_tar(
             url=self._snana_url,
             out_dir=self._data_dir,
@@ -278,11 +273,9 @@ class Sako18(PhotometricRelease):
         # Unzip file listing "bad" photometry
         outlier_archive = self._snana_dir / 'SDSS_allCandidates+BOSS.tar.gz'
         if outlier_archive.exists():
-            log.info('Unzipping SNANA data...')
             with tarfile.open(str(outlier_archive), mode='r:gz') as data:
                 data.extractall(str(outlier_archive.parent))
 
-        log.info(f'Downloading tables...')
         for file_name in self._table_names:
             utils.download_file(
                 url=self._base_url + file_name,
@@ -290,7 +283,6 @@ class Sako18(PhotometricRelease):
                 force=force
             )
 
-        log.info(f'Downloading filters...')
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,

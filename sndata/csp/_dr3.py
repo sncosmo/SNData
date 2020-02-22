@@ -3,7 +3,6 @@
 
 """This module defines the CSP DR3 API"""
 
-import logging
 import os
 from typing import List
 
@@ -12,8 +11,6 @@ from astropy.table import Table
 
 from sndata import _utils as utils
 from sndata.base_classes import PhotometricRelease
-
-log = logging.getLogger(__name__)
 
 
 def parse_snoopy_data(path: str):
@@ -230,7 +227,6 @@ class DR3(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info('Downloading data tables...')
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
@@ -244,7 +240,6 @@ class DR3(PhotometricRelease):
             fix_dr3_readme(readme_path)
 
         # Download photometry
-        log.info('Downloading photometry...')
         utils.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir / 'photometry',
@@ -252,7 +247,6 @@ class DR3(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading filters...')
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,

@@ -3,7 +3,6 @@
 
 """This module defines the Essence Narayan16 API"""
 
-import logging
 from pathlib import Path
 from typing import List
 
@@ -13,8 +12,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 def _format_table(data_table: Table) -> Table:
@@ -145,7 +142,6 @@ class Narayan16(PhotometricRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info('Downloading tables and photometry...')
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
@@ -153,7 +149,6 @@ class Narayan16(PhotometricRelease):
             force=force
         )
 
-        log.info('Downloading filters...')
         utils.download_file(
             url=self._i_filter_url,
             path=self._filter_dir / 'I_band.dat',

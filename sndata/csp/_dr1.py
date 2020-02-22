@@ -3,7 +3,6 @@
 
 """This module defines the CSP DR1 API"""
 
-import logging
 from pathlib import Path
 from typing import List, Union
 
@@ -11,8 +10,6 @@ from astropy.table import Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
-
-log = logging.getLogger(__name__)
 
 
 def _read_file(path: Union[str, Path]) -> (float, float, Table):
@@ -147,7 +144,6 @@ class DR1(SpectroscopicRelease):
             force: Re-Download locally available data (Default: False)
         """
 
-        log.info('Downloading data tables...')
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
@@ -156,7 +152,6 @@ class DR1(SpectroscopicRelease):
         )
 
         # Download spectra
-        log.info('Downloading spectra...')
         utils.download_tar(
             url=self._spectra_url,
             out_dir=self._data_dir / 'spectra',
