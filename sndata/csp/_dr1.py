@@ -4,7 +4,7 @@
 """This module defines the CSP DR1 API"""
 
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
 from astropy.table import Table, vstack
 
@@ -12,21 +12,21 @@ from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
 
 
-def _read_file(path: Union[str, Path]) -> (float, float, Table):
+def read_dr1_file(path: str) -> Table:
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:
-        path (str or Path): Path of file to read
+        path: Path of file to read
 
     Returns:
-        - The data of maximum for the observed target
-        - The redshift of the target
-        - An astropy table with file data and meta data
+        An astropy table with file data and meta data
     """
 
-    # Handle the single file with a different data model:
-    # There are three columns instead of two
     path = Path(path)
+    obj_id = '20' + path.name.split('_')[0].lstrip('SN')
+
+    # Handle the single file with a different data model:
+    # This file has three columns instead of two
     if path.stem == 'SN07bc_070409_b01_BAA_IM':
         data = Table.read(path, format='ascii', names=['wavelength', 'flux', '_'])
         data.remove_column('_')
@@ -34,25 +34,38 @@ def _read_file(path: Union[str, Path]) -> (float, float, Table):
     else:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
-    # Get various data from the table meta data
+    # Read the table meta data
     file_comments = data.meta['comments']
     redshift = float(file_comments[1].lstrip('Redshift: '))
-    max_date = float(file_comments[2].lstrip('JDate_of_max: '))
     obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
     epoch = float(file_comments[4].lstrip('Epoch: '))
+
+    # Add meta data
+    data.meta['obj_id'] = obj_id
+    data.meta['ra'] = None
+    data.meta['dec'] = None
+    data.meta['z'] = redshift
+    data.meta['z_err'] = None
+    del data.meta['comments']
 
     # Add remaining columns. These values are constant for a single file
     # (i.e. a single spectrum) but vary across files (across spectra)
     _, _, w_range, telescope, instrument = path.stem.split('_')
-    data['date'] = obs_date
+    data['time'] = obs_date
     data['epoch'] = epoch
     data['wavelength_range'] = w_range
     data['telescope'] = telescope
     data['instrument'] = instrument
 
     # Ensure dates are in JD format
-    data['date'] = utils.convert_to_jd(data['date'])
-    return max_date, redshift, data
+    data['time'] = utils.convert_to_jd(data['time'])
+
+    # Enforce an intuitive column order
+    column_order = [
+        'time', 'wavelength', 'flux', 'epoch',
+        'wavelength_range', 'telescope', 'instrument']
+
+    return data[column_order]
 
 
 class DR1(SpectroscopicRelease):
@@ -110,32 +123,11 @@ class DR1(SpectroscopicRelease):
             An astropy table of data for the given ID
         """
 
-        out_table = Table(
-            names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
-                   'telescope', 'instrument'],
-            dtype=[float, float, float, float, 'U3', 'U3', 'U2']
-        )
-
         files = self._spectra_dir.rglob(f'SN{obj_id[2:]}_*.dat')
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
-        for path in files:
-            max_date, redshift, spectral_data = _read_file(path)
-            out_table = vstack([out_table, spectral_data])
-
-        # Add meta data
-        out_table.meta['obj_id'] = obj_id
-        out_table.meta['ra'] = None
-        out_table.meta['dec'] = None
-        out_table.meta['z'] = redshift
-        out_table.meta['z_err'] = None
-        del out_table.meta['comments']
-
-        if format_table:
-            out_table.rename_column('date', 'time')
-
-        return out_table
+        return vstack([read_dr1_file(path) for path in files])
 
     def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release

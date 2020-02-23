@@ -114,9 +114,9 @@ class Sako18(PhotometricRelease):
         # Local paths
         self._filter_dir = self._data_dir / 'doi_2010_filters/'  # Transmission filters
         self._table_dir = self._data_dir / 'tables/'  # Tables from the published paper
-        self._smp_dir = self._data_dir / 'SMP_Data/'  # SMP data files (photometric light-curves)
-        self._snana_dir = self._data_dir / 'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
-        self._outlier_path = self._snana_dir / 'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
+        self._smp_dir = self._data_dir / 'photometry' / 'SMP_Data/'  # SMP data files (photometric light-curves)
+        self._snana_dir = self._data_dir / 'photometry' /'SDSS_dataRelease-snana/'  # SNANA files including list of outliers
+        self._outlier_path = self._snana_dir / 'photometry' /'SDSS_allCandidates+BOSS/SDSS_allCandidates+BOSS.IGNORE'  # Outlier data
 
         self._filter_file_names = tuple(f'{b}{c}.dat' for b, c in product('ugriz', '123456'))
         self._table_names = 'master_data.txt', 'Table2.txt', 'Table9.txt', 'Table11.txt', 'Table12.txt'
@@ -257,7 +257,7 @@ class Sako18(PhotometricRelease):
         # Photometry
         utils.download_tar(
                 url=self._smp_url,
-                out_dir=self._data_dir,
+                out_dir=self._data_dir / 'photometry',
                 mode='r:gz',
                 force=force
         )
@@ -265,7 +265,7 @@ class Sako18(PhotometricRelease):
         # SNANA files - including files specifying "bad" photometry data points
         utils.download_tar(
             url=self._snana_url,
-            out_dir=self._data_dir,
+            out_dir=self._data_dir / 'photometry',
             mode='r:gz',
             force=force
         )

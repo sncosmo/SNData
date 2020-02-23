@@ -73,7 +73,7 @@ class VizierTables:
 
         # Raise error if data is not downloaded
         if table_id not in self.get_available_tables():
-            raise NoDownloadedData(f'Table {table_id} is not available.')
+            raise ValueError(f'Table {table_id} is not available.')
 
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
