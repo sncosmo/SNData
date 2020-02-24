@@ -6,7 +6,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/mwvgroup/SNData/badge.svg?branch=master)](https://coveralls.io/github/mwvgroup/SNData?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/sn-data/badge/?version=latest)](https://sn-data.readthedocs.io/en/latest/?badge=latest)
 
-
 **Supernova data access made easy!!!**
 SNData provides a standardized and intuitive interface for downloading,
 parsing, and manipulating data from supernova surveys. For more information,

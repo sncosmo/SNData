@@ -32,10 +32,10 @@ def fix_balland09_cds_readme(readme_path):
 
 
 class Balland09(SpectroscopicRelease):
-    """The ``Ballan09`` class  provides access to to the three year data 
-    release of the Supernova Legacy Survey (SNLS) performed by the 
-    Canada-France-Hawaï Telescope (CFHT). It includes 139 spectra of 124 
-    Type Ia supernovae that range from z = 0.149 to z = 1.031 and have an 
+    """The ``Ballan09`` class  provides access to to the three year data
+    release of the Supernova Legacy Survey (SNLS) performed by the
+    Canada-France-Hawaï Telescope (CFHT). It includes 139 spectra of 124
+    Type Ia supernovae that range from z = 0.149 to z = 1.031 and have an
     average redshift of z = 0.63 +/- 0.02. (Source: Balland et al. 2009)
 
     Deviations from the standard UI:
