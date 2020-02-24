@@ -7,6 +7,8 @@ plugins:
   pep8:
     enabled: true
     checks:
+      E731:  # Use of lambda
+        enabled: false
       E501:  # line length
         enabled: false
 
