@@ -6,6 +6,9 @@ plugins:
 
   pep8:
     enabled: true
+    config:
+      max-line-length: 110
+
 
   markdownlint:
     enabled: true
