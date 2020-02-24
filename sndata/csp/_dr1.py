@@ -12,11 +12,12 @@ from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
 
 
-def read_dr1_file(path: str) -> Table:
+def read_dr1_file(path: str, format_table: bool = False) -> Table:
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:
         path: Path of file to read
+        format_table: Format table to a sndata standard format
 
     Returns:
         An astropy table with file data and meta data
@@ -40,7 +41,7 @@ def read_dr1_file(path: str) -> Table:
     obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
     epoch = float(file_comments[4].lstrip('Epoch: '))
 
-    # Add meta data
+    # Add meta data to output table according to sndata standard
     data.meta['obj_id'] = obj_id
     data.meta['ra'] = None
     data.meta['dec'] = None
@@ -48,24 +49,25 @@ def read_dr1_file(path: str) -> Table:
     data.meta['z_err'] = None
     del data.meta['comments']
 
-    # Add remaining columns. These values are constant for a single file
-    # (i.e. a single spectrum) but vary across files (across spectra)
-    _, _, w_range, telescope, instrument = path.stem.split('_')
     data['time'] = obs_date
-    data['epoch'] = epoch
-    data['wavelength_range'] = w_range
-    data['telescope'] = telescope
-    data['instrument'] = instrument
+    if format_table:
+        # Add remaining columns. These values are constant for a single file
+        # (i.e. a single spectrum) but vary across files (across spectra)
+        _, _, w_range, telescope, instrument = path.stem.split('_')
+        data['epoch'] = epoch
+        data['wavelength_range'] = w_range
+        data['telescope'] = telescope
+        data['instrument'] = instrument
 
-    # Ensure dates are in JD format
-    data['time'] = utils.convert_to_jd(data['time'])
+        # Ensure dates are in JD format
+        data['time'] = utils.convert_to_jd(data['time'])
 
-    # Enforce an intuitive column order
-    column_order = [
-        'time', 'wavelength', 'flux', 'epoch',
-        'wavelength_range', 'telescope', 'instrument']
+        # Enforce an intuitive column order
+        data = data[[
+            'time', 'wavelength', 'flux', 'epoch',
+            'wavelength_range', 'telescope', 'instrument']]
 
-    return data[column_order]
+    return data
 
 
 class DR1(SpectroscopicRelease):
@@ -127,7 +129,7 @@ class DR1(SpectroscopicRelease):
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
-        return vstack([read_dr1_file(path) for path in files])
+        return vstack([read_dr1_file(path, format_table) for path in files])
 
     def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
