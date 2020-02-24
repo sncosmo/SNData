@@ -1,6 +1,8 @@
 plugins:
- radon:
-  enabled: true
+  radon:
+    enabled: true
+    config:
+      threshold: "C"  # Reports complexity > 10
 
   pep8:
     enabled: true
