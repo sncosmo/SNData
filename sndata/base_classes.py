@@ -14,7 +14,7 @@ from astropy.io import ascii
 from astropy.table import Table
 
 from . import _utils
-from .exceptions import InvalidObjId, NoDownloadedData
+from .exceptions import InvalidObjId
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]

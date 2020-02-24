@@ -26,11 +26,10 @@ def delete_all_data():
         essence.Narayan16(),
         jla.Betoule14(),
         sdss.Sako18(),
-        sdss.Sako18Spec()
+        sdss.Sako18Spec(
+
+        )
     )
 
     for data_class in data_classes:
         data_class.delete_module_data()
-
-
-
