@@ -1,0 +1,15 @@
+plugins:
+ radon:
+  enabled: true
+
+  pep8:
+    enabled: true
+
+  markdownlint:
+    enabled: true
+
+  git-legal:
+    enabled: true
+
+  fixme:
+    enabled: true
