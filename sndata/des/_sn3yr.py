@@ -27,7 +27,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = data_table['JD']
+    out_table['time'] = utils.convert_to_jd(data_table['MJD'])
     out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
     out_table['flux'] = data_table['FLUXCAL']
     out_table['fluxerr'] = data_table['FLUXCALERR']
@@ -172,8 +172,6 @@ class SN3YR(PhotometricRelease):
             names=['VARLIST:', 'MJD', 'BAND', 'FIELD', 'FLUXCAL', 'FLUXCALERR',
                    'ZPFLUX', 'PSF', 'SKYSIG', 'GAIN', 'PHOTFLAG', 'PHOTPROB'])
 
-        data['JD'] = utils.convert_to_jd(data['MJD'])
-
         # Add meta data to table
         with open(file_path) as ofile:
             table_meta_data = ofile.readlines()
@@ -198,6 +196,7 @@ class SN3YR(PhotometricRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
+        # Download filters
         utils.download_tar(
             url=self._filter_url,
             out_dir=self._data_dir / 'filters',
@@ -206,6 +205,7 @@ class SN3YR(PhotometricRelease):
             timeout=timeout
         )
 
+        # Download photometry data
         utils.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir / 'photometry',
@@ -214,6 +214,7 @@ class SN3YR(PhotometricRelease):
             timeout=timeout
         )
 
+        # Download supplementary tables
         utils.download_tar(
             url=self._fits_url,
             out_dir=self._data_dir / 'fit_tables',
