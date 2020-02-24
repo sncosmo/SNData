@@ -9,16 +9,8 @@ matrix:
     - python: 3.7
     - python: 3.8
 
-env:
-  global:
-    CC_TEST_REPORTER_ID=9ec2f743b416ce4be7f55304f7f7b5cc9ceb11afe1b16617f366b337429c1512
-
 # Install codeclimate API
 # https://docs.codeclimate.com/
-before_install:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-
 install:
   - pip install -r requirements.txt
   - python setup.py install
@@ -28,8 +20,14 @@ install:
   - pip install coverage
   - pip install pytest-cov
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
-  - pytest --cov=sndata/
+  - coverage run -m pytest
 
 after_script:
+  - coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
