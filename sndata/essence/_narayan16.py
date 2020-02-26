@@ -62,7 +62,6 @@ class Narayan16(PhotometricRelease):
 
     # Photometric metadata (Required for photometric data, otherwise delete)
     band_names = ('essence_narayan16_R', 'essence_narayan16_I')
-    lambda_effective = (6440, 8050)
     zero_point = tuple(27.5 for _ in band_names)
 
     def __init__(self):
