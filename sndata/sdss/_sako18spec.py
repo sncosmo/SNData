@@ -3,8 +3,8 @@
 
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
-import logging
 import zipfile
+from datetime import datetime
 from pathlib import Path
 from typing import List, Union
 from urllib.parse import urljoin
@@ -13,8 +13,6 @@ from astropy.table import Column, Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
-from datetime import datetime
-log = logging.getLogger(__name__)
 
 
 class Sako18Spec(SpectroscopicRelease):
@@ -177,35 +175,23 @@ class Sako18Spec(SpectroscopicRelease):
         out_data.meta['dtype'] = 'spectroscopic'
         return out_data
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        # Tables from the published paper
-        if utils.check_url(self._base_url):
-            for file_name in self._table_names:
-
-                out_path = self._table_dir / file_name
-                if force or not out_path.exists():
-                    log.info(f'Downloading {file_name}...')
-                    utils.download_file(
-                        url=self._base_url + file_name,
-                        out_file=out_path
-                    )
-
-        # if (force or not meta.spectra_dir.exists()) \
-        #         and utils.check_url(meta.spectra_url):
-        #     log.info('Downloading spectra...')
-        #     utils.download_tar(
-        #         url=meta.spectra_url,
-        #         out_dir=meta.data_dir,
-        #         mode='r:gz')
+        for file_name in self._table_names:
+            utils.download_file(
+                url=self._base_url + file_name,
+                path=self._table_dir / file_name,
+                force=force,
+                timeout=timeout
+            )
 
         # Spectral data parsing requires IRAF so we use preparsed data instead
         if force or not self._spectra_dir.exists():
-            log.info('Unzipping spectra...')
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
                 zip_ref.extractall(self._data_dir)

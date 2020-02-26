@@ -3,7 +3,6 @@
 
 """This module handles combining data from different data sets."""
 
-import logging
 from copy import copy
 from typing import List, Tuple, Union
 
@@ -15,7 +14,6 @@ from . import csp, des, essence, jla, sdss
 from .exceptions import InvalidObjId, ObservedDataTypeError
 
 CombinedID = Tuple[str]
-log = logging.getLogger(__name__)
 
 
 # Todo: Test this function with a dedicated unit test
@@ -164,7 +162,6 @@ class CombinedDataset:
         """
 
         for name, module in self._data_releases.items():
-            log.info(f'Downloading data for {name}')
             module.download_module_data(force=force)
 
     def delete_module_data(self):

@@ -11,7 +11,7 @@ from . import csp, des, essence, jla, sdss
 from ._combine_data import CombinedDataset, get_zp
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
-__version__ = '0.10.1'
+__version__ = '0.10.2'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
@@ -26,11 +26,10 @@ def delete_all_data():
         essence.Narayan16(),
         jla.Betoule14(),
         sdss.Sako18(),
-        sdss.Sako18Spec()
+        sdss.Sako18Spec(
+
+        )
     )
 
     for data_class in data_classes:
         data_class.delete_module_data()
-
-
-

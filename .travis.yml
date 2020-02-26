@@ -9,18 +9,25 @@ matrix:
     - python: 3.7
     - python: 3.8
 
+# Install codeclimate API
+# https://docs.codeclimate.com/
 install:
   - pip install -r requirements.txt
   - python setup.py install
 
-  # For running tests
+  # Extra dependencies for running tests
   - pip install pytest
   - pip install coverage
   - pip install pytest-cov
-  - pip install python-coveralls
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
-  - pytest --cov=sndata/
+  - coverage run -m pytest
 
-after_success:
-  - coveralls
+after_script:
+  - coverage xml
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

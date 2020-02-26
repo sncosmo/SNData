@@ -3,7 +3,6 @@
 
 """This module defines the SNLS Balland09 API"""
 
-import logging
 import os
 from pathlib import Path
 
@@ -12,8 +11,6 @@ from astropy.table import Table, vstack
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 def fix_balland09_cds_readme(readme_path):
@@ -35,10 +32,10 @@ def fix_balland09_cds_readme(readme_path):
 
 
 class Balland09(SpectroscopicRelease):
-    """The ``Ballan09`` class  provides access to to the three year data 
-    release of the Supernova Legacy Survey (SNLS) performed by the 
-    Canada-France-Hawaï Telescope (CFHT). It includes 139 spectra of 124 
-    Type Ia supernovae that range from z = 0.149 to z = 1.031 and have an 
+    """The ``Ballan09`` class  provides access to to the three year data
+    release of the Supernova Legacy Survey (SNLS) performed by the
+    Canada-France-Hawaï Telescope (CFHT). It includes 139 spectra of 124
+    Type Ia supernovae that range from z = 0.149 to z = 1.031 and have an
     average redshift of z = 0.63 +/- 0.02. (Source: Balland et al. 2009)
 
     Deviations from the standard UI:
@@ -73,7 +70,8 @@ class Balland09(SpectroscopicRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        files = self._spectra_dir.glob('*.dat')
+        # Use recursive glob since the data files are in sub directories
+        files = self._spectra_dir.rglob('*.dat')
         ids = (Path(f).name.split('_')[1] for f in files)
         return sorted(set(ids))
 
@@ -93,7 +91,7 @@ class Balland09(SpectroscopicRelease):
             raise InvalidObjId()
 
         tables = []
-        for fpath in self._spectra_dir.glob(f'*_{obj_id}_*_Balland_etal_09.dat'):
+        for fpath in self._spectra_dir.rglob(f'*_{obj_id}_*_Balland_etal_09.dat'):
             data_table = Table.read(
                 fpath,
                 names=['pixel', 'wavelength', 'flux', 'fluxerr'],
@@ -135,33 +133,35 @@ class Balland09(SpectroscopicRelease):
 
         return out_table
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) and utils.check_url(
-                self._table_url):
-            log.info('Downloading data tables...')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            skip_exists=self._table_dir,
+            mode='r:gz',
+            force=force
+        )
+
+        readme_path = self._table_dir / 'ReadMe'
+        if readme_path.exists():
+            fix_balland09_cds_readme(readme_path)
+
+        # Download both kinds of spectra
+        spec_urls = self._phase_spectra_url, self._snonly_spectra_url
+        names = 'combined', 'sn_only'
+        for spectra_url, data_name in zip(spec_urls, names):
             utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
-
-        fix_balland09_cds_readme(self._table_dir / 'ReadMe')
-
-        # Download spectra
-        if (force or not self._spectra_dir.exists()):
-            spec_urls = self._phase_spectra_url, self._snonly_spectra_url
-            names = 'combined', 'supernova only'
-
-            for spectra_url, data_name in zip(spec_urls, names):
-                if utils.check_url(spectra_url):
-                    log.info(f'Downloading {data_name} spectra...')
-                    utils.download_tar(
-                        url=spectra_url,
-                        out_dir=self._spectra_dir,
-                        mode='r:gz')
+                url=spectra_url,
+                out_dir=self._spectra_dir / data_name,
+                skip_exists=self._spectra_dir / data_name,
+                mode='r:gz',
+                force=force,
+                timeout=timeout
+            )

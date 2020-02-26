@@ -4,14 +4,12 @@
 """This module provides general utilities."""
 
 import functools
-import logging
 import os
 import tarfile
 from copy import deepcopy
-from pathlib import Path, PosixPath
+from pathlib import Path
 from tempfile import TemporaryFile
-from typing import Union
-from warnings import warn
+from typing import TextIO, Union
 
 import numpy as np
 import requests
@@ -20,8 +18,6 @@ from astropy.coordinates import Angle
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
-
-log = logging.getLogger(__name__)
 
 
 def hourangle_to_degrees(
@@ -70,9 +66,11 @@ def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
         The path of the directory where
     """
 
+    # Enforce the use of lowercase file names
     safe_survey = survey_abbrev.lower().replace(' ', '_')
     safe_release = release.lower().replace(' ', '_')
 
+    # Default to using data directory specified in the environment
     if 'SNDATA_DIR' in os.environ:
         base_dir = Path(os.environ['SNDATA_DIR']).resolve()
 
@@ -100,6 +98,7 @@ def lru_copy_cache(maxsize: int = 128, typed: bool = False, copy: bool = True):
     """
 
     if not copy:
+        # Return the normal function cache
         return functools.lru_cache(maxsize, typed)
 
     def decorator(f):
@@ -159,83 +158,89 @@ def convert_to_jd(date: float):
     return date
 
 
-def check_url(url: str, timeout: int = None):
-    """Return whether a connection can be established to a given URL
+def download_file(
+        url: str,
+        path: str = None,
+        file_obj: TextIO = None,
+        force: bool = False,
+        timeout: float = 15):
+    """Download content from a url to a file
 
-    If False, a warning is also raised.
-
-    Args:
-        url: The URL to check
-        timeout: Optional number of seconds to timeout after
-
-    Returns:
-        A boolean
-    """
-
-    try:
-        _ = requests.get(url, timeout=timeout)
-        return True
-
-    except requests.ConnectionError:
-        warn(f'Could not connect to {url}')
-
-    return False
-
-
-def download_file(url: str, out_file: str):
-    """Download data to a file
+    If ``path`` is specified but already exists, skip the download by default.
 
     Args:
         url: URL of the file to download
-        out_file: The file path to write to or a file object
+        path: The path or file stream to write to
+        file_obj: Optionally write to a file like object instead of path
+        force: Re-Download locally available data (Default: False)
+        timeout: Seconds before raising timeout error (Default: 15)
     """
 
-    log.info(f'Fetching {url}')
+    if file_obj is None:
+        if path is None:
+            raise ValueError('Must specify either ``path`` or ``file_obj``')
+
+        # Skip download if file already exists or url unavailable
+        path = Path(path)
+        if not (force or not path.exists()):
+            return
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        file_obj = open(path, 'wb')
 
     # Establish remote connection
-    response = requests.get(url)
+    print(f'Fetching {url}')
+    response = requests.get(url, timeout=timeout)
     response.raise_for_status()
+    file_obj.write(response.content)
 
-    is_file_handle = not isinstance(out_file, (str, PosixPath))
-    if not is_file_handle:
-        Path(out_file).parent.mkdir(parents=True, exist_ok=True)
-        out_file = open(out_file, 'wb')
-
-    out_file.write(response.content)
-
-    if not is_file_handle:
-        out_file.close()
+    if path:
+        file_obj.close()
 
 
-def download_tar(url: str, out_dir: str, mode: str = None):
-    """Download and unzip a .tar.gz file to a given output path
+def download_tar(
+        url: str,
+        out_dir: str,
+        mode: str = None,
+        force: bool = False,
+        timeout: float = 15,
+        skip_exists: str = None
+):
+    """Download and unzip a .tar.gz file to a given output directory
 
     Args:
         url: URL of the file to download
         out_dir: The directory to unzip file contents to
         mode: Compression mode (Default: r:gz)
+        force: Re-Download locally available data (Default: False)
+        timeout: Seconds before raising timeout error (Default: 15)
+        skip_exists: Optionally skip the download if given path exists
     """
 
     out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Skip download if file already exists or url unavailable
+    if skip_exists and Path(skip_exists).exists() and not force:
+        return
 
     # Download data to file and decompress
-    with TemporaryFile() as ofile:
-        download_file(url, ofile)
+    with TemporaryFile() as temp_file:
+        download_file(url, file_obj=temp_file, timeout=timeout)
 
         # Writing to the file moves us to the end of the file
         # We move back to the beginning so we can decompress the data
-        ofile.seek(0)
+        temp_file.seek(0)
 
-        with tarfile.open(fileobj=ofile, mode=mode) as data:
-            for file_ in data:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(fileobj=temp_file, mode=mode) as data_archive:
+            for ffile in data_archive:
                 try:
-                    data.extract(file_, path=out_dir)
+                    data_archive.extract(ffile, path=out_dir)
 
                 except IOError:
                     # If output path already exists, delete it and try again
-                    (out_dir / file_.name).unlink()
-                    data.extract(file_, path=out_dir)
+                    (out_dir / ffile.name).unlink()
+                    data_archive.extract(ffile, path=out_dir)
 
 
 def require_data_path(*data_dirs: Path):

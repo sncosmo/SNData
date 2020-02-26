@@ -3,7 +3,6 @@
 
 """This module defines the DES SN3YR API"""
 
-import logging
 from typing import List
 from typing import Union
 
@@ -13,8 +12,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 def _format_sncosmo_table(data_table: Table) -> Table:
@@ -30,7 +27,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = data_table['JD']
+    out_table['time'] = utils.convert_to_jd(data_table['MJD'])
     out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
     out_table['flux'] = data_table['FLUXCAL']
     out_table['fluxerr'] = data_table['FLUXCALERR']
@@ -175,8 +172,6 @@ class SN3YR(PhotometricRelease):
             names=['VARLIST:', 'MJD', 'BAND', 'FIELD', 'FLUXCAL', 'FLUXCALERR',
                    'ZPFLUX', 'PSF', 'SKYSIG', 'GAIN', 'PHOTFLAG', 'PHOTPROB'])
 
-        data['JD'] = utils.convert_to_jd(data['MJD'])
-
         # Add meta data to table
         with open(file_path) as ofile:
             table_meta_data = ofile.readlines()
@@ -193,33 +188,40 @@ class SN3YR(PhotometricRelease):
 
         return data
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        if (force or not self._filter_dir.exists()) \
-                and utils.check_url(self._filter_url):
-            log.info('Downloading filters...')
-            utils.download_tar(
-                url=self._filter_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        # Download filters
+        utils.download_tar(
+            url=self._filter_url,
+            out_dir=self._data_dir,
+            skip_exists=self._filter_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
-        if (force or not self._photometry_dir.exists()) \
-                and utils.check_url(self._photometry_url):
-            log.info('Downloading photometry...')
-            utils.download_tar(
-                url=self._photometry_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        # Download photometry data
+        utils.download_tar(
+            url=self._photometry_url,
+            out_dir=self._data_dir,
+            skip_exists=self._photometry_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
-        if (force or not self._fits_dir.exists()) \
-                and utils.check_url(self._fits_url):
-            log.info('Downloading Light-Curve Fits...')
-            utils.download_tar(
-                url=self._fits_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        # Download supplementary tables
+        utils.download_tar(
+            url=self._fits_url,
+            out_dir=self._data_dir,
+            skip_exists=self._table_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )

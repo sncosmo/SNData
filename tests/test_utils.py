@@ -44,14 +44,6 @@ class ConvertToJD(TestCase):
             'Incorrect date for JD format')
 
 
-class CheckUrl(TestCase):
-    """Tests for the ``convert_to_jd`` function"""
-
-    def test_offline_url_warning(self):
-        fake_url = 'https://www.thisurllisfake.com/'
-        self.assertWarns(Warning, utils.check_url, fake_url)
-
-
 class RequireDataPath(TestCase):
     """Tests for the ``require_data_path`` function"""
 

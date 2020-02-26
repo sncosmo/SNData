@@ -3,34 +3,31 @@
 
 """This module defines the CSP DR1 API"""
 
-import logging
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List
 
-import numpy as np
-from astropy.table import Column, Table, vstack
+from astropy.table import Table, vstack
 
 from .. import _utils as utils
 from ..base_classes import SpectroscopicRelease
 
-log = logging.getLogger(__name__)
 
-
-def _read_file(path: Union[str, Path]) -> (float, float, Table):
+def read_dr1_file(path: str, format_table: bool = False) -> Table:
     """Read a file path of spectroscopic data from CSP DR1
 
     Args:
-        path (str or Path): Path of file to read
+        path: Path of file to read
+        format_table: Format table to a sndata standard format
 
     Returns:
-        - The data of maximum for the observed target
-        - The redshift of the target
-        - An astropy table with file data and meta data
+        An astropy table with file data and meta data
     """
 
-    # Handle the single file with a different data model:
-    # There are three columns instead of two
     path = Path(path)
+    obj_id = '20' + path.name.split('_')[0].lstrip('SN')
+
+    # Handle the single file with a different data model:
+    # This file has three columns instead of two
     if path.stem == 'SN07bc_070409_b01_BAA_IM':
         data = Table.read(path, format='ascii', names=['wavelength', 'flux', '_'])
         data.remove_column('_')
@@ -38,26 +35,39 @@ def _read_file(path: Union[str, Path]) -> (float, float, Table):
     else:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
-    # Get various data from the table meta data
+    # Read the table meta data
     file_comments = data.meta['comments']
     redshift = float(file_comments[1].lstrip('Redshift: '))
-    max_date = float(file_comments[2].lstrip('JDate_of_max: '))
     obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
     epoch = float(file_comments[4].lstrip('Epoch: '))
 
-    # Add remaining columns. These values are constant for a single file
-    # (i.e. a single spectrum) but vary across files (across spectra)
-    _, _, w_range, telescope, instrument = path.stem.split('_')
-    date_col = Column(data=np.full(len(data), obs_date), name='date')
-    epoch_col = Column(data=np.full(len(data), epoch), name='epoch')
-    wr_col = Column(data=np.full(len(data), w_range), name='wavelength_range')
-    tel_col = Column(data=np.full(len(data), telescope), name='telescope')
-    inst_col = Column(data=np.full(len(data), instrument), name='instrument')
-    data.add_columns([date_col, epoch_col, wr_col, tel_col, inst_col])
+    # Add meta data to output table according to sndata standard
+    data.meta['obj_id'] = obj_id
+    data.meta['ra'] = None
+    data.meta['dec'] = None
+    data.meta['z'] = redshift
+    data.meta['z_err'] = None
+    del data.meta['comments']
 
-    # Ensure dates are in JD format
-    data['date'] = utils.convert_to_jd(data['date'])
-    return max_date, redshift, data
+    data['time'] = obs_date
+    if format_table:
+        # Add remaining columns. These values are constant for a single file
+        # (i.e. a single spectrum) but vary across files (across spectra)
+        _, _, w_range, telescope, instrument = path.stem.split('_')
+        data['epoch'] = epoch
+        data['wavelength_range'] = w_range
+        data['telescope'] = telescope
+        data['instrument'] = instrument
+
+        # Ensure dates are in JD format
+        data['time'] = utils.convert_to_jd(data['time'])
+
+        # Enforce an intuitive column order
+        data = data[[
+            'time', 'wavelength', 'flux', 'epoch',
+            'wavelength_range', 'telescope', 'instrument']]
+
+    return data
 
 
 class DR1(SpectroscopicRelease):
@@ -89,8 +99,8 @@ class DR1(SpectroscopicRelease):
         super().__init__()
 
         # Local paths
-        self._spectra_dir = self._data_dir / 'CSP_spectra_DR1'  # DR1 spectra
-        self._table_dir = self._data_dir / 'tables'  # DR3 paper tables
+        self._spectra_dir = self._data_dir / 'CSP_spectra_DR1'
+        self._table_dir = self._data_dir / 'tables'
 
         # Define urls for remote data
         self._spectra_url = 'https://csp.obs.carnegiescience.edu/data/CSP_spectra_DR1.tgz'
@@ -115,53 +125,34 @@ class DR1(SpectroscopicRelease):
             An astropy table of data for the given ID
         """
 
-        out_table = Table(
-            names=['date', 'wavelength', 'flux', 'epoch', 'wavelength_range',
-                   'telescope', 'instrument'],
-            dtype=[float, float, float, float, 'U3', 'U3', 'U2']
-        )
-
         files = self._spectra_dir.rglob(f'SN{obj_id[2:]}_*.dat')
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
-        for path in files:
-            max_date, redshift, spectral_data = _read_file(path)
-            out_table = vstack([out_table, spectral_data])
+        return vstack([read_dr1_file(path, format_table) for path in files])
 
-            out_table.meta['obj_id'] = obj_id
-            out_table.meta['ra'] = None
-            out_table.meta['dec'] = None
-            out_table.meta['z'] = redshift
-            out_table.meta['z_err'] = None
-            del out_table.meta['comments']
-
-        if format_table:
-            out_table.rename_column('date', 'time')
-
-        return out_table
-
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading data tables...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
         # Download spectra
-        if (force or not self._spectra_dir.exists()) \
-                and utils.check_url(self._spectra_url):
-            log.info('Downloading spectra...')
-            utils.download_tar(
-                url=self._spectra_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        utils.download_tar(
+            url=self._spectra_url,
+            out_dir=self._data_dir,
+            skip_exists=self._spectra_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )

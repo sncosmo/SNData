@@ -3,7 +3,6 @@
 
 """This module defines the JLA Betoule14 API"""
 
-import logging
 from typing import List
 
 import numpy as np
@@ -14,8 +13,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 class Betoule14(PhotometricRelease):
@@ -169,8 +166,8 @@ class Betoule14(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._photometry_dir = self._data_dir / 'jla_light_curves'  # Photometry data
-        self._table_dir = self._data_dir / 'tables'  # Vizier tables
+        self._photometry_dir = self._data_dir / 'jla_light_curves'
+        self._table_dir = self._data_dir / 'tables'
         self._filter_path = self._data_dir / 'cfht_filters.txt'
 
         # Define urls for remote data
@@ -317,33 +314,35 @@ class Betoule14(PhotometricRelease):
 
         return out_table
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        # Download data tables
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading data tables...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            skip_exists=self._table_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
-        # Download Photometry
-        if (force or not self._photometry_dir.exists()) \
-                and utils.check_url(self._photometry_url):
-            log.info('Downloading photometry...')
-            utils.download_tar(
-                url=self._photometry_url,
-                out_dir=self._data_dir,
-                mode='r:gz')
+        utils.download_tar(
+            url=self._photometry_url,
+            out_dir=self._data_dir,
+            skip_exists=self._photometry_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
-        # Download Filters
-        if (force or not self._filter_path.exists()) \
-                and utils.check_url(self._filter_url):
-            log.info('Downloading filters...')
-            utils.download_file(url=self._filter_url, out_file=self._filter_path)
+        utils.download_file(
+            url=self._filter_url,
+            path=self._filter_path,
+            force=force,
+            timeout=timeout
+        )

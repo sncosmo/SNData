@@ -3,7 +3,6 @@
 
 """This module defines the Essence Narayan16 API"""
 
-import logging
 from pathlib import Path
 from typing import List
 
@@ -13,8 +12,6 @@ from astropy.table import Table
 from .. import _utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
-
-log = logging.getLogger(__name__)
 
 
 def _format_table(data_table: Table) -> Table:
@@ -125,7 +122,7 @@ class Narayan16(PhotometricRelease):
             decm=object_metadata['DEm'],
             decs=object_metadata['DEs']
         )
-        
+
         data_table.meta['obj_id'] = obj_id
         data_table.meta['ra'] = ra
         data_table.meta['dec'] = dec
@@ -138,28 +135,27 @@ class Narayan16(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
-        if (force or not self._table_dir.exists()) \
-                and utils.check_url(self._table_url):
-            log.info('Downloading tables and photometry...')
-            utils.download_tar(
-                url=self._table_url,
-                out_dir=self._table_dir,
-                mode='r:gz')
+        utils.download_tar(
+            url=self._table_url,
+            out_dir=self._table_dir,
+            skip_exists=self._table_dir,
+            mode='r:gz',
+            force=force,
+            timeout=timeout
+        )
 
-        if (force or not self._filter_dir.exists()) \
-                and utils.check_url(self._i_filter_url):
-            log.info('Downloading tables and photometry...')
+        for filter_file in self._filter_file_names:
             utils.download_file(
                 url=self._i_filter_url,
-                out_file=self._filter_dir / 'I_band.dat')
-
-            utils.download_file(
-                url=self._r_filter_url,
-                out_file=self._filter_dir / 'R_band.dat')
+                path=self._filter_dir / filter_file,
+                force=force,
+                timeout=timeout
+            )
