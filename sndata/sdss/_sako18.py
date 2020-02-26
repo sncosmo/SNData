@@ -98,13 +98,6 @@ class Sako18(PhotometricRelease):
     # are available at https://www.sdss.org/instruments/camera/#Filters
     band_names = tuple(f'sdss_sako18_{b}{c}' for b, c in product('ugriz', '123456'))
     zero_point = tuple(2.5 * np.log10(3631) for _ in band_names)
-    lambda_effective = (
-        3551, 3551, 3551, 3551, 3551, 3551,
-        4686, 4686, 4686, 4686, 4686, 4686,
-        6166, 6166, 6166, 6166, 6166, 6166,
-        7480, 7480, 7480, 7480, 7480, 7480,
-        8932, 8932, 8932, 8932, 8932, 8932
-    )
 
     def __init__(self):
         """Define local and remote paths of data"""

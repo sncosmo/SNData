@@ -41,9 +41,8 @@ Survey.
    print(dr3.publications)
    print(dr3.ads_url)
 
-   # Photometric data releases include filter names and effective wavelengths
+   # Photometric data releases include filters
    print(dr3.band_names)
-   print(dr3.lambda_effective)
 
 
 Downloading Data

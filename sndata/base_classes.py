@@ -188,7 +188,6 @@ class PhotometricRelease(SpectroscopicRelease):
     # Photometric metadata
     band_names = tuple()
     zero_point = tuple()
-    lambda_effective = tuple()
 
     @classmethod
     def get_zp_for_band(cls, band: str) -> str:

@@ -72,7 +72,6 @@ class SN3YR(PhotometricRelease):
         'des_sn3yr_y')
 
     zero_point = tuple(27.5 for _ in band_names)
-    lambda_effective = (5270, 6590, 7890, 9760, 10030)
 
     def __init__(self):
         """Define local and remote paths of data"""
