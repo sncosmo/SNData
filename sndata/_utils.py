@@ -203,10 +203,10 @@ def download_tar(
         out_dir: str,
         mode: str = None,
         force: bool = False,
-        timeout: float = 15):
+        timeout: float = 15,
+        skip_exists: str = None
+):
     """Download and unzip a .tar.gz file to a given output directory
-
-    If ``out_dir`` already exists, skip the download by default.
 
     Args:
         url: URL of the file to download
@@ -214,12 +214,13 @@ def download_tar(
         mode: Compression mode (Default: r:gz)
         force: Re-Download locally available data (Default: False)
         timeout: Seconds before raising timeout error (Default: 15)
+        skip_exists: Optionally skip the download if given path exists
     """
 
     out_dir = Path(out_dir)
 
     # Skip download if file already exists or url unavailable
-    if not (force or not out_dir.exists()):
+    if skip_exists and Path(skip_exists).exists() and not force:
         return
 
     # Download data to file and decompress

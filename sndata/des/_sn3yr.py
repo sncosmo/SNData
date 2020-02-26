@@ -80,9 +80,9 @@ class SN3YR(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._filter_dir = self._data_dir / 'filters' / '01-FILTERS' / 'DECam'
-        self._photometry_dir = self._data_dir / 'photometry' / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
-        self._fits_dir = self._data_dir / 'fit_tables' / '04-BBCFITS'
+        self._filter_dir = self._data_dir / '01-FILTERS' / 'DECam'
+        self._photometry_dir = self._data_dir / '02-DATA_PHOTOMETRY/DES-SN3YR_DES'
+        self._fits_dir = self._data_dir / '04-BBCFITS'
 
         # Define urls for remote data
         _des_url = 'http://desdr-server.ncsa.illinois.edu/despublic/sn_files/y3/tar_files/'
@@ -199,7 +199,8 @@ class SN3YR(PhotometricRelease):
         # Download filters
         utils.download_tar(
             url=self._filter_url,
-            out_dir=self._data_dir / 'filters',
+            out_dir=self._data_dir,
+            skip_exists=self._filter_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
@@ -208,7 +209,8 @@ class SN3YR(PhotometricRelease):
         # Download photometry data
         utils.download_tar(
             url=self._photometry_url,
-            out_dir=self._data_dir / 'photometry',
+            out_dir=self._data_dir,
+            skip_exists=self._photometry_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
@@ -217,7 +219,8 @@ class SN3YR(PhotometricRelease):
         # Download supplementary tables
         utils.download_tar(
             url=self._fits_url,
-            out_dir=self._data_dir / 'fit_tables',
+            out_dir=self._data_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

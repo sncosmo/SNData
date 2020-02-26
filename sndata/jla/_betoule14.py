@@ -166,7 +166,7 @@ class Betoule14(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._photometry_dir = self._data_dir / 'photometry' / 'jla_light_curves'
+        self._photometry_dir = self._data_dir / 'jla_light_curves'
         self._table_dir = self._data_dir / 'tables'
         self._filter_path = self._data_dir / 'cfht_filters.txt'
 
@@ -325,6 +325,7 @@ class Betoule14(PhotometricRelease):
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
@@ -332,7 +333,8 @@ class Betoule14(PhotometricRelease):
 
         utils.download_tar(
             url=self._photometry_url,
-            out_dir=self._data_dir / 'photometry',
+            out_dir=self._data_dir,
+            skip_exists=self._photometry_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

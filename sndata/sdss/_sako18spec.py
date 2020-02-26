@@ -191,13 +191,6 @@ class Sako18Spec(SpectroscopicRelease):
                 timeout=timeout
             )
 
-        # if (force or not meta.spectra_dir.exists()) \
-        #         and utils.check_url(meta.spectra_url):
-        #     utils.download_tar(
-        #         url=meta.spectra_url,
-        #         out_dir=meta.data_dir,
-        #         mode='r:gz')
-
         # Spectral data parsing requires IRAF so we use preparsed data instead
         if force or not self._spectra_dir.exists():
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:

@@ -136,7 +136,7 @@ class DR3(PhotometricRelease):
         super().__init__()
 
         # Local paths
-        self._photometry_dir = self._data_dir / 'photometry' / 'DR3'
+        self._photometry_dir = self._data_dir / 'DR3'
         self._filter_dir = self._data_dir / 'filters'
         self._table_dir = self._data_dir / 'tables'
 
@@ -244,7 +244,8 @@ class DR3(PhotometricRelease):
         # Download photometry
         utils.download_tar(
             url=self._photometry_url,
-            out_dir=self._data_dir / 'photometry',
+            out_dir=self._data_dir,
+            skip_exists=self._photometry_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

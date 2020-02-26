@@ -146,21 +146,17 @@ class Narayan16(PhotometricRelease):
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
         )
 
-        utils.download_file(
-            url=self._i_filter_url,
-            path=self._filter_dir / 'I_band.dat',
-            force=force,
-            timeout=timeout
-        )
+        for filter_file in self._filter_file_names:
+            utils.download_file(
+                url=self._i_filter_url,
+                path=self._filter_dir / filter_file,
+                force=force,
+                timeout=timeout
+            )
 
-        utils.download_file(
-            url=self._r_filter_url,
-            path=self._filter_dir / 'R_band.dat',
-            force=force,
-            timeout=timeout
-        )

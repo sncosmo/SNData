@@ -70,7 +70,8 @@ class Balland09(SpectroscopicRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        files = self._spectra_dir.glob('*.dat')
+        # Use recursive glob since the data files are in sub directories
+        files = self._spectra_dir.rglob('*.dat')
         ids = (Path(f).name.split('_')[1] for f in files)
         return sorted(set(ids))
 
@@ -90,7 +91,7 @@ class Balland09(SpectroscopicRelease):
             raise InvalidObjId()
 
         tables = []
-        for fpath in self._spectra_dir.glob(f'*_{obj_id}_*_Balland_etal_09.dat'):
+        for fpath in self._spectra_dir.rglob(f'*_{obj_id}_*_Balland_etal_09.dat'):
             data_table = Table.read(
                 fpath,
                 names=['pixel', 'wavelength', 'flux', 'fluxerr'],
@@ -143,6 +144,7 @@ class Balland09(SpectroscopicRelease):
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force
         )
@@ -153,11 +155,12 @@ class Balland09(SpectroscopicRelease):
 
         # Download both kinds of spectra
         spec_urls = self._phase_spectra_url, self._snonly_spectra_url
-        names = 'combined', 'supernova only'
+        names = 'combined', 'sn_only'
         for spectra_url, data_name in zip(spec_urls, names):
             utils.download_tar(
                 url=spectra_url,
-                out_dir=self._spectra_dir,
+                out_dir=self._spectra_dir / data_name,
+                skip_exists=self._spectra_dir / data_name,
                 mode='r:gz',
                 force=force,
                 timeout=timeout

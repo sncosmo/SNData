@@ -99,7 +99,7 @@ class DR1(SpectroscopicRelease):
         super().__init__()
 
         # Local paths
-        self._spectra_dir = self._data_dir / 'spectra' / 'CSP_spectra_DR1'
+        self._spectra_dir = self._data_dir / 'CSP_spectra_DR1'
         self._table_dir = self._data_dir / 'tables'
 
         # Define urls for remote data
@@ -150,7 +150,8 @@ class DR1(SpectroscopicRelease):
         # Download spectra
         utils.download_tar(
             url=self._spectra_url,
-            out_dir=self._data_dir / 'spectra',
+            out_dir=self._data_dir,
+            skip_exists=self._spectra_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
