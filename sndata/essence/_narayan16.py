@@ -159,4 +159,3 @@ class Narayan16(PhotometricRelease):
                 force=force,
                 timeout=timeout
             )
-
