@@ -6,11 +6,21 @@
 from unittest import TestCase
 
 from sndata import jla
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing
+from .standard_ui_template_tests import PhotometricDataUI
 
 
-class Betoule14(TestCase, template_tests.PhotometricDataParsing):
-    """Generic tests for a given survey"""
+class Betoule14Parsing(TestCase, PhotometricDataParsing):
+    """Data parsing tests for the Betoule14 release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = jla.Betoule14()
+        cls.test_class.download_module_data()
+
+
+class Betoule14UI(TestCase, PhotometricDataUI):
+    """UI tests for the Betoule14 release"""
 
     @classmethod
     def setUpClass(cls):

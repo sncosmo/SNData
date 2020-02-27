@@ -62,8 +62,7 @@ class Sako18Spec(SpectroscopicRelease):
         self._spectra_url = urljoin(self._base_url, 'Spectra.tar.gz')
 
     def get_available_tables(self) -> List[str]:
-        """Get table numbers for machine readable tables published in the paper
-        for this data release"""
+        """Get Ids for available vizier tables published by this data release"""
 
         utils.require_data_path(self._table_dir)
 
@@ -79,9 +78,7 @@ class Sako18Spec(SpectroscopicRelease):
 
     @utils.lru_copy_cache(maxsize=None)
     def load_table(self, table_id: Union[int, str]) -> Table:
-        """Load a table from the data paper for this survey / data
-
-        See ``get_available_tables`` for a list of valid table IDs.
+        """Return a Vizier table published by this data release
 
         Args:
             table_id: The published table number or table name

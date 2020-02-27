@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """This module provides template testing classes for spectroscopic and
-photometric data.
+photometric data parsing.
 """
 
 import numpy as np
@@ -12,7 +12,32 @@ from sndata import get_zp
 from sndata.exceptions import InvalidObjId
 
 
-class SpectroscopicDataParsing:
+class VizierTableParsing:
+    """Generic data parsing tests for vizier table data releases"""
+
+    def test_paper_tables_are_parsed(self):
+        """Test no errors are raised by ``load_table`` when parsing any of the
+        table numbers returned by ``get_available_tables``
+        """
+
+        table_names = self.test_class.get_available_tables()
+        if len(table_names) == 0:
+            self.fail('No available Tables')
+
+        err_msg = 'Empty table number {}'
+        for table in table_names:
+            try:
+                table = self.test_class.load_table(table)
+
+            except:
+                self.fail(f'Cannot parse table {table}')
+
+            self.assertTrue(table, err_msg.format(table))
+
+
+class SpectroscopicDataParsing(VizierTableParsing):
+    """Generic data parsing tests for spectroscopic data releases"""
+
     date_col_name = 'time'  # Name of column to check for JD time format
 
     def test_bad_object_id_err(self):
@@ -39,25 +64,6 @@ class SpectroscopicDataParsing:
 
         if i < 0:
             self.fail('No data yielded')
-
-    def test_paper_tables_are_parsed(self):
-        """Test no errors are raised by ``load_table`` when parsing any of the
-        table numbers returned by ``get_available_tables``
-        """
-
-        table_names = self.test_class.get_available_tables()
-        if len(table_names) == 0:
-            self.fail('No available Tables')
-
-        err_msg = 'Empty table number {}'
-        for table in table_names:
-            try:
-                table = self.test_class.load_table(table)
-
-            except:
-                self.fail(f'Cannot parse table {table}')
-
-            self.assertTrue(table, err_msg.format(table))
 
     def test_unique_ids(self):
         """Test all object Ids are unique"""
@@ -122,7 +128,7 @@ class SpectroscopicDataParsing:
 
 
 class PhotometricDataParsing(SpectroscopicDataParsing):
-    """Generic tests for a given survey"""
+    """Generic data parsing tests for photometric data releases"""
 
     def test_get_zp(self):
         """Test that ``sndata.get_zp`` returns the correct zero point"""

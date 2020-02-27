@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module defines parent classes used by the data access API to define
-basic data handling and to enforce a consistent user interface. For an example
-on how to use these classes to create custom data access module for a new
-survey / data release, see the :ref:`CustomClasses` section of the docs."""
+"""The ``base_classes`` module defines parent classes used by the data access
+API to define basic data handling and to enforce a consistent user interface.
+
+Classes are provided to represent three kinds of data sets. This includes
+  1) data releases with only supplementary tables (i.e., no observational data)
+  2) spectroscopic data releases
+  3) photometric data releases.
+
+For an example on how to use these classes to create custom data access module
+for a new survey / data release, see the :ref:`CustomClasses` section of the
+docs.
+"""
 
 import shutil
 from typing import List, Union
@@ -45,7 +53,7 @@ class VizierTables:
         self._table_dir = self._data_dir / 'tables'
 
     def get_available_tables(self) -> List[VizierTableId]:
-        """Get Ids for available Vizier tables published by this data release"""
+        """Get Ids for available vizier tables published by this data release"""
 
         # In case child class has no data table directory
         if not hasattr(self, '_table_dir'):
@@ -103,7 +111,7 @@ class SpectroscopicRelease(VizierTables):
     release = None
     survey_url = None
     data_type = 'spectroscopic'
-    publications = (None,)
+    publications = tuple()
     ads_url = None
 
     def get_available_ids(self) -> List[str]:
@@ -205,7 +213,7 @@ class PhotometricRelease(SpectroscopicRelease):
         """Register filters for this survey / data release with SNCosmo
 
         Args:
-            force: Re-register a band if already registered (Default: False)
+            force: Re-register a band if already registered
         """
 
         # Raise error if data is not downloaded

@@ -1,0 +1,8 @@
+# This document contains the expected documentation for various functions and is used to ensure consistent documentation across modules
+delete_module_data: "Delete any data for the current survey / data release"
+download_module_data: "Download data for the current survey / data release\n\n    Args:\n        force: Re-Download locally available data\n        timeout: Seconds before timeout for individual files/archives\n    "
+get_available_ids: "Return a list of target object IDs for the current survey\n\n    Returns:\n        A list of object IDs\n    "
+get_available_tables: "Get Ids for available vizier tables published by this data release"
+get_data_for_id: "Returns data for a given object ID\n\n    See ``get_available_ids()`` for a list of available ID values.\n\n    Args:\n        obj_id: The ID of the desired object\n        format_table: Format for use with ``sncosmo`` (Default: True)\n\n    Returns:\n        An astropy table of data for the given ID\n    "
+load_table: "Return a Vizier table published by this data release\n\n    Args:\n        table_id: The published table number or table name\n    "
+register_filters: "Register filters for this survey / data release with SNCosmo\n\n    Args:\n        force: Re-register a band if already registered\n    "

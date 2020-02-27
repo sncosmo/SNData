@@ -97,15 +97,15 @@ class SN3YR(PhotometricRelease):
             'DECam_Y.dat')
 
     def get_available_tables(self) -> List[str]:
-        """Get available Ids for tables published by the paper for this data
-        release"""
+        """Get Ids for available vizier tables published by this data release"""
 
         # noinspection SpellCheckingInspection
+        utils.require_data_path(self._fits_dir)
         return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
     @utils.lru_copy_cache(maxsize=None)
     def load_table(self, table_id: Union[str, int]):
-        """Return a table from the data paper for this survey / data
+        """Return a Vizier table published by this data release
 
         Args:
             table_id: The published table number or table name
