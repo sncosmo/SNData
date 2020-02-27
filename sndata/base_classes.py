@@ -225,9 +225,6 @@ class PhotometricRelease(SpectroscopicRelease):
             band: The name of the bandpass
         """
 
-        if band not in cls.band_names:
-            raise ValueError(f'Invalid band name: ``{band}``')
-
         sorter = np.argsort(cls.band_names)
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
         return np.array(cls.zero_point)[sorter[indices]]
