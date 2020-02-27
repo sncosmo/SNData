@@ -9,7 +9,6 @@ import numpy as np
 import sncosmo
 
 from sndata import get_zp
-from sndata.exceptions import InvalidObjId
 
 
 class VizierTableParsing:
@@ -39,11 +38,6 @@ class SpectroscopicDataParsing(VizierTableParsing):
     """Generic data parsing tests for spectroscopic data releases"""
 
     date_col_name = 'time'  # Name of column to check for JD time format
-
-    def test_bad_object_id_err(self):
-        """Test an InvalidObjId exception is raised for a made up Id"""
-
-        self.assertRaises(InvalidObjId, self.test_class.get_data_for_id, 'fake_id')
 
     def test_no_empty_data_tables(self, lim: int = 25):
         """Test for empty tables in ``iter_data``

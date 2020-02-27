@@ -5,15 +5,25 @@
 spectroscopic and photometric data releases.
 """
 
+from sndata.exceptions import InvalidObjId, InvalidTableId
+
 
 class VizierTableUI:
     """Generic UI tests for vizier table data releases"""
 
-    pass
+    def test_bad_table_id_err(self):
+        """Test an InvalidObjId exception is raised for a made up Id"""
+
+        self.assertRaises(InvalidTableId, self.test_class.load_table, 'fake_id')
 
 
 class SpectroscopicDataUI(VizierTableUI):
     """Generic UI tests for spectroscopic data releases"""
+
+    def test_bad_object_id_err(self):
+        """Test an InvalidObjId exception is raised for a made up Id"""
+
+        self.assertRaises(InvalidObjId, self.test_class.get_data_for_id, 'fake_id')
 
     def test_not_missing_metadata(self):
         """Test that standard metadata attributes are not null"""
