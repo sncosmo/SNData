@@ -121,7 +121,7 @@ class Sako18(PhotometricRelease):
         self._smp_url = urljoin(self._base_url, 'SMP_Data.tar.gz')
         self._snana_url = urljoin(self._base_url, 'SDSS_dataRelease-snana.tar.gz')
 
-    def get_available_tables(self) -> List[str]:
+    def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
         utils.require_data_path(self._table_dir)
@@ -136,8 +136,7 @@ class Sako18(PhotometricRelease):
 
         return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
-    @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[int, str]) -> Table:
+    def _load_table(self, table_id: Union[int, str]) -> Table:
         """Return a Vizier table published by this data release
 
         Args:
@@ -160,7 +159,7 @@ class Sako18(PhotometricRelease):
 
         return table
 
-    def get_available_ids(self):
+    def _get_available_ids(self):
         """Return a list of target object IDs for the current survey
 
         Returns:
@@ -237,7 +236,7 @@ class Sako18(PhotometricRelease):
 
         return data
 
-    def download_module_data(self, force=False, timeout: float = 15):
+    def _download_module_data(self, force=False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

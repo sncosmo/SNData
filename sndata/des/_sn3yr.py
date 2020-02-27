@@ -96,15 +96,14 @@ class SN3YR(PhotometricRelease):
             'DECam_z.dat',
             'DECam_Y.dat')
 
-    def get_available_tables(self) -> List[str]:
+    def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
         # noinspection SpellCheckingInspection
         utils.require_data_path(self._fits_dir)
         return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
-    @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[str, int]):
+    def _load_table(self, table_id: Union[str, int]):
         """Return a Vizier table published by this data release
 
         Args:
@@ -187,7 +186,7 @@ class SN3YR(PhotometricRelease):
 
         return data
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

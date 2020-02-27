@@ -131,7 +131,7 @@ class DR1(SpectroscopicRelease):
 
         return vstack([read_dr1_file(path, format_table) for path in files])
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

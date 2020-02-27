@@ -52,8 +52,8 @@ class VizierTables:
         self._data_dir = _utils.find_and_create_data_dir(self.survey_abbrev, self.release)
         self._table_dir = self._data_dir / 'tables'
 
-    def get_available_tables(self) -> List[VizierTableId]:
-        """Get Ids for available vizier tables published by this data release"""
+    def _get_available_tables(self) -> List[VizierTableId]:
+        # Default backend functionality of ``get_available_tables`` function
 
         # In case child class has no data table directory
         if not hasattr(self, '_table_dir'):
@@ -71,13 +71,13 @@ class VizierTables:
 
         return sorted(table_nums)
 
-    @_utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: VizierTableId) -> Table:
-        """Return a Vizier table published by this data release
+    def get_available_tables(self) -> List[VizierTableId]:
+        """Get Ids for available vizier tables published by this data release"""
 
-        Args:
-            table_id: The published table number or table name
-        """
+        return self._get_available_tables()
+
+    def _load_table(self, table_id: VizierTableId) -> Table:
+        # Default backend functionality of ``load_table`` function
 
         # Raise error if data is not downloaded
         if table_id not in self.get_available_tables():
@@ -91,6 +91,16 @@ class VizierTables:
         description = _utils.read_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description
         return data
+
+    @_utils.lru_copy_cache(maxsize=None)
+    def load_table(self, table_id: VizierTableId) -> Table:
+        """Return a Vizier table published by this data release
+
+        Args:
+            table_id: The published table number or table name
+        """
+
+        return self._load_table(table_id)
 
     def __repr__(self):
         # Using self.__class__ ensures correct name appears for child classes
@@ -183,6 +193,16 @@ class SpectroscopicRelease(VizierTables):
         except FileNotFoundError:
             pass
 
+    def download_module_data(self, force: bool = False, timeout: float = 15):
+        """Download data for the current survey / data release
+
+        Args:
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
+        """
+
+        self._download_module_data(force, timeout)
+
 
 class PhotometricRelease(SpectroscopicRelease):
     """Generic representation of a photometric data release
@@ -209,12 +229,8 @@ class PhotometricRelease(SpectroscopicRelease):
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
         return np.array(cls.zero_point)[sorter[indices]]
 
-    def register_filters(self, force: bool = False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered
-        """
+    def _register_filters(self, force: bool = False):
+        # Default backend functionality of ``register_filters`` functiom
 
         # Raise error if data is not downloaded
         _utils.require_data_path(self._filter_dir)
@@ -223,3 +239,12 @@ class PhotometricRelease(SpectroscopicRelease):
         for _file_name, _band_name in bandpass_data:
             filter_path = self._filter_dir / _file_name
             _utils.register_filter(filter_path, _band_name, force=force)
+
+    def register_filters(self, force: bool = False):
+        """Register filters for this survey / data release with SNCosmo
+
+        Args:
+            force: Re-register a band if already registered
+        """
+
+        self._register_filters(force)

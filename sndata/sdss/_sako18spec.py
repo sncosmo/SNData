@@ -61,7 +61,7 @@ class Sako18Spec(SpectroscopicRelease):
         self._base_url = 'https://portal.nersc.gov/project/dessn/SDSS/dataRelease/'
         self._spectra_url = urljoin(self._base_url, 'Spectra.tar.gz')
 
-    def get_available_tables(self) -> List[str]:
+    def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
         utils.require_data_path(self._table_dir)
@@ -76,8 +76,7 @@ class Sako18Spec(SpectroscopicRelease):
 
         return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
-    @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[int, str]) -> Table:
+    def _load_table(self, table_id: Union[int, str]) -> Table:
         """Return a Vizier table published by this data release
 
         Args:
@@ -172,7 +171,7 @@ class Sako18Spec(SpectroscopicRelease):
         out_data.meta['dtype'] = 'spectroscopic'
         return out_data
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

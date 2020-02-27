@@ -137,7 +137,7 @@ class Betoule14(PhotometricRelease):
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/A+A/568/A22'
         self._filter_url = 'http://www.cfht.hawaii.edu/Instruments/Imaging/Megacam/data.MegaPrime/MegaCam_Filters_data_SAGEM.txt'
 
-    def register_filters(self, force: bool = False):
+    def _register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo
 
         Args:
@@ -167,7 +167,7 @@ class Betoule14(PhotometricRelease):
             new_band.name = new_band_name
             sncosmo.register(new_band, force=force)
 
-    def get_available_tables(self) -> List[str]:
+    def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
         utils.require_data_path(self._table_dir)
@@ -176,7 +176,7 @@ class Betoule14(PhotometricRelease):
         file_list = dat_file_list + fits_file_list
         return sorted([str(f).rstrip('.datfit')[-2:] for f in file_list])
 
-    def load_table(self, table_id: str) -> Table:
+    def _load_table(self, table_id: str) -> Table:
         """Return a Vizier table published by this data release
 
         Args:
@@ -275,7 +275,7 @@ class Betoule14(PhotometricRelease):
 
         return out_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

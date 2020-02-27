@@ -134,7 +134,7 @@ class Narayan16(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
