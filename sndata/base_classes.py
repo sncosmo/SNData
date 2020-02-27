@@ -55,10 +55,6 @@ class VizierTables:
     def _get_available_tables(self) -> List[VizierTableId]:
         # Default backend functionality of ``get_available_tables`` function
 
-        # In case child class has no data table directory
-        if not hasattr(self, '_table_dir'):
-            return []
-
         # Find available tables - assume standard Vizier naming scheme
         # This includes assuming lowercase file names
         table_nums = []
