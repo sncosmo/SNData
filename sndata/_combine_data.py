@@ -48,7 +48,7 @@ def get_zp(band_name: str) -> float:
 
 
 def _reduce_id_mapping(id_list: List[CombinedID]) -> list:
-    """Combine a list of sets by combining any sets with shared elements
+    """Combine a list of sets by joining any sets with shared elements
 
     Args
         id_list: List of object IDs to join
@@ -88,7 +88,7 @@ class CombinedDataset:
     """Combine data from different surveys into a single data set
 
     Args:
-        data_sets (iter[module]): SNData module for a specific data release
+        data_sets: SNData module for a specific data release
     """
 
     def __init__(self, *data_sets):
@@ -110,7 +110,7 @@ class CombinedDataset:
 
         self._joined_ids = []
 
-        # _obj_id_dataframe stores a combined table of all object ids and
+        # ``_obj_id_dataframe`` stores a combined table of all object ids and
         # their parent surveys / data releases. We don't load the table at
         # init in case some data isn't downloaded
         self._obj_id_dataframe = None
@@ -155,15 +155,16 @@ class CombinedDataset:
     def zero_point(self) -> Tuple[float]:
         return tuple(get_zp(b) for b in self.band_names)
 
-    def download_module_data(self, force: bool = False):
+    def download_module_data(self, force: bool = False, timeout: int = 15):
         """Download data for all combined surveys / data releases
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
         for name, module in self._data_releases.items():
-            module.download_module_data(force=force)
+            module.download_module_data(force=force, timeout=timeout)
 
     def delete_module_data(self):
         """Delete any data for all combined surveys / data releases"""
@@ -172,7 +173,11 @@ class CombinedDataset:
             module.delete_module_data()
 
     def get_available_ids(self) -> List[CombinedID]:
-        """Return a table of object IDs available in the combined data set"""
+        """Return a list of object IDs available in the combined data set
+
+        Returns:
+            A list of tuples
+        """
 
         data_order = ['obj_id', 'release', 'survey']
         return sorted(
@@ -263,8 +268,8 @@ class CombinedDataset:
         See ``get_available_ids()`` for a table of available ID values. Object
 
         Args:
-            obj_id   (tuple[str]): The ID of the desired object
-            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
+            obj_id: The ID of the desired object
+            format_table: Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -355,3 +360,19 @@ class CombinedDataset:
             obj_id_set -= obj_ids
 
         self._joined_ids = _reduce_id_mapping(self._joined_ids)
+
+    def get_available_tables(self):
+
+        table_id_list = []
+        for data_class in self._data_releases.values():
+            survey_abbrev = data_class.survey_abbrev
+            release = data_class.release
+            for table_id in data_class.get_available_tables():
+                table_id_list.append((survey_abbrev, release, table_id))
+
+        return table_id_list
+
+    def load_table(self, id):
+        survey_abbrev, release, table_id = id
+        data_class = self._data_releases[f'{survey_abbrev}:{release}']
+        return data_class.load_table(table_id)
