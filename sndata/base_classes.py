@@ -49,7 +49,7 @@ class VizierTables:
         self.survey_abbrev = survey_abbrev if survey_abbrev else self.survey_abbrev
         self.release = release if release else self.release
 
-        self._data_dir = _utils.find_and_create_data_dir(self.survey_abbrev, self.release)
+        self._data_dir = _utils.find_data_dir(self.survey_abbrev, self.release)
         self._table_dir = self._data_dir / 'tables'
 
     def _get_available_tables(self) -> List[VizierTableId]:
