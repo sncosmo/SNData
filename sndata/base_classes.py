@@ -230,7 +230,7 @@ class PhotometricRelease(SpectroscopicRelease):
         return np.array(cls.zero_point)[sorter[indices]]
 
     def _register_filters(self, force: bool = False):
-        # Default backend functionality of ``register_filters`` functiom
+        # Default backend functionality of ``register_filters`` function
 
         # Raise error if data is not downloaded
         _utils.require_data_path(self._filter_dir)
