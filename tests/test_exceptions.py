@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from sndata.exceptions import InvalidObjId, NoDownloadedData, ObservedDataTypeError
+from sndata.exceptions import InvalidObjId, InvalidTableId, NoDownloadedData, ObservedDataTypeError
 
 
 class NonEmptyDefaultMessage(TestCase):
@@ -11,7 +11,7 @@ class NonEmptyDefaultMessage(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.exceptions = NoDownloadedData, InvalidObjId, ObservedDataTypeError
+        cls.exceptions = NoDownloadedData, InvalidObjId, ObservedDataTypeError, InvalidTableId
 
     def runTest(self):
         for exception in self.exceptions:

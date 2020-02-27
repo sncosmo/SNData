@@ -22,7 +22,7 @@ from astropy.io import ascii
 from astropy.table import Table
 
 from . import _utils
-from .exceptions import InvalidObjId
+from .exceptions import InvalidObjId, InvalidTableId
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
@@ -79,10 +79,6 @@ class VizierTables:
     def _load_table(self, table_id: VizierTableId) -> Table:
         # Default backend functionality of ``load_table`` function
 
-        # Raise error if data is not downloaded
-        if table_id not in self.get_available_tables():
-            raise ValueError(f'Table {table_id} is not available.')
-
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
 
@@ -99,6 +95,10 @@ class VizierTables:
         Args:
             table_id: The published table number or table name
         """
+
+        # Raise error if data is not downloaded
+        if table_id not in self.get_available_tables():
+            raise InvalidTableId(f'Table {table_id} is not available.')
 
         return self._load_table(table_id)
 
@@ -224,6 +224,9 @@ class PhotometricRelease(SpectroscopicRelease):
         Args:
             band: The name of the bandpass
         """
+
+        if band not in cls.band_names:
+            raise ValueError(f'Invalid band name: ``{band}``')
 
         sorter = np.argsort(cls.band_names)
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
