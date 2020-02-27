@@ -6,7 +6,6 @@ sets
 """
 
 from unittest import TestCase
-from unittest import skip
 
 from astropy.table import vstack
 
@@ -70,14 +69,6 @@ class Combined(TestCase, PhotometricDataParsing):
             sorted(obj1_data.as_array().tolist()),
             'Incorrect data for second ID after joining.'
         )
-
-    @skip('Table functionality not supported by combined data sets')
-    def test_cache_not_mutated(self):
-        pass
-
-    @skip('Table functionality not supported by combined data sets')
-    def test_paper_tables_are_parsed(self):
-        pass
 
 
 class MapReduction(TestCase):

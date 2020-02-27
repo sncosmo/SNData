@@ -93,7 +93,7 @@ class CombinedDataset:
 
     def __init__(self, *data_sets):
 
-        # Enforce same metadata attributes as a single data release
+        # Enforce the same metadata attributes as a single data release
         self.survey_name = tuple(ds.survey_name for ds in data_sets)
         self.survey_abbrev = tuple(ds.survey_abbrev for ds in data_sets)
         self.release = tuple(ds.release for ds in data_sets)
@@ -110,8 +110,9 @@ class CombinedDataset:
 
         self._joined_ids = []
 
-        # To store combined table of all object ids
-        # We don't load the table at init in case some data isn't downloaded
+        # _obj_id_dataframe stores a combined table of all object ids and
+        # their parent surveys / data releases. We don't load the table at
+        # init in case some data isn't downloaded
         self._obj_id_dataframe = None
 
     @property

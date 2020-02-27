@@ -31,6 +31,10 @@ VizierTableId = Union[int, str]
 class VizierTables:
     """Generic representation of Vizier data tables for a given data release"""
 
+    publications = tuple()
+    ads_url = None
+    data_type = 'tables'
+
     def __init__(self, survey_abbrev: str = None, release: str = None):
         """Represent Vizier data downloaded on the local machine
 
@@ -116,8 +120,6 @@ class SpectroscopicRelease(VizierTables):
     release = None
     survey_url = None
     data_type = 'spectroscopic'
-    publications = tuple()
-    ads_url = None
 
     def get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey
