@@ -109,7 +109,6 @@ class DR1(SpectroscopicRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._spectra_dir)
         files = self._spectra_dir.glob('SN*.dat')
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))
@@ -131,7 +130,7 @@ class DR1(SpectroscopicRelease):
 
         return vstack([read_dr1_file(path, format_table) for path in files])
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

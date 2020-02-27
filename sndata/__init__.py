@@ -7,7 +7,7 @@ available survey is represented by a dedicated submodule. Each available
 data release is represented by a dedicated class.
 """
 
-from . import csp, des, essence, jla, sdss
+from . import csp, des, essence, jla, sdss, snls
 from ._combine_data import CombinedDataset, get_zp
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
@@ -26,9 +26,8 @@ def delete_all_data():
         essence.Narayan16(),
         jla.Betoule14(),
         sdss.Sako18(),
-        sdss.Sako18Spec(
-
-        )
+        sdss.Sako18Spec(),
+        snls.Balland09()
     )
 
     for data_class in data_classes:

@@ -121,11 +121,8 @@ class Sako18(PhotometricRelease):
         self._smp_url = urljoin(self._base_url, 'SMP_Data.tar.gz')
         self._snana_url = urljoin(self._base_url, 'SDSS_dataRelease-snana.tar.gz')
 
-    def get_available_tables(self) -> List[str]:
-        """Get table numbers for machine readable tables published in the paper
-        for this data release"""
-
-        utils.require_data_path(self._table_dir)
+    def _get_available_tables(self) -> List[str]:
+        """Get Ids for available vizier tables published by this data release"""
 
         table_names = []
         for f in self._table_dir.glob('*.txt'):
@@ -137,14 +134,11 @@ class Sako18(PhotometricRelease):
 
         return sorted(table_names, key=lambda x: 0 if x == 'master' else x)
 
-    @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[int, str]) -> Table:
-        """Load a table from the data paper for this survey / data
-
-        See ``get_available_tables`` for a list of valid table IDs.
+    def _load_table(self, table_id: Union[int, str]) -> Table:
+        """Return a Vizier table published by this data release
 
         Args:
-            table_id (int, str): The published table number or table name
+            table_id: The published table number or table name
         """
 
         if table_id not in self.get_available_tables():
@@ -163,11 +157,11 @@ class Sako18(PhotometricRelease):
 
         return table
 
-    def get_available_ids(self):
+    def _get_available_ids(self):
         """Return a list of target object IDs for the current survey
 
         Returns:
-            A list of object IDs as strings
+            A list of object IDs
         """
 
         return sorted(self.load_table('master')['CID'])
@@ -240,11 +234,12 @@ class Sako18(PhotometricRelease):
 
         return data
 
-    def download_module_data(self, force=False):
+    def _download_module_data(self, force=False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
-            force (bool): Re-Download locally available data (Default: False)
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
         """
 
         # Photometry
@@ -253,7 +248,8 @@ class Sako18(PhotometricRelease):
             out_dir=self._data_dir,
             skip_exists=self._smp_dir,
             mode='r:gz',
-            force=force
+            force=force,
+            timeout=timeout
         )
 
         # SNANA files - including files specifying "bad" photometry data points
@@ -262,7 +258,8 @@ class Sako18(PhotometricRelease):
             out_dir=self._data_dir,
             skip_exists=self._snana_dir,
             mode='r:gz',
-            force=force
+            force=force,
+            timeout=timeout
         )
 
         # Unzip file listing "bad" photometry
@@ -275,12 +272,14 @@ class Sako18(PhotometricRelease):
             utils.download_file(
                 url=self._base_url + file_name,
                 path=self._table_dir / file_name,
-                force=force
+                force=force,
+                timeout=timeout
             )
 
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,
                 path=self._filter_dir / file_name,
-                force=force
+                force=force,
+                timeout=timeout
             )

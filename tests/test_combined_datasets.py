@@ -5,17 +5,18 @@
 sets
 """
 
-from unittest import TestCase, skip
+from unittest import TestCase
+from unittest import skip
 
 from astropy.table import vstack
 
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing
 
 
-class Combined(TestCase, template_tests.PhotometricDataParsing):
+class Combined(TestCase, PhotometricDataParsing):
     """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
 
     @classmethod

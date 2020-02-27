@@ -17,6 +17,12 @@ class InvalidObjId(Exception):
         super().__init__(*args, **kwargs)
 
 
+class InvalidTableId(Exception):
+    def __init__(self, *args, **kwargs):
+        args = args if args else ('No table was found matching the given ID.',)
+        super().__init__(*args, **kwargs)
+
+
 class ObservedDataTypeError(Exception):
     def __init__(self, *args, **kwargs):
         # Add default message

@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module defines parent classes used by the data access API to define
-basic data handling and to enforce a consistent user interface. For an example
-on how to use these classes to create custom data access module for a new
-survey / data release, see the :ref:`CustomClasses` section of the docs."""
+"""The ``base_classes`` module defines parent classes used by the data access
+API to define basic data handling and to enforce a consistent user interface.
+
+Classes are provided to represent three kinds of data sets. This includes
+  1) data releases with only supplementary tables (i.e., no observational data)
+  2) spectroscopic data releases
+  3) photometric data releases.
+
+For an example on how to use these classes to create custom data access module
+for a new survey / data release, see the :ref:`CustomClasses` section of the
+docs.
+"""
 
 import shutil
 from typing import List, Union
@@ -14,7 +22,7 @@ from astropy.io import ascii
 from astropy.table import Table
 
 from . import _utils
-from .exceptions import InvalidObjId
+from .exceptions import InvalidObjId, InvalidTableId
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
@@ -41,18 +49,11 @@ class VizierTables:
         self.survey_abbrev = survey_abbrev if survey_abbrev else self.survey_abbrev
         self.release = release if release else self.release
 
-        self._data_dir = _utils.find_and_create_data_dir(self.survey_abbrev, self.release)
+        self._data_dir = _utils.find_data_dir(self.survey_abbrev, self.release)
         self._table_dir = self._data_dir / 'tables'
 
-    def get_available_tables(self) -> List[VizierTableId]:
-        """Get Ids for available Vizier tables published by this data release"""
-
-        # In case child class has no data table directory
-        if not hasattr(self, '_table_dir'):
-            return []
-
-        # Raise error if data is not downloaded
-        _utils.require_data_path(self._table_dir)
+    def _get_available_tables(self) -> List[VizierTableId]:
+        # Default backend functionality of ``get_available_tables`` function
 
         # Find available tables - assume standard Vizier naming scheme
         # This includes assuming lowercase file names
@@ -62,6 +63,25 @@ class VizierTables:
             table_nums.append(int(table_number))
 
         return sorted(table_nums)
+
+    def get_available_tables(self) -> List[VizierTableId]:
+        """Get Ids for available vizier tables published by this data release"""
+
+        # Raise error if data is not downloaded
+        _utils.require_data_path(self._data_dir)
+        return self._get_available_tables()
+
+    def _load_table(self, table_id: VizierTableId) -> Table:
+        # Default backend functionality of ``load_table`` function
+
+        readme_path = self._table_dir / 'ReadMe'
+        table_path = self._table_dir / f'table{table_id}.dat'
+
+        # Read data from file and add meta data from the readme
+        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+        description = _utils.read_vizier_table_descriptions(readme_path)[table_id]
+        data.meta['description'] = description
+        return data
 
     @_utils.lru_copy_cache(maxsize=None)
     def load_table(self, table_id: VizierTableId) -> Table:
@@ -73,16 +93,9 @@ class VizierTables:
 
         # Raise error if data is not downloaded
         if table_id not in self.get_available_tables():
-            raise ValueError(f'Table {table_id} is not available.')
+            raise InvalidTableId(f'Table {table_id} is not available.')
 
-        readme_path = self._table_dir / 'ReadMe'
-        table_path = self._table_dir / f'table{table_id}.dat'
-
-        # Read data from file and add meta data from the readme
-        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = _utils.read_vizier_table_descriptions(readme_path)[table_id]
-        data.meta['description'] = description
-        return data
+        return self._load_table(table_id)
 
     def __repr__(self):
         # Using self.__class__ ensures correct name appears for child classes
@@ -103,7 +116,7 @@ class SpectroscopicRelease(VizierTables):
     release = None
     survey_url = None
     data_type = 'spectroscopic'
-    publications = (None,)
+    publications = tuple()
     ads_url = None
 
     def get_available_ids(self) -> List[str]:
@@ -113,6 +126,7 @@ class SpectroscopicRelease(VizierTables):
             A list of object IDs
         """
 
+        _utils.require_data_path(self._data_dir)
         return self._get_available_ids()
 
     def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
@@ -175,6 +189,16 @@ class SpectroscopicRelease(VizierTables):
         except FileNotFoundError:
             pass
 
+    def download_module_data(self, force: bool = False, timeout: float = 15):
+        """Download data for the current survey / data release
+
+        Args:
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
+        """
+
+        self._download_module_data(force, timeout)
+
 
 class PhotometricRelease(SpectroscopicRelease):
     """Generic representation of a photometric data release
@@ -201,17 +225,20 @@ class PhotometricRelease(SpectroscopicRelease):
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
         return np.array(cls.zero_point)[sorter[indices]]
 
-    def register_filters(self, force: bool = False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered (Default: False)
-        """
-
-        # Raise error if data is not downloaded
-        _utils.require_data_path(self._filter_dir)
+    def _register_filters(self, force: bool = False):
+        # Default backend functionality of ``register_filters`` function
 
         bandpass_data = zip(self._filter_file_names, self.band_names)
         for _file_name, _band_name in bandpass_data:
             filter_path = self._filter_dir / _file_name
             _utils.register_filter(filter_path, _band_name, force=force)
+
+    def register_filters(self, force: bool = False):
+        """Register filters for this survey / data release with SNCosmo
+
+        Args:
+            force: Re-register a band if already registered
+        """
+
+        _utils.require_data_path(self._data_dir)
+        self._register_filters(force)

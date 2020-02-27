@@ -180,7 +180,6 @@ class DR3(PhotometricRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
@@ -215,7 +214,7 @@ class DR3(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

@@ -137,14 +137,13 @@ class Betoule14(PhotometricRelease):
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/A+A/568/A22'
         self._filter_url = 'http://www.cfht.hawaii.edu/Instruments/Imaging/Megacam/data.MegaPrime/MegaCam_Filters_data_SAGEM.txt'
 
-    def register_filters(self, force: bool = False):
+    def _register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo
 
         Args:
-            force: Re-register a band if already registered (Default: False)
+            force: Re-register a band if already registered
         """
 
-        utils.require_data_path(self._filter_path)
         data_arr = np.genfromtxt(self._filter_path, skip_header=1)
         filt_table = Table(data_arr, names=['wave', 'u', 'g', 'r', 'i', 'z'])
         filt_table['wave'] *= 10  # Convert nm to angstroms
@@ -167,18 +166,16 @@ class Betoule14(PhotometricRelease):
             new_band.name = new_band_name
             sncosmo.register(new_band, force=force)
 
-    def get_available_tables(self) -> List[str]:
-        """Get available Ids for tables published by the paper for this data
-        release"""
+    def _get_available_tables(self) -> List[str]:
+        """Get Ids for available vizier tables published by this data release"""
 
-        utils.require_data_path(self._table_dir)
         dat_file_list = list(self._table_dir.glob('table*.dat'))
         fits_file_list = list(self._table_dir.glob('table*.fit'))
         file_list = dat_file_list + fits_file_list
         return sorted([str(f).rstrip('.datfit')[-2:] for f in file_list])
 
-    def load_table(self, table_id: str) -> Table:
-        """Return a table from the data paper for this survey / data
+    def _load_table(self, table_id: str) -> Table:
+        """Return a Vizier table published by this data release
 
         Args:
             table_id: The published table number or table name
@@ -207,7 +204,6 @@ class Betoule14(PhotometricRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         file_list = self._photometry_dir.glob('*.list')
         return sorted(str(f).split('-')[-1][:-5] for f in file_list)
 
@@ -276,7 +272,7 @@ class Betoule14(PhotometricRelease):
 
         return out_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
