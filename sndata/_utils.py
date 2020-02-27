@@ -78,7 +78,6 @@ def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
         base_dir = Path(__file__).resolve().parent / 'data'
 
     data_dir = base_dir / safe_survey / safe_release
-    data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
 
 

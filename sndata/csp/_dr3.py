@@ -180,7 +180,6 @@ class DR3(PhotometricRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 

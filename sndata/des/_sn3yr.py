@@ -100,7 +100,6 @@ class SN3YR(PhotometricRelease):
         """Get Ids for available vizier tables published by this data release"""
 
         # noinspection SpellCheckingInspection
-        utils.require_data_path(self._fits_dir)
         return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
     def _load_table(self, table_id: Union[str, int]):

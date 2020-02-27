@@ -64,8 +64,6 @@ class Sako18Spec(SpectroscopicRelease):
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
-        utils.require_data_path(self._table_dir)
-
         table_names = []
         for f in self._table_dir.glob('*.txt'):
             table_num = f.stem.strip('Table_data')

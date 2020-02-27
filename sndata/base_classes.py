@@ -59,9 +59,6 @@ class VizierTables:
         if not hasattr(self, '_table_dir'):
             return []
 
-        # Raise error if data is not downloaded
-        _utils.require_data_path(self._table_dir)
-
         # Find available tables - assume standard Vizier naming scheme
         # This includes assuming lowercase file names
         table_nums = []
@@ -74,6 +71,8 @@ class VizierTables:
     def get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
 
+        # Raise error if data is not downloaded
+        _utils.require_data_path(self._data_dir)
         return self._get_available_tables()
 
     def _load_table(self, table_id: VizierTableId) -> Table:
@@ -131,6 +130,7 @@ class SpectroscopicRelease(VizierTables):
             A list of object IDs
         """
 
+        _utils.require_data_path(self._data_dir)
         return self._get_available_ids()
 
     def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
@@ -232,9 +232,6 @@ class PhotometricRelease(SpectroscopicRelease):
     def _register_filters(self, force: bool = False):
         # Default backend functionality of ``register_filters`` function
 
-        # Raise error if data is not downloaded
-        _utils.require_data_path(self._filter_dir)
-
         bandpass_data = zip(self._filter_file_names, self.band_names)
         for _file_name, _band_name in bandpass_data:
             filter_path = self._filter_dir / _file_name
@@ -247,4 +244,5 @@ class PhotometricRelease(SpectroscopicRelease):
             force: Re-register a band if already registered
         """
 
+        _utils.require_data_path(self._data_dir)
         self._register_filters(force)

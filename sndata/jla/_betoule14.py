@@ -144,7 +144,6 @@ class Betoule14(PhotometricRelease):
             force: Re-register a band if already registered
         """
 
-        utils.require_data_path(self._filter_path)
         data_arr = np.genfromtxt(self._filter_path, skip_header=1)
         filt_table = Table(data_arr, names=['wave', 'u', 'g', 'r', 'i', 'z'])
         filt_table['wave'] *= 10  # Convert nm to angstroms
@@ -170,7 +169,6 @@ class Betoule14(PhotometricRelease):
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
-        utils.require_data_path(self._table_dir)
         dat_file_list = list(self._table_dir.glob('table*.dat'))
         fits_file_list = list(self._table_dir.glob('table*.fit'))
         file_list = dat_file_list + fits_file_list
@@ -206,7 +204,6 @@ class Betoule14(PhotometricRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         file_list = self._photometry_dir.glob('*.list')
         return sorted(str(f).split('-')[-1][:-5] for f in file_list)
 
