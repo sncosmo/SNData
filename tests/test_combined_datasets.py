@@ -13,6 +13,7 @@ from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
 from .data_parsing_template_tests import PhotometricDataParsing
+from .test_exceptions import InvalidTableId
 
 
 class Combined(TestCase, PhotometricDataParsing):
@@ -24,12 +25,11 @@ class Combined(TestCase, PhotometricDataParsing):
         cls.test_class = CombinedDataset(*cls.joined_surveys)
         cls.test_class.download_module_data()
 
-    def test_obj_id_dataframe(self):
-        """Test for expected data releases in object id DataFrame"""
+    def test_bad_table_id_err(self):
+        """Test an InvalidObjId exception is raised for a made up Id"""
 
-        expected = set(s.survey_abbrev for s in self.joined_surveys)
-        actual = set(self.test_class._obj_ids['survey'])
-        self.assertEqual(expected, actual)
+        fake_table_id = ('fake_id', 'fake_release', 'fake_survey')
+        self.assertRaises(InvalidTableId, self.test_class.load_table, fake_table_id)
 
     def test_id_joining(self):
         """Test correct data is returned after joining / separating IDs"""

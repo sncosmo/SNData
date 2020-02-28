@@ -125,7 +125,7 @@ class SpectroscopicRelease(VizierTables):
         """Return a list of target object IDs for the current survey
 
         Returns:
-            A list of object IDs
+            A list of object IDs as strings
         """
 
         _utils.require_data_path(self._data_dir)
@@ -138,7 +138,7 @@ class SpectroscopicRelease(VizierTables):
 
         Args:
             obj_id: The ID of the desired object
-            format_table: Format for use with ``sncosmo`` (Default: True)
+            format_table: Format data into the ``sndata`` standard format
 
         Returns:
             An astropy table of data for the given ID
