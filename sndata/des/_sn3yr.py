@@ -217,7 +217,7 @@ class SN3YR(PhotometricRelease):
         utils.download_tar(
             url=self._fits_url,
             out_dir=self._data_dir,
-            skip_exists=self._table_dir,
+            skip_exists=self._fits_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

@@ -9,10 +9,16 @@ import numpy as np
 import sncosmo
 
 from sndata import get_zp
+from sndata.exceptions import InvalidTableId
 
 
 class VizierTableParsing:
     """Generic data parsing tests for vizier table data releases"""
+
+    def test_bad_table_id_err(self):
+        """Test an InvalidObjId exception is raised for a made up Id"""
+
+        self.assertRaises(InvalidTableId, self.test_class.load_table, 'fake_id')
 
     def test_paper_tables_are_parsed(self):
         """Test no errors are raised by ``load_table`` when parsing any of the
