@@ -18,9 +18,9 @@ SNData
 
 .. rst-class:: badges
 
-   +--------------------------------------------+
-   | |python| |license| |travis| |cover| |docs| |
-   +--------------------------------------------+
+   +------------------------------------+
+   | |python| |license| |travis| |docs| |
+   +------------------------------------+
 
 
 **SNData** provides access to data releases published by a variety of
