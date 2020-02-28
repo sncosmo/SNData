@@ -4,15 +4,17 @@
 """This module handles combining data from different data sets."""
 
 from copy import copy
+from functools import lru_cache
 from typing import List, Tuple, Union
 
+import pandas as pd
 from astropy.table import Table, vstack
 
 from . import _utils as utils
 from . import csp, des, essence, jla, sdss
-from .exceptions import InvalidTableId, ObservedDataTypeError
+from .exceptions import InvalidObjId, InvalidTableId, ObservedDataTypeError
 
-CombinedID = Tuple[str, str, str]
+CombinedID = Union[str, Tuple[str, str, str]]
 
 
 # Todo: Test this function with a dedicated unit test
@@ -109,45 +111,14 @@ class CombinedDataset:
 
         self._joined_ids = []
 
-    def get_joined_ids(self) -> List[CombinedID]:
-        """Return a list of joined object IDs
+    @property
+    @lru_cache(None)
+    def _obj_id_dataframe(self):
+        # Return a data frame of object Id's and their survey / release names
 
-        Return:
-            A list of joined object IDs [{id_1, id_2}, ...]
-        """
-
-        return copy(self._joined_ids)
-
-    def join_ids(self, *obj_ids: CombinedID):
-        """Join object ID values to indicate the same object
-
-        Args:
-            obj_ids: Object IDs to join
-        """
-
-        if len(obj_ids) <= 1:
-            raise ValueError(
-                'Object IDs can only be joined in sets of 2 or more.')
-
-        self._joined_ids.append(set(obj_ids))
-        self._joined_ids = _reduce_id_mapping(self._joined_ids)
-
-    def separate_ids(self, *obj_ids: CombinedID):
-        """Separate object IDs so they are no longer joined to other IDs
-
-        Args:
-            obj_ids: List of object IDs to separate
-        """
-
-        if len(obj_ids) <= 1:
-            raise ValueError(
-                'Object IDs can only be separated in sets of 2 or more.')
-
-        obj_ids = set(obj_ids)
-        for obj_id_set in self._joined_ids:
-            obj_id_set -= obj_ids
-
-        self._joined_ids = _reduce_id_mapping(self._joined_ids)
+        return pd.DataFrame(
+            self.get_available_ids(),
+            columns=['obj_id', 'release', 'survey']).set_index('obj_id')
 
     @property
     def band_names(self) -> Tuple[str]:
@@ -223,7 +194,25 @@ class CombinedDataset:
             An astropy table of data for the given ID
         """
 
-        single_obj_id, release, survey_abbrev = obj_id
+        # If object_id is a tuple, get survey and release names from tuple
+        if isinstance(obj_id, tuple):
+            single_obj_id, release, survey_abbrev = obj_id
+
+        # Get survey and release names from self._obj_id_dataframe
+        else:
+            try:
+                obj_id_parent = self._obj_id_dataframe.loc[obj_id]
+
+            except KeyError:
+                raise InvalidObjId()
+
+            if not isinstance(obj_id_parent, pd.Series):
+                raise RuntimeError(f'Multiple results for obj_id: {obj_id}')
+
+            release = obj_id_parent.release
+            survey_abbrev = obj_id_parent.survey
+            single_obj_id = obj_id
+
         data_class = self._data_releases[f"{survey_abbrev}:{release}"]
         return data_class.get_data_for_id(single_obj_id, format_table)
 
@@ -345,3 +334,43 @@ class CombinedDataset:
 
         for module in self._data_releases.values():
             module.delete_module_data()
+
+    def get_joined_ids(self) -> List[CombinedID]:
+        """Return a list of joined object IDs
+
+        Return:
+            A list of joined object IDs [{id_1, id_2}, ...]
+        """
+
+        return copy(self._joined_ids)
+
+    def join_ids(self, *obj_ids: CombinedID):
+        """Join object ID values to indicate the same object
+
+        Args:
+            obj_ids: Object IDs to join
+        """
+
+        if len(obj_ids) <= 1:
+            raise ValueError(
+                'Object IDs can only be joined in sets of 2 or more.')
+
+        self._joined_ids.append(set(obj_ids))
+        self._joined_ids = _reduce_id_mapping(self._joined_ids)
+
+    def separate_ids(self, *obj_ids: CombinedID):
+        """Separate object IDs so they are no longer joined to other IDs
+
+        Args:
+            obj_ids: List of object IDs to separate
+        """
+
+        if len(obj_ids) <= 1:
+            raise ValueError(
+                'Object IDs can only be separated in sets of 2 or more.')
+
+        obj_ids = set(obj_ids)
+        for obj_id_set in self._joined_ids:
+            obj_id_set -= obj_ids
+
+        self._joined_ids = _reduce_id_mapping(self._joined_ids)
