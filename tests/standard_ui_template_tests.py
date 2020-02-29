@@ -6,22 +6,6 @@ spectroscopic and photometric data releases.
 """
 
 
-class VizierTableUI:
-    """Generic UI tests for vizier table data releases"""
-
-    def test_not_missing_metadata(self):
-        """Test that standard metadata attributes are not null"""
-
-        msg = '``{}`` attribute is not set'
-        self.assertTrue(self.test_class.ads_url, msg.format('ads_url'))
-        self.assertTrue(self.test_class.publications, msg.format('publications'))
-
-    def test_correct_data_type_attribute(self):
-        """Test the ``data_type`` attribute is set to ``tables``"""
-
-        self.assertEqual(self.test_class.data_type, 'tables')
-
-
 class SpectroscopicDataUI:
     """Generic UI tests for spectroscopic data releases"""
 

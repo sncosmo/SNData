@@ -163,7 +163,8 @@ data (``NoDownloadedData``). This is handled automatically by the
 
 .. note:: The formatting of Vizier tables is fairly standard, and there is a
    chance your ``_get_available_tables`` and ``_load_table`` methods be exactly
-   the same as the above example.
+   the same as the above example. Instead of copy and pasting these two
+   methods from above, you can inherit the ``DefaultDataParser`` class.
 
 
 Photometric Data
@@ -218,4 +219,5 @@ For example:
                band.name = filter_name
                sncosmo.register(band, force=force)
 
-.. note:: Mention automatic behavior
+.. note:: The ``_register_filters`` method shown above can also be inherited
+   from the ``DefaultDataParser`` class.

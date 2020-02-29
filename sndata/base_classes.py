@@ -29,10 +29,13 @@ VizierTableId = Union[int, str]
 
 
 class DefaultParser:
-    """Generic representation of Vizier data tables for a given data release"""
+    """Prebuilt data parsing tools for Vizier tables and photometric filters
+
+    For more information see the :ref:`CustomClasses` section of the docs.
+    """
 
     def _get_available_tables(self) -> List[VizierTableId]:
-        # Default backend functionality of ``get_available_tables`` function
+        """Default backend functionality of ``get_available_tables`` function"""
 
         # Find available tables - assume standard Vizier naming scheme
         # This includes assuming lowercase file names
@@ -44,7 +47,7 @@ class DefaultParser:
         return sorted(table_nums)
 
     def _load_table(self, table_id: VizierTableId) -> Table:
-        # Default backend functionality of ``load_table`` function
+        """Default backend functionality of ``load_table`` function"""
 
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
@@ -56,7 +59,7 @@ class DefaultParser:
         return data
 
     def _register_filters(self, force: bool = False):
-        # Default backend functionality of ``register_filters`` function
+        """Default backend functionality of ``register_filters`` function"""
 
         bandpass_data = zip(self._filter_file_names, self.band_names)
         for _file_name, _band_name in bandpass_data:
