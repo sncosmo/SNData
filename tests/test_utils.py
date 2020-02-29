@@ -7,7 +7,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from sndata import _utils as utils
+from sndata import utils as utils
 from sndata.exceptions import NoDownloadedData
 
 

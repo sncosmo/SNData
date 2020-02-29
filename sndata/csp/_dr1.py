@@ -8,8 +8,8 @@ from typing import List
 
 from astropy.table import Table, vstack
 
-from .. import _utils as utils
-from ..base_classes import SpectroscopicRelease
+from .. import utils as utils
+from ..base_classes import SpectroscopicRelease, VizierTables
 
 
 def read_dr1_file(path: str, format_table: bool = False) -> Table:
@@ -70,7 +70,7 @@ def read_dr1_file(path: str, format_table: bool = False) -> Table:
     return data
 
 
-class DR1(SpectroscopicRelease):
+class DR1(SpectroscopicRelease, VizierTables):
     """The ``DR1`` class provides access to spectra from the first release of
     optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
     the Carnegie Supernova Project. It includes 604 previously unpublished

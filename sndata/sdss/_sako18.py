@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 import numpy as np
 from astropy.table import Column, Table
 
-from .. import _utils as utils
+from .. import utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
 

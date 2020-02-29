@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module provides general utilities."""
+"""The ``utils`` module provides an assorted collection of general utilities
+used when building data access classes for a given survye / data release.
+"""
 
 import functools
 import os
@@ -296,7 +298,7 @@ def read_vizier_table_descriptions(readme_path: Union[Path, str]):
     return table_descriptions
 
 
-def register_filter(file_path: str, filter_name: str, force: bool = False):
+def register_filter_file(file_path: str, filter_name: str, force: bool = False):
     """Registers filter profiles with sncosmo if not already registered
 
     Assumes the file at ``file_path`` is a two column, white space delimited

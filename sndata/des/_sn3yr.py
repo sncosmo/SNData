@@ -9,7 +9,7 @@ from typing import Union
 import numpy as np
 from astropy.table import Table
 
-from .. import _utils as utils
+from .. import utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
 
