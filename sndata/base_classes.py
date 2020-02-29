@@ -28,7 +28,7 @@ from .exceptions import InvalidObjId, InvalidTableId
 VizierTableId = Union[int, str]
 
 
-class VizierTables:
+class DefaultParser:
     """Generic representation of Vizier data tables for a given data release"""
 
     def _get_available_tables(self) -> List[VizierTableId]:
@@ -54,6 +54,14 @@ class VizierTables:
         description = utils.read_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description
         return data
+
+    def _register_filters(self, force: bool = False):
+        # Default backend functionality of ``register_filters`` function
+
+        bandpass_data = zip(self._filter_file_names, self.band_names)
+        for _file_name, _band_name in bandpass_data:
+            filter_path = self._filter_dir / _file_name
+            utils.register_filter_file(filter_path, _band_name, force=force)
 
 
 class SpectroscopicRelease:
@@ -228,14 +236,6 @@ class PhotometricRelease(SpectroscopicRelease):
         sorter = np.argsort(cls.band_names)
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
         return np.array(cls.zero_point)[sorter[indices]]
-
-    def _register_filters(self, force: bool = False):
-        # Default backend functionality of ``register_filters`` function
-
-        bandpass_data = zip(self._filter_file_names, self.band_names)
-        for _file_name, _band_name in bandpass_data:
-            filter_path = self._filter_dir / _file_name
-            utils.register_filter_file(filter_path, _band_name, force=force)
 
     def register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo

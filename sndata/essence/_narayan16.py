@@ -10,7 +10,7 @@ import numpy as np
 from astropy.table import Table
 
 from .. import utils as utils
-from ..base_classes import PhotometricRelease, VizierTables
+from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -38,7 +38,7 @@ def _format_table(data_table: Table) -> Table:
     return out_table
 
 
-class Narayan16(PhotometricRelease, VizierTables):
+class Narayan16(PhotometricRelease, DefaultParser):
     """The ``Narayan16`` class provides access to photometric data for 213
     Type Ia supernovae discovered by the ESSENCE survey at redshifts
     0.1 <= z <= 0.81 between 2002 and 2008. It includes R and I band photometry

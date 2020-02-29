@@ -10,8 +10,8 @@ from typing import List, Tuple, Union
 import pandas as pd
 from astropy.table import Table, vstack
 
-from . import utils as utils
 from . import csp, des, essence, jla, sdss
+from . import utils as utils
 from .exceptions import InvalidObjId, InvalidTableId, ObservedDataTypeError
 
 CombinedID = Union[str, Tuple[str, str, str]]
