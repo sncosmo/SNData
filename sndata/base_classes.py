@@ -3,12 +3,6 @@
 
 """The ``base_classes`` module defines parent classes used by the data access
 API to define basic data handling and to enforce a consistent user interface.
-
-Classes are provided to represent three kinds of data sets. This includes
-  1) data releases with only supplementary tables (i.e., no observational data)
-  2) spectroscopic data releases
-  3) photometric data releases.
-
 For an example on how to use these classes to create custom data access module
 for a new survey / data release, see the :ref:`CustomClasses` section of the
 docs.

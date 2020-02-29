@@ -7,7 +7,7 @@ VizierTables
 ------------
 
 .. autoclass:: sndata.base_classes.VizierTables
-   :members:
+   :members: _get_available_tables, _load_table, _register_filters
 
 SpectroscopicRelease
 --------------------
