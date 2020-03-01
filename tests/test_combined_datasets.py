@@ -54,7 +54,7 @@ class CombinedDataParsing(TestCase, PhotometricDataParsing):
             'Incorrect data for joined IDs.'
         )
 
-        # Check we get the original data after seperating ids
+        # Check we get the original data after separating ids
         self.test_class.separate_ids(*test_ids[0])
         obj0_data = self.test_class.get_data_for_id(test_ids[0], True)
         obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
@@ -69,6 +69,16 @@ class CombinedDataParsing(TestCase, PhotometricDataParsing):
             sorted(obj1_data.as_array().tolist()),
             'Incorrect data for second ID after joining.'
         )
+
+    def test_join_id_string_error(self):
+        """Test joining object ids as strings raises an error"""
+
+        with self.assertRaises(TypeError):
+            self.test_class.join_ids('dummy_id_1', 'dummy_id_2')
+
+        fake_id_as_tuple = ('dummy_id_1', 'dummy_release', 'dummy_survey')
+        with self.assertRaises(TypeError):
+            self.test_class.join_ids(fake_id_as_tuple, 'dummy_id_2')
 
 
 class CombinedDataStringIDs(TestCase):

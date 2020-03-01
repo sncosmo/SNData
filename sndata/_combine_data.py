@@ -173,14 +173,20 @@ class CombinedDataset:
             A list of object IDs as tuples
         """
 
-        obj_id_list = []
+        all_obj_ids = set()
         for data_class in self._data_releases.values():
             survey_abbrev = data_class.survey_abbrev
             release = data_class.release
             for obj_id in data_class.get_available_ids():
-                obj_id_list.append((obj_id, release, survey_abbrev))
+                all_obj_ids.add((obj_id, release, survey_abbrev))
 
-        return sorted(obj_id_list)
+        # Remove joined Id's
+        for obj_id_set in self._joined_ids:
+            obj_id_set = obj_id_set.copy()
+            obj_id_set.pop()
+            all_obj_ids -= obj_id_set
+
+        return sorted(all_obj_ids)
 
     def _get_data_single_id(
             self, obj_id: CombinedID, format_table: bool = True) -> Table:
@@ -354,6 +360,9 @@ class CombinedDataset:
         if len(obj_ids) <= 1:
             raise ValueError(
                 'Object IDs can only be joined in sets of 2 or more.')
+
+        if not all(isinstance(obj_id, tuple) for obj_id in obj_ids):
+            raise TypeError('Can only join object Id\'s as tuples')
 
         self._joined_ids.append(set(obj_ids))
         self._joined_ids = _reduce_id_mapping(self._joined_ids)
