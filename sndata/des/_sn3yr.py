@@ -9,8 +9,8 @@ from typing import Union
 import numpy as np
 from astropy.table import Table
 
-from .. import _utils as utils
-from ..base_classes import PhotometricRelease
+from .. import utils as utils
+from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -36,7 +36,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     return out_table
 
 
-class SN3YR(PhotometricRelease):
+class SN3YR(PhotometricRelease, DefaultParser):
     """The ``SN3YR`` class provides access to data from the first public data
     release of the Dark Energy Survey Supernova Program, DES-SN3YR. It includes
     griz light curves of 251 supernovae from the first 3 years of the Dark

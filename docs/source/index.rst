@@ -96,11 +96,12 @@ Available Data
    getting_started/quick_start
    getting_started/slow_start
    getting_started/combining_datasets
+   getting_started/custom_classes
 
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Module Docs:
+   :caption: Data Release Docs:
 
    module_docs/csp
    module_docs/des
@@ -112,7 +113,8 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Top Level API:
+   :caption: Package API:
 
    package_api/sndata
    package_api/base_classes
+   package_api/utils

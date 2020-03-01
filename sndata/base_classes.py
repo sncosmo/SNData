@@ -3,12 +3,6 @@
 
 """The ``base_classes`` module defines parent classes used by the data access
 API to define basic data handling and to enforce a consistent user interface.
-
-Classes are provided to represent three kinds of data sets. This includes
-  1) data releases with only supplementary tables (i.e., no observational data)
-  2) spectroscopic data releases
-  3) photometric data releases.
-
 For an example on how to use these classes to create custom data access module
 for a new survey / data release, see the :ref:`CustomClasses` section of the
 docs.
@@ -21,19 +15,67 @@ import numpy as np
 from astropy.io import ascii
 from astropy.table import Table
 
-from . import _utils
+from . import utils
 from .exceptions import InvalidObjId, InvalidTableId
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
 
 
-class VizierTables:
-    """Generic representation of Vizier data tables for a given data release"""
+class DefaultParser:
+    """Prebuilt data parsing tools for Vizier tables and photometric filters
 
+    For more information see the :ref:`CustomClasses` section of the docs.
+    """
+
+    def _get_available_tables(self) -> List[VizierTableId]:
+        """Default backend functionality of ``get_available_tables`` function"""
+
+        # Find available tables - assume standard Vizier naming scheme
+        # This includes assuming lowercase file names
+        table_nums = []
+        for f in self._table_dir.rglob('table*.dat'):
+            table_number = f.stem.lstrip('table')
+            table_nums.append(int(table_number))
+
+        return sorted(table_nums)
+
+    def _load_table(self, table_id: VizierTableId) -> Table:
+        """Default backend functionality of ``load_table`` function"""
+
+        readme_path = self._table_dir / 'ReadMe'
+        table_path = self._table_dir / f'table{table_id}.dat'
+
+        # Read data from file and add meta data from the readme
+        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
+        data.meta['description'] = description
+        return data
+
+    def _register_filters(self, force: bool = False):
+        """Default backend functionality of ``register_filters`` function"""
+
+        bandpass_data = zip(self._filter_file_names, self.band_names)
+        for _file_name, _band_name in bandpass_data:
+            filter_path = self._filter_dir / _file_name
+            utils.register_filter_file(filter_path, _band_name, force=force)
+
+
+class SpectroscopicRelease:
+    """Generic representation of a spectroscopic data release
+
+    This class is a template designed to enforce a consistent user interface
+    and requires child classes to fill in incomplete functionality.
+    """
+
+    # General metadata
     publications = tuple()
     ads_url = None
-    data_type = 'tables'
+    survey_name = None
+    survey_abbrev = None
+    release = None
+    survey_url = None
+    data_type = 'spectroscopic'
 
     def __init__(self, survey_abbrev: str = None, release: str = None):
         """Represent Vizier data downloaded on the local machine
@@ -53,41 +95,17 @@ class VizierTables:
         self.survey_abbrev = survey_abbrev if survey_abbrev else self.survey_abbrev
         self.release = release if release else self.release
 
-        self._data_dir = _utils.find_data_dir(self.survey_abbrev, self.release)
+        self._data_dir = utils.find_data_dir(self.survey_abbrev, self.release)
         self._table_dir = self._data_dir / 'tables'
-
-    def _get_available_tables(self) -> List[VizierTableId]:
-        # Default backend functionality of ``get_available_tables`` function
-
-        # Find available tables - assume standard Vizier naming scheme
-        # This includes assuming lowercase file names
-        table_nums = []
-        for f in self._table_dir.rglob('table*.dat'):
-            table_number = f.stem.lstrip('table')
-            table_nums.append(int(table_number))
-
-        return sorted(table_nums)
 
     def get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
 
         # Raise error if data is not downloaded
-        _utils.require_data_path(self._data_dir)
+        utils.require_data_path(self._data_dir)
         return self._get_available_tables()
 
-    def _load_table(self, table_id: VizierTableId) -> Table:
-        # Default backend functionality of ``load_table`` function
-
-        readme_path = self._table_dir / 'ReadMe'
-        table_path = self._table_dir / f'table{table_id}.dat'
-
-        # Read data from file and add meta data from the readme
-        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = _utils.read_vizier_table_descriptions(readme_path)[table_id]
-        data.meta['description'] = description
-        return data
-
-    @_utils.lru_copy_cache(maxsize=None)
+    @utils.lru_copy_cache(maxsize=None)
     def load_table(self, table_id: VizierTableId) -> Table:
         """Return a Vizier table published by this data release
 
@@ -101,26 +119,6 @@ class VizierTables:
 
         return self._load_table(table_id)
 
-    def __repr__(self):
-        # Using self.__class__ ensures correct name appears for child classes
-        class_name = self.__class__.__name__
-        return f'<{class_name} ({self.survey_abbrev} {self.release})>'
-
-
-class SpectroscopicRelease(VizierTables):
-    """Generic representation of a spectroscopic data release
-
-    This class is a template designed to enforce a consistent user interface
-    and requires child classes to fill in incomplete functionality.
-    """
-
-    # General metadata
-    survey_name = None
-    survey_abbrev = None
-    release = None
-    survey_url = None
-    data_type = 'spectroscopic'
-
     def get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey
 
@@ -128,7 +126,7 @@ class SpectroscopicRelease(VizierTables):
             A list of object IDs as strings
         """
 
-        _utils.require_data_path(self._data_dir)
+        utils.require_data_path(self._data_dir)
         return self._get_available_ids()
 
     def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
@@ -174,7 +172,7 @@ class SpectroscopicRelease(VizierTables):
         if filter_func is None:
             filter_func = lambda x: x
 
-        iterable = _utils.build_pbar(self.get_available_ids(), verbose)
+        iterable = utils.build_pbar(self.get_available_ids(), verbose)
         for obj_id in iterable:
             data_table = self.get_data_for_id(
                 obj_id, format_table=format_table)
@@ -199,7 +197,16 @@ class SpectroscopicRelease(VizierTables):
             timeout: Seconds before timeout for individual files/archives
         """
 
+        if not hasattr(self, '_download_module_data'):
+            raise RuntimeError(
+                'This data set does not support downloading remote data')
+
         self._download_module_data(force, timeout)
+
+    def __repr__(self):
+        # Using self.__class__ ensures correct name appears for child classes
+        class_name = self.__class__.__name__
+        return f'<{class_name} ({self.survey_abbrev} {self.release})>'
 
 
 class PhotometricRelease(SpectroscopicRelease):
@@ -227,14 +234,6 @@ class PhotometricRelease(SpectroscopicRelease):
         indices = np.searchsorted(cls.band_names, band, sorter=sorter)
         return np.array(cls.zero_point)[sorter[indices]]
 
-    def _register_filters(self, force: bool = False):
-        # Default backend functionality of ``register_filters`` function
-
-        bandpass_data = zip(self._filter_file_names, self.band_names)
-        for _file_name, _band_name in bandpass_data:
-            filter_path = self._filter_dir / _file_name
-            _utils.register_filter(filter_path, _band_name, force=force)
-
     def register_filters(self, force: bool = False):
         """Register filters for this survey / data release with SNCosmo
 
@@ -242,5 +241,5 @@ class PhotometricRelease(SpectroscopicRelease):
             force: Re-register a band if already registered
         """
 
-        _utils.require_data_path(self._data_dir)
+        utils.require_data_path(self._data_dir)
         self._register_filters(force)

@@ -10,7 +10,7 @@ import sncosmo
 from astropy.io import ascii, fits
 from astropy.table import Table
 
-from .. import _utils as utils
+from .. import utils as utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
 

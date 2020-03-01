@@ -11,8 +11,8 @@ from urllib.parse import urljoin
 import numpy as np
 from astropy.table import Column, Table
 
-from .. import _utils as utils
-from ..base_classes import PhotometricRelease
+from .. import utils as utils
+from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -62,7 +62,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     return out_table
 
 
-class Sako18(PhotometricRelease):
+class Sako18(PhotometricRelease, DefaultParser):
     """The ``Sako18`` class provides access to the **photometric** data release
     of the Sloan Digital Sky Survey-II (SDSS-II) Supernova Survey conducted
     between 2005 and 2007. Light curves are presented for 10,258 variable and

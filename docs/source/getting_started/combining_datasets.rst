@@ -6,16 +6,14 @@ Combining Data Sets
 interface as a single data access module but provides access to data from
 multiple surveys / data releases.
 
-For demonstration purposes we combine data from the third data
-release of the Carnegie Supernova Project and the three year cosmology release
-of the Dark Energy Survey.
-
 Creating a Combined Data Set
 ----------------------------
 
 To create a combined data set, import the data access classes for each of the
 data releases you want to join and pass them to the ``CombinedDataset``
-object.
+object. For demonstration purposes we combine data from the third data
+release of the Carnegie Supernova Project and the three year cosmology release
+of the Dark Energy Survey:
 
 .. code-block:: python
    :linenos:
@@ -68,7 +66,8 @@ By specifying object Id's in this way, it is ensured that objects in combined
 data releases always have unique identifiers. However, in the case where
 the object Id's from two data releases are already unique (as is the case when
 combining ``csp.DR3` and ``des.SN3YR``), ``CombinedDataset`` objects are smart
-enough to handle object Id's as strings. For example:
+enough to mimic the behavior of a normal / single data release and can
+take object Id's as strings. For example:
 
 .. code-block:: python
    :linenos:
@@ -79,19 +78,19 @@ enough to handle object Id's as strings. For example:
    # or if the object names across the joined surveys are unique, as a string
    combined_data.get_data_for_id('2007S')
 
-Joining Object IDs
-------------------
+Joining Object Id's
+-------------------
 
 It is possible for two different photometric surveys to observe the same
-astronomical object. In this case, object IDs from different surveys can be
-"joined" together so that when requesting data for a given object Id,  data is
-returned for all Ids that have been joined together. Accomplishing this is as
+astronomical object. In this case, object Id's from different surveys can be
+*"joined"* together so that when requesting data for a given object Id,  data is
+returned for all Id's that have been joined together. Accomplishing this is as
 simple as:
 
 .. code-block:: python
    :linenos:
 
-   # Note that you can join an arbitrary number of object IDs
+   # Note that you can join an arbitrary number of object Id's
    combined_data.join_ids(obj_id_1, obj_id_2, obj_id_3, ...)
 
    # You can also retrieve a list of joined ID values
@@ -116,7 +115,7 @@ equivalent.
 .. code-block:: python
    :linenos:
 
-   # You can join multiple IDs at once ...
+   # You can join multiple Id's at once ...
    combined_data.join_ids(obj_id_1, obj_id_2, obj_id_3)
 
    # Or join them successively

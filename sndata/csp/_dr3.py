@@ -9,8 +9,8 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from sndata import _utils as utils
-from sndata.base_classes import PhotometricRelease
+from sndata import utils as utils
+from sndata.base_classes import DefaultParser, PhotometricRelease
 
 
 def parse_snoopy_data(path: str):
@@ -88,7 +88,7 @@ def fix_dr3_readme(readme_path: str):
         readme.writelines(lines)
 
 
-class DR3(PhotometricRelease):
+class DR3(PhotometricRelease, DefaultParser):
     """The ``DR3`` class provides access to data from the third data release of
     the Carnegie Supernova Project (CSP) which includes natural-system optical
     (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that

@@ -3,31 +3,11 @@
 
 """This module tests the template classes for the user interface."""
 
-from unittest import TestCase
-
-from sndata.base_classes import PhotometricRelease, SpectroscopicRelease, VizierTables
+from sndata.base_classes import PhotometricRelease, SpectroscopicRelease
 from sndata.exceptions import NoDownloadedData
 
 
-class VizierTableUI(TestCase):
-    """Generic UI tests for vizier table data releases"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.test_class = VizierTables('dummy_survey', 'dummy_release')
-
-    def test_get_available_tables_no_downloaded_data(self):
-        """Test ``get_available_tables`` raises NoDownloadedData error"""
-
-        self.assertRaises(NoDownloadedData, self.test_class.get_available_tables)
-
-    def test_load_table_no_downloaded_data(self):
-        """Test ``load_table`` raises NoDownloadedData error"""
-
-        self.assertRaises(NoDownloadedData, self.test_class.load_table, 'dummy_id')
-
-
-class SpectroscopicDataUI(VizierTableUI):
+class SpectroscopicDataUI:
     """Generic UI tests for spectroscopic data releases"""
 
     @classmethod
@@ -45,6 +25,16 @@ class SpectroscopicDataUI(VizierTableUI):
 
         with self.assertRaises(NoDownloadedData):
             next(self.test_class.iter_data())
+
+    def test_get_available_tables_no_downloaded_data(self):
+        """Test ``get_available_tables`` raises NoDownloadedData error"""
+
+        self.assertRaises(NoDownloadedData, self.test_class.get_available_tables)
+
+    def test_load_table_no_downloaded_data(self):
+        """Test ``load_table`` raises NoDownloadedData error"""
+
+        self.assertRaises(NoDownloadedData, self.test_class.load_table, 'dummy_id')
 
 
 class PhotometricDataUI(SpectroscopicDataUI):
