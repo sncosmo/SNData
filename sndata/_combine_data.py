@@ -122,8 +122,9 @@ class CombinedDataset:
 
     @property
     def band_names(self) -> Tuple[str]:
-        # Assuming all the combined data releases are photometric
-        # return the unique bandpass names
+        """Assuming all the combined data releases are photometric
+        return the unique bandpass names
+        """
 
         # This will raise an error if any data releases are spectroscopic
         # That is OK!
@@ -135,7 +136,7 @@ class CombinedDataset:
 
     @property
     def zero_point(self) -> Tuple[float]:
-        # Get the zeropoint from each of the combined data releases
+        """Get the zeropoint from each of the combined data releases"""
 
         return tuple(get_zp(b) for b in self.band_names)
 

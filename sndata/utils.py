@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """The ``utils`` module provides an assorted collection of general utilities
-used when building data access classes for a given survye / data release.
+used when building data access classes for a given survey / data release.
 """
 
 import functools
@@ -102,6 +102,7 @@ def lru_copy_cache(maxsize: int = 128, typed: bool = False, copy: bool = True):
         # Return the normal function cache
         return functools.lru_cache(maxsize, typed)
 
+    # noinspection PyMissingOrEmptyDocstring
     def decorator(f):
         cached_func = functools.lru_cache(maxsize, typed)(f)
 
