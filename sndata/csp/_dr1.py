@@ -8,8 +8,8 @@ from typing import List
 
 from astropy.table import Table, vstack
 
-from .. import _utils as utils
-from ..base_classes import SpectroscopicRelease
+from .. import utils as utils
+from ..base_classes import DefaultParser, SpectroscopicRelease
 
 
 def read_dr1_file(path: str, format_table: bool = False) -> Table:
@@ -70,7 +70,7 @@ def read_dr1_file(path: str, format_table: bool = False) -> Table:
     return data
 
 
-class DR1(SpectroscopicRelease):
+class DR1(SpectroscopicRelease, DefaultParser):
     """The ``DR1`` class provides access to spectra from the first release of
     optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
     the Carnegie Supernova Project. It includes 604 previously unpublished
@@ -109,7 +109,6 @@ class DR1(SpectroscopicRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._spectra_dir)
         files = self._spectra_dir.glob('SN*.dat')
         ids = ('20' + Path(f).name.split('_')[0].lstrip('SN') for f in files)
         return sorted(set(ids))
@@ -131,7 +130,7 @@ class DR1(SpectroscopicRelease):
 
         return vstack([read_dr1_file(path, format_table) for path in files])
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
@@ -142,6 +141,7 @@ class DR1(SpectroscopicRelease):
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

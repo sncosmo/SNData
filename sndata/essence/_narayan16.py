@@ -9,8 +9,8 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from .. import _utils as utils
-from ..base_classes import PhotometricRelease
+from .. import utils as utils
+from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -38,7 +38,7 @@ def _format_table(data_table: Table) -> Table:
     return out_table
 
 
-class Narayan16(PhotometricRelease):
+class Narayan16(PhotometricRelease, DefaultParser):
     """The ``Narayan16`` class provides access to photometric data for 213
     Type Ia supernovae discovered by the ESSENCE survey at redshifts
     0.1 <= z <= 0.81 between 2002 and 2008. It includes R and I band photometry
@@ -62,7 +62,6 @@ class Narayan16(PhotometricRelease):
 
     # Photometric metadata (Required for photometric data, otherwise delete)
     band_names = ('essence_narayan16_R', 'essence_narayan16_I')
-    lambda_effective = (6440, 8050)
     zero_point = tuple(27.5 for _ in band_names)
 
     def __init__(self):
@@ -84,7 +83,6 @@ class Narayan16(PhotometricRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.dat')
         return sorted(Path(f).name.split('.')[0] for f in files)
 
@@ -135,7 +133,7 @@ class Narayan16(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:

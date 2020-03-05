@@ -5,18 +5,19 @@
 sets
 """
 
-from unittest import TestCase, skip
+from unittest import TestCase
 
 from astropy.table import vstack
 
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import _reduce_id_mapping
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing
+from .test_exceptions import InvalidTableId
 
 
-class Combined(TestCase, template_tests.PhotometricDataParsing):
-    """Tests the CombinedDataset class using des.sn3yr and csp.dr3 data"""
+class CombinedDataParsing(TestCase, PhotometricDataParsing):
+    """Tests the CombinedDataset class using des.SN3YR and csp.DR3 data"""
 
     @classmethod
     def setUpClass(cls):
@@ -24,12 +25,11 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
         cls.test_class = CombinedDataset(*cls.joined_surveys)
         cls.test_class.download_module_data()
 
-    def test_obj_id_dataframe(self):
-        """Test for expected data releases in object id DataFrame"""
+    def test_bad_table_id_err(self):
+        """Test an InvalidObjId exception is raised for a made up Id"""
 
-        expected = set(s.survey_abbrev for s in self.joined_surveys)
-        actual = set(self.test_class._obj_ids['survey'])
-        self.assertEqual(expected, actual)
+        fake_table_id = ('fake_id', 'fake_release', 'fake_survey')
+        self.assertRaises(InvalidTableId, self.test_class.load_table, fake_table_id)
 
     def test_id_joining(self):
         """Test correct data is returned after joining / separating IDs"""
@@ -54,7 +54,7 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
             'Incorrect data for joined IDs.'
         )
 
-        # Check we get the original data after seperating ids
+        # Check we get the original data after separating ids
         self.test_class.separate_ids(*test_ids[0])
         obj0_data = self.test_class.get_data_for_id(test_ids[0], True)
         obj1_data = self.test_class.get_data_for_id(test_ids[1], True)
@@ -70,13 +70,43 @@ class Combined(TestCase, template_tests.PhotometricDataParsing):
             'Incorrect data for second ID after joining.'
         )
 
-    @skip('Table functionality not supported by combined data sets')
-    def test_cache_not_mutated(self):
-        pass
+    def test_join_id_string_error(self):
+        """Test joining object ids as strings raises an error"""
 
-    @skip('Table functionality not supported by combined data sets')
-    def test_paper_tables_are_parsed(self):
-        pass
+        with self.assertRaises(TypeError):
+            self.test_class.join_ids('dummy_id_1', 'dummy_id_2')
+
+        fake_id_as_tuple = ('dummy_id_1', 'dummy_release', 'dummy_survey')
+        with self.assertRaises(TypeError):
+            self.test_class.join_ids(fake_id_as_tuple, 'dummy_id_2')
+
+
+class CombinedDataStringIDs(TestCase):
+    """Tests usage of string object IDs with CombinedDataset objects"""
+
+    def test_obj_id_as_str(self):
+        """Test returned data is the same for obj_ids as strings and tuples"""
+
+        test_class = CombinedDataset(csp.DR3())
+        test_class.download_module_data()
+
+        # Known object_id for csp
+        test_id = ('2004dt', 'DR3', 'CSP')
+        data_from_tuple_id = test_class.get_data_for_id(test_id)
+        data_from_str_id = test_class.get_data_for_id(test_id[0])
+        self.assertListEqual(
+            sorted(data_from_tuple_id.as_array().tolist()),
+            sorted(data_from_str_id.as_array().tolist())
+        )
+
+    def test_duplicate_obj_id_strings(self):
+        """Test an error is raised for non unique string Ids"""
+
+        dummy_release = csp.DR3()
+        dummy_release.release = '234'
+        combined_data = CombinedDataset(csp.DR3(), dummy_release)
+        with self.assertRaises(RuntimeError):
+            combined_data.get_data_for_id('2010ae')
 
 
 class MapReduction(TestCase):

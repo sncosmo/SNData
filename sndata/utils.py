@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module provides general utilities."""
+"""The ``utils`` module provides an assorted collection of general utilities
+used when building data access classes for a given survey / data release.
+"""
 
 import functools
 import os
@@ -53,7 +55,7 @@ def hourangle_to_degrees(
     return ra, dec
 
 
-def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
+def find_data_dir(survey_abbrev: str, release: str) -> Path:
     """Determine the directory where data files are stored for a data release
 
     If the directory does not exist, create it.
@@ -78,7 +80,6 @@ def find_and_create_data_dir(survey_abbrev: str, release: str) -> Path:
         base_dir = Path(__file__).resolve().parent / 'data'
 
     data_dir = base_dir / safe_survey / safe_release
-    data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
 
 
@@ -101,6 +102,7 @@ def lru_copy_cache(maxsize: int = 128, typed: bool = False, copy: bool = True):
         # Return the normal function cache
         return functools.lru_cache(maxsize, typed)
 
+    # noinspection PyMissingOrEmptyDocstring
     def decorator(f):
         cached_func = functools.lru_cache(maxsize, typed)(f)
 
@@ -297,7 +299,7 @@ def read_vizier_table_descriptions(readme_path: Union[Path, str]):
     return table_descriptions
 
 
-def register_filter(file_path: str, filter_name: str, force: bool = False):
+def register_filter_file(file_path: str, filter_name: str, force: bool = False):
     """Registers filter profiles with sncosmo if not already registered
 
     Assumes the file at ``file_path`` is a two column, white space delimited

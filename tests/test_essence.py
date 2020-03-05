@@ -6,13 +6,22 @@
 from unittest import TestCase
 
 from sndata import essence
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing
+from .standard_ui_template_tests import PhotometricDataUI
 
 
-class Narayan16(TestCase, template_tests.PhotometricDataParsing):
-    """Generic tests for a given survey"""
+class Narayan16Parsing(TestCase, PhotometricDataParsing):
+    """Data parsing tests for the Narayan16 release"""
 
     @classmethod
     def setUpClass(cls):
         cls.test_class = essence.Narayan16()
         cls.test_class.download_module_data()
+
+
+class Narayan16UI(TestCase, PhotometricDataUI):
+    """UI parsing tests for the Narayan16 release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = essence.Narayan16()

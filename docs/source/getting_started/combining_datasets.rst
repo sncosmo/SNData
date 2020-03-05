@@ -6,16 +6,14 @@ Combining Data Sets
 interface as a single data access module but provides access to data from
 multiple surveys / data releases.
 
-For demonstration purposes we combine data from the third data
-release of the Carnegie Supernova Project and the three year cosmology release
-of the Dark Energy Survey.
-
 Creating a Combined Data Set
 ----------------------------
 
-To create a combined data set, import the data access modules for each of the
+To create a combined data set, import the data access classes for each of the
 data releases you want to join and pass them to the ``CombinedDataset``
-object.
+object. For demonstration purposes we combine data from the third data
+release of the Carnegie Supernova Project and the three year cosmology release
+of the Dark Energy Survey:
 
 .. code-block:: python
    :linenos:
@@ -34,6 +32,13 @@ The resulting object provides the same user interface as the rest of the
     # Download all data for the combined data releases
     combined_data.download_module_data()
 
+    # Get a list of available supplementary tables
+    list_of_table_ids = combined_data.get_available_tables()
+
+    # Load a supplementary tables
+    demo_table_id = list_of_table_ids[0]
+    demo_sup_table = combined_data.load_table(demo_table_id)
+
     # Get a list of available objects
     list_of_ids = combined_data.get_available_ids()
 
@@ -47,29 +52,45 @@ The resulting object provides the same user interface as the rest of the
         print(data)
         break
 
+.. important:: The format of object and table Id's for ``CombinedDataset``
+   objects is slightly different than for a single data release. Please
+   keep reading.
 
-.. important::
+Unlike the object and table Id's for a single data release, the default Id's
+for a ``CombinedDataset`` are tuples instead of strings. Each tuple contains
+three elements including (in order) the individual object identifier, data
+release name, and survey name. For example, the ID value for supernova '2007S'
+from CSP Data Release 3 (DR3) would be ``('2007S', 'DR3', 'CSP')``.
 
-  Unlike the rest of the **SNData** package, object ID's for a combined data
-  set are tuples instead of strings. Each tuple contains three elements
-  including (in order) the survey name, data release name, and individual
-  object identifier. For example, the ID value for supernova 2007S from CSP
-  Data Release 3 would be ``('csp', 'dr3', '2007S')``
+By specifying object Id's in this way, it is ensured that objects in combined
+data releases always have unique identifiers. However, in the case where
+the object Id's from two data releases are already unique (as is the case when
+combining ``csp.DR3` and ``des.SN3YR``), ``CombinedDataset`` objects are smart
+enough to mimic the behavior of a normal / single data release and can
+take object Id's as strings. For example:
 
+.. code-block:: python
+   :linenos:
 
-Joining Object IDs
-------------------
+   # You can specify object ID's as tuples
+   combined_data.get_data_for_id(('2007S', 'DR3', 'CSP'))
+
+   # or if the object names across the joined surveys are unique, as a string
+   combined_data.get_data_for_id('2007S')
+
+Joining Object Id's
+-------------------
 
 It is possible for two different photometric surveys to observe the same
-astronomical object. In this case, object IDs from different surveys can be
-"joined" together so that when requesting data for an object data is
-returned for all IDs that have been joined together. Accomplishing this is as
+astronomical object. In this case, object Id's from different surveys can be
+*"joined"* together so that when requesting data for a given object Id,  data is
+returned for all Id's that have been joined together. Accomplishing this is as
 simple as:
 
 .. code-block:: python
    :linenos:
 
-   # Note that you can join an arbitrary number of object IDs
+   # Note that you can join an arbitrary number of object Id's
    combined_data.join_ids(obj_id_1, obj_id_2, obj_id_3, ...)
 
    # You can also retrieve a list of joined ID values
@@ -94,21 +115,9 @@ equivalent.
 .. code-block:: python
    :linenos:
 
-   # You can join multiple IDs at once ...
+   # You can join multiple Id's at once ...
    combined_data.join_ids(obj_id_1, obj_id_2, obj_id_3)
 
    # Or join them successively
    combined_data.join_ids(obj_id_1, obj_id_2)
    combined_data.join_ids(obj_id_2, obj_id_3)
-
-
-Excluded Features
------------------
-
-There are a handful of meta data features provided for individual data releases
-that are not supported for combined data sets. The following attributes
-do not exist for ``CombinedDataset`` objects:
-
-- ``get_vailable_tables``
-- ``load_tables``
-

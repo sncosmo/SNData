@@ -4,16 +4,17 @@
 """This module handles combining data from different data sets."""
 
 from copy import copy
+from functools import lru_cache
 from typing import List, Tuple, Union
 
 import pandas as pd
 from astropy.table import Table, vstack
 
-from . import _utils as utils
 from . import csp, des, essence, jla, sdss
-from .exceptions import InvalidObjId, ObservedDataTypeError
+from . import utils as utils
+from .exceptions import InvalidObjId, InvalidTableId, ObservedDataTypeError
 
-CombinedID = Tuple[str]
+CombinedID = Union[str, Tuple[str, str, str]]
 
 
 # Todo: Test this function with a dedicated unit test
@@ -48,7 +49,7 @@ def get_zp(band_name: str) -> float:
 
 
 def _reduce_id_mapping(id_list: List[CombinedID]) -> list:
-    """Combine a list of sets by combining any sets with shared elements
+    """Combine a list of sets by joining any sets with shared elements
 
     Args
         id_list: List of object IDs to join
@@ -88,12 +89,12 @@ class CombinedDataset:
     """Combine data from different surveys into a single data set
 
     Args:
-        data_sets (iter[module]): SNData module for a specific data release
+        data_sets: SNData module for a specific data release
     """
 
     def __init__(self, *data_sets):
 
-        # Enforce same metadata attributes as a single data release
+        # Enforce the same metadata attributes as a single data release
         self.survey_name = tuple(ds.survey_name for ds in data_sets)
         self.survey_abbrev = tuple(ds.survey_abbrev for ds in data_sets)
         self.release = tuple(ds.release for ds in data_sets)
@@ -110,31 +111,14 @@ class CombinedDataset:
 
         self._joined_ids = []
 
-        # To store combined table of all object ids
-        # We don't load the table at init in case some data isn't downloaded
-        self._obj_id_dataframe = None
-
     @property
-    def _obj_ids(self) -> pd.DataFrame:
-        if self._obj_id_dataframe is not None:
-            return self._obj_id_dataframe
+    @lru_cache(None)
+    def _obj_id_dataframe(self):
+        # Return a data frame of object Id's and their survey / release names
 
-        # Create a DataFrame of combined object IDs
-        obj_id_dataframe = None
-        for data_module in self._data_releases.values():
-            id_df = pd.DataFrame({'obj_id': data_module.get_available_ids()})
-            id_df.insert(0, 'release', data_module.release)
-            id_df.insert(0, 'survey', data_module.survey_abbrev)
-
-            if obj_id_dataframe is None:
-                obj_id_dataframe = id_df
-
-            else:
-                obj_id_dataframe = obj_id_dataframe.append(
-                    id_df, ignore_index=True)
-
-        self._obj_id_dataframe = obj_id_dataframe
-        return self._obj_id_dataframe
+        return pd.DataFrame(
+            self.get_available_ids(),
+            columns=['obj_id', 'release', 'survey']).set_index('obj_id')
 
     @property
     def band_names(self) -> Tuple[str]:
@@ -152,82 +136,104 @@ class CombinedDataset:
 
     @property
     def zero_point(self) -> Tuple[float]:
+        """Get the zeropoint from each of the combined data releases"""
+
         return tuple(get_zp(b) for b in self.band_names)
 
-    def download_module_data(self, force: bool = False):
-        """Download data for all combined surveys / data releases
+    def get_available_tables(self):
+        """Get Ids for vizier tables published by the combined data releases"""
+
+        table_id_list = []
+        for data_class in self._data_releases.values():
+            survey_abbrev = data_class.survey_abbrev
+            release = data_class.release
+            for table_id in data_class.get_available_tables():
+                table_id_list.append((survey_abbrev, release, table_id))
+
+        return table_id_list
+
+    def load_table(self, table_id):
+        """Return a Vizier table published by the combined data releases
 
         Args:
-            force: Re-Download locally available data (Default: False)
+            table_id: The published table number or table name
         """
 
-        for name, module in self._data_releases.items():
-            module.download_module_data(force=force)
+        survey_abbrev, release, table_id = table_id
+        try:
+            data_class = self._data_releases[f'{survey_abbrev}:{release}']
+            return data_class.load_table(table_id)
 
-    def delete_module_data(self):
-        """Delete any data for all combined surveys / data releases"""
-
-        for module in self._data_releases.values():
-            module.delete_module_data()
+        except KeyError:
+            raise InvalidTableId()
 
     def get_available_ids(self) -> List[CombinedID]:
-        """Return a table of object IDs available in the combined data set"""
+        """Return a list of target object IDs for the combined data releases
 
-        data_order = ['obj_id', 'release', 'survey']
-        return sorted(
-            zip(*[self._obj_ids[c].values.tolist() for c in data_order])
-        )
-
-    def register_filters(self, force: bool = False):
-        """Register filters for the combined data with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered (Default: False)
+        Returns:
+            A list of object IDs as tuples
         """
 
+        all_obj_ids = set()
         for data_class in self._data_releases.values():
-            try:
-                data_class.register_filters(force=force)
+            survey_abbrev = data_class.survey_abbrev
+            release = data_class.release
+            for obj_id in data_class.get_available_ids():
+                all_obj_ids.add((obj_id, release, survey_abbrev))
 
-            except utils.NoDownloadedData:
-                raise utils.NoDownloadedData(
-                    f'No data downloaded for {data_class.__name__}')
+        # Remove joined Id's
+        for obj_id_set in self._joined_ids:
+            obj_id_set = obj_id_set.copy()
+            obj_id_set.pop()
+            all_obj_ids -= obj_id_set
+
+        return sorted(all_obj_ids)
 
     def _get_data_single_id(
-            self, obj_id: Tuple[str], format_table: bool = True) -> Table:
-        """Return data for a given object ID
+            self, obj_id: CombinedID, format_table: bool = True) -> Table:
+        """Return data for a single object ID
 
         Args:
             obj_id: The ID of the desired object
-            format_table: Format data for SNCosmo.fit_lc (Default: False)
+            format_table: Format data for SNCosmo.fit_lc
 
         Returns:
             An astropy table of data for the given ID
         """
 
-        id_data = self._obj_ids[
-            (self._obj_ids['obj_id'] == obj_id[0]) &
-            (self._obj_ids['release'] == obj_id[1]) &
-            (self._obj_ids['survey'] == obj_id[2])
-            ]
+        # If object_id is a tuple, get survey and release names from tuple
+        if isinstance(obj_id, tuple):
+            single_obj_id, release, survey_abbrev = obj_id
 
-        if len(id_data) == 0:
-            raise InvalidObjId(f'Unrecognized object ID: {obj_id}')
+        # Get survey and release names from self._obj_id_dataframe
+        else:
+            try:
+                obj_id_parent = self._obj_id_dataframe.loc[obj_id]
 
-        module_key = f"{id_data['survey'].iloc[0]}:{id_data['release'].iloc[0]}"
-        data_module = self._data_releases[module_key]
-        return data_module.get_data_for_id(obj_id[0], format_table=format_table)
+            except KeyError:
+                raise InvalidObjId()
+
+            if not isinstance(obj_id_parent, pd.Series):
+                raise RuntimeError(f'Multiple results for obj_id: {obj_id}')
+
+            release = obj_id_parent.release
+            survey_abbrev = obj_id_parent.survey
+            single_obj_id = obj_id
+
+        data_class = self._data_releases[f"{survey_abbrev}:{release}"]
+        return data_class.get_data_for_id(single_obj_id, format_table)
 
     def _get_data_id_list(
             self, obj_id_list: List[CombinedID], format_table: bool = True):
-        """Return data for a list of object ID
+        """Return data for a list of object IDs
 
         Data tables for individual object IDs are vertically stacked. Meta
-        data for each individual obj_id is stored in the combined
+        data for each individual obj_id is stored in the combined.
+        See ``get_available_ids()`` for a list of available ID values.
 
         Args:
-            obj_id_list: The ID of the desired object
-            format_table: Format data for SNCosmo.fit_lc (Default: False)
+            obj_id: The ID of the desired object
+            format_table: Format data into the ``sndata`` standard format
 
         Returns:
             An astropy table of data for the given ID
@@ -262,8 +268,8 @@ class CombinedDataset:
         See ``get_available_ids()`` for a table of available ID values. Object
 
         Args:
-            obj_id   (tuple[str]): The ID of the desired object
-            format_table   (bool): Format data for SNCosmo.fit_lc (Default: False)
+            obj_id: The ID of the desired object
+            format_table: Format data for SNCosmo.fit_lc (Default: False)
 
         Returns:
             An astropy table of data for the given ID
@@ -277,22 +283,19 @@ class CombinedDataset:
 
     def iter_data(
             self,
-            survey: str = None,
-            release: str = None,
             verbose: Union[bool, dict] = False,
             format_table: bool = True,
             filter_func: callable = None) -> Table:
         """Iterate through all available targets and yield data tables
 
-        An optional progress bar can be formatted by passing a dictionary of tqdm
-        arguments. Outputs can be optionally filtered by passing a function
-        ``filter_func`` that accepts a data table and returns a boolean.
+        An optional progress bar can be formatted by passing a dictionary of
+        ``tqdm`` arguments. Outputs can be optionally filtered by passing a
+        function ``filter_func`` that accepts a data table and returns a
+        boolean.
 
         Args:
-            survey: Only include data from a given survey (Default: None)
-            release: Only include data from a given data release (Default: None)
-            verbose: Optionally display progress bar while iterating (Default: False)
-            format_table: Format data for SNCosmo.fit_lc (Default: False)
+            verbose: Optionally display progress bar while iterating
+            format_table: Format data for ``SNCosmo`` (Default: True)
             filter_func: An optional function to filter outputs by
 
         Yields:
@@ -302,18 +305,42 @@ class CombinedDataset:
         if filter_func is None:
             filter_func = lambda x: x
 
-        id_data = self._obj_ids
-        if survey is not None:
-            id_data = id_data[id_data['survey'] == survey]
-
-        if release is not None:
-            id_data = id_data[id_data['release'] == release]
-
-        for index, row in utils.build_pbar(id_data.iterrows(), verbose):
-            obj_id = (row['obj_id'], row['release'], row['survey'])
+        for obj_id in utils.build_pbar(self.get_available_ids(), verbose):
             data = self.get_data_for_id(obj_id, format_table=format_table)
             if filter_func(data):
                 yield data
+
+    def register_filters(self, force: bool = False):
+        """Register filters for the combined data releases with sncosmo
+
+        Args:
+            force: Re-register a band if already registered
+        """
+
+        for data_class in self._data_releases.values():
+            try:
+                data_class.register_filters(force=force)
+
+            except utils.NoDownloadedData:
+                raise utils.NoDownloadedData(
+                    f'No data downloaded for {data_class.__name__}')
+
+    def download_module_data(self, force: bool = False, timeout: int = 15):
+        """Download data for all combined data releases
+
+        Args:
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
+        """
+
+        for name, module in self._data_releases.items():
+            module.download_module_data(force=force, timeout=timeout)
+
+    def delete_module_data(self):
+        """Delete any data for all combined surveys / data releases"""
+
+        for module in self._data_releases.values():
+            module.delete_module_data()
 
     def get_joined_ids(self) -> List[CombinedID]:
         """Return a list of joined object IDs
@@ -334,6 +361,9 @@ class CombinedDataset:
         if len(obj_ids) <= 1:
             raise ValueError(
                 'Object IDs can only be joined in sets of 2 or more.')
+
+        if not all(isinstance(obj_id, tuple) for obj_id in obj_ids):
+            raise TypeError('Can only join object Id\'s as tuples')
 
         self._joined_ids.append(set(obj_ids))
         self._joined_ids = _reduce_id_mapping(self._joined_ids)

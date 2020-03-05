@@ -8,10 +8,12 @@ from unittest import TestCase
 import numpy as np
 
 from sndata import csp
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing, SpectroscopicDataParsing
+from .standard_ui_template_tests import PhotometricDataUI, SpectroscopicDataUI
 
 
-class DR1(TestCase, template_tests.SpectroscopicDataParsing):
+class DR1Parsing(TestCase, SpectroscopicDataParsing):
+    """Data parsing tests for the DR1 release"""
 
     @classmethod
     def setUpClass(cls):
@@ -19,7 +21,16 @@ class DR1(TestCase, template_tests.SpectroscopicDataParsing):
         cls.test_class.download_module_data()
 
 
-class DR3(TestCase, template_tests.PhotometricDataParsing):
+class DR1UI(TestCase, SpectroscopicDataUI):
+    """UI tests for the DR1 release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = csp.DR1()
+
+
+class DR3(TestCase, PhotometricDataParsing):
+    """Data parsing tests for the DR3 release"""
 
     @classmethod
     def setUpClass(cls):
@@ -46,3 +57,11 @@ class DR3(TestCase, template_tests.PhotometricDataParsing):
 
         # Check error in mag is not changed
         self.assertEqual(formatted_data['mag_err'], unformatted_data['mag_err'])
+
+
+class DR3UI(TestCase, PhotometricDataUI):
+    """UI tests for the DR3 release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = csp.DR3()

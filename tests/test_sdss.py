@@ -6,11 +6,12 @@
 from unittest import TestCase
 
 from sndata import sdss
-from . import template_tests
+from .data_parsing_template_tests import PhotometricDataParsing, SpectroscopicDataParsing
+from .standard_ui_template_tests import PhotometricDataUI, SpectroscopicDataUI
 
 
-class Sako18(TestCase, template_tests.PhotometricDataParsing):
-    """Generic tests for a given survey"""
+class Sako18Parsing(TestCase, PhotometricDataParsing):
+    """Data parsing tests for the Sako18 release"""
 
     @classmethod
     def setUpClass(cls):
@@ -18,10 +19,26 @@ class Sako18(TestCase, template_tests.PhotometricDataParsing):
         cls.test_class.download_module_data()
 
 
-class Sako18Spec(TestCase, template_tests.SpectroscopicDataParsing):
-    """Generic tests for a given survey"""
+class Sako18UI(TestCase, PhotometricDataUI):
+    """UI tests for the Sako18 release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = sdss.Sako18()
+
+
+class Sako18SpecParsing(TestCase, SpectroscopicDataParsing):
+    """Data parsing tests for the Sako18Spec release"""
 
     @classmethod
     def setUpClass(cls):
         cls.test_class = sdss.Sako18Spec()
         cls.test_class.download_module_data()
+
+
+class Sako18SpecUI(TestCase, SpectroscopicDataUI):
+    """UI tests for the Sako18Spec release"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_class = sdss.Sako18Spec()

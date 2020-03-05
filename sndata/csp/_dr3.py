@@ -9,8 +9,8 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from sndata import _utils as utils
-from sndata.base_classes import PhotometricRelease
+from sndata import utils as utils
+from sndata.base_classes import DefaultParser, PhotometricRelease
 
 
 def parse_snoopy_data(path: str):
@@ -88,7 +88,7 @@ def fix_dr3_readme(readme_path: str):
         readme.writelines(lines)
 
 
-class DR3(PhotometricRelease):
+class DR3(PhotometricRelease, DefaultParser):
     """The ``DR3`` class provides access to data from the third data release of
     the Carnegie Supernova Project (CSP) which includes natural-system optical
     (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that
@@ -124,11 +124,6 @@ class DR3(PhotometricRelease):
         12.986, 15.111, 14.902, 14.545, 14.328, 14.437, 14.393,
         14.439, 13.921, 13.836, 13.836, 13.510, 13.770, 13.866, 13.502
     )
-
-    lambda_effective = (
-        3639.3, 4765.1, 6223.3, 7609.2, 4350.6, 5369.6, 5401.4,
-        5375.2, 10350.8, 12386.5, 12356.3, 16297.7, 10439.8,
-        12383.2, 16282.8)
 
     def __init__(self):
         """Define local and remote paths of data"""
@@ -185,7 +180,6 @@ class DR3(PhotometricRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        utils.require_data_path(self._photometry_dir)
         files = self._photometry_dir.glob('*.txt')
         return sorted(f.stem.split('_')[0].lstrip('SN') for f in files)
 
@@ -220,7 +214,7 @@ class DR3(PhotometricRelease):
 
         return data_table
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
@@ -231,6 +225,7 @@ class DR3(PhotometricRelease):
         utils.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
+            skip_exists=self._table_dir,
             mode='r:gz',
             force=force,
             timeout=timeout

@@ -9,8 +9,8 @@ from typing import Union
 import numpy as np
 from astropy.table import Table
 
-from .. import _utils as utils
-from ..base_classes import PhotometricRelease
+from .. import utils as utils
+from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
 
 
@@ -36,7 +36,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     return out_table
 
 
-class SN3YR(PhotometricRelease):
+class SN3YR(PhotometricRelease, DefaultParser):
     """The ``SN3YR`` class provides access to data from the first public data
     release of the Dark Energy Survey Supernova Program, DES-SN3YR. It includes
     griz light curves of 251 supernovae from the first 3 years of the Dark
@@ -72,7 +72,6 @@ class SN3YR(PhotometricRelease):
         'des_sn3yr_y')
 
     zero_point = tuple(27.5 for _ in band_names)
-    lambda_effective = (5270, 6590, 7890, 9760, 10030)
 
     def __init__(self):
         """Define local and remote paths of data"""
@@ -97,16 +96,14 @@ class SN3YR(PhotometricRelease):
             'DECam_z.dat',
             'DECam_Y.dat')
 
-    def get_available_tables(self) -> List[str]:
-        """Get available Ids for tables published by the paper for this data
-        release"""
+    def _get_available_tables(self) -> List[str]:
+        """Get Ids for available vizier tables published by this data release"""
 
         # noinspection SpellCheckingInspection
         return ['SALT2mu_DES+LOWZ_C11.FITRES', 'SALT2mu_DES+LOWZ_G10.FITRES']
 
-    @utils.lru_copy_cache(maxsize=None)
-    def load_table(self, table_id: Union[str, int]):
-        """Return a table from the data paper for this survey / data
+    def _load_table(self, table_id: Union[str, int]):
+        """Return a Vizier table published by this data release
 
         Args:
             table_id: The published table number or table name
@@ -188,7 +185,7 @@ class SN3YR(PhotometricRelease):
 
         return data
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
@@ -220,7 +217,7 @@ class SN3YR(PhotometricRelease):
         utils.download_tar(
             url=self._fits_url,
             out_dir=self._data_dir,
-            skip_exists=self._table_dir,
+            skip_exists=self._fits_dir,
             mode='r:gz',
             force=force,
             timeout=timeout
