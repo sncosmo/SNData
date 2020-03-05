@@ -93,7 +93,7 @@ table's meta data when available.
 
    # Get data for a given object
    demo_id = list_of_ids[0]
-   data_table = get_data_for_id(demo_id)
+   data_table = dr3.get_data_for_id(demo_id)
    print(data_table)
 
    # Don't forget to check the meta data!
