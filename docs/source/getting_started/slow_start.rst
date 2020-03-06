@@ -123,7 +123,7 @@ target with a redshift less than .1:
    :linenos:
 
    def filter_func(data_table):
-       return data_table.meta['redshift'] < .1
+       return data_table.meta['z'] < .1
 
    for data in dr3.iter_data(filter_func=filter_func):
        print(data)
@@ -187,7 +187,7 @@ are called).
 
    # Fit the data
    model = sncosmo.Model('salt2')
-   model.set(z=data_table.meta['redshift'])
+   model.set(z=data_table.meta['z'])
    result, fitted_model = sncosmo.fit_lc(
        data=data_table,
        model=model,
