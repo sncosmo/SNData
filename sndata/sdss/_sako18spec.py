@@ -138,7 +138,11 @@ class Sako18Spec(SpectroscopicRelease):
             if format_table:
                 date_with_timezone = summary_row['Date'] + '+0000'
                 date = datetime.strptime(date_with_timezone, '%Y-%m-%d%z')
-                data['time'] = date.timestamp()
+
+                unix_time = date.timestamp()
+                january_1_1970_in_julian = 2440587.5
+                day_in_seconds = 24 * 60 * 60
+                data['time'] = (unix_time / day_in_seconds) + january_1_1970_in_julian
 
             else:
                 data['date'] = observed_date
