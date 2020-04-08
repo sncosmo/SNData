@@ -78,6 +78,9 @@ class DR1(SpectroscopicRelease, DefaultParser):
     before to over 150 days after the time of B-band maximum light.
     (Source: Folatelli et al. 2013)
 
+    .. important:: The DR1 spectra are both published and returned by sndata
+       in units of rest frame wavelength.
+
     Deviations from the standard UI:
         - None
 

@@ -86,6 +86,7 @@ Available Data
    :maxdepth: 0
 
    Overview<self>
+   change_log
 
 .. toctree::
    :hidden:
