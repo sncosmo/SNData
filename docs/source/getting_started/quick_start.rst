@@ -8,14 +8,14 @@ For a more in depth overview, see the :ref:`SlowStart`.
 .. code-block:: python
    :linenos:
 
-   # All data releases are available as `sndata.survey_name.release_name`
+   # All data releases are available as ``sndata.<survey name>.<release name>``
    from sndata.csp import DR3
 
    # Start by creating an instance of the data release
    dr3 = DR3()
 
-   # Download data to your machine. Note:
-   # If it is already downloaded, this function call won't do anything.
+   # Download data to your machine.
+   # Note: If data is already downloaded, this function call won't do anything.
    dr3.download_module_data()
 
    # Check what tables are available from the release's corresponding publication
@@ -34,7 +34,8 @@ For a more in depth overview, see the :ref:`SlowStart`.
    dr3.get_data_for_id(demo_id)
 
    # Data is auto-formatted to be compatible with the SNCosmo package.
-   # To disable this:
+   # To disable this and return data as presented on the data release,
+   # set ``format_table=False``.
    dr3.get_data_for_id(demo_id, format_table=False)
 
    # For convenience you can iterate over all tables

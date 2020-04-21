@@ -14,14 +14,15 @@ To access data from a specific survey, import it from the parent package. A
 summary of each data release, including any deviations from the standard UI,
 can be accessed by calling the builtin ``help`` function. For demonstration
 purposes we will be using the third data release from the Carnegie Supernova
-Survey.
+Project.
 
 .. code-block:: python
    :linenos:
 
    from sndata.csp import DR3
 
-   # At instantiation, the DR3 class determines where the data is located on your machine
+   # At instantiation, the DR3 class determines where the data
+   # is located on your machine
    dr3 = DR3()
 
    # Information about the parent survey
