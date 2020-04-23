@@ -232,7 +232,7 @@ class CombinedDataset:
         See ``get_available_ids()`` for a list of available ID values.
 
         Args:
-            obj_id: The ID of the desired object
+            obj_id_list: The IDs of the desired objects
             format_table: Format data into the ``sndata`` standard format
 
         Returns:

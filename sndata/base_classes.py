@@ -209,6 +209,7 @@ class SpectroscopicRelease:
         return f'<{class_name} ({self.survey_abbrev} {self.release})>'
 
 
+# noinspection PyUnresolvedReferences
 class PhotometricRelease(SpectroscopicRelease):
     """Generic representation of a photometric data release
 
