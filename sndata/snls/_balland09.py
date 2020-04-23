@@ -8,7 +8,7 @@ from pathlib import Path
 
 from astropy.table import Table, vstack
 
-from .. import utils as utils
+from .. import utils
 from ..base_classes import DefaultParser, SpectroscopicRelease
 from ..exceptions import InvalidObjId
 

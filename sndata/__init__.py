@@ -7,11 +7,11 @@ available survey is represented by a dedicated submodule. Each available
 data release is represented by a dedicated class.
 """
 
-from . import csp, des, essence, jla, sdss, snls
+from . import csp, des, essence, jla, loss, sdss, snls
 from ._combine_data import CombinedDataset, get_zp
 from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
