@@ -7,9 +7,7 @@ available survey is represented by a dedicated submodule. Each available
 data release is represented by a dedicated class.
 """
 
-from . import csp, des, essence, jla, loss, sdss, snls
 from ._combine_data import CombinedDataset, get_zp
-from .exceptions import ObservedDataTypeError as _ObservedDataTypeError
 
 __version__ = '1.1.0'
 __author__ = 'Daniel Perrefort'
@@ -19,16 +17,12 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    data_classes = (
-        csp.DR1(),
-        csp.DR1(),
-        des.SN3YR(),
-        essence.Narayan16(),
-        jla.Betoule14(),
-        sdss.Sako18(),
-        sdss.Sako18Spec(),
-        snls.Balland09()
-    )
+    from .utils import find_data_dir
 
-    for data_class in data_classes:
-        data_class.delete_module_data()
+    data_dir = find_data_dir('dummy_survey', 'summy_release').parent.parent
+    for path in data_dir.glob('*'):
+        if path.is_dir():
+            path.rmdir()
+
+        else:
+            path.unlink()
