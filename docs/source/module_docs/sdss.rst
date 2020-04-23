@@ -6,13 +6,13 @@ Sloan Digital Sky Survey (SDSS)
 +---------------------+--------------+---------------+----------------------------+
 | Data Release        | Class name   | Data Type     | Publication                |
 +=====================+==============+===============+============================+
-| Sako et al. 2018    | Sako18       | Photometric   | `Sako et al. (2018)`_      |
+| Sako et al. 2018    | Sako18       | Photometric   | `Sako et al. 2018`_        |
 +---------------------+--------------+---------------+----------------------------+
-| Sako et al. 2018    | Sako18Spec   | Spectroscopic | `Sako et al. (2018)`_      |
+| Sako et al. 2018    | Sako18Spec   | Spectroscopic | `Sako et al. 2018`_        |
 +---------------------+--------------+---------------+----------------------------+
 
 
-.. _Sako et al. (2018): https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract
+.. _Sako et al. 2018: https://ui.adsabs.harvard.edu/abs/2018PASP..130f4002S/abstract
 
 
 Sako et al. 2018 (Photometric)
