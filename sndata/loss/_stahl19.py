@@ -3,17 +3,63 @@
 
 """This module defines the LOSS Stahl19 API"""
 
+import json
+import multiprocessing as mp
+import warnings
 from typing import List
 
 import numpy as np
+import requests
 from astropy.table import Table
+from bs4 import BeautifulSoup
 
 from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
 
+def _get_obj_metadata(obj_id):
+    """Scrape object meta data off of heracles.astro.berkeley.edu
+
+    Args:
+        obj_id: The id of the object to scrape data for
+
+    Returns:
+        - The object id
+        - A dictionary of meta data
+    """
+
+    url = f'http://heracles.astro.berkeley.edu/sndb/object?SN%20{obj_id}'
+
+    # Get web-page content
+    page_data = requests.get(url).content
+
+    # Locate the div that contains object meta data
+    soup = BeautifulSoup(page_data)
+    meta_data_div = soup.find('div', attrs={'class': 'col-md-6'})
+
+    # Iterate over any available meta data for the object
+    object_data = {}
+    for heading in meta_data_div.find_all('h3'):
+        htext = heading.text
+        if not htext:
+            continue
+
+        key, value = htext.strip().split(': ')
+        key = key.lower().replace('.', '').replace(' ', '_')
+        key = key.replace('redshift', 'z').replace('decl', 'dec')
+
+        try:
+            value = float(value)
+
+        except ValueError:
+            pass
+
+        object_data[key] = value
+
+    return obj_id, object_data
+
+
 # Todo: Add zero points and convert magnitudes to fluxes in formatted table
-# Check Vizier for additional tables
 class Stahl19(PhotometricRelease, DefaultParser):
     """The ``Stahl19`` class provides access to 93 Type Ia supernovae (SNe Ia)
     from the second data release of the Lick Observatory Supernova Search
@@ -71,6 +117,7 @@ class Stahl19(PhotometricRelease, DefaultParser):
         self._filter_url = 'http://heracles.astro.berkeley.edu/sndb/static/LOSS2/transmission_curves.tar.gz'
 
         # Local data paths
+        self._meta_data_path = self._data_dir / 'meta_data.yml'
         self._table_2_path = self._table_dir / 'Table2.txt'
         self._table_b3_path = self._table_dir / 'TableB3.txt'
         self._filter_dir = self._data_dir / 'transmission_curves'
@@ -92,6 +139,18 @@ class Stahl19(PhotometricRelease, DefaultParser):
             'V_nickel1.txt',
             'V_nickel2.txt')
 
+        # Place holder attribute for caching meta data
+        self._meta_data = None
+
+    def _get_meta_data(self):
+        """Cache and return a dictionary of object metadata"""
+
+        if self._meta_data is None:
+            with self._meta_data_path.open() as infile:
+                self._meta_data = json.load(infile)
+
+        return self._meta_data
+
     def _get_available_tables(self) -> List[int]:
         """Get Ids for available vizier tables published by this data release"""
 
@@ -107,6 +166,9 @@ class Stahl19(PhotometricRelease, DefaultParser):
 
             table_nums.append(table_number)
 
+        if self._meta_data_path.exists():
+            table_nums.append('scraped_meta')
+
         return table_nums
 
     def _load_table(self, table_id: int) -> Table:
@@ -115,6 +177,11 @@ class Stahl19(PhotometricRelease, DefaultParser):
         Args:
             table_id: The published table number or table name
         """
+
+        if table_id == 'scraped_meta':
+            table = Table(list(self._get_meta_data().values()))
+            table['obj_id'] = self.get_available_ids()
+            return table[table.colnames[::-1]]
 
         table_path = self._table_dir / f'Table{table_id}.txt'
         table = Table.read(table_path, format='ascii')
@@ -160,15 +227,42 @@ class Stahl19(PhotometricRelease, DefaultParser):
 
             object_data['time'] = utils.convert_to_jd(object_data['time'])
 
+        object_meta = self._get_meta_data()[obj_id]
         object_data.meta = {
             'obj_id': obj_id,
-            'ra': None,
-            'dec': None,
-            'z': None,
-            'z_err': None
+            'ra': object_meta.get('ra', None),
+            'dec': object_meta.get('dec', None),
+            'z': object_meta.get('redshift', None),
+            'z_err': None,
+            'type': object_meta.get('type', None),
+            'host_name': object_meta.get('host_name', None),
+            'alternate_object_name': object_meta.get('alternate_object_name', None),
+            'object_names': object_meta.get('object_names', None),
         }
 
         return object_data
+
+    def _download_meta_data(self):
+        """Download meta data (RA, Dec, etc.) for available object ids
+
+        Data is scraped from the http://heracles.astro.berkeley.edu webpage
+        for each object.
+
+        Download is skipped if ``out_path`` exists. Data is saved in yaml
+        format using a yml file extension.
+        """
+
+        if self._meta_data_path.exists():
+            return
+
+        print('Fetching metadata from http://heracles.astro.berkeley.edu/sndb/')
+        with mp.Pool(8) as pool:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                meta_data = pool.map(_get_obj_metadata, self.get_available_ids())
+
+        with self._meta_data_path.open('w') as out_file:
+            json.dump(dict(meta_data), out_file)
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
@@ -196,3 +290,5 @@ class Stahl19(PhotometricRelease, DefaultParser):
             force=force,
             timeout=timeout
         )
+
+        self._download_meta_data()
