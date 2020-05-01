@@ -165,7 +165,8 @@ def download_file(
         path: str = None,
         file_obj: TextIO = None,
         force: bool = False,
-        timeout: float = 15):
+        timeout: float = 15,
+        verbose: bool = True):
     """Download content from a url to a file
 
     If ``path`` is specified but already exists, skip the download by default.
@@ -176,13 +177,17 @@ def download_file(
         file_obj: Optionally write to a file like object instead of path
         force: Re-Download locally available data (Default: False)
         timeout: Seconds before raising timeout error (Default: 15)
+        verbose: Print status to stdout
     """
+
+    response = requests.get(url, timeout=timeout)
+    response.raise_for_status()
 
     if file_obj is None:
         if path is None:
             raise ValueError('Must specify either ``path`` or ``file_obj``')
 
-        # Skip download if file already exists or url unavailable
+        # Skip downcload if file already exists or url unavailable
         path = Path(path)
         if not (force or not path.exists()):
             return
@@ -191,9 +196,9 @@ def download_file(
         file_obj = open(path, 'wb')
 
     # Establish remote connection
-    print(f'Fetching {url}')
-    response = requests.get(url, timeout=timeout)
-    response.raise_for_status()
+    if verbose:
+        print(f'Fetching {url}')
+
     file_obj.write(response.content)
 
     if path:

@@ -7,6 +7,7 @@ available survey is represented by a dedicated submodule. Each available
 data release is represented by a dedicated class.
 """
 
+from . import *
 from ._combine_data import CombinedDataset, get_zp
 
 __version__ = '1.1.0'

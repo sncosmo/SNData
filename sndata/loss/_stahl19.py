@@ -4,63 +4,17 @@
 """This module defines the LOSS Stahl19 API"""
 
 import json
-import multiprocessing as mp
-import warnings
 from typing import List
 
 import numpy as np
-import requests
 from astropy.table import Table
-from bs4 import BeautifulSoup
 
 from .. import utils
-from ..base_classes import DefaultParser, PhotometricRelease
-
-
-def _get_obj_metadata(obj_id):
-    """Scrape object meta data off of heracles.astro.berkeley.edu
-
-    Args:
-        obj_id: The id of the object to scrape data for
-
-    Returns:
-        - The object id
-        - A dictionary of meta data
-    """
-
-    url = f'http://heracles.astro.berkeley.edu/sndb/object?SN%20{obj_id}'
-
-    # Get web-page content
-    page_data = requests.get(url).content
-
-    # Locate the div that contains object meta data
-    soup = BeautifulSoup(page_data)
-    meta_data_div = soup.find('div', attrs={'class': 'col-md-6'})
-
-    # Iterate over any available meta data for the object
-    object_data = {}
-    for heading in meta_data_div.find_all('h3'):
-        htext = heading.text
-        if not htext:
-            continue
-
-        key, value = htext.strip().split(': ')
-        key = key.lower().replace('.', '').replace(' ', '_')
-        key = key.replace('redshift', 'z').replace('decl', 'dec')
-
-        try:
-            value = float(value)
-
-        except ValueError:
-            pass
-
-        object_data[key] = value
-
-    return obj_id, object_data
+from ..base_classes import DefaultParser, PhotometricRelease, ScrapeAstroBerkely
 
 
 # Todo: Add zero points and convert magnitudes to fluxes in formatted table
-class Stahl19(PhotometricRelease, DefaultParser):
+class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
     """The ``Stahl19`` class provides access to 93 Type Ia supernovae (SNe Ia)
     from the second data release of the Lick Observatory Supernova Search
     (LOSS) conducted between 2005 and 2018. It consists of 78 spectroscopically
@@ -241,28 +195,6 @@ class Stahl19(PhotometricRelease, DefaultParser):
         }
 
         return object_data
-
-    def _download_meta_data(self):
-        """Download meta data (RA, Dec, etc.) for available object ids
-
-        Data is scraped from the http://heracles.astro.berkeley.edu webpage
-        for each object.
-
-        Download is skipped if ``out_path`` exists. Data is saved in yaml
-        format using a yml file extension.
-        """
-
-        if self._meta_data_path.exists():
-            return
-
-        print('Fetching metadata from http://heracles.astro.berkeley.edu/sndb/')
-        with mp.Pool(8) as pool:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                meta_data = pool.map(_get_obj_metadata, self.get_available_ids())
-
-        with self._meta_data_path.open('w') as out_file:
-            json.dump(dict(meta_data), out_file)
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release

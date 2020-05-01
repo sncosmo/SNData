@@ -5,14 +5,14 @@
 
 from typing import List
 
-from astropy.table import Table, vstack
 from astropy.io.ascii.core import InconsistentTableError
+from astropy.table import Table, vstack
 
 from .. import utils
-from ..base_classes import SpectroscopicRelease
+from ..base_classes import ScrapeAstroBerkely, SpectroscopicRelease
 
 
-class Stahl20(SpectroscopicRelease):
+class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
     """The second data release of the the Berkeley Supernova Ia Program
     (BSNIP), including 637 low-redshift optical spectra collected  between
     2009 and 2018. Targets include 626 spectra (of 242 objects) that are
@@ -44,6 +44,7 @@ class Stahl20(SpectroscopicRelease):
         super().__init__()
         self._spectra_dir = self._data_dir / 'spectra'
         self._table_dir = self._data_dir / 'tables'
+        self._meta_data_path = self._data_dir / 'meta_data.yml'
 
         # Define urls / path for remote / local data.
         self._spectra_url = 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPdata2/spectra.tar.gz'
@@ -135,3 +136,5 @@ class Stahl20(SpectroscopicRelease):
             force=force,
             timeout=timeout
         )
+
+        self._download_meta_data()
