@@ -62,7 +62,7 @@ class Narayan16(PhotometricRelease, DefaultParser):
 
     # Photometric metadata (Required for photometric data, otherwise delete)
     band_names = ('essence_narayan16_R', 'essence_narayan16_I')
-    zero_point = tuple(27.5 for _ in band_names)
+    zero_point = (27.5, 27.5)
 
     def __init__(self):
         """Define local and remote paths of data"""
@@ -76,8 +76,11 @@ class Narayan16(PhotometricRelease, DefaultParser):
 
         # Define urls for remote data
         self._table_url = 'http://cdsarc.u-strasbg.fr/viz-bin/nph-Cat/tar.gz?J/ApJS/224/3'
-        self._r_filter_url = 'https://www.noao.edu/kpno/mosaic/filters/asc6004.f287.r04.txt'
-        self._i_filter_url = 'https://www.noao.edu/kpno/mosaic/filters/asc6028.f287.r04.txt'
+        self._filter_urls = (
+            'https://www.noao.edu/kpno/mosaic/filters/asc6004.f287.r04.txt',
+            'https://www.noao.edu/kpno/mosaic/filters/asc6028.f287.r04.txt'
+        )
+
         self._filter_file_names = ('R_band.dat', 'I_band.dat')
 
     def _get_available_ids(self) -> List[str]:
@@ -150,9 +153,9 @@ class Narayan16(PhotometricRelease, DefaultParser):
             timeout=timeout
         )
 
-        for filter_file in self._filter_file_names:
+        for filter_file, filter_url in zip(self._filter_file_names, self._filter_urls):
             utils.download_file(
-                url=self._i_filter_url,
+                url=filter_url,
                 path=self._filter_dir / filter_file,
                 force=force,
                 timeout=timeout
