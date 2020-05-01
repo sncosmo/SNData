@@ -219,7 +219,7 @@ class Stahl19(PhotometricRelease, DefaultParser):
                     # zp.append(0)
                     flux = row[band_name]
                     fluxerr = row['E' + band_name]
-                    formatted_rows.append([time, band_name, 0, 'AB', flux, fluxerr])
+                    formatted_rows.append([time, band_name, 0, 'Landolt', flux, fluxerr])
 
             object_data = Table(
                 rows=formatted_rows,
