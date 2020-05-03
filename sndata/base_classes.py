@@ -269,7 +269,9 @@ class ScrapeAstroBerkely:
             - A dictionary of meta data
         """
 
-        url = f'http://heracles.astro.berkeley.edu/sndb/object?SN%20{obj_id}'
+        obj_id_for_url = obj_id.lstrip('SN ')
+        url = f'http://heracles.astro.berkeley.edu/sndb/object?SN%20{obj_id_for_url}'
+        print(url)
 
         # Get web-page content
         page_data = requests.get(url).content

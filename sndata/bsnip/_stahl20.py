@@ -3,16 +3,15 @@
 
 """This module defines the BSNIP Stahl20 API"""
 
-from typing import List
-
 from astropy.io.ascii.core import InconsistentTableError
 from astropy.table import Table, vstack
+from typing import List
 
 from .. import utils
-from ..base_classes import ScrapeAstroBerkely, SpectroscopicRelease
+from ..base_classes import SpectroscopicRelease
 
 
-class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
+class Stahl20(SpectroscopicRelease):
     """The second data release of the the Berkeley Supernova Ia Program
     (BSNIP), including 637 low-redshift optical spectra collected  between
     2009 and 2018. Targets include 626 spectra (of 242 objects) that are
@@ -25,7 +24,8 @@ class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
     light. (Source:  Stahl et al. 2020)
 
     Deviations from the standard UI:
-        - None
+        - Meta data such as object Ra, DEC, and redshifts ar not included
+          in the official data release files.
 
     Cuts on returned data:
         - None
@@ -91,6 +91,7 @@ class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
         for row in object_meta:
             path = self._spectra_dir / row['Filename']
 
+            # Tables either have two or three columns
             try:
                 table = Table.read(
                     path, format='ascii',
@@ -109,6 +110,10 @@ class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
         all_data = vstack(data_tables)
         all_data.sort('wavelength')
         all_data.meta['obj_id'] = obj_id
+        all_data.meta['ra'] = None
+        all_data.meta['dec'] = None
+        all_data.meta['z'] = None
+        all_data.meta['z_err'] = None
 
         # Return data with columns in a standard order
         return all_data
@@ -136,5 +141,3 @@ class Stahl20(SpectroscopicRelease, ScrapeAstroBerkely):
             force=force,
             timeout=timeout
         )
-
-        self._download_meta_data()
