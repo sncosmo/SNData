@@ -3,14 +3,14 @@
 
 """This module defines the Sweetspot DR1 API"""
 
+import tarfile
+from pathlib import Path
 from typing import List
 
-import numpy as np
-import sncosmo
 from astropy.table import Table
 
 from .. import utils
-from ..base_classes import PhotometricRelease
+from ..base_classes import PhotometricRelease, DefaultParser
 
 _dr1_files = [
     'CSS121009:011101-172841_CSS121009:011101-172841.Wstd.dat',
@@ -48,7 +48,7 @@ _dr1_files = [
     'iPTF13ebh_iPTF13ebh.Wstd.dat']
 
 
-class DR1(PhotometricRelease):
+class DR1(PhotometricRelease, DefaultParser):
     """SweetSpot is a 3 yr National Optical Astronomy Observatory (NOAO)
     survey program to observe Type Ia supernovae (SNe Ia) in the smooth Hubble
     flow. DR1 includes data from the first half of this survey, including
@@ -71,7 +71,7 @@ class DR1(PhotometricRelease):
     survey_url = 'https://mwvgroup.github.io/SweetSpot/'
     publications = ('Weyant et al. 2018',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2018AJ....155..201W/abstract/'
-    band_names = ('sweetspot_dr1_WHIRCH', 'sweetspot_dr1_WHIRCJ', 'sweetspot_dr1_WHIRCK')
+    band_names = ('sweetspot_dr1_J', 'sweetspot_dr1_H', 'sweetspot_dr1_K')
     zero_point = (25, 25, 25)
 
     def __init__(self):
@@ -87,6 +87,10 @@ class DR1(PhotometricRelease):
 
         self._target_info_path = self._table_dir / 'observed_target_info.dr1.txt'
         self._filter_dir = self._data_dir / 'filters'
+        self._filter_zip_path = Path(__file__).parent / 'filters.tar.gz'
+        self._filter_file_names = (
+            'whirc_J.dat', 'whirc_H.dat', 'whirc_K.dat'
+        )
 
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
@@ -159,6 +163,25 @@ class DR1(PhotometricRelease):
 
         return table
 
+    def _decompress_filters(self):
+        """Decompress filter files into the filter directory"""
+
+        print(self._filter_zip_path)
+        with tarfile.open(self._filter_zip_path) as data_archive:
+            for ffile in data_archive:
+                path = self._filter_dir / ffile.name
+                if path.exists():
+                    continue
+
+                print(f'Unzipping {ffile.name}')
+
+                try:
+                    data_archive.extract(ffile, path=self._filter_dir)
+
+                except IOError:
+                    path.unlink()
+                    data_archive.extract(ffile, path=self._filter_dir)
+
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
@@ -185,17 +208,4 @@ class DR1(PhotometricRelease):
                 verbose=False
             )
 
-    def _register_filters(self, force: bool = False):
-        """Register filters for this survey / data release with SNCosmo
-
-        Args:
-            force: Re-register a band if already registered
-        """
-
-        bandpass_data = zip(self._filter_file_names, self.band_names)
-        for file_name, band_name in bandpass_data:
-            filter_path = self._filter_dir / file_name
-            wave, transmission = np.genfromtxt(filter_path).T
-            band = sncosmo.Bandpass(wave, transmission)
-            band.name = band_name
-            sncosmo.register(band, force=force)
+        self._decompress_filters()

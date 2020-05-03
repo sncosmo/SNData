@@ -10,7 +10,7 @@ from typing import List, Tuple, Union
 import pandas as pd
 from astropy.table import Table, vstack
 
-from . import csp, des, essence, jla, sdss
+from . import csp, des, essence, jla, sdss, sweetspot
 from . import utils as utils
 from .exceptions import InvalidObjId, InvalidTableId, ObservedDataTypeError
 
@@ -30,17 +30,22 @@ def get_zp(band_name: str) -> float:
         The zero point as a float
     """
 
-    survey, release, *_ = band_name.split('_')
+
+
     modules_dict = {
-        'dr1': csp.DR1,
-        'dr3': csp.DR3,
-        'sn3yr': des.SN3YR,
-        'narayan16': essence.Narayan16,
-        'betoule14': jla.Betoule14,
-        'sako18': sdss.Sako18
+        'csp_dr1': csp.DR1,
+        'csp_dr3': csp.DR3,
+        'des_sn3yr': des.SN3YR,
+        'essence_narayan16': essence.Narayan16,
+        'jla_betoule14': jla.Betoule14,
+        'sdss_sako18': sdss.Sako18,
+        'sweetspot_dr1': sweetspot.DR1
     }
 
-    data_class = modules_dict[release]
+    survey, release, *_ = band_name.split('_')
+    key = f'{survey}_{release}'
+    data_class = modules_dict[key]
+
     if not hasattr(data_class, 'band_names'):
         raise ObservedDataTypeError(
             'Survey {} {} does not have registered photometric band passes.')

@@ -208,7 +208,7 @@ def download_file(
 def download_tar(
         url: str,
         out_dir: str,
-        mode: str = None,
+        mode: str = 'r:gz',
         force: bool = False,
         timeout: float = 15,
         skip_exists: str = None
