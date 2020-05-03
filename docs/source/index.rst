@@ -46,7 +46,8 @@ data release may have from the rest of the package. In general you should:
 
 1. Read the installation guide (~1 minute if you know how to use ``pip``)
 2. Read the quick start guide to learn how the package works (~5 minutes)
-3. Read the slow start guide for a better understanding of the available features and how they can make your life easier (~10 minutes)
+3. Read the slow start guide for a better understanding of the available
+   features and how they can make your life easier (~10 minutes)
 4. Refer to the API documentation for a given survey as you see necessary
 
 
@@ -74,6 +75,8 @@ Available Data
 +------------------------------------------------------+--------------------------+---------------+
 + Supernova Legacy Survey                              | `Balland et al. 2009`_   | Spectroscopic |
 +------------------------------------------------------+--------------------------+---------------+
++ Sweetspot                                            | `Weyant et al. 2018`_    | Photometric   |
++------------------------------------------------------+--------------------------+---------------+
 
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
@@ -83,6 +86,7 @@ Available Data
 .. _Sako et al. 2018: http://data.darkenergysurvey.org/sdsssn/dataRelease/
 .. _Balland et al. 2009: https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
 .. _Stahl et al. 2019: https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.3882S/abstract
+.. _Weyant et al. 2018: https://ui.adsabs.harvard.edu/abs/2018AJ....155..201W/abstract/
 
 .. toctree::
    :hidden:
@@ -114,6 +118,7 @@ Available Data
    module_docs/loss
    module_docs/sdss
    module_docs/snls
+   module_docs/sweetspot
 
 .. toctree::
    :hidden:
