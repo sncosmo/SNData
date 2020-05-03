@@ -1,7 +1,7 @@
 Sweetspot
 =========
 
-.. automodule:: sndata.csp
+.. automodule:: sndata.sweetspot
 
 +------------------+--------------+---------------+-----------------------------+
 | Data Release     | Class Name   | Data Type     | Publication                 |
