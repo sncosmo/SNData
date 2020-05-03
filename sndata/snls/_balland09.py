@@ -39,7 +39,7 @@ class Balland09(SpectroscopicRelease, DefaultParser):
     average redshift of z = 0.63 +/- 0.02. (Source: Balland et al. 2009)
 
     Deviations from the standard UI:
-        - None
+        - Time values returned in units of phase and not observed Julian date.
 
     Cuts on returned data:
         - None

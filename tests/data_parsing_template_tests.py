@@ -131,7 +131,7 @@ class SpectroscopicDataParsing:
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:
-            'time', 'band', 'flux', 'fluxerr', 'zp', 'zpsys'
+            'time', 'band', 'flux'
         """
 
         test_id = self.test_class.get_available_ids()[0]
