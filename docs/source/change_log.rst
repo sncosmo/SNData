@@ -7,11 +7,7 @@ This page documents any API changes between different versions of the
 V 1.1.0
 -------
 
-- Adds data from the Sweetspot survey (DR1), Berkeley Supernova Ia Program ()
-  and Lick Observatory Supernova Search.
-- Fixes bug causing duplicate registration of photometric filters for the
-  ``essence.Narayan16`` data release.
-- Minor doc improvements for consistent formatting and clarity.
+- Adds data from the first data release of the Sweetspot survey (``sndata.sweetsport.DR1``).
 
 V 1.0.1
 -------
