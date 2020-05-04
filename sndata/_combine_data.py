@@ -30,8 +30,6 @@ def get_zp(band_name: str) -> float:
         The zero point as a float
     """
 
-
-
     modules_dict = {
         'csp_dr1': csp.DR1,
         'csp_dr3': csp.DR3,

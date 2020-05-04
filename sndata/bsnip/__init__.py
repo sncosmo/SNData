@@ -7,6 +7,7 @@ Ia Program (BSNIP). For the photometric compliment to this survey, see the
 """
 
 from ._stahl20 import Stahl20
+from ._Silverman12 import Silverman12
 
 survey_name = 'Berkeley Supernova Ia Program'
 survey_abbrev = 'BSNIP'
