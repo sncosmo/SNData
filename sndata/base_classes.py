@@ -8,12 +8,18 @@ for a new survey / data release, see the :ref:`CustomClasses` section of the
 docs.
 """
 
+import json
+import multiprocessing as mp
 import shutil
-from typing import List, Union
+import warnings
+from typing import List
+from typing import Union
 
 import numpy as np
+import requests
 from astropy.io import ascii
 from astropy.table import Table
+from bs4 import BeautifulSoup
 
 from . import utils
 from .exceptions import InvalidObjId, InvalidTableId
@@ -209,6 +215,7 @@ class SpectroscopicRelease:
         return f'<{class_name} ({self.survey_abbrev} {self.release})>'
 
 
+# noinspection PyUnresolvedReferences
 class PhotometricRelease(SpectroscopicRelease):
     """Generic representation of a photometric data release
 
@@ -243,3 +250,75 @@ class PhotometricRelease(SpectroscopicRelease):
 
         utils.require_data_path(self._data_dir)
         self._register_filters(force)
+
+
+class ScrapeAstroBerkely:
+    """Handles scraping of meta data from the Astro Berkeley DB"""
+
+    _meta_data_path = None
+
+    @staticmethod
+    def get_obj_metadata(obj_id):
+        """Scrape object meta data off of heracles.astro.berkeley.edu
+
+        Args:
+            obj_id: The id of the object to scrape data for
+
+        Returns:
+            - The object id
+            - A dictionary of meta data
+        """
+
+        obj_id_for_url = obj_id.lstrip('SN ')
+        url = f'http://heracles.astro.berkeley.edu/sndb/object?SN%20{obj_id_for_url}'
+        print(url)
+
+        # Get web-page content
+        page_data = requests.get(url).content
+
+        # Locate the div that contains object meta data
+        soup = BeautifulSoup(page_data)
+        meta_data_div = soup.find('div', attrs={'class': 'col-md-6'})
+
+        # Iterate over any available meta data for the object
+        object_data = {}
+        for heading in meta_data_div.find_all('h3'):
+            htext = heading.text
+            if not htext:
+                continue
+
+            key, value = htext.strip().split(': ')
+            key = key.lower().replace('.', '').replace(' ', '_')
+            key = key.replace('redshift', 'z').replace('decl', 'dec')
+
+            try:
+                value = float(value)
+
+            except ValueError:
+                pass
+
+            object_data[key] = value
+
+        return obj_id, object_data
+
+    def _download_meta_data(self):
+        """Download meta data (RA, Dec, etc.) for available object ids
+
+        Data is scraped from the http://heracles.astro.berkeley.edu webpage
+        for each object.
+
+        Download is skipped if ``out_path`` exists. Data is saved in yaml
+        format using a yml file extension.
+        """
+
+        if self._meta_data_path.exists():
+            return
+
+        print('Fetching metadata from http://heracles.astro.berkeley.edu/sndb/')
+        with mp.Pool(8) as pool:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                meta_data = pool.map(self.get_obj_metadata, self.get_available_ids())
+
+        with self._meta_data_path.open('w') as out_file:
+            json.dump(dict(meta_data), out_file)

@@ -29,7 +29,7 @@ class DR1UI(TestCase, SpectroscopicDataUI):
         cls.test_class = csp.DR1()
 
 
-class DR3(TestCase, PhotometricDataParsing):
+class DR3Parsing(TestCase, PhotometricDataParsing):
     """Data parsing tests for the DR3 release"""
 
     @classmethod

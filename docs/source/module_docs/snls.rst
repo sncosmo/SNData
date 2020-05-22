@@ -6,11 +6,11 @@ Supernova Legacy Survey (SNLS)
 +---------------------+--------------+---------------+----------------------------+
 | Data Release        | Class name   | Data Type     | Publication                |
 +=====================+==============+===============+============================+
-| Balland et al. 2009 | Balland09    | Spectroscopic | `Balland et al. (2009)`_   |
+| Balland et al. 2009 | Balland09    | Spectroscopic | `Balland et al. 2009`_     |
 +---------------------+--------------+---------------+----------------------------+
 
 
-.. _Balland et al. (2009): https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
+.. _Balland et al. 2009: https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
 
 
 Balland et al. 2009

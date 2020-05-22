@@ -72,11 +72,11 @@ environment. This behavior can be disabled by specifying the ``force=True``
 argument.
 
 .. Important:: Survey data is often hosted across multiple websites. As such,
-it is possible the server responsible for hosting a subset of a survey's
-data (e.g. the filter transmission curves) is temporarily offline. In this
-case **SNData** will raise a warning and continue downloading any data that is
-still online. The ``download_module_data`` function can then be re-run once
-the server is back online.
+   it is possible the server responsible for hosting a subset of a survey's
+   data (e.g. the filter transmission curves) is temporarily offline. In this
+   case **SNData** will raise a warning and continue downloading any data that
+   is still online. The ``download_module_data`` function can then be re-run
+   once the server is back online.
 
 
 Accessing Data

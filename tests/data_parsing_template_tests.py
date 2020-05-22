@@ -45,6 +45,11 @@ class SpectroscopicDataParsing:
         duplicates = unique_elements[count > 1]
         self.assertTrue(len(duplicates) == 0, f'Duplicate Ids: {duplicates}')
 
+    def test_no_empty_ids(self):
+        """Test no object Ids are empty strings"""
+
+        self.assertNotIn('', self.test_class.get_available_ids())
+
     def test_cache_not_mutated(self):
         """Test mutating returned tables does not mutate them in the cache"""
 
@@ -122,6 +127,20 @@ class SpectroscopicDataParsing:
 
             self.assertTrue(table, err_msg.format(table))
 
+    def test_column_names(self):
+        """Test columns required by sncosmo are included in formatted tables
+
+        Columns checked to exist include:
+            'time', 'band', 'flux'
+        """
+
+        test_id = self.test_class.get_available_ids()[0]
+        test_data = self.test_class.get_data_for_id(test_id, format_table=True)
+
+        expected_cols = ('time', 'wavelength', 'flux')
+        for column in expected_cols:
+            self.assertIn(column, test_data.colnames)
+
 
 class PhotometricDataParsing(SpectroscopicDataParsing):
     """Generic data parsing tests for photometric data releases"""
@@ -133,7 +152,7 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
         actual_zp = self.test_class.zero_point
         self.assertSequenceEqual(actual_zp, returned_zp)
 
-    def test_sncosmo_column_names(self):
+    def test_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:

@@ -23,6 +23,20 @@ class Balland09Parsing(TestCase, SpectroscopicDataParsing):
     def test_jd_time_format(self):
         pass
 
+    def test_column_names(self):
+        """Test columns required by sncosmo are included in formatted tables
+
+        Columns checked to exist include:
+            'phase', 'band', 'flux'
+        """
+
+        test_id = self.test_class.get_available_ids()[0]
+        test_data = self.test_class.get_data_for_id(test_id, format_table=True)
+
+        expected_cols = ('phase', 'wavelength', 'flux')
+        for column in expected_cols:
+            self.assertIn(column, test_data.colnames)
+
 
 class Balland09UI(TestCase, SpectroscopicDataUI):
     """UI tests for the Balland09 release"""

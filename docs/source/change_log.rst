@@ -4,6 +4,11 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.1.0
+-------
+
+- Adds data from the first data release of the Sweetspot survey (``sndata.sweetsport.DR1``).
+
 V 1.0.1
 -------
 
