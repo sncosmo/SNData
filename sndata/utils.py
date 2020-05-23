@@ -6,6 +6,7 @@ used when building data access classes for a given survey / data release.
 """
 
 import functools
+import json
 import os
 import tarfile
 from copy import deepcopy
@@ -17,6 +18,7 @@ import numpy as np
 import requests
 import sncosmo
 from astropy.coordinates import Angle
+from astropy.table import Table
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
@@ -329,3 +331,25 @@ def register_filter_file(file_path: str, filter_name: str, force: bool = False):
         band = sncosmo.Bandpass(filter_data[0], filter_data[1])
         band.name = filter_name
         sncosmo.register(band, force=force)
+
+
+def query_osc(obj_id: str, data_type: str = None) -> Table:
+    """Query various types of data from the Open Supernova Catalog
+
+    Args:
+        obj_id: SN name (e.g. '2011fe')
+        data_type: The type of data to query (r.g. 'Photometry')
+
+    Returns:
+        A dictionary of queried data
+    """
+
+    # Construct URL
+    url = f'https://api.astrocats.space/{obj_id}/'
+    if data_type:
+        url += f'{data_type}/'
+
+    response = requests.get(url)
+    response.raise_for_status()
+    data = json.loads(response.content.decode('utf-8'))[obj_id]
+    return data[data_type] if data_type else data
