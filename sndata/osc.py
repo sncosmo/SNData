@@ -6,38 +6,66 @@ Supernova Catalog. Photometric and spectroscopic data can be accessed
 separately via the `OSCPhot` and `OSCSpec` classes respectively.
 """
 
-from pathlib import Path
+import json
 from typing import List
 
-import pandas as pd
-from astropy.table import Table
+import numpy as np
+import requests
+from astropy.table import Table, vstack
 
 from sndata import utils
-from sndata.base_classes import PhotometricRelease
+from sndata.base_classes import VizierTableId
+from sndata.exceptions import InvalidTableId
+
+_OBJ_ID_CACHE = None
 
 
-# def query_osc_spectra(uia_name: str) -> Table:
-#     """Return photometric data from the Open Supernova Catalog
-#
-#     Args:
-#         uia_name: SN name (e.g. 'SN2011fe')
-#
-#     Returns:
-#         A list of spectral data as dictionaries
-#     """
-#
-#     return _query_osc(uia_name, 'spectra')
+def query_osc(object: str, quantity: str = None, attribute: str = None, **kwargs):
+    """Query the open supernova catalog
 
+    Full documentation of the OSC REST API is available at
+    https://github.com/astrocatalogs/OACAPI
 
-class OSCPhot(PhotometricRelease):
+    Args:
+        object: Object(s) to query data for
+        quantity: Quantity to query for object
+        attribute: Sub set of quantity to return data for
+        kwargs: Any arguments for sub-selecting the query
+
+    Returns:
+        Query response as a dictionary
     """
 
-    Deviations from the standard UI:
-        - None  # Todo
+    # Construct a base query for the specified object that we can build off of as
+    # https://api.sne.space/OBJECT/QUANTITY/ATTRIBUTE?ARGUMENT1=VALUE1&...
+    url = f'https://api.astrocats.space/{object}/'
 
-    Cuts on returned data:
-        - None   # Todo
-    """
+    if quantity:
+        url += f'{quantity}/'
+
+    elif attribute:
+        # Attributes are a subset of the quantity.
+        raise RuntimeError('Cannot query ``attribute`` without ``quantity``')
+
+    if attribute:
+        url += f'{attribute}/'
+
+    if kwargs:
+        url += '?'
+        for key, value in kwargs.items():
+            url += key
+            if value is not None:
+                url += f'={value}'
+
+        url += '&'
+
+    response = requests.get(url)
+    response.raise_for_status()
+    return json.loads(response.content.decode('utf-8'))
+
+
+class OSCBase:
+    """Base class for accessing the Open Supernova Catalog"""
 
     survey_name = 'Open Supernova Catalog'
     survey_abbrev = 'OSC'
@@ -47,53 +75,134 @@ class OSCPhot(PhotometricRelease):
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2017ApJ...835...64G/abstract'
 
     def __init__(self):
+        self._data_dir = utils.find_data_dir('osc', 'osc')
+
+    def get_available_tables(self) -> List[VizierTableId]:
+        """Get Ids for available vizier tables published by this data release"""
+
+        return ['catalog']
+
+    def load_table(self, table_id: VizierTableId, use_cached: bool = True) -> Table:
+        """Return a Vizier table published by this data release
+
+        Args:
+            table_id: The published table number or table name
+            use_cached: Whether to use results that have been cached to disk
+        """
+
+        if table_id == 'catalog':
+            osc_response = query_osc('catalog')  # Todo: only include a subset of columns
+            return Table(osc_response['catalog'])
+
+        raise InvalidTableId()
+
+
+class OSCSpec(OSCBase):
+    """
+
+    Deviations from the standard UI:
+        - None  # Todo
+
+    Cuts on returned data:
+        - None
+    """
+
+    def __init__(self):
         """Define local and remote paths of data"""
 
         super().__init__()
-        self._phot_dir = self._data_dir / 'cached_photometry'
+        self._spectra_dir = self._data_dir / 'cached_spectroscopy'
 
-    def _get_available_tables(self) -> List[int]:
-        """Get Ids for available vizier tables published by this data release"""
-
-        return []
-
-    def _get_available_ids(self) -> List[str]:
+    def get_available_ids(self, use_cached: bool = True) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        # Returned object Ids should be sorted and unique.
-        # For example:
-        files = self._spectra_dir.glob('*.dat')
-        return sorted(set(Path(f).name for f in files))
+        obj_id_path = self._data_dir / 'obj_id.dat'
+        if use_cached and obj_id_path.exists():
+            obj_ids = np.load(obj_id_path).tolist()
 
-    def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
+        else:
+            obj_ids = sorted(query_osc('catalog', 'name').keys())
+            np.save(obj_id_path, obj_ids)
+
+        return obj_ids
+
+    def get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:
             obj_id: The ID of the desired object
-            format_table: Format for use with ``sncosmo`` (Default: True)
+            use_cached: Whether to use results that have been cached to disk
 
         Returns:
             An astropy table of data for the given ID
         """
 
-        osc_response = utils.query_osc(obj_id)
-        data = Table.from_pandas(pd.DataFrame(osc_response))
-        data.meta = osc_response
+        local_path = self._spectra_dir / f'{obj_id.lower()}.ecsv'
+        if use_cached and local_path.exists():
+            out_table = Table.read(local_path)
 
-        # Todo: table formatting
+        else:
+            osc_response = query_osc('2011fe', 'spectra')
 
-        return data
+            spectrum_tables = []
+            for spectrum_dict in osc_response['2011fe']['spectra']:
+                spec_data = spectrum_dict.pop('data')
+                if len(spec_data[0]) == 2:
+                    names = ['wavelength', 'flux']
 
-    def _download_module_data(self, force: bool = False, timeout: float = 15):
-        """Download data for the current survey / data release
+                else:
+                    names = ['wavelength', 'flux', 'fluxerr']
+
+                spectrum_tables.append(Table(rows=spec_data, names=names))
+
+            out_table = vstack(spectrum_tables)
+            out_table.meta = query_osc(obj_id)
+            out_table.write(local_path)  # Todo add other data from osc_response
+
+        return out_table
+
+
+class OSCPhot(OSCBase):
+    """
+
+    Deviations from the standard UI:
+        - None  # Todo
+
+    Cuts on returned data:
+        - None
+    """
+
+    def __init__(self):
+        """Define local and remote paths of data"""
+
+        super().__init__()
+        self._phot_dir = self._data_dir / 'cached_photometry'
+
+    @utils.lru_copy_cache()
+    def get_available_ids(self) -> List[str]:
+        """Return a list of target object IDs for the current survey"""
+
+        return []  # Todo
+
+    def get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
+        """Returns data for a given object ID
 
         Args:
-            force: Re-Download locally available data
-            timeout: Seconds before timeout for individual files/archives
+            obj_id: The ID of the desired object
+            use_cached: Whether to use results that have been cached to disk
+
+        Returns:
+            An astropy table of data for the given ID
         """
 
-        raise NotImplementedError(
-            'Data from the OSC is downloaded from the OSC database and cached '
-            'to disk as needed. Downloading the entire OSC at once via the '
-            '`download_module_data` function is not supported.'
-        )
+        local_path = self._phot_dir / f'{obj_id.lower()}.ecsv'
+        if use_cached and local_path.exists():
+            data = Table.read(local_path)
+
+        else:
+            osc_response = query_osc(obj_id, 'photometry')
+            data = Table(osc_response[obj_id]['photometry'])
+            data.meta = query_osc(obj_id)
+            data.write(local_path)
+
+        return data
