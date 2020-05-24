@@ -14,10 +14,7 @@ import requests
 from astropy.table import Table, vstack
 
 from sndata import utils
-from sndata.base_classes import VizierTableId
-from sndata.exceptions import InvalidTableId
-
-_OBJ_ID_CACHE = None
+from sndata.base_classes import SpectroscopicRelease, VizierTableId
 
 
 def query_osc(object: str, quantity: str = None, attribute: str = None, **kwargs):
@@ -74,15 +71,12 @@ class OSCBase:
     publications = ('Guillochon et al. 2017',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2017ApJ...835...64G/abstract'
 
-    def __init__(self):
-        self._data_dir = utils.find_data_dir('osc', 'osc')
-
-    def get_available_tables(self) -> List[VizierTableId]:
+    def _get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
 
         return ['catalog']
 
-    def load_table(self, table_id: VizierTableId, use_cached: bool = True) -> Table:
+    def _load_table(self, table_id: VizierTableId, use_cached: bool = True) -> Table:
         """Return a Vizier table published by this data release
 
         Args:
@@ -90,14 +84,27 @@ class OSCBase:
             use_cached: Whether to use results that have been cached to disk
         """
 
-        if table_id == 'catalog':
-            osc_response = query_osc('catalog')  # Todo: only include a subset of columns
-            return Table(osc_response['catalog'])
+        meta_path = self._data_dir / 'catalog.json'
+        with meta_path.open() as infile:
+            return Table(json.load(infile))
 
-        raise InvalidTableId()
+    def _download_module_data(self, force: bool = False, timeout: float = 15):
+        """Download data for the current survey / data release
+
+        Args:
+            force: Re-Download locally available data
+            timeout: Seconds before timeout for individual files/archives
+        """
+
+        meta_path = self._data_dir / 'catalog.json'
+        if not meta_path.exists():
+            # Download data and write to file
+            osc_response = query_osc('catalog', format='csv')
+            with meta_path.open() as ofile:
+                json.dump(osc_response['catalog'], ofile)
 
 
-class OSCSpec(OSCBase):
+class OSCSpec(SpectroscopicRelease, OSCBase):
     """
 
     Deviations from the standard UI:
@@ -110,10 +117,11 @@ class OSCSpec(OSCBase):
     def __init__(self):
         """Define local and remote paths of data"""
 
-        super().__init__()
-        self._spectra_dir = self._data_dir / 'cached_spectroscopy'
+        self._data_dir = utils.find_data_dir('osc', 'spectroscopic')
+        self._spectra_dir = self._data_dir / 'spectra'
+        self._spectra_dir.mkdir(exist_ok=True, parents=True)
 
-    def get_available_ids(self, use_cached: bool = True) -> List[str]:
+    def _get_available_ids(self, use_cached: bool = True) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         obj_id_path = self._data_dir / 'obj_id.dat'
@@ -126,7 +134,7 @@ class OSCSpec(OSCBase):
 
         return obj_ids
 
-    def get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
+    def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:
@@ -156,7 +164,7 @@ class OSCSpec(OSCBase):
                 spectrum_tables.append(Table(rows=spec_data, names=names))
 
             out_table = vstack(spectrum_tables)
-            out_table.meta = query_osc(obj_id)
+            out_table.meta = query_osc(obj_id)  # Todo: use meta data from disk
             out_table.write(local_path)  # Todo add other data from osc_response
 
         return out_table
@@ -179,12 +187,12 @@ class OSCPhot(OSCBase):
         self._phot_dir = self._data_dir / 'cached_photometry'
 
     @utils.lru_copy_cache()
-    def get_available_ids(self) -> List[str]:
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         return []  # Todo
 
-    def get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
+    def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
 
         Args:
@@ -202,7 +210,7 @@ class OSCPhot(OSCBase):
         else:
             osc_response = query_osc(obj_id, 'photometry')
             data = Table(osc_response[obj_id]['photometry'])
-            data.meta = query_osc(obj_id)
+            data.meta = query_osc(obj_id)  # Todo: use meta data from disk
             data.write(local_path)
 
         return data
