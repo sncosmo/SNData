@@ -7,26 +7,28 @@ separately via the `OSCPhot` and `OSCSpec` classes respectively.
 """
 
 import json
+from functools import lru_cache
 from typing import List
+from warnings import warn
 
-import numpy as np
 import requests
 from astropy.table import Table, vstack
 
 from sndata import utils
-from sndata.base_classes import SpectroscopicRelease, VizierTableId
+from sndata.base_classes import PhotometricRelease, SpectroscopicRelease, VizierTableId
 
 
-def query_osc(object: str, quantity: str = None, attribute: str = None, **kwargs):
+def query_osc(object: str, quantity: str = None, attribute: str = None, timeout=None, **kwargs):
     """Query the open supernova catalog
 
-    Full documentation of the OSC REST API is available at
-    https://github.com/astrocatalogs/OACAPI
+    Function signature follows the the OSC REST API. Full documentation of the
+    OSC API is available at https://github.com/astrocatalogs/OACAPI .
 
     Args:
         object: Object(s) to query data for
         quantity: Quantity to query for object
         attribute: Sub set of quantity to return data for
+        timeout: Seconds before request timeout
         kwargs: Any arguments for sub-selecting the query
 
     Returns:
@@ -35,7 +37,7 @@ def query_osc(object: str, quantity: str = None, attribute: str = None, **kwargs
 
     # Construct a base query for the specified object that we can build off of as
     # https://api.sne.space/OBJECT/QUANTITY/ATTRIBUTE?ARGUMENT1=VALUE1&...
-    url = f'https://api.astrocats.space/{object}/'
+    url = f'https://api.sne.space/{object}/'
 
     if quantity:
         url += f'{quantity}/'
@@ -56,7 +58,7 @@ def query_osc(object: str, quantity: str = None, attribute: str = None, **kwargs
 
         url += '&'
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=timeout)
     response.raise_for_status()
     return json.loads(response.content.decode('utf-8'))
 
@@ -66,7 +68,6 @@ class OSCBase:
 
     survey_name = 'Open Supernova Catalog'
     survey_abbrev = 'OSC'
-    release = 'OSCPhot'
     survey_url = 'https://sne.space/'
     publications = ('Guillochon et al. 2017',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2017ApJ...835...64G/abstract'
@@ -76,19 +77,26 @@ class OSCBase:
 
         return ['catalog']
 
-    def _load_table(self, table_id: VizierTableId, use_cached: bool = True) -> Table:
-        """Return a Vizier table published by this data release
-
-        Args:
-            table_id: The published table number or table name
-            use_cached: Whether to use results that have been cached to disk
-        """
+    # Make private because there are no ``require_data_path`` protections
+    @lru_cache(maxsize=None)  # Cache I/O result
+    def _object_meta_data(self) -> dict:
+        """Return object meta data as a dictionary"""
 
         meta_path = self._data_dir / 'catalog.json'
         with meta_path.open() as infile:
-            return Table(json.load(infile))
+            return json.load(infile)
 
-    def _download_module_data(self, force: bool = False, timeout: float = 15):
+    def load_table(self, table_id: VizierTableId) -> Table:
+        """Return a table published by this data release
+
+        Args:
+            table_id: The published table number or table name
+        """
+
+        return Table(self._object_meta_data())
+
+    # Use a larger timeout here since the OSC query is slow
+    def _download_module_data(self, force: bool = False, timeout: float = None):
         """Download data for the current survey / data release
 
         Args:
@@ -97,14 +105,15 @@ class OSCBase:
         """
 
         meta_path = self._data_dir / 'catalog.json'
-        if not meta_path.exists():
-            # Download data and write to file
-            osc_response = query_osc('catalog', format='csv')
-            with meta_path.open() as ofile:
-                json.dump(osc_response['catalog'], ofile)
+        if force or not meta_path.exists():
+            osc_response = query_osc('catalog', timeout=timeout)
+
+            meta_path.parent.mkdir(parents=True)
+            with meta_path.open('w') as ofile:
+                json.dump(osc_response, ofile)
 
 
-class OSCSpec(SpectroscopicRelease, OSCBase):
+class OSCSpec(OSCBase, SpectroscopicRelease):
     """
 
     Deviations from the standard UI:
@@ -114,25 +123,20 @@ class OSCSpec(SpectroscopicRelease, OSCBase):
         - None
     """
 
+    release = 'OSCSpec'
+
     def __init__(self):
         """Define local and remote paths of data"""
 
-        self._data_dir = utils.find_data_dir('osc', 'spectroscopic')
+        super().__init__()
         self._spectra_dir = self._data_dir / 'spectra'
         self._spectra_dir.mkdir(exist_ok=True, parents=True)
 
     def _get_available_ids(self, use_cached: bool = True) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        obj_id_path = self._data_dir / 'obj_id.dat'
-        if use_cached and obj_id_path.exists():
-            obj_ids = np.load(obj_id_path).tolist()
-
-        else:
-            obj_ids = sorted(query_osc('catalog', 'name').keys())
-            np.save(obj_id_path, obj_ids)
-
-        return obj_ids
+        # Todo: Some of these objects may not have photometric data
+        return sorted(self._object_meta_data().keys())
 
     def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
@@ -164,13 +168,21 @@ class OSCSpec(SpectroscopicRelease, OSCBase):
                 spectrum_tables.append(Table(rows=spec_data, names=names))
 
             out_table = vstack(spectrum_tables)
-            out_table.meta = query_osc(obj_id)  # Todo: use meta data from disk
+
+            try:
+                out_table.meta = self._object_meta_data()[obj_id]
+
+            except KeyError:
+                warn(f'No metadata found for {obj_id}. '
+                     'OSC may have been updated. '
+                     'If so, please re-download data.')
+
             out_table.write(local_path)  # Todo add other data from osc_response
 
         return out_table
 
 
-class OSCPhot(OSCBase):
+class OSCPhot(OSCBase, PhotometricRelease):
     """
 
     Deviations from the standard UI:
@@ -179,6 +191,8 @@ class OSCPhot(OSCBase):
     Cuts on returned data:
         - None
     """
+
+    release = 'OSCPhot'
 
     def __init__(self):
         """Define local and remote paths of data"""
