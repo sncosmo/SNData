@@ -9,16 +9,17 @@ separately via the `OSCPhot` and `OSCSpec` classes respectively.
 import json
 from functools import lru_cache
 from typing import List
-from warnings import warn
 
 import requests
 from astropy.table import Table, vstack
 
 from sndata import utils
 from sndata.base_classes import PhotometricRelease, SpectroscopicRelease, VizierTableId
+from sndata.exceptions import InvalidTableId, NoDownloadedData
 
 
-def query_osc(object: str, quantity: str = None, attribute: str = None, timeout=None, **kwargs):
+def query_osc(object: str, quantity: str = None, attribute: str = None,
+              timeout=None, verbose=False, **kwargs):
     """Query the open supernova catalog
 
     Function signature follows the the OSC REST API. Full documentation of the
@@ -29,6 +30,7 @@ def query_osc(object: str, quantity: str = None, attribute: str = None, timeout=
         quantity: Quantity to query for object
         attribute: Sub set of quantity to return data for
         timeout: Seconds before request timeout
+        verbose: Print fetched URL from request
         kwargs: Any arguments for sub-selecting the query
 
     Returns:
@@ -58,13 +60,16 @@ def query_osc(object: str, quantity: str = None, attribute: str = None, timeout=
 
         url += '&'
 
+    if verbose:
+        print(f'Fetching {url}')
+
     response = requests.get(url, timeout=timeout)
     response.raise_for_status()
     return json.loads(response.content.decode('utf-8'))
 
 
 class OSCBase:
-    """Base class for accessing the Open Supernova Catalog"""
+    """Mixin class for accessing the Open Supernova Catalog"""
 
     survey_name = 'Open Supernova Catalog'
     survey_abbrev = 'OSC'
@@ -72,18 +77,24 @@ class OSCBase:
     publications = ('Guillochon et al. 2017',)
     ads_url = 'https://ui.adsabs.harvard.edu/abs/2017ApJ...835...64G/abstract'
 
-    def _get_available_tables(self) -> List[VizierTableId]:
+    def __init__(self):
+
+        super().__init__()
+        self._meta_path = self._data_dir / 'catalog.json'
+
+    def get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
 
         return ['catalog']
 
-    # Make private because there are no ``require_data_path`` protections
     @lru_cache(maxsize=None)  # Cache I/O result
     def _object_meta_data(self) -> dict:
         """Return object meta data as a dictionary"""
 
-        meta_path = self._data_dir / 'catalog.json'
-        with meta_path.open() as infile:
+        if not self._meta_path.exists():
+            raise NoDownloadedData()
+
+        with self._meta_path.open() as infile:
             return json.load(infile)
 
     def load_table(self, table_id: VizierTableId) -> Table:
@@ -92,11 +103,12 @@ class OSCBase:
         Args:
             table_id: The published table number or table name
         """
+        if table_id == 'catalog':
+            return self._object_meta_data()  # Todo: Return a table instead of a dictionary
 
-        return Table(self._object_meta_data())
+        raise InvalidTableId()
 
-    # Use a larger timeout here since the OSC query is slow
-    def _download_module_data(self, force: bool = False, timeout: float = None):
+    def download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
 
         Args:
@@ -104,12 +116,11 @@ class OSCBase:
             timeout: Seconds before timeout for individual files/archives
         """
 
-        meta_path = self._data_dir / 'catalog.json'
-        if force or not meta_path.exists():
-            osc_response = query_osc('catalog', timeout=timeout)
+        if force or not self._meta_path.exists():
+            osc_response = query_osc('catalog', timeout=timeout, verbose=True)
 
-            meta_path.parent.mkdir(parents=True)
-            with meta_path.open('w') as ofile:
+            self._meta_path.parent.mkdir(parents=True, exist_ok=True)
+            with self._meta_path.open('w') as ofile:
                 json.dump(osc_response, ofile)
 
 
@@ -132,11 +143,37 @@ class OSCSpec(OSCBase, SpectroscopicRelease):
         self._spectra_dir = self._data_dir / 'spectra'
         self._spectra_dir.mkdir(exist_ok=True, parents=True)
 
-    def _get_available_ids(self, use_cached: bool = True) -> List[str]:
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        # Todo: Some of these objects may not have photometric data
+        # Todo: Some of these objects may not have spectroscopic data
         return sorted(self._object_meta_data().keys())
+
+    @staticmethod
+    def _osc_spec_to_table(spectrum_dict: dict) -> Table:
+        """Typecast an OSC spectrum from a dictionary to a Table
+
+        Args:
+            spectrum_dict: The OSC spectrum
+
+        Returns:
+            An astropy table
+        """
+
+        spec_data = spectrum_dict.pop('data')
+        if len(spec_data[0]) == 2:
+            names = ['wavelength', 'flux']
+            dtype = [float, float]
+
+        else:
+            names = ['wavelength', 'flux', 'fluxerr']
+            dtype = [float, float, float]
+
+        spec_table = Table(rows=spec_data, names=names, dtype=dtype)
+        for k, v in spectrum_dict.items():
+            spec_table[k] = v
+
+        return spec_table
 
     def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
@@ -154,30 +191,13 @@ class OSCSpec(OSCBase, SpectroscopicRelease):
             out_table = Table.read(local_path)
 
         else:
-            osc_response = query_osc('2011fe', 'spectra')
+            osc_spectra = query_osc(obj_id, 'spectra')[obj_id]['spectra']
+            out_table = vstack([self._osc_spec_to_table(sdict) for sdict in osc_spectra])
 
-            spectrum_tables = []
-            for spectrum_dict in osc_response['2011fe']['spectra']:
-                spec_data = spectrum_dict.pop('data')
-                if len(spec_data[0]) == 2:
-                    names = ['wavelength', 'flux']
-
-                else:
-                    names = ['wavelength', 'flux', 'fluxerr']
-
-                spectrum_tables.append(Table(rows=spec_data, names=names))
-
-            out_table = vstack(spectrum_tables)
-
-            try:
-                out_table.meta = self._object_meta_data()[obj_id]
-
-            except KeyError:
-                warn(f'No metadata found for {obj_id}. '
-                     'OSC may have been updated. '
-                     'If so, please re-download data.')
-
-            out_table.write(local_path)  # Todo add other data from osc_response
+            # Todo: Format meta data to meet package standards
+            out_table.meta = {'obj_id': obj_id}
+            out_table.meta.update(self._object_meta_data()[obj_id])
+            out_table.write(local_path)
 
         return out_table
 
@@ -200,11 +220,11 @@ class OSCPhot(OSCBase, PhotometricRelease):
         super().__init__()
         self._phot_dir = self._data_dir / 'cached_photometry'
 
-    @utils.lru_copy_cache()
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        return []  # Todo
+        # Todo: Some of these objects may not have photometric data
+        return sorted(self._object_meta_data().keys())
 
     def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
@@ -224,7 +244,11 @@ class OSCPhot(OSCBase, PhotometricRelease):
         else:
             osc_response = query_osc(obj_id, 'photometry')
             data = Table(osc_response[obj_id]['photometry'])
-            data.meta = query_osc(obj_id)  # Todo: use meta data from disk
+
+            # Todo: Format meta data to meet package standards
+            data.meta = {'obj_id': obj_id}
+            data.meta.update(self._object_meta_data()[obj_id])
             data.write(local_path)
 
+        # Todo: format data to meet some kind of uniform standard
         return data
