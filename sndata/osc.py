@@ -7,7 +7,6 @@ separately via the `OSCPhot` and `OSCSpec` classes respectively.
 """
 
 import json
-from functools import lru_cache
 from typing import List
 
 import requests
@@ -87,28 +86,24 @@ class OSCBase:
 
         return ['catalog']
 
-    @lru_cache(maxsize=None)  # Cache I/O result
-    def _object_meta_data(self) -> dict:
-        """Return object meta data as a dictionary"""
-
-        if not self._meta_path.exists():
-            raise NoDownloadedData()
-
-        with self._meta_path.open() as infile:
-            return json.load(infile)
-
+    @utils.lru_copy_cache(maxsize=None)  # Cache I/O result
     def load_table(self, table_id: VizierTableId) -> Table:
         """Return a table published by this data release
 
         Args:
             table_id: The published table number or table name
         """
+
         if table_id == 'catalog':
-            return self._object_meta_data()  # Todo: Return a table instead of a dictionary
+            if not self._meta_path.exists():
+                raise NoDownloadedData()
+
+            with self._meta_path.open() as infile:
+                return json.load(infile)
 
         raise InvalidTableId()
 
-    def download_module_data(self, force: bool = False, timeout: float = 15):
+    def download_module_data(self, force: bool = False, timeout: float = 45):
         """Download data for the current survey / data release
 
         Args:
@@ -128,7 +123,7 @@ class OSCSpec(OSCBase, SpectroscopicRelease):
     """
 
     Deviations from the standard UI:
-        - None  # Todo
+        - The ``catalog`` table is returned by ``load_table`` as a ``dict`` and not a ``Table``.
 
     Cuts on returned data:
         - None
@@ -147,7 +142,7 @@ class OSCSpec(OSCBase, SpectroscopicRelease):
         """Return a list of target object IDs for the current survey"""
 
         # Todo: Some of these objects may not have spectroscopic data
-        return sorted(self._object_meta_data().keys())
+        return sorted(self.load_table('catalog').keys())
 
     @staticmethod
     def _osc_spec_to_table(spectrum_dict: dict) -> Table:
@@ -206,7 +201,7 @@ class OSCPhot(OSCBase, PhotometricRelease):
     """
 
     Deviations from the standard UI:
-        - None  # Todo
+        - The ``catalog`` table is returned by ``load_table`` as a ``dict`` and not a ``Table``.
 
     Cuts on returned data:
         - None
@@ -219,12 +214,13 @@ class OSCPhot(OSCBase, PhotometricRelease):
 
         super().__init__()
         self._phot_dir = self._data_dir / 'cached_photometry'
+        self._phot_dir.parent.mkdir(exist_ok=True, parents=True)
 
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         # Todo: Some of these objects may not have photometric data
-        return sorted(self._object_meta_data().keys())
+        return sorted(self.load_table('catalog').keys())
 
     def _get_data_for_id(self, obj_id: str, use_cached: bool = True) -> Table:
         """Returns data for a given object ID
@@ -247,7 +243,7 @@ class OSCPhot(OSCBase, PhotometricRelease):
 
             # Todo: Format meta data to meet package standards
             data.meta = {'obj_id': obj_id}
-            data.meta.update(self._object_meta_data()[obj_id])
+            data.meta.update(self.load_table('catalog')[obj_id])
             data.write(local_path)
 
         # Todo: format data to meet some kind of uniform standard

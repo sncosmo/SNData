@@ -108,7 +108,7 @@ class SpectroscopicDataParsing:
 
         self.assertRaises(InvalidTableId, self.test_class.load_table, 'fake_id')
 
-    def test_paper_tables_are_parsed(self):
+    def test_meta_tables_are_parsed(self):
         """Test no errors are raised by ``load_table`` when parsing any of the
         table numbers returned by ``get_available_tables``
         """

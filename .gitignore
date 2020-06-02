@@ -25,4 +25,4 @@ docs/build
 *.ipynb
 .ipynb_checkpoints/
 
-todo.md
+sndata/data
