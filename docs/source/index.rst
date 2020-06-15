@@ -7,8 +7,8 @@ SNData
 .. |license| image:: https://img.shields.io/badge/license-GPL%20v3.0-blue.svg
     :target: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-.. |travis| image:: https://www.travis-ci.com/mwvgroup/SNData.svg?branch=master
-   :target: https://www.travis-ci.com/mwvgroup/SNData
+.. |travis| image:: https://www.travis-ci.com/sncosmo/SNData.svg?branch=master
+    :target: https://www.travis-ci.com/sncosmo/SNData
 
 .. |cover| image:: https://coveralls.io/repos/github/mwvgroup/SNData/badge.svg?branch=master
    :target: https://coveralls.io/github/mwvgroup/SNData?branch=master
