@@ -13,8 +13,9 @@ SNData
 .. |cover| image:: https://coveralls.io/repos/github/mwvgroup/SNData/badge.svg?branch=master
    :target: https://coveralls.io/github/mwvgroup/SNData?branch=master
 
-.. |docs| image:: https://readthedocs.org/projects/sn-data/badge/?version=latest
-   :target: https://sn-data.readthedocs.io/en/latest/?badge=latest
+.. |docs| image:: https://readthedocs.org/projects/sndata/badge/?version=latest
+   :target: https://sndata.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 .. rst-class:: badges
 
