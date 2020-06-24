@@ -4,6 +4,11 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.1.1
+-------
+
+- Fixes bug where existing data is not skipped during download by default.
+
 V 1.1.0
 -------
 
