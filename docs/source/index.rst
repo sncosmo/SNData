@@ -63,7 +63,7 @@ check the `Server Status Page`_.
 | Survey Name                                          | Data Release             | Data Type     |
 +======================================================+==========================+===============+
 | Berkeley Supernova Ia Program                        | `Stahl et al. 2020`_     | Spectroscopic |
-------------------------------------------------------+--------------------------+---------------+
++------------------------------------------------------+--------------------------+---------------+
 |                                                      | `DR1`_                   | Spectroscopic |
 + Carnegie Supernova Project                           +--------------------------+---------------+
 |                                                      | `DR3`_                   | Photometric   |
@@ -82,6 +82,7 @@ check the `Server Status Page`_.
 +------------------------------------------------------+--------------------------+---------------+
 + Sweetspot                                            | `Weyant et al. 2018`_    | Photometric   |
 +------------------------------------------------------+--------------------------+---------------+
+
 
 .. _Stahl et al. 2020: https://ui.adsabs.harvard.edu/abs/2012MNRAS.425.1789S/abstract
 .. _Server Status Page: https://stats.uptimerobot.com/gQ8lkslGWO
