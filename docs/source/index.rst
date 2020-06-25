@@ -55,6 +55,10 @@ data release may have from the rest of the package. In general you should:
 Available Data
 --------------
 
+SNData provides data access for the following supernova surveys. If you are
+having issues downloading data for a particular survey or data release, please
+check the `Server Status Page`_.
+
 +------------------------------------------------------+--------------------------+---------------+
 | Survey Name                                          | Data Release             | Data Type     |
 +======================================================+==========================+===============+
@@ -68,8 +72,6 @@ Available Data
 +------------------------------------------------------+--------------------------+---------------+
 + Joint Light-Curve Analysis                           | `Betoule et al. 2014`_   | Photometric   |
 +------------------------------------------------------+--------------------------+---------------+
-+ Lick Observatory Supernova Search                    | `Stahl et al. 2019`_     | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
 |                                                      | `Sako et al. 2018`_      | Photometric   |
 + Sloan Digital Sky Survey                             +--------------------------+---------------+
 |                                                      | `Sako et al. 2018`_      | Spectroscopic |
@@ -79,6 +81,7 @@ Available Data
 + Sweetspot                                            | `Weyant et al. 2018`_    | Photometric   |
 +------------------------------------------------------+--------------------------+---------------+
 
+.. _Server Status Page: https://stats.uptimerobot.com/gQ8lkslGWO
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
 .. _SN3YR: https://des.ncsa.illinois.edu/releases/sn

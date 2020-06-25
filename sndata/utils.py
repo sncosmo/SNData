@@ -180,14 +180,11 @@ def download_file(
         verbose: Print status to stdout
     """
 
-    response = requests.get(url, timeout=timeout)
-    response.raise_for_status()
-
     if file_obj is None:
         if path is None:
             raise ValueError('Must specify either ``path`` or ``file_obj``')
 
-        # Skip downcload if file already exists or url unavailable
+        # Skip download if file already exists or url unavailable
         path = Path(path)
         if not (force or not path.exists()):
             return
@@ -195,10 +192,12 @@ def download_file(
         path.parent.mkdir(parents=True, exist_ok=True)
         file_obj = open(path, 'wb')
 
-    # Establish remote connection
     if verbose:
         print(f'Fetching {url}')
 
+    # Establish remote connection
+    response = requests.get(url, timeout=timeout)
+    response.raise_for_status()
     file_obj.write(response.content)
 
     if path:
