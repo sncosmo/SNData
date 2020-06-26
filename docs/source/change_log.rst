@@ -4,6 +4,13 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.2.0
+-------
+
+- Adds data from the second data release of the Berkely SuperNova Ia Program (``sndata.bsnip.Stahl20``)
+- The ``format`` argument is added to the ``utils.convert_to_jd`` function.
+- Support is added to ``utils.convert_to_jd`` for converting UT times to JD.
+
 V 1.1.1
 -------
 
