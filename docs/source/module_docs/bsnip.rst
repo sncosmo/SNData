@@ -1,5 +1,5 @@
-Berkeley Supernova Ia Program (SDSS)
-===============================
+Berkeley Supernova Ia Program (BSNIP)
+=====================================
 
 .. automodule:: sndata.bsnip
 
