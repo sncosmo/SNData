@@ -3,49 +3,13 @@
 
 """This module defines the BSNIP Stahl20 API"""
 
-from datetime import datetime
 from typing import List
 
 from astropy.io.ascii.core import InconsistentTableError
 from astropy.table import Table, vstack
-from pytz import utc
 
 from .. import utils
 from ..base_classes import SpectroscopicRelease
-
-
-def ut_to_jd(date: float) -> float:
-    """Convert time values from Universal Time to Julian Day
-
-    Args:
-        date (float): Universal time from the Stahl20 meta data table
-
-    Returns:
-        Time value in units of Julian Day
-    """
-
-    # Break date down into year, month, and days
-    str_date = str(date)
-    year = int(str_date[:4])
-    month = int(str_date[4:6])
-    day = int(str_date[6:8])
-    fractional_days = float(str_date[8:])
-
-    # Convert fractional days into minutes and seconds
-    hours_in_day = 24
-    min_in_hour = 60
-    sec_in_min = 60
-    microsec_in_sec = 1e+6
-
-    hours = fractional_days * hours_in_day
-    minutes = (hours * min_in_hour) - (int(hours) * min_in_hour)
-    seconds = (minutes * sec_in_min) - (int(minutes) * sec_in_min)
-    microsec = (seconds * microsec_in_sec) - (int(seconds) * microsec_in_sec)
-
-    # ``toordinal`` returns the number of days since December 31, 1 BC
-    # We add 1721424.5 to rescale the result to January 1, 4713 BC at 12:00 (i.e. to JD)
-    date = datetime(year, month, day, int(hours), int(minutes), int(seconds), int(microsec), tzinfo=utc)
-    return date.toordinal() + 1721424.5
 
 
 class Stahl20(SpectroscopicRelease):
@@ -140,7 +104,7 @@ class Stahl20(SpectroscopicRelease):
                     names=['wavelength', 'flux'])
 
             if format_table:
-                table['time'] = ut_to_jd(row['UT_Date'])
+                table['time'] = utils.convert_ut_to_jd(row['UT_Date'])
                 table['instrument'] = row['Instrument']
 
             data_tables.append(table)
