@@ -6,6 +6,7 @@ Ia Program (BSNIP).
 """
 
 from ._stahl20 import Stahl20
+from ._silverman12 import Silverman12
 
 survey_name = 'Berkeley Supernova Ia Program'
 survey_abbrev = 'BSNIP'
