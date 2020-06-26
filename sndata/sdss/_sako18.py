@@ -210,7 +210,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         for i, name in enumerate(col_names):
             data[f'col{i + 1}'].name = name
 
-        data['JD'] = utils.convert_to_jd(data['MJD'])
+        data['JD'] = utils.convert_to_jd(data['MJD'], format='mjd')
 
         # Add meta data
         master_table = self.load_table('master')

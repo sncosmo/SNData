@@ -104,7 +104,7 @@ class Stahl20(SpectroscopicRelease):
                     names=['wavelength', 'flux'])
 
             if format_table:
-                table['time'] = utils.convert_ut_to_jd(row['UT_Date'])
+                table['time'] = utils.convert_to_jd(row['UT_Date'], format='UT')
                 table['instrument'] = row['Instrument']
 
             data_tables.append(table)

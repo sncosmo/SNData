@@ -250,7 +250,7 @@ class Betoule14(PhotometricRelease):
             out_table.rename_column('ZP', 'zp')
             out_table.rename_column('MagSys', 'zpsys')
 
-            out_table['time'] = utils.convert_to_jd(out_table['time'])
+            out_table['time'] = utils.convert_to_jd(out_table['time'], format='MJD')
             out_table['band'] = ['jla_betoule14_' + b for b in
                                  out_table['band']]
 

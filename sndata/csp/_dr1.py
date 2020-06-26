@@ -60,7 +60,7 @@ def read_dr1_file(path: str, format_table: bool = False) -> Table:
         data['instrument'] = instrument
 
         # Ensure dates are in JD format
-        data['time'] = utils.convert_to_jd(data['time'])
+        data['time'] = utils.convert_to_jd(data['time'], format='snpy')
 
         # Enforce an intuitive column order
         data = data[[

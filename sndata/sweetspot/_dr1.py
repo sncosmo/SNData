@@ -135,7 +135,7 @@ class DR1(PhotometricRelease, DefaultParser):
         table = Table.read(path, format='ascii', names=names)
 
         if format_table:
-            table['time'] = utils.convert_to_jd(table['MJD'])
+            table['time'] = utils.convert_to_jd(table['MJD'], format='mjd')
             table['fluxerr'] = (table['Fluxerr-'] + table['Fluxerr+']) / 2
             table['zp'] = 25
             table['zpsys'] = 'AB'

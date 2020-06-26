@@ -27,7 +27,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = utils.convert_to_jd(data_table['MJD'])
+    out_table['time'] = utils.convert_to_jd(data_table['MJD'], format='MJD')
     out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
     out_table['flux'] = data_table['FLUXCAL']
     out_table['fluxerr'] = data_table['FLUXCALERR']
