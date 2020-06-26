@@ -26,7 +26,7 @@ copyright = '2019, Daniel Perrefort'
 author = 'Daniel Perrefort'
 
 # The short X.Y version
-version = '1.1.1'
+version = '1.2.0'
 
 # The full version, including alpha/beta/rc tags
 release = version

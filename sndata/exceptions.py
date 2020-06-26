@@ -10,6 +10,7 @@ class NoDownloadedData(Exception):
     def __init__(self, *args, **kwargs):
         default_message = 'Data has not been downloaded for this data release.'
         args = args if args else (default_message,)
+        # noinspection PyArgumentList
         super().__init__(*args, **kwargs)
 
 
@@ -18,6 +19,7 @@ class InvalidObjId(Exception):
 
     def __init__(self, *args, **kwargs):
         args = args if args else ('The provided object Id is not valid.',)
+        # noinspection PyArgumentList
         super().__init__(*args, **kwargs)
 
 
@@ -26,6 +28,7 @@ class InvalidTableId(Exception):
 
     def __init__(self, *args, **kwargs):
         args = args if args else ('No table was found matching the given ID.',)
+        # noinspection PyArgumentList
         super().__init__(*args, **kwargs)
 
 
@@ -40,4 +43,5 @@ class ObservedDataTypeError(Exception):
             'included in the current data release.',
         )
         args = args if args else (default_message,)
+        # noinspection PyArgumentList
         super().__init__(*args, **kwargs)
