@@ -12,7 +12,7 @@ from ..base_classes import SpectroscopicRelease
 
 
 def parse_bsnip_table(path):
-
+    default_appendix_b_indices = [0, 10, 17, 24, 29, 36, 41, 47, 52, 59, 64, 70, 75, 81, 87, 93]
     column_indices = {
         'table1': [0, 10, 19, 51, 59, 64, 70, 75, 77, 97, 110, 134, 137, 143, 151],
         'table2': [0, 11, 17, 1926, 36, 43, 46, 52, 58, 70, 75, 78, 83, 88, 94, 110, 113],
@@ -20,24 +20,24 @@ def parse_bsnip_table(path):
         'table5': [0, 15, 25, 28],
         'table7': [0, 9, 17, 26, 33, 41, 47, 51, 56],
         'tableA1': [0, 44, 68, 76, 84, 87],
-        'tableB1': [],
-        'tableB2': [],
-        'tableB3': [],
-        'tableB4': [],
-        'tableB5': [],
-        'tableB6': [],
-        'tableB7': [],
-        'tableB8': [],
-        'tableB9': [],
+        'tableB1': default_appendix_b_indices,
+        'tableB2': default_appendix_b_indices,
+        'tableB3': default_appendix_b_indices[:10],
+        'tableB4': default_appendix_b_indices[:10],
+        'tableB5': default_appendix_b_indices,
+        'tableB6': default_appendix_b_indices,
+        'tableB7': default_appendix_b_indices,
+        'tableB8': default_appendix_b_indices,
+        'tableB9': default_appendix_b_indices,
 
     }
 
     indices = column_indices[path.stem]
 
     with path.open() as infile:
-        title = infile.readline().lstrip('#  Title: ').rstrip()
-        author = infile.readline().lstrip('#  Authors: ').rstrip()
-        table_name = infile.readline().lstrip('#  Table: ').rstrip()
+        title = infile.readline().strip('#  Title: \n')
+        author = infile.readline().strip('#  Authors: \n')
+        table_name = infile.readline().strip('#  Table: \n')
 
         # Skip two spacer lines
         infile.readline()
@@ -46,7 +46,7 @@ def parse_bsnip_table(path):
         # Parse column names
         names = []
         line = infile.readline()
-        while line != '#\n':
+        while line.strip('# \n'):
             names.append(line.lstrip('# ').strip())
             line = infile.readline()
 
@@ -55,7 +55,7 @@ def parse_bsnip_table(path):
 
         # Parse table notes
         notes = []
-        while not line.startswith('-'):
+        while '----------------' not in line:
             notes.append(line)
             line = infile.readline().lstrip('# ')
 
