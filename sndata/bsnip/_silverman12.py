@@ -3,30 +3,86 @@
 
 """This module defines the BSNIP Stahl20 API"""
 
-from astropy.table import Table
 from typing import List
+
+from astropy.table import Table
 
 from .. import utils
 from ..base_classes import SpectroscopicRelease
 
-_table_url_data = {
-    1: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/obj_info_table.txt',
-    2: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/spec_info_table.txt',
-    5: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/SNID_templates_table.txt',
-    7: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/snid_info_table.txt',
-    3: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/ben_vel.txt',
-    'A1': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/data_summary.txt',
-    'B1': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/cahk.txt',
-    'B2': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si4000.txt',
-    'B3': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/mg.txt',
-    'B4': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/fe.txt',
-    'B5': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/sii.txt',
-    'B6': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si5972.txt',
-    'B7': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si6355.txt',
-    'B8': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/oi.txt',
-    'B9': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/cair.txt'
 
-}
+def parse_bsnip_table(path):
+
+    column_indices = {
+        'table1': [0, 10, 19, 51, 59, 64, 70, 75, 77, 97, 110, 134, 137, 143, 151],
+        'table2': [0, 11, 17, 1926, 36, 43, 46, 52, 58, 70, 75, 78, 83, 88, 94, 110, 113],
+        'table3': [0, 11, 28, 56, 63, 69, 75, 80, 86],
+        'table5': [0, 15, 25, 28],
+        'table7': [0, 9, 17, 26, 33, 41, 47, 51, 56],
+        'tableA1': [0, 44, 68, 76, 84, 87],
+        'tableB1': [],
+        'tableB2': [],
+        'tableB3': [],
+        'tableB4': [],
+        'tableB5': [],
+        'tableB6': [],
+        'tableB7': [],
+        'tableB8': [],
+        'tableB9': [],
+
+    }
+
+    indices = column_indices[path.stem]
+
+    with path.open() as infile:
+        title = infile.readline().lstrip('#  Title: ').rstrip()
+        author = infile.readline().lstrip('#  Authors: ').rstrip()
+        table_name = infile.readline().lstrip('#  Table: ').rstrip()
+
+        # Skip two spacer lines
+        infile.readline()
+        infile.readline()
+
+        # Parse column names
+        names = []
+        line = infile.readline()
+        while line != '#\n':
+            names.append(line.lstrip('# ').strip())
+            line = infile.readline()
+
+        # Skip spacer line
+        line = infile.readline()
+
+        # Parse table notes
+        notes = []
+        while not line.startswith('-'):
+            notes.append(line)
+            line = infile.readline().lstrip('# ')
+
+        table = Table(names=names, dtype=[object for _ in names])
+        table.meta['Title'] = title
+        table.meta['Authors'] = author
+        table.meta['Table'] = table_name
+        table.meta['Notes'] = notes
+
+        table_data = infile.readlines()
+
+    for line in table_data:
+        row = []
+        for i, j in zip(indices, indices[1:] + [None]):
+            part = line[i:j].strip()
+            try:
+                part = float(part)
+
+            except ValueError:
+                pass
+
+            row.append(part)
+
+        row.extend([''] * (len(names) - len(row)))
+        table.add_row(row, mask=[elt == '' for elt in row])
+
+    return table
 
 
 class Silverman12(SpectroscopicRelease):
@@ -59,11 +115,29 @@ class Silverman12(SpectroscopicRelease):
         self._table_dir = self._data_dir / 'tables'
 
         self._spectra_url = 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/BSNIPI_spectra.tar.gz'
+        self._table_urls = {
+            1: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/obj_info_table.txt',
+            2: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/spec_info_table.txt',
+            5: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/SNID_templates_table.txt',
+            7: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPI/snid_info_table.txt',
+            3: 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/ben_vel.txt',
+            'A1': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/data_summary.txt',
+            'B1': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/cahk.txt',
+            'B2': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si4000.txt',
+            'B3': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/mg.txt',
+            'B4': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/fe.txt',
+            'B5': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/sii.txt',
+            'B6': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si5972.txt',
+            'B7': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si6355.txt',
+            'B8': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/oi.txt',
+            'B9': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/cair.txt'
+
+        }
 
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
-        return sorted(_table_url_data.keys(), key=str)
+        return sorted(self._table_urls.keys(), key=str)
 
     def _load_table(self, table_id: str) -> Table:
         """Return a Vizier table published by this data release
@@ -72,12 +146,12 @@ class Silverman12(SpectroscopicRelease):
             table_id: The published table number or table name
         """
 
-        raise NotImplementedError
+        return parse_bsnip_table(self._table_dir / f'table{table_id}.dat')
 
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        raise NotImplementedError
+        return sorted(self.load_table(1)['Supernova Name (1)'])
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
@@ -110,10 +184,10 @@ class Silverman12(SpectroscopicRelease):
                 timeout=timeout
             )
 
-        except EOFError:  # Official file is not formatted correctly?
+        except EOFError:  # Todo: check if Official file is not formatted correctly
             pass
 
-        for table_id, url in _table_url_data.items():
+        for table_id, url in self._table_urls.items():
             utils.download_file(
                 url=url,
                 path=self._table_dir / f'table{table_id}.dat',
