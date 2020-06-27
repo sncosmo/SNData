@@ -12,7 +12,7 @@ from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryFile
-from typing import TextIO, Union
+from typing import Union, IO
 
 import numpy as np
 import requests
@@ -192,7 +192,7 @@ def convert_to_jd(date: float, format: str) -> float:
 def download_file(
         url: str,
         path: str = None,
-        file_obj: TextIO = None,
+        file_obj: IO = None,
         force: bool = False,
         timeout: float = 15,
         verbose: bool = True):
