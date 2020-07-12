@@ -3,15 +3,27 @@
 
 """This module defines the BSNIP Stahl20 API"""
 
+from pathlib import Path
 from typing import List
 
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 from .. import utils
 from ..base_classes import SpectroscopicRelease
 
 
-def parse_bsnip_table(path):
+def parse_bsnip_table(path: Path) -> Table:
+    """Parse a supplementary table from Silverman et a. 2020
+
+    Args:
+        path: Path of the file to read
+
+    Returns:
+        Tabular data
+    """
+
+    # The table formatting makes it very difficult for the pandas or astropy
+    # libraries to automatically identify columns. We Specify the columns by hand
     default_appendix_b_indices = [0, 10, 17, 24, 29, 36, 41, 47, 52, 59, 64, 70, 75, 81, 87, 93]
     column_indices = {
         'table1': [0, 10, 19, 51, 59, 64, 70, 75, 77, 97, 110, 134, 137, 143, 151],
@@ -65,9 +77,10 @@ def parse_bsnip_table(path):
         table.meta['Table'] = table_name
         table.meta['Notes'] = notes
 
-        table_data = infile.readlines()
+        table_body_lines = infile.readlines()
 
-    for line in table_data:
+    # Populate table rows with data from each remaining line
+    for line in table_body_lines:
         row = []
         for i, j in zip(indices, indices[1:] + [None]):
             part = line[i:j].strip()
@@ -131,7 +144,6 @@ class Silverman12(SpectroscopicRelease):
             'B7': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/si6355.txt',
             'B8': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/oi.txt',
             'B9': 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPII/cair.txt'
-
         }
 
     def _get_available_tables(self) -> List[str]:
@@ -151,7 +163,7 @@ class Silverman12(SpectroscopicRelease):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        return sorted(self.load_table(1)['Supernova Name (1)'])
+        return sorted(oid.lstrip('SN ') for oid in self.load_table(1)['Supernova Name (1)'])
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
@@ -164,7 +176,16 @@ class Silverman12(SpectroscopicRelease):
             An astropy table of data for the given ID
         """
 
-        raise NotImplementedError
+        tables = []
+        for path in self._spectra_dir.glob(f'sn{obj_id.lower()}*.flm'):
+            time = path.stem.split('-')[1]
+            spec_table = Table.read(path, names=['wavelength', 'flux'], fomrat='ascii.ascii')
+            if format_table:
+                spec_table['time'] = utils.convert_to_jd(time + '.0', 'UT')
+
+            tables.append(spec_table)
+
+        return vstack(tables)
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
@@ -184,7 +205,7 @@ class Silverman12(SpectroscopicRelease):
                 timeout=timeout
             )
 
-        except EOFError:  # Todo: check if Official file is not formatted correctly
+        except EOFError:  # Todo: check if official file is not formatted correctly
             pass
 
         for table_id, url in self._table_urls.items():
