@@ -9,4 +9,4 @@
 **Supernova data access made easy!!!**
 SNData provides a standardized and intuitive interface for downloading,
 parsing, and manipulating data from supernova surveys. For more information,
-see the online documentation [here](https://sn-data.readthedocs.io/en/latest/).
+see the online documentation [here](https://sndata.readthedocs.io/en/latest/).
