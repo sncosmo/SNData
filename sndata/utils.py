@@ -7,12 +7,13 @@ used when building data access classes for a given survey / data release.
 
 import functools
 import os
+import sys
 import tarfile
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from tempfile import TemporaryFile
-from typing import TextIO, Union
+from tempfile import NamedTemporaryFile
+from typing import IO, Union
 
 import numpy as np
 import requests
@@ -191,46 +192,57 @@ def convert_to_jd(date: float, format: str) -> float:
 
 def download_file(
         url: str,
-        path: str = None,
-        file_obj: TextIO = None,
+        destination: Union[str, Path, IO] = None,
         force: bool = False,
         timeout: float = 15,
         verbose: bool = True):
     """Download content from a url to a file
 
-    If ``path`` is specified but already exists, skip the download by default.
+    If ``destination`` is a path but already exists, skip the
+    download unless ``force`` is also ``True``.
 
     Args:
         url: URL of the file to download
-        path: The path or file stream to write to
-        file_obj: Optionally write to a file like object instead of path
+        destination: Path or file object to download to
         force: Re-Download locally available data (Default: False)
         timeout: Seconds before raising timeout error (Default: 15)
         verbose: Print status to stdout
     """
 
-    if file_obj is None:
-        if path is None:
-            raise ValueError('Must specify either ``path`` or ``file_obj``')
-
-        # Skip download if file already exists or url unavailable
-        path = Path(path)
-        if not (force or not path.exists()):
+    destination_is_path = isinstance(destination, (str, Path))
+    if destination_is_path:
+        path = Path(destination)
+        if (not force) and path.exists():
             return
 
-        path.parent.mkdir(parents=True, exist_ok=True)
-        file_obj = open(path, 'wb')
+        path.parent.mkdir(exist_ok=True, parents=True)
+        destination = path.open('wb')
 
     if verbose:
-        print(f'Fetching {url}')
+        tqdm.write(f'Fetching {url}', file=sys.stdout)
+        response = requests.get(url, stream=True, timeout=timeout)
 
-    # Establish remote connection
-    response = requests.get(url, timeout=timeout)
-    response.raise_for_status()
-    file_obj.write(response.content)
+        total = int(response.headers.get('content-length', 0))
+        with tqdm(total=total, file=sys.stdout) as pbar:
+            for data in response.iter_content(chunk_size=1024):
+                pbar.update(destination.write(data))
 
-    if path:
-        file_obj.close()
+        # If we wanted to use astropy
+        # from astropy.utils.console import ProgressBarOrSpinner
+        # with ProgressBarOrSpinner(total, f'Fetching {url}') as p:
+        #     bytes_read = 0
+        #     for data in response.iter_content(chunk_size=1024):
+        #         bytes_read += file_obj.write(data)
+        #         p.update(bytes_read)
+
+    else:
+        response = requests.get(url, timeout=timeout)
+        response.raise_for_status()
+        destination.write(response.content)
+        destination.write(response.content)
+
+    if destination_is_path:
+        destination.close()
 
 
 def download_tar(
@@ -259,8 +271,8 @@ def download_tar(
         return
 
     # Download data to file and decompress
-    with TemporaryFile() as temp_file:
-        download_file(url, file_obj=temp_file, timeout=timeout)
+    with NamedTemporaryFile() as temp_file:
+        download_file(url, destination=temp_file, timeout=timeout)
 
         # Writing to the file moves us to the end of the file
         # We move back to the beginning so we can decompress the data

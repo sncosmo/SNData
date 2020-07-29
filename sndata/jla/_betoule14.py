@@ -300,7 +300,7 @@ class Betoule14(PhotometricRelease):
 
         utils.download_file(
             url=self._filter_url,
-            path=self._filter_path,
+            destination=self._filter_path,
             force=force,
             timeout=timeout
         )

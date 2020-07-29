@@ -130,7 +130,7 @@ class Stahl20(SpectroscopicRelease):
 
         utils.download_file(
             url=self._meta_table_url,
-            path=self._meta_table_path,
+            destination=self._meta_table_path,
             force=force,
             timeout=timeout
         )
