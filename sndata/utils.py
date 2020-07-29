@@ -7,6 +7,7 @@ used when building data access classes for a given survey / data release.
 
 import functools
 import os
+import sys
 import tarfile
 from copy import deepcopy
 from datetime import datetime
@@ -222,12 +223,27 @@ def download_file(
         file_obj = open(path, 'wb')
 
     if verbose:
-        print(f'Fetching {url}')
+        tqdm.write(f'Fetching {url}', file=sys.stdout)
+        response = requests.get(url, stream=True, timeout=timeout)
 
-    # Establish remote connection
-    response = requests.get(url, timeout=timeout)
-    response.raise_for_status()
-    file_obj.write(response.content)
+        total = int(response.headers.get('content-length', 0))
+        with tqdm(total=total, file=sys.stdout) as pbar:
+            for data in response.iter_content(chunk_size=1024):
+                pbar.update(file_obj.write(data))
+
+        # If we wanted to use astropy
+        # from astropy.utils.console import ProgressBarOrSpinner
+        # with ProgressBarOrSpinner(total, f'Fetching {url}') as p:
+        #     bytes_read = 0
+        #     for data in response.iter_content(chunk_size=1024):
+        #         bytes_read += file_obj.write(data)
+        #         p.update(bytes_read)
+
+    else:
+        response = requests.get(url, timeout=timeout)
+        response.raise_for_status()
+        file_obj.write(response.content)
+        file_obj.write(response.content)
 
     if path:
         file_obj.close()
