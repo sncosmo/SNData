@@ -57,6 +57,27 @@ class Stahl19(PhotometricRelease, DefaultParser):
         'loss_stahl19_V_nickel1',
         'loss_stahl19_V_nickel2')
 
+    # Taken from Ganeshalingam et al. 2013
+    # https://ui.adsabs.harvard.edu/abs/2013MNRAS.433.2240G/abstract
+    zero_point = [
+        15.332,
+        15.249,
+        15.224,
+        np.nan,
+        14.457,
+        14.439,
+        14.703,
+        np.nan,
+        15.008,
+        14.973,
+        14.930,
+        np.nan,
+        14.921,
+        14.922,
+        14.828,
+        np.nan
+    ]
+
     def __init__(self):
         """Define local and remote paths of data"""
 
@@ -139,25 +160,28 @@ class Stahl19(PhotometricRelease, DefaultParser):
             An astropy table of data for the given ID
         """
 
+        # Unformatted table has a separate column for each bandpass
         table_2 = self.load_table(2)
         object_data = table_2[table_2['SN'] == obj_id]
 
         if format_table:
-            bands = 'BVRI'
             formatted_rows = []
-            for row in table_2[table_2['SN'] == obj_id]:
-                for band_name in bands:
-                    time = row['MJD']
-                    # zp.append(0)
-                    flux = row[band_name]
-                    fluxerr = row['E' + band_name]
-                    formatted_rows.append([time, band_name, 0, 'Landolt', flux, fluxerr])
+            for row in object_data:
+                for band in 'BVRI':
+                    band_name = f'loss_stahl19_{band}_{row["system"]}'
+                    zp = self.zero_point[self.band_names.index(band_name)]
+                    formatted_rows.append(
+                        [row['MJD'], band_name, zp, 'Landolt',
+                         row[band], row['E' + band]]
+                    )
 
             object_data = Table(
                 rows=formatted_rows,
                 names=['time', 'band', 'zp', 'zpsys', 'mag', 'magerr'])
 
-            object_data['time'] = utils.convert_to_jd(object_data['time'])
+            object_data['time'] = utils.convert_to_jd(object_data['time'], 'mjd')
+            object_data['flux'] = 10 ** ((object_data['mag'] - object_data['zp']) / -2.5)
+            object_data['fluxerr'] = (np.log(10) / -2.5) * object_data['flux'] * object_data['magerr']
 
         object_data.meta = {
             'obj_id': obj_id,
