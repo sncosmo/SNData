@@ -12,7 +12,6 @@ from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
 
-# Todo: Add zero points and convert magnitudes to fluxes in formatted table
 class Stahl19(PhotometricRelease, DefaultParser):
     """The ``Stahl19`` class provides access to 93 Type Ia supernovae (SNe Ia)
     from the second data release of the Lick Observatory Supernova Search
