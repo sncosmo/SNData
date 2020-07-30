@@ -74,6 +74,8 @@ check the `Server Status Page`_.
 +------------------------------------------------------+--------------------------+---------------+
 + Joint Light-Curve Analysis                           | `Betoule et al. 2014`_   | Photometric   |
 +------------------------------------------------------+--------------------------+---------------+
++ Lick Observatory Supernova Search                    | `Stahl et al. 2019`_     | Photometric   |
++------------------------------------------------------+--------------------------+---------------+
 |                                                      | `Sako et al. 2018`_      | Photometric   |
 + Sloan Digital Sky Survey                             +--------------------------+---------------+
 |                                                      | `Sako et al. 2018`_      | Spectroscopic |
@@ -124,6 +126,7 @@ check the `Server Status Page`_.
    module_docs/des
    module_docs/essence
    module_docs/jla
+   module_docs/loss
    module_docs/sdss
    module_docs/snls
    module_docs/sweetspot

@@ -2,7 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 """The ``bsnip`` module provides access to data from the Berkeley Supernova
-Ia Program (BSNIP).
+Ia Program (BSNIP). For the photometric compliment to this survey, see the
+``loss`` module.
 """
 
 from ._stahl20 import Stahl20
