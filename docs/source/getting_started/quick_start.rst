@@ -14,6 +14,9 @@ For a more in depth overview, see the :ref:`SlowStart`.
    # Start by creating an instance of the data release
    dr3 = DR3()
 
+   # Use ``help`` to get a description of the survey
+   print(help(dr3))
+
    # Download data to your machine.
    # Note: If data is already downloaded, this function call won't do anything.
    dr3.download_module_data()

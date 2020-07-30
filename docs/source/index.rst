@@ -7,14 +7,15 @@ SNData
 .. |license| image:: https://img.shields.io/badge/license-GPL%20v3.0-blue.svg
     :target: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-.. |travis| image:: https://www.travis-ci.com/mwvgroup/SNData.svg?branch=master
-   :target: https://www.travis-ci.com/mwvgroup/SNData
+.. |travis| image:: https://www.travis-ci.com/sncosmo/SNData.svg?branch=master
+    :target: https://www.travis-ci.com/sncosmo/SNData
 
 .. |cover| image:: https://coveralls.io/repos/github/mwvgroup/SNData/badge.svg?branch=master
    :target: https://coveralls.io/github/mwvgroup/SNData?branch=master
 
-.. |docs| image:: https://readthedocs.org/projects/sn-data/badge/?version=latest
-   :target: https://sn-data.readthedocs.io/en/latest/?badge=latest
+.. |docs| image:: https://readthedocs.org/projects/sndata/badge/?version=latest
+   :target: https://sndata.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 .. rst-class:: badges
 
@@ -54,9 +55,15 @@ data release may have from the rest of the package. In general you should:
 Available Data
 --------------
 
+SNData provides data access for the following supernova surveys. If you are
+having issues downloading data for a particular survey or data release, please
+check the `Server Status Page`_.
+
 +------------------------------------------------------+--------------------------+---------------+
 | Survey Name                                          | Data Release             | Data Type     |
 +======================================================+==========================+===============+
+| Berkeley Supernova Ia Program                        | `Stahl et al. 2020`_     | Spectroscopic |
++------------------------------------------------------+--------------------------+---------------+
 |                                                      | `DR1`_                   | Spectroscopic |
 + Carnegie Supernova Project                           +--------------------------+---------------+
 |                                                      | `DR3`_                   | Photometric   |
@@ -78,6 +85,9 @@ Available Data
 + Sweetspot                                            | `Weyant et al. 2018`_    | Photometric   |
 +------------------------------------------------------+--------------------------+---------------+
 
+
+.. _Stahl et al. 2020: https://ui.adsabs.harvard.edu/abs/2012MNRAS.425.1789S/abstract
+.. _Server Status Page: https://stats.uptimerobot.com/gQ8lkslGWO
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
 .. _SN3YR: https://des.ncsa.illinois.edu/releases/sn
@@ -109,8 +119,9 @@ Available Data
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Data Release Docs:
+   :caption: Data Releases:
 
+   module_docs/bsnip
    module_docs/csp
    module_docs/des
    module_docs/essence

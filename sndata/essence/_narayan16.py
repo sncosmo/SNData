@@ -27,7 +27,7 @@ def _format_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = utils.convert_to_jd(data_table['MJD'])
+    out_table['time'] = utils.convert_to_jd(data_table['MJD'], format='MJD')
     out_table['band'] = ['csp_dr3_' + band for band in data_table['Passband']]
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
@@ -156,7 +156,7 @@ class Narayan16(PhotometricRelease, DefaultParser):
         for filter_file, filter_url in zip(self._filter_file_names, self._filter_urls):
             utils.download_file(
                 url=filter_url,
-                path=self._filter_dir / filter_file,
+                destination=self._filter_dir / filter_file,
                 force=force,
                 timeout=timeout
             )

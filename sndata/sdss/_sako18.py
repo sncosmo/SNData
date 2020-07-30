@@ -210,7 +210,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         for i, name in enumerate(col_names):
             data[f'col{i + 1}'].name = name
 
-        data['JD'] = utils.convert_to_jd(data['MJD'])
+        data['JD'] = utils.convert_to_jd(data['MJD'], format='mjd')
 
         # Add meta data
         master_table = self.load_table('master')
@@ -271,7 +271,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         for file_name in self._table_names:
             utils.download_file(
                 url=self._base_url + file_name,
-                path=self._table_dir / file_name,
+                destination=self._table_dir / file_name,
                 force=force,
                 timeout=timeout
             )
@@ -279,7 +279,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,
-                path=self._filter_dir / file_name,
+                destination=self._filter_dir / file_name,
                 force=force,
                 timeout=timeout
             )

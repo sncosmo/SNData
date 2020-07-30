@@ -4,14 +4,22 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.2.0
+-------
+
+- Adds data from the second data release of the Berkely SuperNova Ia Program (``sndata.bsnip.Stahl20``)
+- The ``format`` argument is added to the ``utils.convert_to_jd`` function.
+- Support is added to ``utils.convert_to_jd`` for converting UT times to JD.
+
+V 1.1.1
+-------
+
+- Fixes bug where existing data is not skipped during download by default.
+
 V 1.1.0
 -------
 
-- Adds data from the Sweetspot survey (DR1), Berkeley Supernova Ia Program ()
-  and Lick Observatory Supernova Search.
-- Fixes bug causing duplicate registration of photometric filters for the
-  ``essence.Narayan16`` data release.
-- Minor doc improvements for consistent formatting and clarity.
+- Adds data from the first data release of the Sweetspot survey (``sndata.sweetsport.DR1``).
 
 V 1.0.1
 -------

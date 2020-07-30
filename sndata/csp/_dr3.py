@@ -48,7 +48,7 @@ def parse_snoopy_data(path: str):
             time, mag, mag_err = line_list
             out_table.add_row([time, band, mag, mag_err])
 
-    out_table['time'] = utils.convert_to_jd(out_table['time'])
+    out_table['time'] = utils.convert_to_jd(out_table['time'], format='snpy')
     return out_table
 
 
@@ -249,7 +249,7 @@ class DR3(PhotometricRelease, DefaultParser):
         for file_name in self._filter_file_names:
             utils.download_file(
                 url=self._filter_url + file_name,
-                path=self._filter_dir / file_name,
+                destination=self._filter_dir / file_name,
                 force=force,
                 timeout=timeout
             )
