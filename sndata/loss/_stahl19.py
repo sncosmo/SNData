@@ -3,18 +3,17 @@
 
 """This module defines the LOSS Stahl19 API"""
 
-import json
 from typing import List
 
 import numpy as np
 from astropy.table import Table
 
 from .. import utils
-from ..base_classes import DefaultParser, PhotometricRelease, ScrapeAstroBerkely
+from ..base_classes import DefaultParser, PhotometricRelease
 
 
 # Todo: Add zero points and convert magnitudes to fluxes in formatted table
-class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
+class Stahl19(PhotometricRelease, DefaultParser):
     """The ``Stahl19`` class provides access to 93 Type Ia supernovae (SNe Ia)
     from the second data release of the Lick Observatory Supernova Search
     (LOSS) conducted between 2005 and 2018. It consists of 78 spectroscopically
@@ -71,7 +70,6 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
         self._filter_url = 'http://heracles.astro.berkeley.edu/sndb/static/LOSS2/transmission_curves.tar.gz'
 
         # Local data paths
-        self._meta_data_path = self._data_dir / 'meta_data.yml'
         self._table_2_path = self._table_dir / 'Table2.txt'
         self._table_b3_path = self._table_dir / 'TableB3.txt'
         self._filter_dir = self._data_dir / 'transmission_curves'
@@ -93,18 +91,6 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
             'V_nickel1.txt',
             'V_nickel2.txt')
 
-        # Place holder attribute for caching meta data
-        self._meta_data = None
-
-    def _get_meta_data(self):
-        """Cache and return a dictionary of object metadata"""
-
-        if self._meta_data is None:
-            with self._meta_data_path.open() as infile:
-                self._meta_data = json.load(infile)
-
-        return self._meta_data
-
     def _get_available_tables(self) -> List[int]:
         """Get Ids for available vizier tables published by this data release"""
 
@@ -120,9 +106,6 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
 
             table_nums.append(table_number)
 
-        if self._meta_data_path.exists():
-            table_nums.append('scraped_meta')
-
         return table_nums
 
     def _load_table(self, table_id: int) -> Table:
@@ -131,11 +114,6 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
         Args:
             table_id: The published table number or table name
         """
-
-        if table_id == 'scraped_meta':
-            table = Table(list(self._get_meta_data().values()))
-            table['obj_id'] = self.get_available_ids()
-            return table[table.colnames[::-1]]
 
         table_path = self._table_dir / f'Table{table_id}.txt'
         table = Table.read(table_path, format='ascii')
@@ -148,7 +126,7 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        return list(np.unique(self.load_table(2)['SN']))
+        return sorted(np.unique(self.load_table(2)['SN']))
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
@@ -181,17 +159,12 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
 
             object_data['time'] = utils.convert_to_jd(object_data['time'])
 
-        object_meta = self._get_meta_data()[obj_id]
         object_data.meta = {
             'obj_id': obj_id,
-            'ra': object_meta.get('ra', None),
-            'dec': object_meta.get('dec', None),
-            'z': object_meta.get('redshift', None),
+            'ra': None,
+            'dec': None,
+            'z': None,
             'z_err': None,
-            'type': object_meta.get('type', None),
-            'host_name': object_meta.get('host_name', None),
-            'alternate_object_name': object_meta.get('alternate_object_name', None),
-            'object_names': object_meta.get('object_names', None),
         }
 
         return object_data
@@ -209,7 +182,7 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
         for file_url, file_path in zip(urls, paths):
             utils.download_file(
                 url=file_url,
-                path=file_path,
+                destination=file_path,
                 force=force,
                 timeout=timeout
             )
@@ -222,5 +195,3 @@ class Stahl19(PhotometricRelease, ScrapeAstroBerkely, DefaultParser):
             force=force,
             timeout=timeout
         )
-
-        self._download_meta_data()
