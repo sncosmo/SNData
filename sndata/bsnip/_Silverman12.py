@@ -116,7 +116,7 @@ class Silverman12(SpectroscopicRelease):
         for table_id, url in _table_url_data.items():
             utils.download_file(
                 url=url,
-                path=self._table_dir / f'table{table_id}.dat',
+                destination=self._table_dir / f'table{table_id}.dat',
                 force=force,
                 timeout=timeout
             )
