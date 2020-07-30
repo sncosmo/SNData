@@ -223,17 +223,11 @@ def download_file(
         response = requests.get(url, stream=True, timeout=timeout)
 
         total = int(response.headers.get('content-length', 0))
-        with tqdm(total=total, file=sys.stdout) as pbar:
-            for data in response.iter_content(chunk_size=1024):
+        chunk_size = 1024
+        with tqdm(total=total, unit='B', unit_scale=True,
+                  unit_divisor=chunk_size, file=sys.stdout) as pbar:
+            for data in response.iter_content(chunk_size=chunk_size):
                 pbar.update(destination.write(data))
-
-        # If we wanted to use astropy
-        # from astropy.utils.console import ProgressBarOrSpinner
-        # with ProgressBarOrSpinner(total, f'Fetching {url}') as p:
-        #     bytes_read = 0
-        #     for data in response.iter_content(chunk_size=1024):
-        #         bytes_read += file_obj.write(data)
-        #         p.update(bytes_read)
 
     else:
         response = requests.get(url, timeout=timeout)
