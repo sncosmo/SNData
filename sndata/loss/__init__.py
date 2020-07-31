@@ -7,6 +7,7 @@ survey, see the ``bsnip`` module.
 """
 
 from ._stahl19 import Stahl19
+from ._ganeshalingam13 import Ganeshalingam13
 
 survey_name = 'Lick Observatory Supernova Search'
 survey_abbrev = 'LOSS'

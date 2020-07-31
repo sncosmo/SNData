@@ -90,8 +90,8 @@ class Stahl19(PhotometricRelease, DefaultParser):
         self._filter_url = 'http://heracles.astro.berkeley.edu/sndb/static/LOSS2/transmission_curves.tar.gz'
 
         # Local data paths
-        self._table_2_path = self._table_dir / 'Table2.txt'
-        self._table_b3_path = self._table_dir / 'TableB3.txt'
+        self._table_2_path = self._table_dir / 'table2.dat'
+        self._table_b3_path = self._table_dir / 'tableB3.dat'
         self._filter_dir = self._data_dir / 'transmission_curves'
         self._filter_file_names = (
             'B_kait3.txt',
@@ -111,23 +111,6 @@ class Stahl19(PhotometricRelease, DefaultParser):
             'V_nickel1.txt',
             'V_nickel2.txt')
 
-    def _get_available_tables(self) -> List[int]:
-        """Get Ids for available vizier tables published by this data release"""
-
-        table_nums = []
-        for f in self._table_dir.rglob('Table*.txt'):
-            table_number = f.stem.lstrip('Table')
-            try:
-                table_number = int(table_number)
-
-            # Table from appendix and has letter in name. E.g. 'B3'
-            except ValueError:
-                pass
-
-            table_nums.append(table_number)
-
-        return table_nums
-
     def _load_table(self, table_id: int) -> Table:
         """Return a Vizier table published by this data release
 
@@ -135,7 +118,7 @@ class Stahl19(PhotometricRelease, DefaultParser):
             table_id: The published table number or table name
         """
 
-        table_path = self._table_dir / f'Table{table_id}.txt'
+        table_path = self._table_dir / f'table{table_id}.dat'
         table = Table.read(table_path, format='ascii')
         table = Table(table, masked=True)  # Convert to a masked table
         for col in table.columns.values():
