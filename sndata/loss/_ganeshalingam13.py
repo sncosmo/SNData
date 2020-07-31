@@ -7,6 +7,7 @@ from functools import lru_cache
 from typing import List
 
 import numpy as np
+import pandas as pd
 from astropy.table import Table
 
 from ._load_meta_data import load_meta
@@ -29,7 +30,7 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
     maximum B-band light.  (Source: Stahl et al. 2019)
 
     Deviations from the standard UI:
-        - LOSS data files are published without metadata such as ra, dec, or z
+        - None
 
     Cuts on returned data:
         - None
@@ -136,17 +137,25 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
             table_id: The published table number or table name
         """
 
-        table_path = self._table_dir / f'table{table_id}.dat'
-        table = Table.read(table_path, format='ascii', names=[
-            'SN name', 'Redshift in CMB frame', 'm_{B}', 'm_{B} err', 'x_{1}',
-            'x_{1} err', 'c', 'c err', 'mu', 'mu_err', 'Sample Name',
-            'Reference'])
+        if table_id == 'meta_data':
+            return load_meta()
 
-        table = Table(table, masked=True)  # Convert to a masked table
-        for col in table.columns.values():
-            col.mask = col == 99.999
+        if table_id == 3:
+            table_path = self._table_dir / f'table{table_id}.dat'
+            df = pd.read_table(
+                table_path, sep=r'\s{2,}', comment='#',
+                names=['obj_id', 'z', 'm_{B}', 'm_{B} err', 'x_{1}',
+                       'x_{1} err', 'c', 'c err', 'mu', 'mu_err',
+                       'Sample Name', 'Reference'])
 
-        return table
+            table = Table.from_pandas(df)
+            table = Table(table, masked=True)
+            for col in table.columns.values():
+                col.mask = col == 99.999
+
+            return table
+
+        raise NotImplementedError(f'Parsing is not implimented for table {table_id}')
 
     @lru_cache()
     def _load_photometry(self) -> Table:
@@ -166,8 +175,9 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
 
         return sorted(np.unique(self._load_photometry()['SN']))
 
-
     def _get_available_tables(self) -> List[str]:
+        """Add the ``meta_data`` table to the list of available tables"""
+
         tables = super()._get_available_tables()
         tables.append('meta_data')
         return tables

@@ -227,8 +227,13 @@ class PhotometricRelease(SpectroscopicRelease):
     data_type = 'photometric'
 
     # Photometric metadata
-    band_names = tuple()
-    zero_point = tuple()
+    @property
+    def band_names(self) -> tuple:
+        raise NotImplementedError('Band passes are not defined for this survey')
+
+    @property
+    def zero_point(self) -> tuple:
+        raise NotImplementedError('Zero points are not defined for this survey')
 
     @classmethod
     def get_zp_for_band(cls, band: str) -> str:

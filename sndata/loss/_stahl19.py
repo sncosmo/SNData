@@ -59,24 +59,24 @@ class Stahl19(PhotometricRelease, DefaultParser):
 
     # Taken from Ganeshalingam et al. 2013
     # https://ui.adsabs.harvard.edu/abs/2013MNRAS.433.2240G/abstract
-    zero_point = [
-        15.332,
-        15.249,
-        15.224,
-        np.nan,
-        14.457,
-        14.439,
-        14.703,
-        np.nan,
-        15.008,
-        14.973,
-        14.930,
-        np.nan,
-        14.921,
-        14.922,
-        14.828,
-        np.nan
-    ]
+    # zero_point = [
+    #     15.332,
+    #     15.249,
+    #     15.224,
+    #     ????,
+    #     14.457,
+    #     14.439,
+    #     14.703,
+    #     ????,
+    #     15.008,
+    #     14.973,
+    #     14.930,
+    #     ????,
+    #     14.921,
+    #     14.922,
+    #     14.828,
+    #     ????
+    # ]
 
     def __init__(self):
         """Define local and remote paths of data"""
@@ -113,6 +113,8 @@ class Stahl19(PhotometricRelease, DefaultParser):
             'V_nickel2.txt')
 
     def _get_available_tables(self) -> List[str]:
+        """Add the ``meta_data`` table to the list of available tables"""
+
         tables = super()._get_available_tables()
         tables.append('meta_data')
         return tables
