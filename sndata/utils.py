@@ -359,7 +359,8 @@ def register_filter_file(file_path: str, filter_name: str, force: bool = False):
 
     # Register the new bandpass
     if filter_name not in available_bands:
-        filter_data = np.genfromtxt(file_path).T
-        band = sncosmo.Bandpass(filter_data[0], filter_data[1])
+        wave, trans = np.genfromtxt(file_path).T
+        is_good_data = ~np.isnan(wave) & ~np.isnan(trans)
+        band = sncosmo.Bandpass(wave[is_good_data], trans[is_good_data])
         band.name = filter_name
         sncosmo.register(band, force=force)
