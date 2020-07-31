@@ -38,7 +38,8 @@ def get_zp(band_name: str) -> float:
         'jla_betoule14': jla.Betoule14,
         'sdss_sako18': sdss.Sako18,
         'sweetspot_dr1': sweetspot.DR1,
-        'loss_stahl19': loss.Stahl19
+        'loss_stahl19': loss.Stahl19,
+        'loss_ganeshalingam13': loss.Ganeshalingam13
     }
 
     survey, release, *_ = band_name.split('_')

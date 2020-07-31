@@ -8,6 +8,7 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
+from ._load_meta_data import load_meta
 from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
@@ -24,7 +25,7 @@ class Stahl19(PhotometricRelease, DefaultParser):
     maximum B-band light.  (Source: Stahl et al. 2019)
 
     Deviations from the standard UI:
-        - None
+        - LOSS data files are published without metadata such as ra, dec, or z
 
     Cuts on returned data:
         - None
@@ -58,24 +59,24 @@ class Stahl19(PhotometricRelease, DefaultParser):
 
     # Taken from Ganeshalingam et al. 2013
     # https://ui.adsabs.harvard.edu/abs/2013MNRAS.433.2240G/abstract
-    zero_point = [
-        15.332,
-        15.249,
-        15.224,
-        np.nan,
-        14.457,
-        14.439,
-        14.703,
-        np.nan,
-        15.008,
-        14.973,
-        14.930,
-        np.nan,
-        14.921,
-        14.922,
-        14.828,
-        np.nan
-    ]
+    # zero_point = [
+    #     15.332,
+    #     15.249,
+    #     15.224,
+    #     ????,
+    #     14.457,
+    #     14.439,
+    #     14.703,
+    #     ????,
+    #     15.008,
+    #     14.973,
+    #     14.930,
+    #     ????,
+    #     14.921,
+    #     14.922,
+    #     14.828,
+    #     ????
+    # ]
 
     def __init__(self):
         """Define local and remote paths of data"""
@@ -90,8 +91,8 @@ class Stahl19(PhotometricRelease, DefaultParser):
         self._filter_url = 'http://heracles.astro.berkeley.edu/sndb/static/LOSS2/transmission_curves.tar.gz'
 
         # Local data paths
-        self._table_2_path = self._table_dir / 'Table2.txt'
-        self._table_b3_path = self._table_dir / 'TableB3.txt'
+        self._table_2_path = self._table_dir / 'table2.dat'
+        self._table_b3_path = self._table_dir / 'tableB3.dat'
         self._filter_dir = self._data_dir / 'transmission_curves'
         self._filter_file_names = (
             'B_kait3.txt',
@@ -111,22 +112,12 @@ class Stahl19(PhotometricRelease, DefaultParser):
             'V_nickel1.txt',
             'V_nickel2.txt')
 
-    def _get_available_tables(self) -> List[int]:
-        """Get Ids for available vizier tables published by this data release"""
+    def _get_available_tables(self) -> List[str]:
+        """Add the ``meta_data`` table to the list of available tables"""
 
-        table_nums = []
-        for f in self._table_dir.rglob('Table*.txt'):
-            table_number = f.stem.lstrip('Table')
-            try:
-                table_number = int(table_number)
-
-            # Table from appendix and has letter in name. E.g. 'B3'
-            except ValueError:
-                pass
-
-            table_nums.append(table_number)
-
-        return table_nums
+        tables = super()._get_available_tables()
+        tables.append('meta_data')
+        return tables
 
     def _load_table(self, table_id: int) -> Table:
         """Return a Vizier table published by this data release
@@ -135,7 +126,11 @@ class Stahl19(PhotometricRelease, DefaultParser):
             table_id: The published table number or table name
         """
 
-        table_path = self._table_dir / f'Table{table_id}.txt'
+        if table_id == 'meta_data':
+            meta = load_meta()
+            return meta[np.isin(meta['obj_id'], self.get_available_ids())]
+
+        table_path = self._table_dir / f'table{table_id}.dat'
         table = Table.read(table_path, format='ascii')
         table = Table(table, masked=True)  # Convert to a masked table
         for col in table.columns.values():
@@ -182,13 +177,9 @@ class Stahl19(PhotometricRelease, DefaultParser):
             object_data['flux'] = 10 ** ((object_data['mag'] - object_data['zp']) / -2.5)
             object_data['fluxerr'] = (np.log(10) / -2.5) * object_data['flux'] * object_data['magerr']
 
-        object_data.meta = {
-            'obj_id': obj_id,
-            'ra': None,
-            'dec': None,
-            'z': None,
-            'z_err': None,
-        }
+        meta = load_meta()
+        obj_meta = meta[meta['obj_id'] == obj_id][0]
+        object_data.meta = {k: (v if v != -99.99 else None) for k, v in zip(obj_meta.colnames, obj_meta)}
 
         return object_data
 

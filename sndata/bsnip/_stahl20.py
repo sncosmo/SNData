@@ -95,12 +95,12 @@ class Stahl20(SpectroscopicRelease):
             # Tables either have two or three columns
             try:
                 table = Table.read(
-                    path, format='ascii',
+                    str(path), format='ascii',
                     names=['wavelength', 'flux', 'fluxerr'])
 
             except InconsistentTableError:
                 table = Table.read(
-                    path, format='ascii',
+                    str(path), format='ascii',
                     names=['wavelength', 'flux'])
 
             if format_table:

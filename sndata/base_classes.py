@@ -37,9 +37,15 @@ class DefaultParser:
         table_nums = []
         for f in self._table_dir.rglob('table*.dat'):
             table_number = f.stem.lstrip('table')
-            table_nums.append(int(table_number))
+            try:
+                table_number = int(table_number)
 
-        return sorted(table_nums)
+            except ValueError:
+                pass
+
+            table_nums.append(table_number)
+
+        return sorted(table_nums, key=str)
 
     def _load_table(self, table_id: VizierTableId) -> Table:
         """Default backend functionality of ``load_table`` function"""
@@ -221,8 +227,13 @@ class PhotometricRelease(SpectroscopicRelease):
     data_type = 'photometric'
 
     # Photometric metadata
-    band_names = tuple()
-    zero_point = tuple()
+    @property
+    def band_names(self) -> tuple:
+        raise NotImplementedError('Band passes are not defined for this survey')
+
+    @property
+    def zero_point(self) -> tuple:
+        raise NotImplementedError('Zero points are not defined for this survey')
 
     @classmethod
     def get_zp_for_band(cls, band: str) -> str:
