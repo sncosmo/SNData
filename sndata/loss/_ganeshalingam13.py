@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""This module defines the LOSS ganeshalingam13 API"""
+"""This module defines the LOSS Ganeshalingam13 API"""
 
 from functools import lru_cache
 from typing import List
@@ -9,6 +9,7 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
+from ._load_meta_data import load_meta
 from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
@@ -28,7 +29,7 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
     maximum B-band light.  (Source: Stahl et al. 2019)
 
     Deviations from the standard UI:
-        - None
+        - LOSS data files are published without metadata such as ra, dec, or z
 
     Cuts on returned data:
         - None
@@ -46,23 +47,23 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
         'B_kait1_shifted.txt',
         'V_kait1_shifted.txt',
         'R_kait1_shifted.txt',
-        'R_kait1_shifted.txt',
+        'I_kait1_shifted.txt',
         'B_kait2_shifted.txt',
         'V_kait2_shifted.txt',
         'R_kait2_shifted.txt',
-        'R_kait2_shifted.txt',
+        'I_kait2_shifted.txt',
         'B_kait3_shifted.txt',
         'V_kait3_shifted.txt',
         'R_kait3_shifted.txt',
-        'R_kait3_shifted.txt',
+        'I_kait3_shifted.txt',
         'B_kait4_shifted.txt',
         'V_kait4_shifted.txt',
         'R_kait4_shifted.txt',
-        'R_kait4_shifted.txt',
-        'B_nickle_shifted.txt',
-        'V_nickle_shifted.txt',
-        'R_nickle_shifted.txt',
-        'R_nickle_shifted.txt'
+        'I_kait4_shifted.txt',
+        'B_nickel_shifted.txt',
+        'V_nickel_shifted.txt',
+        'R_nickel_shifted.txt',
+        'I_nickel_shifted.txt'
     ]
 
     band_names = (
@@ -77,7 +78,7 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
         'loss_ganeshalingam13_B_kait3',
         'loss_ganeshalingam13_V_kait3',
         'loss_ganeshalingam13_R_kait3',
-        'loss_ganeshalingam13_I_kait3'
+        'loss_ganeshalingam13_I_kait3',
         'loss_ganeshalingam13_B_kait4',
         'loss_ganeshalingam13_V_kait4',
         'loss_ganeshalingam13_R_kait4',
@@ -139,7 +140,7 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
         table = Table.read(table_path, format='ascii', names=[
             'SN name', 'Redshift in CMB frame', 'm_{B}', 'm_{B} err', 'x_{1}',
             'x_{1} err', 'c', 'c err', 'mu', 'mu_err', 'Sample Name',
-            'Reference'], delimiter='  ')
+            'Reference'])
 
         table = Table(table, masked=True)  # Convert to a masked table
         for col in table.columns.values():
@@ -164,6 +165,12 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
         """Return a list of target object IDs for the current survey"""
 
         return sorted(np.unique(self._load_photometry()['SN']))
+
+
+    def _get_available_tables(self) -> List[str]:
+        tables = super()._get_available_tables()
+        tables.append('meta_data')
+        return tables
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
@@ -195,13 +202,9 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
             object_data['zpsys'] = 'Landolt'
             object_data.remove_columns(['Mag', 'Mag err'])
 
-        object_data.meta = {
-            'obj_id': obj_id,
-            'ra': None,
-            'dec': None,
-            'z': None,
-            'z_err': None,
-        }
+        meta = load_meta()
+        obj_meta = meta[meta['obj_id'] == obj_id][0]
+        object_data.meta = {k: (v if v != -99.99 else None) for k, v in zip(obj_meta.colnames, obj_meta)}
 
         return object_data
 

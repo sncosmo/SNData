@@ -8,6 +8,7 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
+from ._load_meta_data import load_meta
 from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
@@ -24,7 +25,7 @@ class Stahl19(PhotometricRelease, DefaultParser):
     maximum B-band light.  (Source: Stahl et al. 2019)
 
     Deviations from the standard UI:
-        - None
+        - LOSS data files are published without metadata such as ra, dec, or z
 
     Cuts on returned data:
         - None
@@ -111,12 +112,21 @@ class Stahl19(PhotometricRelease, DefaultParser):
             'V_nickel1.txt',
             'V_nickel2.txt')
 
+    def _get_available_tables(self) -> List[str]:
+        tables = super()._get_available_tables()
+        tables.append('meta_data')
+        return tables
+
     def _load_table(self, table_id: int) -> Table:
         """Return a Vizier table published by this data release
 
         Args:
             table_id: The published table number or table name
         """
+
+        if table_id == 'meta_data':
+            meta = load_meta()
+            return meta[np.isin(meta['obj_id'], self.get_available_ids())]
 
         table_path = self._table_dir / f'table{table_id}.dat'
         table = Table.read(table_path, format='ascii')
@@ -165,13 +175,9 @@ class Stahl19(PhotometricRelease, DefaultParser):
             object_data['flux'] = 10 ** ((object_data['mag'] - object_data['zp']) / -2.5)
             object_data['fluxerr'] = (np.log(10) / -2.5) * object_data['flux'] * object_data['magerr']
 
-        object_data.meta = {
-            'obj_id': obj_id,
-            'ra': None,
-            'dec': None,
-            'z': None,
-            'z_err': None,
-        }
+        meta = load_meta()
+        obj_meta = meta[meta['obj_id'] == obj_id][0]
+        object_data.meta = {k: (v if v != -99.99 else None) for k, v in zip(obj_meta.colnames, obj_meta)}
 
         return object_data
 

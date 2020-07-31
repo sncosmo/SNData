@@ -1,4 +1,4 @@
-obj_id	 | ra	 | dec	 | type	 | Type Ref	 | ZSNID Subtype	 | Discovery Date	 | Discoverer	 | Discovery Ref	 | Host Name	 | Host Type	 | Galaxy Redshift	 | Galaxy Redshift Error | z | zerr	 | Reddening	 | Reddening Error	 
+obj_id	 | ra	 | dec	 | type	 | Type Ref	 | ZSNID Subtype	 | Discovery Date	 | Discoverer	 | Discovery Ref	 | Host Name	 | Host Type	 | Galaxy Redshift	 | Galaxy Redshift Error | z | z_err	 | Reddening	 | Reddening Error
 1885A	 | 10.6796	 | 41.2678	 | 	 | 	 | 	 | 1885-08-17	 | Hartwig (S And)	 | 	 | NGC 224	 | SA(s)b         LINER	 | -0.001	 | 0.00001	 | 	 | 0	 | 0.6814	 | 0	 
 1895A	 | 186.821	 | 9.41694	 | 	 | 	 | 	 | 1895-03-16	 | Wolf (VW Vir)	 | 	 | NGC 4424	 | SB(s)a:        HII	 | 0.00146	 | 0.00001	 | 	 | 0	 | 0.01866	 | 0	 
 1895B	 | 204.989	 | -31.6367	 | 	 | 	 | 	 | 1895-07-07	 | Fleming (Z Cen)	 | 	 | NGC 5253	 | Im pec;HII     Sbrst	 | 0.00136	 | 0.00001	 | 	 | 0	 | 0.05565	 | 0	 
