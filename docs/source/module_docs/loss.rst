@@ -14,12 +14,6 @@ Lick Observatory Supernova Search (LOSS)
 .. _Stahl et al. 2019: https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.3882S/abstract
 .. _Ganeshalingam et al. 2013: https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.3882S/abstract
 
-Stahl et al. 2019
------------------
-
-.. autoclass:: sndata.loss.Stahl19
-   :members:
-   :inherited-members:
 
 Ganeshalingam et al. 2013
 -------------------------
