@@ -6,7 +6,6 @@ Observatory Supernova Search (LOSS). For the spectroscopic compliment to this
 survey, see the ``bsnip`` module.
 """
 
-from ._stahl19 import Stahl19
 from ._ganeshalingam13 import Ganeshalingam13
 
 survey_name = 'Lick Observatory Supernova Search'
