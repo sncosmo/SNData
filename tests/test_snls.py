@@ -23,7 +23,7 @@ class Balland09Parsing(TestCase, SpectroscopicDataParsing):
     def test_jd_time_format(self):
         pass
 
-    def test_column_names(self):
+    def test_standard_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:

@@ -156,7 +156,7 @@ class Narayan16(PhotometricRelease, DefaultParser):
         for filter_file, filter_url in zip(self._filter_file_names, self._filter_urls):
             utils.download_file(
                 url=filter_url,
-                path=self._filter_dir / filter_file,
+                destination=self._filter_dir / filter_file,
                 force=force,
                 timeout=timeout
             )
