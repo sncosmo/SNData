@@ -62,8 +62,6 @@ check the `Server Status Page`_.
 +------------------------------------------------------+------------------------------+---------------+
 | Survey Name                                          | Data Release                 | Data Type     |
 +======================================================+==============================+===============+
-| Berkeley Supernova Ia Program                        | `Stahl et al. 2020`_         | Spectroscopic |
-+------------------------------------------------------+------------------------------+---------------+
 |                                                      | `DR1`_                       | Spectroscopic |
 + Carnegie Supernova Project                           +------------------------------+---------------+
 |                                                      | `DR3`_                       | Photometric   |
@@ -74,9 +72,7 @@ check the `Server Status Page`_.
 +------------------------------------------------------+------------------------------+---------------+
 + Joint Light-Curve Analysis                           | `Betoule et al. 2014`_       | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
-|                                                      | `Sako et al. 2018`_          | Photometric   |
-+ Lick Observatory Supernova Search                    +------------------------------+---------------+
-|                                                      | `Sako et al. 2018`_          | Photometric   |
++ Lick Observatory Supernova Search                    | `Ganeshalingam et al. 2013`_ | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
 |                                                      | `Sako et al. 2018`_          | Photometric   |
 + Sloan Digital Sky Survey                             +------------------------------+---------------+
@@ -124,7 +120,6 @@ check the `Server Status Page`_.
    :maxdepth: 1
    :caption: Data Releases:
 
-   module_docs/bsnip
    module_docs/csp
    module_docs/des
    module_docs/essence

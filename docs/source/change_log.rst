@@ -4,12 +4,11 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
-Development
------------
+V 1.2.0
+-------
 
-- Adds data from the second data release of the BLick Observatory Supernova Search (``sndata.loss.Stahl19``).
-- Adds data from the second data release of the Berkely Supernova Ia Program (``sndata.bsnip.Stahl20``).
-- Ignores warnings issued when reading in data files.
+- Patches missing file bug for Ganeshalingam et al. 2013 release.
+- Hides any benign warnings when parsing data files.
 
 V 1.2.0
 -------
