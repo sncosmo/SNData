@@ -8,7 +8,9 @@ for a new survey / data release, see the :ref:`CustomClasses` section of the
 docs.
 """
 
+import functools
 import shutil
+import warnings
 from typing import List
 from typing import Union
 
@@ -21,6 +23,18 @@ from .exceptions import InvalidObjId, InvalidTableId
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
+
+
+def ignore_warnings_wrapper(func: callable) -> callable:
+    """Ignores warnings issued by the wrapped function call"""
+
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            return func(*args, **kwargs)
+
+    return inner
 
 
 class DefaultParser:
@@ -113,6 +127,7 @@ class SpectroscopicRelease:
         return self._get_available_tables()
 
     @utils.lru_copy_cache(maxsize=None)
+    @ignore_warnings_wrapper
     def load_table(self, table_id: VizierTableId) -> Table:
         """Return a Vizier table published by this data release
 
@@ -136,6 +151,7 @@ class SpectroscopicRelease:
         utils.require_data_path(self._data_dir)
         return self._get_available_ids()
 
+    @ignore_warnings_wrapper
     def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
