@@ -169,6 +169,7 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
             self.assertIn(column, test_data.colnames)
 
     def test_no_duplicate_aliases(self):
+        """Test column names do not have duplicate sncosmo aliases"""
 
         test_id = self.test_class.get_available_ids()[0]
         test_data = self.test_class.get_data_for_id(test_id, format_table=True)
