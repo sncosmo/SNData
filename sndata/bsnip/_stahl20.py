@@ -10,6 +10,7 @@ from astropy.table import Table, vstack
 
 from .. import utils
 from ..base_classes import SpectroscopicRelease
+from ..loss._load_meta_data import load_meta
 
 
 class Stahl20(SpectroscopicRelease):
@@ -111,11 +112,10 @@ class Stahl20(SpectroscopicRelease):
 
         all_data = vstack(data_tables)
         all_data.sort('wavelength')
-        all_data.meta['obj_id'] = obj_id
-        all_data.meta['ra'] = None
-        all_data.meta['dec'] = None
-        all_data.meta['z'] = None
-        all_data.meta['z_err'] = None
+
+        meta = load_meta()
+        obj_meta = meta[meta['obj_id'] == obj_id][0]
+        all_data.meta = {k: (v if v != -99.99 else None) for k, v in zip(obj_meta.colnames, obj_meta)}
 
         # Return data with columns in a standard order
         return all_data

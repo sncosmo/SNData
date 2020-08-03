@@ -10,6 +10,7 @@ from astropy.table import Table, vstack
 
 from .. import utils
 from ..base_classes import SpectroscopicRelease
+from ..loss._load_meta_data import load_meta
 
 
 def parse_bsnip_table(path: Path) -> Table:
@@ -185,7 +186,12 @@ class Silverman12(SpectroscopicRelease):
 
             tables.append(spec_table)
 
-        return vstack(tables)
+        meta = load_meta()
+        obj_meta = meta[meta['obj_id'] == obj_id][0]
+
+        object_data = vstack(tables)
+        object_data.meta = {k: (v if v != -99.99 else None) for k, v in zip(obj_meta.colnames, obj_meta)}
+        return object_data
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
@@ -211,7 +217,7 @@ class Silverman12(SpectroscopicRelease):
         for table_id, url in self._table_urls.items():
             utils.download_file(
                 url=url,
-                path=self._table_dir / f'table{table_id}.dat',
+                destination=self._table_dir / f'table{table_id}.dat',
                 force=force,
                 timeout=timeout
             )
