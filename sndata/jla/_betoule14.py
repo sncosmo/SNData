@@ -250,7 +250,7 @@ class Betoule14(PhotometricRelease):
             out_table.rename_column('ZP', 'zp')
             out_table.rename_column('MagSys', 'zpsys')
 
-            out_table['time'] = utils.convert_to_jd(out_table['time'])
+            out_table['time'] = utils.convert_to_jd(out_table['time'], format='snpy')
             out_table['band'] = ['jla_betoule14_' + b for b in
                                  out_table['band']]
 
@@ -300,7 +300,7 @@ class Betoule14(PhotometricRelease):
 
         utils.download_file(
             url=self._filter_url,
-            path=self._filter_path,
+            destination=self._filter_path,
             force=force,
             timeout=timeout
         )

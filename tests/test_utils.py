@@ -79,22 +79,15 @@ class ConvertToJD(TestCase):
         """Test conversion of the snoopy date format to JD"""
 
         self.assertEqual(
-            self.expected_jd, utils.convert_to_jd(self.snoopy_date),
+            self.expected_jd, utils.convert_to_jd(self.snoopy_date, 'snpy'),
             'Incorrect date for snoopy format')
 
     def test_mjd_format(self):
         """Test conversion of the MJD format to JD"""
 
         self.assertEqual(
-            self.expected_jd, utils.convert_to_jd(self.mjd_date),
+            self.expected_jd, utils.convert_to_jd(self.mjd_date, 'mjd'),
             'Incorrect date for MJD format')
-
-    def test_jd_format(self):
-        """Test conversion of the JD format to JD"""
-
-        self.assertEqual(
-            self.expected_jd, utils.convert_to_jd(self.jd_date),
-            'Incorrect date for JD format')
 
 
 class RequireDataPath(TestCase):

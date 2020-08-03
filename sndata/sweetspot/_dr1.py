@@ -135,7 +135,7 @@ class DR1(PhotometricRelease, DefaultParser):
         table = Table.read(path, format='ascii', names=names)
 
         if format_table:
-            table['time'] = utils.convert_to_jd(table['MJD'])
+            table['time'] = utils.convert_to_jd(table['MJD'], format='mjd')
             table['fluxerr'] = (table['Fluxerr-'] + table['Fluxerr+']) / 2
             table['zp'] = 25
             table['zpsys'] = 'AB'
@@ -192,7 +192,7 @@ class DR1(PhotometricRelease, DefaultParser):
 
         utils.download_file(
             url=self._target_info_url,
-            path=self._target_info_path,
+            destination=self._target_info_path,
             force=force,
             timeout=timeout
         )
@@ -202,7 +202,7 @@ class DR1(PhotometricRelease, DefaultParser):
 
             utils.download_file(
                 url=file_url,
-                path=self._photometry_dir / file_name,
+                destination=self._photometry_dir / file_name,
                 force=force,
                 timeout=timeout,
                 verbose=False

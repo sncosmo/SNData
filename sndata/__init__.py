@@ -10,7 +10,7 @@ data release is represented by a dedicated class.
 from . import *
 from ._combine_data import CombinedDataset, get_zp
 
-__version__ = '1.1.1'
+__version__ = '1.2.0'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
@@ -20,7 +20,7 @@ def delete_all_data():
 
     from .utils import find_data_dir
 
-    data_dir = find_data_dir('dummy_survey', 'summy_release').parent.parent
+    data_dir = find_data_dir('dummy_survey', 'dummy_release').parent.parent
     for path in data_dir.glob('*'):
         if path.is_dir():
             path.rmdir()

@@ -87,14 +87,15 @@ class SpectroscopicDataParsing:
         is_greater = np.greater(test_data[col_name], 275300.5).all()
         self.assertTrue(is_greater)
 
-    def test_metadata_order(self):
-        """Test data table metadata has the expected minimum data"""
+    def test_minimal_metadata_keys(self):
+        """Test data table metadata has the expected minimum data
+        ('obj_id', 'ra', 'dec', 'z', 'z_err')
+        """
 
         test_id = self.test_class.get_available_ids()[0]
         test_data = self.test_class.get_data_for_id(test_id)
-        ordered_meta_keys = list(test_data.meta.keys())
-        expected_order = ['obj_id', 'ra', 'dec', 'z', 'z_err']
-        self.assertSequenceEqual(expected_order, ordered_meta_keys[:5])
+        for key in ['obj_id', 'ra', 'dec', 'z', 'z_err']:
+            self.assertIn(key, test_data.meta)
 
     def test_comments_not_in_metadata(self):
         """Test there is no 'comments' key in the  data table metadata"""
@@ -127,7 +128,7 @@ class SpectroscopicDataParsing:
 
             self.assertTrue(table, err_msg.format(table))
 
-    def test_column_names(self):
+    def test_standard_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:
@@ -152,7 +153,8 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
         actual_zp = self.test_class.zero_point
         self.assertSequenceEqual(actual_zp, returned_zp)
 
-    def test_column_names(self):
+    # Overwrites parent class method
+    def test_standard_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:
@@ -165,6 +167,17 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
         expected_cols = ('time', 'band', 'flux', 'fluxerr', 'zp', 'zpsys')
         for column in expected_cols:
             self.assertIn(column, test_data.colnames)
+
+    def test_no_duplicate_aliases(self):
+        """Test column names do not have duplicate sncosmo aliases"""
+
+        test_id = self.test_class.get_available_ids()[0]
+        test_data = self.test_class.get_data_for_id(test_id, format_table=True)
+
+        sncosmo.utils.alias_map(
+            test_data.colnames,
+            sncosmo.photdata.PHOTDATA_ALIASES,
+            required=sncosmo.photdata.PHOTDATA_REQUIRED_ALIASES)
 
     def test_sncosmo_registered_band_names(self):
         """Test registered bands do have the correct name"""

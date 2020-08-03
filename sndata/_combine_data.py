@@ -10,9 +10,9 @@ from typing import List, Tuple, Union
 import pandas as pd
 from astropy.table import Table, vstack
 
-from . import csp, des, essence, jla, sdss, sweetspot
+from . import csp, des, essence, jla, loss, sdss, sweetspot
 from . import utils as utils
-from .exceptions import InvalidObjId, InvalidTableId, ObservedDataTypeError
+from .exceptions import InvalidObjId, InvalidTableId
 
 CombinedID = Union[str, Tuple[str, str, str]]
 
@@ -37,17 +37,13 @@ def get_zp(band_name: str) -> float:
         'essence_narayan16': essence.Narayan16,
         'jla_betoule14': jla.Betoule14,
         'sdss_sako18': sdss.Sako18,
-        'sweetspot_dr1': sweetspot.DR1
+        'sweetspot_dr1': sweetspot.DR1,
+        'loss_ganeshalingam13': loss.Ganeshalingam13
     }
 
     survey, release, *_ = band_name.split('_')
     key = f'{survey}_{release}'
     data_class = modules_dict[key]
-
-    if not hasattr(data_class, 'band_names'):
-        raise ObservedDataTypeError(
-            'Survey {} {} does not have registered photometric band passes.')
-
     return data_class.get_zp_for_band(band_name)
 
 

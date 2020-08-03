@@ -4,6 +4,13 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.2.0
+-------
+
+- Adds data from the first data release of the BLick Observatory Supernova Search (``sndata.loss.Ganeshalingam13``)
+- The ``format`` argument is added to the ``utils.convert_to_jd`` function.
+- Support is added to ``utils.convert_to_jd`` for converting UT times to JD.
+
 V 1.1.1
 -------
 

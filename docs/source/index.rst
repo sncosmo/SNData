@@ -59,28 +59,32 @@ SNData provides data access for the following supernova surveys. If you are
 having issues downloading data for a particular survey or data release, please
 check the `Server Status Page`_.
 
-+------------------------------------------------------+--------------------------+---------------+
-| Survey Name                                          | Data Release             | Data Type     |
-+======================================================+==========================+===============+
-|                                                      | `DR1`_                   | Spectroscopic |
-+ Carnegie Supernova Project                           +--------------------------+---------------+
-|                                                      | `DR3`_                   | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
-| Dark Energy Survey                                   | `SN3YR`_                 | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
-+ Equation of State: Supernovae Trace Cosmic Expansion | `Narayan et al. 2016`_   | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
-+ Joint Light-Curve Analysis                           | `Betoule et al. 2014`_   | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
-|                                                      | `Sako et al. 2018`_      | Photometric   |
-+ Sloan Digital Sky Survey                             +--------------------------+---------------+
-|                                                      | `Sako et al. 2018`_      | Spectroscopic |
-+------------------------------------------------------+--------------------------+---------------+
-+ Supernova Legacy Survey                              | `Balland et al. 2009`_   | Spectroscopic |
-+------------------------------------------------------+--------------------------+---------------+
-+ Sweetspot                                            | `Weyant et al. 2018`_    | Photometric   |
-+------------------------------------------------------+--------------------------+---------------+
++------------------------------------------------------+------------------------------+---------------+
+| Survey Name                                          | Data Release                 | Data Type     |
++======================================================+==============================+===============+
+|                                                      | `DR1`_                       | Spectroscopic |
++ Carnegie Supernova Project                           +------------------------------+---------------+
+|                                                      | `DR3`_                       | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
+| Dark Energy Survey                                   | `SN3YR`_                     | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
++ Equation of State: Supernovae Trace Cosmic Expansion | `Narayan et al. 2016`_       | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
++ Joint Light-Curve Analysis                           | `Betoule et al. 2014`_       | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
++ Lick Observatory Supernova Search                    | `Ganeshalingam et al. 2013`_ | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
+|                                                      | `Sako et al. 2018`_          | Photometric   |
++ Sloan Digital Sky Survey                             +------------------------------+---------------+
+|                                                      | `Sako et al. 2018`_          | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
++ Supernova Legacy Survey                              | `Balland et al. 2009`_       | Spectroscopic |
++------------------------------------------------------+------------------------------+---------------+
++ Sweetspot                                            | `Weyant et al. 2018`_        | Photometric   |
++------------------------------------------------------+------------------------------+---------------+
 
+
+.. _Stahl et al. 2020: https://ui.adsabs.harvard.edu/abs/2012MNRAS.425.1789S/abstract
 .. _Server Status Page: https://stats.uptimerobot.com/gQ8lkslGWO
 .. _DR1: https://csp.obs.carnegiescience.edu/news-items/CSP_spectra_DR1
 .. _DR3: https://csp.obs.carnegiescience.edu/news-items/csp-dr3-photometry-released
@@ -90,6 +94,7 @@ check the `Server Status Page`_.
 .. _Sako et al. 2018: http://data.darkenergysurvey.org/sdsssn/dataRelease/
 .. _Balland et al. 2009: https://ui.adsabs.harvard.edu/abs/2009A%26A...507...85B/abstract
 .. _Stahl et al. 2019: https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.3882S/abstract
+.. _Ganeshalingam et al. 2013: https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.3882S/abstract
 .. _Weyant et al. 2018: https://ui.adsabs.harvard.edu/abs/2018AJ....155..201W/abstract/
 
 .. toctree::
@@ -119,6 +124,7 @@ check the `Server Status Page`_.
    module_docs/des
    module_docs/essence
    module_docs/jla
+   module_docs/loss
    module_docs/sdss
    module_docs/snls
    module_docs/sweetspot
