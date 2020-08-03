@@ -7,7 +7,7 @@ This page documents any API changes between different versions of the
 V 1.2.0
 -------
 
-- Adds data from the second data release of the Berkely SuperNova Ia Program (``sndata.bsnip.Stahl20``)
+- Adds data from the first data release of the BLick Observatory Supernova Search (``sndata.loss.Ganeshalingam13``)
 - The ``format`` argument is added to the ``utils.convert_to_jd`` function.
 - Support is added to ``utils.convert_to_jd`` for converting UT times to JD.
 
