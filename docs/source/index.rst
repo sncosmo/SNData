@@ -72,11 +72,11 @@ check the `Server Status Page`_.
 +------------------------------------------------------+------------------------------+---------------+
 + Joint Light-Curve Analysis                           | `Betoule et al. 2014`_       | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
-|                                                      | `Sako et al. 2018`_          | Photometric   |
-+ Lick Observatory Supernova Search                    +------------------------------+---------------+
-|                                                      | `Sako et al. 2018`_          | Photometric   |
++ Lick Observatory Supernova Search                    | `Ganeshalingam et al. 2013`_ | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
-+ Sloan Digital Sky Survey                             | `Ganeshalingam et al. 2013`_ | Photometric   |
+|                                                      | `Sako et al. 2018`_          | Photometric   |
++ Sloan Digital Sky Survey                             +------------------------------+---------------+
+|                                                      | `Sako et al. 2018`_          | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
 + Supernova Legacy Survey                              | `Balland et al. 2009`_       | Spectroscopic |
 +------------------------------------------------------+------------------------------+---------------+

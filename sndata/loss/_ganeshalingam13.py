@@ -18,16 +18,8 @@ from ..base_classes import DefaultParser, PhotometricRelease
 class Ganeshalingam13(PhotometricRelease, DefaultParser):
     """The ``Ganeshalingam13`` class provides access to BVRI light curves of
     165 objects published by the first data release of the Lick Observatory
-    Supernova Search (LOSS) conducted between 198 and 2008.
-
-
-     It consists of 78 spectroscopically
-    normal SNe Ia, with the remainder divided between distinct subclasses
-    (3 SN 1991bg-like, 3 SN 1991T-like, 4 SNe Iax, 2 peculiar, and 3
-    super-Chandrasekhar events), and has a median redshift of 0.0192.
-    The sample has a median coverage of 16 photometric epochs at a cadence
-    of 5.4 d, and the median first observed epoch is ∼4.6 d before
-    maximum B-band light.  (Source: Stahl et al. 2019)
+    Supernova Search (LOSS) conducted between 1998 and 2008.
+    (Source: Ganeshalingam et al. 2013)
 
     Deviations from the standard UI:
         - None
