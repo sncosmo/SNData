@@ -1,1 +1,2 @@
 include sndata/sdss/Spectra_txt.zip
+include sndata/loss/sndb_meta.csv
