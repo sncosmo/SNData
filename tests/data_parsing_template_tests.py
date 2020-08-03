@@ -128,7 +128,7 @@ class SpectroscopicDataParsing:
 
             self.assertTrue(table, err_msg.format(table))
 
-    def test_column_names(self):
+    def test_standard_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:
@@ -153,7 +153,8 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
         actual_zp = self.test_class.zero_point
         self.assertSequenceEqual(actual_zp, returned_zp)
 
-    def test_column_names(self):
+    # Overwrites parent class method
+    def test_standard_column_names(self):
         """Test columns required by sncosmo are included in formatted tables
 
         Columns checked to exist include:
@@ -166,6 +167,16 @@ class PhotometricDataParsing(SpectroscopicDataParsing):
         expected_cols = ('time', 'band', 'flux', 'fluxerr', 'zp', 'zpsys')
         for column in expected_cols:
             self.assertIn(column, test_data.colnames)
+
+    def test_no_duplicate_aliases(self):
+
+        test_id = self.test_class.get_available_ids()[0]
+        test_data = self.test_class.get_data_for_id(test_id, format_table=True)
+
+        sncosmo.utils.alias_map(
+            test_data.colnames,
+            sncosmo.photdata.PHOTDATA_ALIASES,
+            required=sncosmo.photdata.PHOTDATA_REQUIRED_ALIASES)
 
     def test_sncosmo_registered_band_names(self):
         """Test registered bands do have the correct name"""

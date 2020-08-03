@@ -209,8 +209,8 @@ class Ganeshalingam13(PhotometricRelease, DefaultParser):
             object_data['zp'] = zp
             object_data['flux'] = 10 ** ((object_data['Mag'] - object_data['zp']) / -2.5)
             object_data['fluxerr'] = (np.log(10) / -2.5) * object_data['flux'] * object_data['Mag err']
-            object_data['zpsys'] = 'Landolt'
-            object_data.remove_columns(['Mag', 'Mag err'])
+            object_data['zpsys'] = 'AB'
+            object_data.remove_columns(['SN', 'MJD', 'Filter', 'Mag', 'Mag err'])
 
         meta = load_meta()
         obj_meta = meta[meta['obj_id'] == obj_id][0]
