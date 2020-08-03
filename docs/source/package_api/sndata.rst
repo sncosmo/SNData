@@ -8,11 +8,17 @@ Submodules
 
 .. autosummary::
 
+   base_classes
+   exceptions
+   utils
    csp
    des
    essence
+   jla
+   loss
    sdss
    snls
+   sweetspot
 
 Top Level Functions
 ^^^^^^^^^^^^^^^^^^^

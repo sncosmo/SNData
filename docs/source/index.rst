@@ -78,9 +78,9 @@ check the `Server Status Page`_.
 + Lick Observatory Supernova Search                    +------------------------------+---------------+
 |                                                      | `Sako et al. 2018`_          | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
-|                                                      | `Ganeshalingam et al. 2013`_ | Photometric   |
+|                                                      | `Sako et al. 2018`_          | Photometric   |
 + Sloan Digital Sky Survey                             +------------------------------+---------------+
-|                                                      | `Stahl et al. 2019`_         | Spectroscopic |
+|                                                      | `Sako et al. 2018`_          | Photometric   |
 +------------------------------------------------------+------------------------------+---------------+
 + Supernova Legacy Survey                              | `Balland et al. 2009`_       | Spectroscopic |
 +------------------------------------------------------+------------------------------+---------------+
