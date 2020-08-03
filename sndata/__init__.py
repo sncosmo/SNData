@@ -10,8 +10,7 @@ data release is represented by a dedicated class.
 from . import *
 from ._combine_data import CombinedDataset, get_zp
 
-__version__ = '1.1.0'
-__version__ = '1.2.0'
+__version__ = 'development'
 __author__ = 'Daniel Perrefort'
 __license__ = 'GPL 3.0'
 
