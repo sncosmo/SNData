@@ -4,7 +4,7 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
-V 1.2.0
+V 1.2.1
 -------
 
 - Patches missing file bug for Ganeshalingam et al. 2013 release.
