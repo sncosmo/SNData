@@ -6,12 +6,7 @@
     max-width: 25%;
 }
 
-table.badges {
-     border: none !important;
-}
-
 td {
     background-color: whitesmoke !important;
     border-left-width: 1px !important;
 }
-
