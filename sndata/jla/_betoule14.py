@@ -10,9 +10,9 @@ import sncosmo
 from astropy.io import ascii, fits
 from astropy.table import Table
 
-from .. import utils
 from ..base_classes import PhotometricRelease
 from ..exceptions import InvalidObjId
+from ..utils import downloads, data_parsing, unit_conversion
 
 
 class Betoule14(PhotometricRelease):
@@ -197,11 +197,11 @@ class Betoule14(PhotometricRelease):
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description_dict = utils.read_vizier_table_descriptions(readme_path)
+        description_dict = data_parsing.read_vizier_table_descriptions(readme_path)
         data.meta['description'] = description_dict[f'{table_id}']
         return data
 
-    def _get_available_ids(self):
+    def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
         file_list = self._photometry_dir.glob('*.list')
@@ -250,7 +250,7 @@ class Betoule14(PhotometricRelease):
             out_table.rename_column('ZP', 'zp')
             out_table.rename_column('MagSys', 'zpsys')
 
-            out_table['time'] = utils.convert_to_jd(out_table['time'], format='snpy')
+            out_table['time'] = unit_conversion.convert_to_jd(out_table['time'], format='snpy')
             out_table['band'] = ['jla_betoule14_' + b for b in
                                  out_table['band']]
 
@@ -280,7 +280,7 @@ class Betoule14(PhotometricRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -289,7 +289,7 @@ class Betoule14(PhotometricRelease):
             timeout=timeout
         )
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir,
             skip_exists=self._photometry_dir,
@@ -298,7 +298,7 @@ class Betoule14(PhotometricRelease):
             timeout=timeout
         )
 
-        utils.download_file(
+        downloads.download_file(
             url=self._filter_url,
             destination=self._filter_path,
             force=force,

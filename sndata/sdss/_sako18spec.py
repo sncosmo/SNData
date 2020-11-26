@@ -11,8 +11,8 @@ from urllib.parse import urljoin
 
 from astropy.table import Column, Table, vstack
 
-from .. import utils
 from ..base_classes import SpectroscopicRelease
+from ..utils import downloads
 
 
 class Sako18Spec(SpectroscopicRelease):
@@ -182,7 +182,7 @@ class Sako18Spec(SpectroscopicRelease):
         """
 
         for file_name in self._table_names:
-            utils.download_file(
+            downloads.download_file(
                 url=self._base_url + file_name,
                 destination=self._table_dir / file_name,
                 force=force,

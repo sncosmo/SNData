@@ -9,8 +9,8 @@ from typing import List
 
 from astropy.table import Table
 
-from .. import utils
 from ..base_classes import PhotometricRelease, DefaultParser
+from ..utils import downloads, unit_conversion
 
 _dr1_files = [
     'CSS121009:011101-172841_CSS121009:011101-172841.Wstd.dat',
@@ -135,7 +135,7 @@ class DR1(PhotometricRelease, DefaultParser):
         table = Table.read(path, format='ascii', names=names)
 
         if format_table:
-            table['time'] = utils.convert_to_jd(table['MJD'], format='mjd')
+            table['time'] = unit_conversion.convert_to_jd(table['MJD'], format='mjd')
             table['fluxerr'] = (table['Fluxerr-'] + table['Fluxerr+']) / 2
             table['zp'] = 25
             table['zpsys'] = 'AB'
@@ -190,7 +190,7 @@ class DR1(PhotometricRelease, DefaultParser):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_file(
+        downloads.download_file(
             url=self._target_info_url,
             destination=self._target_info_path,
             force=force,
@@ -200,7 +200,7 @@ class DR1(PhotometricRelease, DefaultParser):
         for file_name in _dr1_files:
             file_url = self._photometry_url + file_name
 
-            utils.download_file(
+            downloads.download_file(
                 url=file_url,
                 destination=self._photometry_dir / file_name,
                 force=force,

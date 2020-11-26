@@ -8,8 +8,8 @@ from typing import List
 
 from astropy.table import Table, vstack
 
-from .. import utils
 from ..base_classes import DefaultParser, SpectroscopicRelease
+from ..utils import downloads
 
 
 def read_dr1_file(path: str, format_table: bool = False) -> Table:
@@ -138,7 +138,7 @@ class DR1(DefaultParser, SpectroscopicRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -148,7 +148,7 @@ class DR1(DefaultParser, SpectroscopicRelease):
         )
 
         # Download spectra
-        utils.download_tar(
+        downloads.download_tar(
             url=self._spectra_url,
             out_dir=self._data_dir,
             skip_exists=self._spectra_dir,

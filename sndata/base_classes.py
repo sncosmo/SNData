@@ -18,8 +18,8 @@ import numpy as np
 from astropy.io import ascii
 from astropy.table import Table
 
-from . import utils
 from .exceptions import InvalidObjId, InvalidTableId
+from .utils import wrappers, data_parsing
 
 # Define short hand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
@@ -118,18 +118,18 @@ class SpectroscopicRelease(Base, metaclass=abc.ABCMeta):
         self.survey_abbrev = survey_abbrev if survey_abbrev else self.survey_abbrev
         self.release = release if release else self.release
 
-        self._data_dir = utils.find_data_dir(self.survey_abbrev, self.release)
+        self._data_dir = data_parsing.find_data_dir(self.survey_abbrev, self.release)
         self._table_dir = self._data_dir / 'tables'
 
     def get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
 
         # Raise error if data is not downloaded
-        utils.require_data_path(self._data_dir)
+        data_parsing.require_data_path(self._data_dir)
         return self._get_available_tables()
 
-    @utils.lru_copy_cache(maxsize=200_000_000)
-    @utils.ignore_warnings_wrapper
+    @wrappers.lru_copy_cache(maxsize=200_000_000)
+    @wrappers.ignore_warnings_wrapper
     def load_table(self, table_id: VizierTableId) -> Table:
         """Return a Vizier table published by this data release
 
@@ -150,10 +150,10 @@ class SpectroscopicRelease(Base, metaclass=abc.ABCMeta):
             A list of object IDs as strings
         """
 
-        utils.require_data_path(self._data_dir)
+        data_parsing.require_data_path(self._data_dir)
         return self._get_available_ids()
 
-    @utils.ignore_warnings_wrapper
+    @wrappers.ignore_warnings_wrapper
     def get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
 
@@ -197,7 +197,7 @@ class SpectroscopicRelease(Base, metaclass=abc.ABCMeta):
         if filter_func is None:
             filter_func = lambda x: x
 
-        iterable = utils.build_pbar(self.get_available_ids(), verbose)
+        iterable = wrappers.build_pbar(self.get_available_ids(), verbose)
         for obj_id in iterable:
             data_table = self.get_data_for_id(
                 obj_id, format_table=format_table)
@@ -267,7 +267,7 @@ class PhotometricRelease(SpectroscopicRelease, metaclass=abc.ABCMeta):
             force: Re-register a band if already registered
         """
 
-        utils.require_data_path(self._data_dir)
+        data_parsing.require_data_path(self._data_dir)
         self._register_filters(force)
 
 
@@ -279,8 +279,8 @@ class DefaultParser:
 
     _table_dir: Path
     _filter_dir: Path
-    _filter_file_names: List[str]
-    band_names: List[str]
+    _filter_file_names: Tuple[str]
+    band_names: Tuple[str]
 
     def _get_available_tables(self) -> List[VizierTableId]:
         """Default backend functionality of ``get_available_tables`` function"""
@@ -308,7 +308,7 @@ class DefaultParser:
 
         # Read data from file and add meta data from the readme
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = utils.read_vizier_table_descriptions(readme_path)[table_id]
+        description = data_parsing.read_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description
         return data
 
@@ -318,4 +318,4 @@ class DefaultParser:
         bandpass_data = zip(self._filter_file_names, self.band_names)
         for _file_name, _band_name in bandpass_data:
             filter_path = self._filter_dir / _file_name
-            utils.register_filter_file(filter_path, _band_name, force=force)
+            data_parsing.register_filter_file(filter_path, _band_name, force=force)

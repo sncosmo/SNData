@@ -11,8 +11,8 @@ import pandas as pd
 from astropy.table import Table
 
 from ._load_meta_data import load_meta
-from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
+from ..utils import downloads, unit_conversion
 
 
 class Ganeshalingam13(DefaultParser, PhotometricRelease):
@@ -196,7 +196,7 @@ class Ganeshalingam13(DefaultParser, PhotometricRelease):
                 bands.append(band)
                 zp.append(zp_dict[band])
 
-            object_data['time'] = utils.convert_to_jd(object_data['MJD'], 'mjd')
+            object_data['time'] = unit_conversion.convert_to_jd(object_data['MJD'], 'mjd')
             object_data['band'] = bands
             object_data['zp'] = zp
             object_data['flux'] = 10 ** ((object_data['Mag'] - object_data['zp']) / -2.5)
@@ -221,14 +221,14 @@ class Ganeshalingam13(DefaultParser, PhotometricRelease):
         urls = (self._table_3_url, self._photometry_url)
         paths = (self._table_3_path, self._photometry_path)
         for file_url, file_path in zip(urls, paths):
-            utils.download_file(
+            downloads.download_file(
                 url=file_url,
                 destination=file_path,
                 force=force,
                 timeout=timeout
             )
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._filter_url,
             out_dir=self._filter_dir,
             skip_exists=self._filter_dir,

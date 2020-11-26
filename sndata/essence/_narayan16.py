@@ -9,9 +9,9 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
+from ..utils import downloads, unit_conversion
 
 
 def _format_table(data_table: Table) -> Table:
@@ -27,7 +27,7 @@ def _format_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = utils.convert_to_jd(data_table['MJD'], format='MJD')
+    out_table['time'] = unit_conversion.convert_to_jd(data_table['MJD'], format='MJD')
     out_table['band'] = ['csp_dr3_' + band for band in data_table['Passband']]
     out_table['zp'] = np.full(len(data_table), 25)
     out_table['zpsys'] = np.full(len(data_table), 'ab')
@@ -114,7 +114,7 @@ class Narayan16(DefaultParser, PhotometricRelease):
         # Get meta data
         table_6 = self.load_table(6)
         object_metadata = table_6[table_6['ESSENCE'] == obj_id][0]
-        ra, dec = utils.hourangle_to_degrees(
+        ra, dec = unit_conversion.hourangle_to_degrees(
             rah=object_metadata['RAh'],
             ram=object_metadata['RAm'],
             ras=object_metadata['RAs'],
@@ -144,7 +144,7 @@ class Narayan16(DefaultParser, PhotometricRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -154,7 +154,7 @@ class Narayan16(DefaultParser, PhotometricRelease):
         )
 
         for filter_file, filter_url in zip(self._filter_file_names, self._filter_urls):
-            utils.download_file(
+            downloads.download_file(
                 url=filter_url,
                 destination=self._filter_dir / filter_file,
                 force=force,

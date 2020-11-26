@@ -18,7 +18,7 @@ __license__ = 'GPL 3.0'
 def delete_all_data():
     """Delete all data downloaded by SNData for all surveys / data releases"""
 
-    from .utils import find_data_dir
+    from sndata.utils.data_parsing import find_data_dir
 
     data_dir = find_data_dir('dummy_survey', 'dummy_release').parent.parent
     for path in data_dir.glob('*'):

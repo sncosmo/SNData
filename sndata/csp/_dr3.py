@@ -9,8 +9,8 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from sndata import utils as utils
 from sndata.base_classes import DefaultParser, PhotometricRelease
+from sndata.utils import downloads, unit_conversion
 
 
 def parse_snoopy_data(path: str):
@@ -48,7 +48,7 @@ def parse_snoopy_data(path: str):
             time, mag, mag_err = line_list
             out_table.add_row([time, band, mag, mag_err])
 
-    out_table['time'] = utils.convert_to_jd(out_table['time'], format='snpy')
+    out_table['time'] = unit_conversion.convert_to_jd(out_table['time'], format='snpy')
     return out_table
 
 
@@ -222,7 +222,7 @@ class DR3(DefaultParser, PhotometricRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -237,7 +237,7 @@ class DR3(DefaultParser, PhotometricRelease):
             fix_dr3_readme(readme_path)
 
         # Download photometry
-        utils.download_tar(
+        downloads.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir,
             skip_exists=self._photometry_dir,
@@ -247,7 +247,7 @@ class DR3(DefaultParser, PhotometricRelease):
         )
 
         for file_name in self._filter_file_names:
-            utils.download_file(
+            downloads.download_file(
                 url=self._filter_url + file_name,
                 destination=self._filter_dir / file_name,
                 force=force,
