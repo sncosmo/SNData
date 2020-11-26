@@ -26,7 +26,7 @@ VizierTableId = Union[int, str]
 
 
 class Base(metaclass=abc.ABCMeta):
-    """Abstract class outlining required methods when implementing data access class"""
+    """Abstract class acting as a base for all data access classes"""
 
     # General metadata
     publications: Tuple
