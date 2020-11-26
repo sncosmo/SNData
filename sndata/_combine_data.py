@@ -11,7 +11,7 @@ import pandas as pd
 from astropy.table import Table, vstack
 
 from . import csp, des, essence, jla, loss, sdss, sweetspot
-from .exceptions import InvalidObjId, InvalidTableId
+from .exceptions import InvalidObjId, InvalidTableId, NoDownloadedData
 from .utils import wrappers
 
 CombinedID = Union[str, Tuple[str, str, str]]
@@ -320,8 +320,8 @@ class CombinedDataset:
             try:
                 data_class.register_filters(force=force)
 
-            except utils.NoDownloadedData:
-                raise utils.NoDownloadedData(
+            except NoDownloadedData:
+                raise NoDownloadedData(
                     f'No data downloaded for {data_class.__name__}')
 
     def download_module_data(self, force: bool = False, timeout: int = 15):

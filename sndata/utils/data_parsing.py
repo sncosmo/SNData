@@ -111,9 +111,11 @@ def register_filter_file(file_path: str, filter_name: str, force: bool = False):
     """
 
     # Get set of registered builtin and custom band passes
+    # noinspection PyProtectedMember
     available_bands = set(
         k[0] for k in sncosmo.bandpasses._BANDPASSES._loaders)
 
+    # noinspection PyProtectedMember
     available_bands.update(
         k[0] for k in sncosmo.bandpasses._BANDPASSES._instances)
 
