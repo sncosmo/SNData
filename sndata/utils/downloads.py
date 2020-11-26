@@ -9,10 +9,39 @@ import sys
 import tarfile
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import IO, Union
+from typing import IO, Union, Tuple
 
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 from tqdm import tqdm
+
+
+def requests_retry_session(
+        retries: int = 3,
+        backoff_factor: float = 0.3,
+        status_forcelist: Tuple[int, ...] = (500, 502, 504)) -> requests.Session:
+    """Create a ``requests.Session`` object that automatically retries failed downloads
+
+    Args:
+        retries: Number of times to retry a failed download
+        backoff_factor: Delay between successive download attempts
+        status_forcelist: Force a retry for the given status codes
+    """
+
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=status_forcelist,
+    )
+
+    adapter = HTTPAdapter(max_retries=retry)
+    session = requests.Session()
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
 
 
 def download_file(
@@ -45,7 +74,7 @@ def download_file(
 
     if verbose:
         tqdm.write(f'Fetching {url}', file=sys.stdout)
-        response = requests.get(url, stream=True, timeout=timeout)
+        response = requests_retry_session().get(url, stream=True, timeout=timeout)
 
         total = int(response.headers.get('content-length', 0))
         chunk_size = 1024
@@ -55,7 +84,7 @@ def download_file(
                 pbar.update(destination.write(data))
 
     else:
-        response = requests.get(url, timeout=timeout)
+        response = requests_retry_session().get(url, timeout=timeout)
         response.raise_for_status()
         destination.write(response.content)
         destination.write(response.content)

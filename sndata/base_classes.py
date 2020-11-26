@@ -29,7 +29,7 @@ class Base(metaclass=abc.ABCMeta):
     """Abstract class acting as a base for all data access classes"""
 
     # General metadata
-    publications: Tuple
+    publications: Tuple[str, ...]
     ads_url: str
     survey_name: str
     survey_abbrev: str
