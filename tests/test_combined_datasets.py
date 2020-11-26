@@ -11,7 +11,7 @@ from astropy.table import vstack
 
 from sndata import CombinedDataset
 from sndata import csp, des
-from sndata._combine_data import _reduce_id_mapping
+from sndata._combine_data import reduce_id_mapping
 from .data_parsing_template_tests import PhotometricDataParsing
 from .test_exceptions import InvalidTableId
 
@@ -110,25 +110,25 @@ class CombinedDataStringIDs(TestCase):
 
 
 class MapReduction(TestCase):
-    """Tests for the _reduce_id_mapping function"""
+    """Tests for the reduce_id_mapping function"""
 
     def test_empty_sets(self):
-        """Test _reduce_id_mapping removes empty sets"""
+        """Test reduce_id_mapping removes empty sets"""
 
         map_in = [{1, 2, 3}, {4, 5}, {}]
         expected_map = [{1, 2, 3}, {4, 5}]
-        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))
+        self.assertListEqual(expected_map, reduce_id_mapping(map_in))
 
     def test_joining(self):
-        """Test _reduce_id_mapping correctly joins sets"""
+        """Test reduce_id_mapping correctly joins sets"""
 
         map_in = [{1, 2, 3}, {3, 4}, {5, 6}, {6, 7}, {7, 8}]
         expected_map = [{1, 2, 3, 4}, {5, 6, 7, 8}]
-        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))
+        self.assertListEqual(expected_map, reduce_id_mapping(map_in))
 
     def test_single_value_sets(self):
-        """Test _reduce_id_mapping removes empty of length 1"""
+        """Test reduce_id_mapping removes empty of length 1"""
 
         map_in = [{1, 2, 3}, {4, 5}, {7}]
         expected_map = [{1, 2, 3}, {4, 5}]
-        self.assertListEqual(expected_map, _reduce_id_mapping(map_in))
+        self.assertListEqual(expected_map, reduce_id_mapping(map_in))

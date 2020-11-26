@@ -11,9 +11,9 @@ from urllib.parse import urljoin
 import numpy as np
 from astropy.table import Column, Table
 
-from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
+from ..utils import downloads, unit_conversion
 
 
 @np.vectorize
@@ -31,7 +31,7 @@ def _construct_band_name(filter_id: int, ccd_id: int) -> str:
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
-def _format_sncosmo_table(data_table: Table) -> Table:
+def _format_table_to_sncosmo(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
@@ -210,7 +210,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         for i, name in enumerate(col_names):
             data[f'col{i + 1}'].name = name
 
-        data['JD'] = utils.convert_to_jd(data['MJD'], format='mjd')
+        data['JD'] = unit_conversion.convert_to_jd(data['MJD'], format='mjd')
 
         # Add meta data
         master_table = self.load_table('master')
@@ -230,7 +230,7 @@ class Sako18(PhotometricRelease, DefaultParser):
             data = data[keep_indices]
 
         if format_table:
-            data = _format_sncosmo_table(data)
+            data = _format_table_to_sncosmo(data)
 
         return data
 
@@ -243,7 +243,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         """
 
         # Photometry
-        utils.download_tar(
+        downloads.download_tar(
             url=self._smp_url,
             out_dir=self._data_dir,
             skip_exists=self._smp_dir,
@@ -253,7 +253,7 @@ class Sako18(PhotometricRelease, DefaultParser):
         )
 
         # SNANA files - including files specifying "bad" photometry data points
-        utils.download_tar(
+        downloads.download_tar(
             url=self._snana_url,
             out_dir=self._data_dir,
             skip_exists=self._snana_dir,
@@ -269,7 +269,7 @@ class Sako18(PhotometricRelease, DefaultParser):
                 data.extractall(str(outlier_archive.parent))
 
         for file_name in self._table_names:
-            utils.download_file(
+            downloads.download_file(
                 url=self._base_url + file_name,
                 destination=self._table_dir / file_name,
                 force=force,
@@ -277,7 +277,7 @@ class Sako18(PhotometricRelease, DefaultParser):
             )
 
         for file_name in self._filter_file_names:
-            utils.download_file(
+            downloads.download_file(
                 url=self._filter_url + file_name,
                 destination=self._filter_dir / file_name,
                 force=force,

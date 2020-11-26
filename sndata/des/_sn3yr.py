@@ -9,12 +9,12 @@ from typing import Union
 import numpy as np
 from astropy.table import Table
 
-from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 from ..exceptions import InvalidObjId
+from ..utils import unit_conversion, downloads
 
 
-def _format_sncosmo_table(data_table: Table) -> Table:
+def _format_table_to_sncosmo(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
@@ -27,7 +27,7 @@ def _format_sncosmo_table(data_table: Table) -> Table:
     out_table = Table()
     out_table.meta = data_table.meta
 
-    out_table['time'] = utils.convert_to_jd(data_table['MJD'], format='MJD')
+    out_table['time'] = unit_conversion.convert_to_jd(data_table['MJD'], format='MJD')
     out_table['band'] = ['des_sn3yr_' + s for s in data_table['BAND']]
     out_table['flux'] = data_table['FLUXCAL']
     out_table['fluxerr'] = data_table['FLUXCALERR']
@@ -181,7 +181,7 @@ class SN3YR(PhotometricRelease, DefaultParser):
             del data.meta['comments']
 
         if format_table:
-            data = _format_sncosmo_table(data)
+            data = _format_table_to_sncosmo(data)
 
         return data
 
@@ -194,7 +194,7 @@ class SN3YR(PhotometricRelease, DefaultParser):
         """
 
         # Download filters
-        utils.download_tar(
+        downloads.download_tar(
             url=self._filter_url,
             out_dir=self._data_dir,
             skip_exists=self._filter_dir,
@@ -204,7 +204,7 @@ class SN3YR(PhotometricRelease, DefaultParser):
         )
 
         # Download photometry data
-        utils.download_tar(
+        downloads.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir,
             skip_exists=self._photometry_dir,
@@ -214,7 +214,7 @@ class SN3YR(PhotometricRelease, DefaultParser):
         )
 
         # Download supplementary tables
-        utils.download_tar(
+        downloads.download_tar(
             url=self._fits_url,
             out_dir=self._data_dir,
             skip_exists=self._fits_dir,

@@ -7,8 +7,10 @@ from unittest import TestCase
 
 import numpy as np
 
+import sndata
 from sndata import utils as utils
 from sndata.exceptions import NoDownloadedData
+from sndata.utils import unit_conversion, data_parsing
 
 
 class HourangleToDegrees(TestCase):
@@ -17,7 +19,7 @@ class HourangleToDegrees(TestCase):
     def test_coordinates_0_0(self):
         """Test a zero hourangle returns zero degrees"""
 
-        ra, dec = utils.hourangle_to_degrees(0, 0, 0, '+', 0, 0, 0)
+        ra, dec = unit_conversion.hourangle_to_degrees(0, 0, 0, '+', 0, 0, 0)
         self.assertEqual(0, ra)
         self.assertEqual(0, dec)
 
@@ -33,7 +35,7 @@ class FindDataDir(TestCase):
 
         old_dir = os.environ.get('SNDATA_DIR', None)
         os.environ['SNDATA_DIR'] = f'/{base_dir}'
-        recovered_dir = utils.find_data_dir(survey, release)
+        recovered_dir = data_parsing.find_data_dir(survey, release)
 
         if old_dir is None:
             del os.environ['SNDATA_DIR']
@@ -48,19 +50,18 @@ class FindDataDir(TestCase):
 
         survey = 'dummy_survey'
         release = 'dummy_release'
-        expected_path = Path(utils.__file__).resolve().parent / 'data' / survey / release
-        recovered_dir = utils.find_data_dir(survey, release)
-        self.assertEqual(expected_path, recovered_dir)
+        expected_path = Path(sndata.__file__).resolve().parent / 'data' / survey / release
+        recovered_dir = data_parsing.find_data_dir(survey, release)
+        self.assertEqual(recovered_dir, expected_path)
 
     def test_enforces_lowercase(self):
         """Test returned directories are always lowercase"""
 
         survey = 'dummy_survey'
         release = 'dummy_release'
-        expected_path = Path(utils.__file__).resolve().parent / 'data' / survey / release
-
-        recovered_dir = utils.find_data_dir(survey.upper(), release.upper())
-        self.assertEqual(expected_path, recovered_dir)
+        expected_path = Path(sndata.__file__).resolve().parent / 'data' / survey / release
+        recovered_dir = data_parsing.find_data_dir(survey.upper(), release.upper())
+        self.assertEqual(recovered_dir, expected_path)
 
 
 class ConvertToJD(TestCase):
@@ -79,14 +80,14 @@ class ConvertToJD(TestCase):
         """Test conversion of the snoopy date format to JD"""
 
         self.assertEqual(
-            self.expected_jd, utils.convert_to_jd(self.snoopy_date, 'snpy'),
+            self.expected_jd, unit_conversion.convert_to_jd(self.snoopy_date, 'snpy'),
             'Incorrect date for snoopy format')
 
     def test_mjd_format(self):
         """Test conversion of the MJD format to JD"""
 
         self.assertEqual(
-            self.expected_jd, utils.convert_to_jd(self.mjd_date, 'mjd'),
+            self.expected_jd, unit_conversion.convert_to_jd(self.mjd_date, 'mjd'),
             'Incorrect date for MJD format')
 
 
@@ -97,4 +98,4 @@ class RequireDataPath(TestCase):
         """Test a ``NoDownloadedData`` error is raised"""
 
         fake_dir = Path('./This_dir_is_fake')
-        self.assertRaises(NoDownloadedData, utils.require_data_path, fake_dir)
+        self.assertRaises(NoDownloadedData, data_parsing.require_data_path, fake_dir)

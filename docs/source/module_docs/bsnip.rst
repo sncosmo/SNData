@@ -12,7 +12,7 @@ Berkeley Supernova Ia Program (BSNIP)
 .. _Stahl et al. 2020: https://ui.adsabs.harvard.edu/abs/2012MNRAS.425.1789S/abstract
 
 Stahl et al. 2020 (Spectroscopic)
---------------------------------
+---------------------------------
 
 .. autoclass:: sndata.bsnip.Stahl20
    :members:
