@@ -308,7 +308,7 @@ class DefaultParser:
 
         # Read data from file and add meta data from the readme
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description = data_parsing.read_vizier_table_descriptions(readme_path)[table_id]
+        description = data_parsing.parse_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description
         return data
 

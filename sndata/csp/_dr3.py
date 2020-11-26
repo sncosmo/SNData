@@ -10,46 +10,7 @@ import numpy as np
 from astropy.table import Table
 
 from sndata.base_classes import DefaultParser, PhotometricRelease
-from sndata.utils import downloads, unit_conversion
-
-
-def parse_snoopy_data(path: str):
-    """Return data from a snoopy file as an astropy table
-
-    Args:
-        path: The file path of a snoopy input file
-
-    Returns:
-        An astropy table with columns 'time', 'band', 'mag', and 'mag_err'
-    """
-
-    out_table = Table(
-        names=['time', 'band', 'mag', 'mag_err'],
-        dtype=[float, object, float, float]
-    )
-
-    with open(path) as ofile:
-        # Get meta data from first line
-        name, z, ra, dec = ofile.readline().split()
-        out_table.meta['obj_id'] = name
-        out_table.meta['ra'] = float(ra)
-        out_table.meta['dec'] = float(dec)
-        out_table.meta['z'] = float(z)
-        out_table.meta['z_err'] = None
-
-        # Read photometric data from the rest of the file
-        band = None
-        for line in ofile.readlines():
-            line_list = line.split()
-            if line.startswith('filter'):
-                band = line_list[1]
-                continue
-
-            time, mag, mag_err = line_list
-            out_table.add_row([time, band, mag, mag_err])
-
-    out_table['time'] = unit_conversion.convert_to_jd(out_table['time'], format='snpy')
-    return out_table
+from sndata.utils import downloads, data_parsing
 
 
 def fix_dr3_readme(readme_path: str):
@@ -196,7 +157,7 @@ class DR3(DefaultParser, PhotometricRelease):
 
         # Read data file for target
         file_path = self._photometry_dir / f'SN{obj_id}_snpy.txt'
-        data_table = parse_snoopy_data(file_path)
+        data_table = data_parsing.parse_snoopy_path(file_path)
         data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
         if format_table:

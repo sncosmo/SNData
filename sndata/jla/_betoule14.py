@@ -197,7 +197,7 @@ class Betoule14(PhotometricRelease):
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
-        description_dict = data_parsing.read_vizier_table_descriptions(readme_path)
+        description_dict = data_parsing.parse_vizier_table_descriptions(readme_path)
         data.meta['description'] = description_dict[f'{table_id}']
         return data
 
