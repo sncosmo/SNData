@@ -1,25 +1,54 @@
-from typing import List, Tuple
+from typing import List
 
 from astropy.table import Table
 
 from ..base_classes import PhotometricRelease, VizierTableId
+from ..utils import downloads
 
 
-class Base(PhotometricRelease):
-    """Abstract class acting as a base for all data access classes"""
+def format_data_to_sncosmo(light_curve: Table) -> Table:
+    """Format a PLaSTICC light-curve to be compatible with sncosmo
 
-    # General metadata
-    publications: Tuple
-    ads_url: str
-    survey_name: str
-    survey_abbrev: str
-    release: str
-    survey_url: str
-    data_type: str
+    Args:
+        light_curve: Table of PLaSTICC light-curve data
+
+    Returns:
+        An astropy table formatted for use with sncosmo
+    """
+
+    lc = Table({
+        'time': light_curve['MJD'],
+        'band': ['lsst_hardware_' + f.lower().strip() for f in light_curve['FLT']],
+        'flux': light_curve['FLUXCAL'],
+        'fluxerr': light_curve['FLUXCALERR'],
+        'zp': light_curve['ZEROPT'],
+        'photflag': light_curve['PHOTFLAG']
+    })
+
+    lc['zpsys'] = 'AB'
+    lc.meta = light_curve.meta
+    return lc
+
+
+class AltSched(PhotometricRelease):
+
+    publications = ('The PLAsTiCC Team et al. 2018')
+    ads_url = 'https://ui.adsabs.harvard.edu/abs/2018arXiv181000001T/abstract'
+    survey_name = 'Photometric LSST Astronomical Time-Series Classification Challenge '
+    survey_abbrev = 'PLaSTICC'
+    release = 'alt_sched'
+    survey_url = 'https://plasticc.org/'
+
+    def __init__(self):
+        super().__init__()
+        self._data_url = 'https://zenodo.org/record/3604380/files/alt_sched.tar.gz'
+        self._photometry_dir = self._data_dir / 'alt_sched'
+        self._optimized_dir = self._data_dir / 'optimized'
 
     def _get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""
-        pass
+
+        return []
 
     def _load_table(self, table_id: VizierTableId) -> Table:
         """Return a Vizier table published by this data release
@@ -27,7 +56,8 @@ class Base(PhotometricRelease):
         Args:
             table_id: The published table number or table name
         """
-        pass
+
+        raise NotImplementedError('Tables not available for the current data release')
 
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey
@@ -35,7 +65,8 @@ class Base(PhotometricRelease):
         Returns:
             A list of object IDs as strings
         """
-        pass
+
+        return sorted(f.stem for f in self._optimized_dir.glob('*.ecsv'))
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
         """Returns data for a given object ID
@@ -49,6 +80,17 @@ class Base(PhotometricRelease):
         Returns:
             An astropy table of data for the given ID
         """
+
+        data = Table.read(self._optimized_dir / f'{obj_id}.ecsv')
+        if format_table:
+            data = format_data_to_sncosmo(data)
+
+        return data
+
+    def _build_optimized_version(self) -> None:
+        """Convert downloaded data from .fits to .ecsv files"""
+
+        # Todo: Build optimized version from data
         pass
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
@@ -58,4 +100,13 @@ class Base(PhotometricRelease):
             force: Re-Download locally available data
             timeout: Seconds before timeout for individual files/archives
         """
-        pass
+
+        downloads.download_tar(
+            url=self._data_url,
+            out_dir=self._photometry_dir,
+            skip_exists=self._photometry_dir,
+            timeout=timeout
+        )
+
+        # Todo: Unzip downloaded data
+        self._build_optimized_version()
