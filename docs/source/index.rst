@@ -114,3 +114,7 @@ check the `Server Status Page`_.
    package_api/sndata
    package_api/base_classes
    package_api/utils
+   package_api/utils.data_parsing.rst
+   package_api/utils.downloads.rst
+   package_api/utils.unit_conversion.rst
+   package_api/utils.wrappers.rst

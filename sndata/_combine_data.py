@@ -11,8 +11,8 @@ import pandas as pd
 from astropy.table import Table, vstack
 
 from . import csp, des, essence, jla, loss, sdss, sweetspot
-from . import utils as utils
-from .exceptions import InvalidObjId, InvalidTableId
+from .exceptions import InvalidObjId, InvalidTableId, NoDownloadedData
+from .utils import wrappers
 
 CombinedID = Union[str, Tuple[str, str, str]]
 
@@ -47,7 +47,7 @@ def get_zp(band_name: str) -> float:
     return data_class.get_zp_for_band(band_name)
 
 
-def _reduce_id_mapping(id_list: List[CombinedID]) -> list:
+def reduce_id_mapping(id_list: List[CombinedID]) -> list:
     """Combine a list of sets by joining any sets with shared elements
 
     Args
@@ -304,7 +304,7 @@ class CombinedDataset:
         if filter_func is None:
             filter_func = lambda x: x
 
-        for obj_id in utils.build_pbar(self.get_available_ids(), verbose):
+        for obj_id in wrappers.build_pbar(self.get_available_ids(), verbose):
             data = self.get_data_for_id(obj_id, format_table=format_table)
             if filter_func(data):
                 yield data
@@ -320,8 +320,8 @@ class CombinedDataset:
             try:
                 data_class.register_filters(force=force)
 
-            except utils.NoDownloadedData:
-                raise utils.NoDownloadedData(
+            except NoDownloadedData:
+                raise NoDownloadedData(
                     f'No data downloaded for {data_class.__name__}')
 
     def download_module_data(self, force: bool = False, timeout: int = 15):
@@ -365,7 +365,7 @@ class CombinedDataset:
             raise TypeError('Can only join object Id\'s as tuples')
 
         self._joined_ids.append(set(obj_ids))
-        self._joined_ids = _reduce_id_mapping(self._joined_ids)
+        self._joined_ids = reduce_id_mapping(self._joined_ids)
 
     def separate_ids(self, *obj_ids: CombinedID):
         """Separate object IDs so they are no longer joined to other IDs
@@ -382,4 +382,4 @@ class CombinedDataset:
         for obj_id_set in self._joined_ids:
             obj_id_set -= obj_ids
 
-        self._joined_ids = _reduce_id_mapping(self._joined_ids)
+        self._joined_ids = reduce_id_mapping(self._joined_ids)

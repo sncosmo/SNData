@@ -8,12 +8,12 @@ from typing import List
 
 from astropy.table import Table, vstack
 
-from .. import utils
 from ..base_classes import DefaultParser, SpectroscopicRelease
+from ..utils import downloads
 
 
-def read_dr1_file(path: str, format_table: bool = False) -> Table:
-    """Read a file path of spectroscopic data from CSP DR1
+def read_csp_spectroscopy_file(path: str, format_table: bool = False) -> Table:
+    """Read a file path of spectroscopic data from CSP
 
     Args:
         path: Path of file to read
@@ -67,7 +67,7 @@ def read_dr1_file(path: str, format_table: bool = False) -> Table:
     return data
 
 
-class DR1(SpectroscopicRelease, DefaultParser):
+class DR1(DefaultParser, SpectroscopicRelease):
     """The ``DR1`` class provides access to spectra from the first release of
     optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
     the Carnegie Supernova Project. It includes 604 previously unpublished
@@ -128,7 +128,7 @@ class DR1(SpectroscopicRelease, DefaultParser):
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
-        return vstack([read_dr1_file(path, format_table) for path in files])
+        return vstack([read_csp_spectroscopy_file(path, format_table) for path in files])
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release
@@ -138,7 +138,7 @@ class DR1(SpectroscopicRelease, DefaultParser):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -148,7 +148,7 @@ class DR1(SpectroscopicRelease, DefaultParser):
         )
 
         # Download spectra
-        utils.download_tar(
+        downloads.download_tar(
             url=self._spectra_url,
             out_dir=self._data_dir,
             skip_exists=self._spectra_dir,

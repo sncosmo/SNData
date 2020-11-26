@@ -8,9 +8,9 @@ from pathlib import Path
 
 from astropy.table import Table, vstack
 
-from .. import utils
 from ..base_classes import DefaultParser, SpectroscopicRelease
 from ..exceptions import InvalidObjId
+from ..utils import downloads, unit_conversion
 
 
 def fix_balland09_cds_readme(readme_path):
@@ -31,7 +31,7 @@ def fix_balland09_cds_readme(readme_path):
         data_in.writelines(lines)
 
 
-class Balland09(SpectroscopicRelease, DefaultParser):
+class Balland09(DefaultParser, SpectroscopicRelease):
     """The ``Balland09`` class  provides access to to the three year data
     release of the Supernova Legacy Survey (SNLS) performed by the
     Canada-France-Hawaii Telescope (CFHT). It includes 139 spectra of 124
@@ -106,7 +106,7 @@ class Balland09(SpectroscopicRelease, DefaultParser):
         # Get object coordinates
         table1 = self.load_table(1)
         table1_object_data = table1[table1['SN'] == obj_id][0]
-        ra, dec = utils.hourangle_to_degrees(
+        ra, dec = unit_conversion.hourangle_to_degrees(
             rah=table1_object_data['RAh'],
             ram=table1_object_data['RAm'],
             ras=table1_object_data['RAs'],
@@ -141,7 +141,7 @@ class Balland09(SpectroscopicRelease, DefaultParser):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -157,7 +157,7 @@ class Balland09(SpectroscopicRelease, DefaultParser):
         spec_urls = self._phase_spectra_url, self._snonly_spectra_url
         names = 'combined', 'sn_only'
         for spectra_url, data_name in zip(spec_urls, names):
-            utils.download_tar(
+            downloads.download_tar(
                 url=spectra_url,
                 out_dir=self._spectra_dir / data_name,
                 skip_exists=self._spectra_dir / data_name,

@@ -9,11 +9,11 @@ from typing import List
 import numpy as np
 from astropy.table import Table
 
-from sndata import utils as utils
 from sndata.base_classes import DefaultParser, PhotometricRelease
+from sndata.utils import downloads, unit_conversion
 
 
-def parse_snoopy_data(path: str):
+def parse_snoopy_path(path: str):
     """Return data from a snoopy file as an astropy table
 
     Args:
@@ -48,7 +48,7 @@ def parse_snoopy_data(path: str):
             time, mag, mag_err = line_list
             out_table.add_row([time, band, mag, mag_err])
 
-    out_table['time'] = utils.convert_to_jd(out_table['time'], format='snpy')
+    out_table['time'] = unit_conversion.convert_to_jd(out_table['time'], format='snpy')
     return out_table
 
 
@@ -88,7 +88,7 @@ def fix_dr3_readme(readme_path: str):
         readme.writelines(lines)
 
 
-class DR3(PhotometricRelease, DefaultParser):
+class DR3(DefaultParser, PhotometricRelease):
     """The ``DR3`` class provides access to data from the third data release of
     the Carnegie Supernova Project (CSP) which includes natural-system optical
     (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that
@@ -196,7 +196,7 @@ class DR3(PhotometricRelease, DefaultParser):
 
         # Read data file for target
         file_path = self._photometry_dir / f'SN{obj_id}_snpy.txt'
-        data_table = parse_snoopy_data(file_path)
+        data_table = parse_snoopy_path(file_path)
         data_table.meta['obj_id'] = data_table.meta['obj_id'].lstrip('SN')
 
         if format_table:
@@ -222,7 +222,7 @@ class DR3(PhotometricRelease, DefaultParser):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._table_url,
             out_dir=self._table_dir,
             skip_exists=self._table_dir,
@@ -237,7 +237,7 @@ class DR3(PhotometricRelease, DefaultParser):
             fix_dr3_readme(readme_path)
 
         # Download photometry
-        utils.download_tar(
+        downloads.download_tar(
             url=self._photometry_url,
             out_dir=self._data_dir,
             skip_exists=self._photometry_dir,
@@ -247,7 +247,7 @@ class DR3(PhotometricRelease, DefaultParser):
         )
 
         for file_name in self._filter_file_names:
-            utils.download_file(
+            downloads.download_file(
                 url=self._filter_url + file_name,
                 destination=self._filter_dir / file_name,
                 force=force,

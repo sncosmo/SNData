@@ -3,11 +3,14 @@ sndata.base_classes
 
 .. automodule:: sndata.base_classes
 
-VizierTables
-------------
 
-.. autoclass:: sndata.base_classes.DefaultParser
-   :members: _get_available_tables, _load_table, _register_filters
+Base
+----
+
+.. autoclass:: sndata.base_classes.Base
+   :members:
+   :private-members:
+
 
 SpectroscopicRelease
 --------------------
@@ -20,3 +23,9 @@ PhotometricRelease
 
 .. autoclass:: sndata.base_classes.PhotometricRelease
    :members:
+
+DefaultParser
+-------------
+
+.. autoclass:: sndata.base_classes.DefaultParser
+   :members: _get_available_tables, _load_table, _register_filters

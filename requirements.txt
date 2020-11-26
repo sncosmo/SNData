@@ -1,9 +1,10 @@
 beautifulsoup4
 astropy
 cython
-numpy >= 1.16.4
+numpy >= 1.17.0
 pandas
 pyyaml
 requests
 tqdm
 sncosmo
+pytz
