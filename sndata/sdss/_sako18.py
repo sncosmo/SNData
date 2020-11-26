@@ -31,7 +31,7 @@ def _construct_band_name(filter_id: int, ccd_id: int) -> str:
     return f'sdss_sako18_{"ugriz"[filter_id]}{ccd_id}'
 
 
-def _format_sncosmo_table(data_table: Table) -> Table:
+def _format_table_to_sncosmo(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
@@ -230,7 +230,7 @@ class Sako18(PhotometricRelease, DefaultParser):
             data = data[keep_indices]
 
         if format_table:
-            data = _format_sncosmo_table(data)
+            data = _format_table_to_sncosmo(data)
 
         return data
 

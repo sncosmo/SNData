@@ -9,7 +9,62 @@ from typing import List
 from astropy.table import Table, vstack
 
 from ..base_classes import DefaultParser, SpectroscopicRelease
-from ..utils import downloads, data_parsing
+from ..utils import downloads
+
+
+def read_csp_spectroscopy_file(path: str, format_table: bool = False) -> Table:
+    """Read a file path of spectroscopic data from CSP
+
+    Args:
+        path: Path of file to read
+        format_table: Format table to a sndata standard format
+
+    Returns:
+        An astropy table with file data and meta data
+    """
+
+    path = Path(path)
+    obj_id = '20' + path.name.split('_')[0].lstrip('SN')
+
+    # Handle the single file with a different data model:
+    # This file has three columns instead of two
+    if path.stem == 'SN07bc_070409_b01_BAA_IM':
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux', '_'])
+        data.remove_column('_')
+
+    else:
+        data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
+
+    # Read the table meta data
+    file_comments = data.meta['comments']
+    redshift = float(file_comments[1].lstrip('Redshift: '))
+    obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
+    epoch = float(file_comments[4].lstrip('Epoch: '))
+
+    # Add meta data to output table according to sndata standard
+    data.meta['obj_id'] = obj_id
+    data.meta['ra'] = None
+    data.meta['dec'] = None
+    data.meta['z'] = redshift
+    data.meta['z_err'] = None
+    del data.meta['comments']
+
+    data['time'] = obs_date
+    if format_table:
+        # Add remaining columns. These values are constant for a single file
+        # (i.e. a single spectrum) but vary across files (across spectra)
+        _, _, w_range, telescope, instrument = path.stem.split('_')
+        data['epoch'] = epoch
+        data['wavelength_range'] = w_range
+        data['telescope'] = telescope
+        data['instrument'] = instrument
+
+        # Enforce an intuitive column order
+        data = data[[
+            'time', 'wavelength', 'flux', 'epoch',
+            'wavelength_range', 'telescope', 'instrument']]
+
+    return data
 
 
 class DR1(DefaultParser, SpectroscopicRelease):
@@ -73,7 +128,7 @@ class DR1(DefaultParser, SpectroscopicRelease):
         if not files:
             raise ValueError(f'No data found for obj_id {obj_id}')
 
-        return vstack([data_parsing.read_csp_spectroscopy_file(path, format_table) for path in files])
+        return vstack([read_csp_spectroscopy_file(path, format_table) for path in files])
 
     def _download_module_data(self, force: bool = False, timeout: float = 15):
         """Download data for the current survey / data release

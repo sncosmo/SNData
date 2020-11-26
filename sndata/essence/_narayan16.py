@@ -14,7 +14,7 @@ from ..exceptions import InvalidObjId
 from ..utils import downloads, unit_conversion
 
 
-def _format_table(data_table: Table) -> Table:
+def _format_table_to_sncosmo(data_table: Table) -> Table:
     """Format a data table for use with SNCosmo
 
     Args:
@@ -132,7 +132,7 @@ class Narayan16(DefaultParser, PhotometricRelease):
         del data_table.meta['comments']
 
         if format_table:
-            data_table = _format_table(data_table)
+            data_table = _format_table_to_sncosmo(data_table)
 
         return data_table
 
