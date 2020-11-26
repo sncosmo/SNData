@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """The ``unit_conversion`` handles the conversion of values between different
-units / timezones.
+units / timezones / systems of measurement.
 """
 
 from datetime import datetime

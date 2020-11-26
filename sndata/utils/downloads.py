@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""The ``downloads`` module supports downloading data in various file formats."""
+"""The ``downloads`` module supports downloading data files in various file
+formats.
+"""
 
 import sys
 import tarfile

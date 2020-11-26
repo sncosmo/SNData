@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""The ``wrappers`` is home to any function or object wrappers used by the
+"""The ``wrappers`` contains function or object wrappers used by the
 parent package.
 """
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-"""The ``data_parsing`` module provides general utilities related to parsing
-data located on the local machine.
+"""The ``data_parsing`` module provides file parsing tools for any file formats
+used by multiple astronomical surveys and / or data releases. It is also
+responsible for locating and registering data located on the local machine.
 """
 
 import os
