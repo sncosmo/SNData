@@ -7,6 +7,7 @@ from unittest import TestCase
 
 import numpy as np
 
+import sndata
 from sndata import utils as utils
 from sndata.exceptions import NoDownloadedData
 from sndata.utils import unit_conversion, data_parsing
@@ -49,19 +50,18 @@ class FindDataDir(TestCase):
 
         survey = 'dummy_survey'
         release = 'dummy_release'
-        expected_path = Path(utils.__file__).resolve().parent / 'data' / survey / release
+        expected_path = Path(sndata.__file__).resolve().parent / 'data' / survey / release
         recovered_dir = data_parsing.find_data_dir(survey, release)
-        self.assertEqual(expected_path, recovered_dir)
+        self.assertEqual(recovered_dir, expected_path)
 
     def test_enforces_lowercase(self):
         """Test returned directories are always lowercase"""
 
         survey = 'dummy_survey'
         release = 'dummy_release'
-        expected_path = Path(utils.__file__).resolve().parent / 'data' / survey / release
-
+        expected_path = Path(sndata.__file__).resolve().parent / 'data' / survey / release
         recovered_dir = data_parsing.find_data_dir(survey.upper(), release.upper())
-        self.assertEqual(expected_path, recovered_dir)
+        self.assertEqual(recovered_dir, expected_path)
 
 
 class ConvertToJD(TestCase):

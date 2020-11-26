@@ -10,7 +10,7 @@ import numpy as np
 from astropy.table import Table
 
 from sndata.base_classes import DefaultParser, PhotometricRelease
-from sndata.utils import downloads
+from sndata.utils import downloads, unit_conversion
 
 
 def parse_snoopy_path(path: str):
