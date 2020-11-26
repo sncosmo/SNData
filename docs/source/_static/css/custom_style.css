@@ -1,0 +1,12 @@
+.wy-nav-content {
+    max-width: 60%;
+}
+
+.wy-nav-side {
+    max-width: 25%;
+}
+
+td {
+    background-color: whitesmoke !important;
+    border-left-width: 1px !important;
+}
