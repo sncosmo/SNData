@@ -9,6 +9,7 @@ import functools
 import os
 import sys
 import tarfile
+import warnings
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -23,6 +24,18 @@ from pytz import utc
 from tqdm import tqdm
 
 from .exceptions import NoDownloadedData
+
+
+def ignore_warnings_wrapper(func: callable) -> callable:
+    """Ignores warnings issued by the wrapped function call"""
+
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            return func(*args, **kwargs)
+
+    return inner
 
 
 def hourangle_to_degrees(

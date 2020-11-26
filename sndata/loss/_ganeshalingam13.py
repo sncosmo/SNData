@@ -15,7 +15,7 @@ from .. import utils
 from ..base_classes import DefaultParser, PhotometricRelease
 
 
-class Ganeshalingam13(PhotometricRelease, DefaultParser):
+class Ganeshalingam13(DefaultParser, PhotometricRelease):
     """The ``Ganeshalingam13`` class provides access to BVRI light curves of
     165 objects published by the first data release of the Lick Observatory
     Supernova Search (LOSS) conducted between 1998 and 2008.

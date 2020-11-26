@@ -67,7 +67,7 @@ def read_dr1_file(path: str, format_table: bool = False) -> Table:
     return data
 
 
-class DR1(SpectroscopicRelease, DefaultParser):
+class DR1(DefaultParser, SpectroscopicRelease):
     """The ``DR1`` class provides access to spectra from the first release of
     optical spectroscopic data of low-redshift Type Ia supernovae (SNe Ia) by
     the Carnegie Supernova Project. It includes 604 previously unpublished

@@ -88,7 +88,7 @@ def fix_dr3_readme(readme_path: str):
         readme.writelines(lines)
 
 
-class DR3(PhotometricRelease, DefaultParser):
+class DR3(DefaultParser, PhotometricRelease):
     """The ``DR3`` class provides access to data from the third data release of
     the Carnegie Supernova Project (CSP) which includes natural-system optical
     (ugriBV) and near-infrared (YJH) photometry of 134 supernovae (SNe) that

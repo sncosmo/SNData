@@ -31,7 +31,7 @@ def fix_balland09_cds_readme(readme_path):
         data_in.writelines(lines)
 
 
-class Balland09(SpectroscopicRelease, DefaultParser):
+class Balland09(DefaultParser, SpectroscopicRelease):
     """The ``Balland09`` class  provides access to to the three year data
     release of the Supernova Legacy Survey (SNLS) performed by the
     Canada-France-Hawaii Telescope (CFHT). It includes 139 spectra of 124
