@@ -4,6 +4,12 @@ Change Log
 This page documents any API changes between different versions of the
 ``sndata`` package.
 
+V 1.2.2
+-------
+
+- Introduces the abstract ``sndata.base_classes.Base`` class.
+- Logic from the ``sndata.utils`` module is broken into multiple sub-modules.
+
 V 1.2.1
 -------
 
