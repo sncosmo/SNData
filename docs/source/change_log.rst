@@ -7,8 +7,9 @@ This page documents any API changes between different versions of the
 V 1.2.2
 -------
 
-- Introduces the abstract ``sndata.base_classes.Base`` class.
-- Logic from the ``sndata.utils`` module is broken into multiple sub-modules.
+- Introduces the abstract `sndata.base_classes.Base` 
+- Logic from the `sndata.utils` module is moved into multiple sub-modules.
+- Increases required numpy version to >= 1.17.0 
 
 V 1.2.1
 -------
