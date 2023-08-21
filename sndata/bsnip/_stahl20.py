@@ -24,6 +24,8 @@ class Stahl20(SpectroscopicRelease):
     Deviations from the standard UI:
         - Metadata such as object Ra, DEC, and redshifts are not included
           in the official data release files.
+        - Reported error values may or may not be available depending on the
+          particular published spectra.
 
     Cuts on returned data:
         - None
