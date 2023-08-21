@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the BSNIP Stahl20 API"""
 
 from typing import List
@@ -8,8 +5,8 @@ from typing import List
 from astropy.io.ascii.core import InconsistentTableError
 from astropy.table import Table, vstack
 
-from .. import utils
 from ..base_classes import SpectroscopicRelease
+from ..utils import unit_conversion, downloads
 
 
 class Stahl20(SpectroscopicRelease):
@@ -104,7 +101,7 @@ class Stahl20(SpectroscopicRelease):
                     names=['wavelength', 'flux'])
 
             if format_table:
-                table['time'] = utils.convert_to_jd(row['UT_Date'], format='UT')
+                table['time'] = unit_conversion.convert_to_jd(row['UT_Date'], format='UT')
                 table['instrument'] = row['Instrument']
 
             data_tables.append(table)
@@ -128,14 +125,14 @@ class Stahl20(SpectroscopicRelease):
             timeout: Seconds before timeout for individual files/archives
         """
 
-        utils.download_file(
+        downloads.download_file(
             url=self._meta_table_url,
             destination=self._meta_table_path,
             force=force,
             timeout=timeout
         )
 
-        utils.download_tar(
+        downloads.download_tar(
             url=self._spectra_url,
             out_dir=self._data_dir,
             skip_exists=self._spectra_dir,
