@@ -97,6 +97,7 @@ check the `Server Status Page`_.
    :maxdepth: 1
    :caption: Data Releases:
 
+   module_docs/bsnip
    module_docs/csp
    module_docs/des
    module_docs/essence
