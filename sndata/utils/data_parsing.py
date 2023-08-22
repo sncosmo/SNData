@@ -93,7 +93,7 @@ def parse_vizier_table_descriptions(readme_path: Union[Path, str]):
                 table_desc += ' ' + line.strip()
                 line = next(ofile)
 
-            table_descriptions[table_num] = table_desc
+            table_descriptions[str(table_num)] = table_desc
 
     return table_descriptions
 

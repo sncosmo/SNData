@@ -119,7 +119,7 @@ class SpectroscopicRelease(Base, metaclass=abc.ABCMeta):
         self.release = release if release else self.release
 
         self._data_dir = data_parsing.find_data_dir(self.survey_abbrev, self.release)
-        self._table_dir = self._data_dir / 'tables'
+        self._tables_dir = self._data_dir / 'tables'
 
     def get_available_tables(self) -> List[VizierTableId]:
         """Get Ids for available vizier tables published by this data release"""

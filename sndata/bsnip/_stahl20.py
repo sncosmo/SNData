@@ -2,11 +2,12 @@
 
 from typing import List
 
+from astropy.io import ascii
 from astropy.io.ascii.core import InconsistentTableError
 from astropy.table import Table, vstack
 
 from ..base_classes import SpectroscopicRelease
-from ..utils import unit_conversion, downloads
+from ..utils import unit_conversion, downloads, data_parsing
 
 
 class Stahl20(SpectroscopicRelease):
@@ -43,21 +44,22 @@ class Stahl20(SpectroscopicRelease):
 
         super().__init__()
         self._spectra_dir = self._data_dir / 'spectra'
-        self._table_dir = self._data_dir / 'tables'
+        self._tables_dir = self._data_dir / 'tables'
         self._meta_data_path = self._data_dir / 'meta_data.yml'
 
         # Define urls / path for remote / local data.
         self._spectra_url = 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPdata2/spectra.tar.gz'
+        self._tables_url = 'https://cdsarc.cds.unistra.fr/viz-bin/nph-Cat/tar.gz?J/MNRAS/492/4325'
+        self._tables_dir = self._data_dir / 'tables'
         self._meta_table_url = 'http://heracles.astro.berkeley.edu/sndb/static/BSNIPdata2/spectra.csv'
-        self._meta_table_path = self._table_dir / 'meta_data.csv'
+        self._meta_table_path = self._data_dir / 'spectra.csv'
 
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
-        if self._meta_table_path.exists():
-            return ['meta_data']
-
-        return []
+        tables = list(file.stem[5:] for file in self._tables_dir.glob('table*.dat'))
+        tables.append('spectra')
+        return sorted(tables)
 
     def _load_table(self, table_id: str) -> Table:
         """Return a Vizier table published by this data release
@@ -66,12 +68,20 @@ class Stahl20(SpectroscopicRelease):
             table_id: The published table number or table name
         """
 
-        return Table.read(self._table_dir / (table_id + '.csv'))
+        if table_id == 'spectra':
+            return Table.read(self._meta_table_path)
+
+        readme_path = self._tables_dir / 'ReadMe'
+        table_path = self._tables_dir / f'table{table_id}.dat'
+        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+        description_dict = data_parsing.parse_vizier_table_descriptions(readme_path)
+        data.meta['description'] = description_dict[f'{table_id}']
+        return data
 
     def _get_available_ids(self) -> List[str]:
         """Return a list of target object IDs for the current survey"""
 
-        obj_ids = self.load_table('meta_data')['ObjName']
+        obj_ids = self.load_table('spectra')['ObjName']
         return sorted(set(obj_ids))
 
     def _get_data_for_id(self, obj_id: str, format_table: bool = True) -> Table:
@@ -86,7 +96,7 @@ class Stahl20(SpectroscopicRelease):
         """
 
         data_tables = []
-        meta_data = self.load_table('meta_data')
+        meta_data = self.load_table('spectra')
         object_meta = meta_data[meta_data['ObjName'] == obj_id]
         for row in object_meta:
             path = self._spectra_dir / row['Filename']
@@ -130,6 +140,15 @@ class Stahl20(SpectroscopicRelease):
         downloads.download_file(
             url=self._meta_table_url,
             destination=self._meta_table_path,
+            force=force,
+            timeout=timeout
+        )
+
+        downloads.download_tar(
+            url=self._tables_url,
+            out_dir=self._tables_dir,
+            skip_exists=self._tables_dir,
+            mode='r:gz',
             force=force,
             timeout=timeout
         )
