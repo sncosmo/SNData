@@ -8,7 +8,7 @@ from astropy.table import Table, vstack
 
 from ..base_classes import SpectroscopicRelease
 from ..utils import unit_conversion, downloads, data_parsing
-
+from astropy import units as u
 
 class Stahl20(SpectroscopicRelease):
     """The second data release of the Berkeley Supernova Ia Program
@@ -77,22 +77,23 @@ class Stahl20(SpectroscopicRelease):
         # The CDS readme has an incorrect data type for the second columns in tables a1 adn s1
         # As a workaround, we parse the file manually
         if table_id == 'a1':
-            data = ascii.read(
+            data = Table.read(
                 table_path,
-                format='fixed_width_no_header',
+                format='ascii.fixed_width_no_header',
                 delimiter=' ',
-                data_start=0,
                 col_starts=[0, 24, 35, 44, 53, 60, 62, 68, 76, 79, 85, 91],
+                units=[None, '"Y:M:D"', u.deg, u.deg, None, None, u.mag, None, None, u.day, u.day, None],
                 names=['Name', 'Discov', 'RAdeg', 'DEdeg', 'z', 'r_z', 'E(B-V)',
                        'Subtype', 'Nsp', 'fepoch', 'lepoch', 'References'])
 
         elif table_id == 's1':
-            data = ascii.read(
+            p1nm = u.CompositeUnit(0.1, [u.nm], [1])
+            data = Table.read(
                 table_path,
-                format='fixed_width_no_header',
+                format='ascii.fixed_width_no_header',
                 delimiter=' ',
-                data_start=0,
                 col_starts=[0, 24, 39, 45, 47, 52, 58, 63, 68, 74, 79, 84, 90],
+                units=[None, '"Y:M:D"', u.day, None, p1nm, p1nm, p1nm, p1nm, u.deg, None, u.s, None, None],
                 names=['Name', 'UTDate', 'tLC', 'Inst', 'lambdamin', 'lambdamax',
                        'Resb', 'Resr', 'PA', 'Airmass', 'ExpTime', 'S/N', 'Ref'])
 
