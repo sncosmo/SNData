@@ -74,16 +74,27 @@ class Stahl20(SpectroscopicRelease):
         readme_path = self._tables_dir / 'ReadMe'
         table_path = self._tables_dir / f'table{table_id}.dat'
 
-        # The CDS readme has an incorrect data type for the second column in table a1
+        # The CDS readme has an incorrect data type for the second columns in tables a1 adn s1
         # As a workaround, we parse the file manually
         if table_id == 'a1':
             data = ascii.read(
                 table_path,
                 format='fixed_width_no_header',
-                col_starts=[0, 24, 35, 44, 53, 60, 62, 68, 76, 79, 85, 92],
                 delimiter=' ',
                 data_start=0,
-                names=('Name', 'Discov', 'RAdeg', 'DEdeg', 'z', 'r_z', 'E(B-V)', 'Subtype', 'Nsp', 'fepoch', 'lepoch', 'References'))
+                col_starts=[0, 24, 35, 44, 53, 60, 62, 68, 76, 79, 85, 91],
+                names=['Name', 'Discov', 'RAdeg', 'DEdeg', 'z', 'r_z', 'E(B-V)',
+                       'Subtype', 'Nsp', 'fepoch', 'lepoch', 'References'])
+
+        elif table_id == 's1':
+            data = ascii.read(
+                table_path,
+                format='fixed_width_no_header',
+                delimiter=' ',
+                data_start=0,
+                col_starts=[0, 24, 39, 45, 47, 52, 58, 63, 68, 74, 79, 84, 90],
+                names=['Name', 'UTDate', 'tLC', 'Inst', 'lambdamin', 'lambdamax',
+                       'Resb', 'Resr', 'PA', 'Airmass', 'ExpTime', 'S/N', 'Ref'])
 
         else:
             data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
