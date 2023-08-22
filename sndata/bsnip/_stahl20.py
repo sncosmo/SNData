@@ -89,7 +89,6 @@ class Stahl20(SpectroscopicRelease):
             data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
 
         description_dict = data_parsing.parse_vizier_table_descriptions(readme_path)
-        breakpoint()
         data.meta['description'] = description_dict[f'{table_id}']
         return data
 
