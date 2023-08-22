@@ -73,8 +73,23 @@ class Stahl20(SpectroscopicRelease):
 
         readme_path = self._tables_dir / 'ReadMe'
         table_path = self._tables_dir / f'table{table_id}.dat'
-        data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+
+        # The CDS readme has an incorrect data type for the second column in table a1
+        # As a workaround, we parse the file manually
+        if table_id == 'a1':
+            data = ascii.read(
+                table_path,
+                format='fixed_width_no_header',
+                col_starts=[0, 24, 35, 44, 53, 60, 62, 68, 76, 79, 85, 92],
+                delimiter=' ',
+                data_start=0,
+                names=('Name', 'Discov', 'RAdeg', 'DEdeg', 'z', 'r_z', 'E(B-V)', 'Subtype', 'Nsp', 'fepoch', 'lepoch', 'References'))
+
+        else:
+            data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
+
         description_dict = data_parsing.parse_vizier_table_descriptions(readme_path)
+        breakpoint()
         data.meta['description'] = description_dict[f'{table_id}']
         return data
 
