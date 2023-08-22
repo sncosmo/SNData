@@ -2,13 +2,14 @@
 
 from typing import List
 
+from astropy import units as u
 from astropy.io import ascii
 from astropy.io.ascii.core import InconsistentTableError
 from astropy.table import Table, vstack
 
 from ..base_classes import SpectroscopicRelease
 from ..utils import unit_conversion, downloads, data_parsing
-from astropy import units as u
+
 
 class Stahl20(SpectroscopicRelease):
     """The second data release of the Berkeley Supernova Ia Program
@@ -122,9 +123,9 @@ class Stahl20(SpectroscopicRelease):
         """
 
         data_tables = []
-        meta_data = self.load_table('spectra')
-        object_meta = meta_data[meta_data['ObjName'] == obj_id]
-        for row in object_meta:
+        all_spectra_inventory = self.load_table('spectra')
+        object_spectra_inventory = all_spectra_inventory[all_spectra_inventory['ObjName'] == obj_id]
+        for row in object_spectra_inventory:
             path = self._spectra_dir / row['Filename']
 
             # Tables either have two or three columns
@@ -144,12 +145,15 @@ class Stahl20(SpectroscopicRelease):
 
             data_tables.append(table)
 
+        meta_data = self.load_table('a1')
+        object_meta_data = meta_data[meta_data['Name'] == obj_id][0]
+
         all_data = vstack(data_tables)
         all_data.sort('wavelength')
         all_data.meta['obj_id'] = obj_id
-        all_data.meta['ra'] = None
-        all_data.meta['dec'] = None
-        all_data.meta['z'] = None
+        all_data.meta['ra'] = object_meta_data['RAdeg']
+        all_data.meta['dec'] = object_meta_data['DEdeg']
+        all_data.meta['z'] = object_meta_data['z']
         all_data.meta['z_err'] = None
 
         # Return data with columns in a standard order
