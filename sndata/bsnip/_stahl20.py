@@ -58,8 +58,14 @@ class Stahl20(SpectroscopicRelease):
     def _get_available_tables(self) -> List[str]:
         """Get Ids for available vizier tables published by this data release"""
 
-        tables = list(file.stem[5:] for file in self._tables_dir.glob('table*.dat'))
-        tables.append('spectra')
+        tables = ['spectra']
+        for file in self._tables_dir.glob('table*.dat'):
+            table_id = file.stem[5:]
+            if table_id.isnumeric():
+                table_id = int(table_id)
+
+            tables.append(table_id)
+
         return sorted(tables)
 
     def _load_table(self, table_id: str) -> Table:
