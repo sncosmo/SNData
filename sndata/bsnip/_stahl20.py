@@ -66,7 +66,7 @@ class Stahl20(SpectroscopicRelease):
 
             tables.append(table_id)
 
-        return sorted(tables)
+        return sorted(tables, key=str)
 
     def _load_table(self, table_id: str) -> Table:
         """Return a Vizier table published by this data release
@@ -108,7 +108,7 @@ class Stahl20(SpectroscopicRelease):
             data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
 
         description_dict = data_parsing.parse_vizier_table_descriptions(readme_path)
-        data.meta['description'] = description_dict[f'{table_id}']
+        data.meta['description'] = description_dict[table_id]
         return data
 
     def _get_available_ids(self) -> List[str]:
