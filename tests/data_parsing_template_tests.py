@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module provides template testing classes for spectroscopic and
 photometric data parsing.
 """
@@ -105,7 +102,7 @@ class SpectroscopicDataParsing:
         self.assertNotIn('comments', test_data.meta)
 
     def test_bad_table_id_err(self):
-        """Test an InvalidObjId exception is raised for a made up Id"""
+        """Test an InvalidObjId exception is raised for a made up ID"""
 
         self.assertRaises(InvalidTableId, self.test_class.load_table, 'fake_id')
 
@@ -123,7 +120,7 @@ class SpectroscopicDataParsing:
             try:
                 table = self.test_class.load_table(table)
 
-            except:
+            except Exception:
                 self.fail(f'Cannot parse table {table}')
 
             self.assertTrue(table, err_msg.format(table))

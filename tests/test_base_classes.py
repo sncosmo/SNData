@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module tests the template classes for the user interface."""
 
 from sndata.base_classes import PhotometricRelease, SpectroscopicRelease

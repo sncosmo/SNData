@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module handles combining data from different data sets."""
 
 from copy import copy
@@ -21,7 +18,7 @@ CombinedID = Union[str, Tuple[str, str, str]]
 def get_zp(band_name: str) -> float:
     """Return the zero point used by sndata for a given bandpass
 
-    bandpass names are case sensitive.
+    Bandpass names are case-sensitive.
 
     Args:
         band_name: The name of the sndata bandpass
@@ -113,7 +110,7 @@ class CombinedDataset:
     @property
     @lru_cache(None)
     def _obj_id_dataframe(self):
-        # Return a data frame of object Id's and their survey / release names
+        # Return a data frame of object ID's and their survey / release names
 
         return pd.DataFrame(
             self.get_available_ids(),
@@ -226,8 +223,8 @@ class CombinedDataset:
             self, obj_id_list: List[CombinedID], format_table: bool = True):
         """Return data for a list of object IDs
 
-        Data tables for individual object IDs are vertically stacked. Meta
-        data for each individual obj_id is stored in the combined.
+        Data tables for individual object IDs are vertically stacked.
+        Metadata for each individual obj_id is stored in the combined.
         See ``get_available_ids()`` for a list of available ID values.
 
         Args:

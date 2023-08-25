@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the SDSS Sako18 API for spectroscopic data"""
 
 import zipfile
@@ -31,7 +28,7 @@ class Sako18Spec(SpectroscopicRelease):
 
     Cuts on returned data:
         - A spectrum is included in the data release for object ``15301``, but
-          no information about this spectra is provided in the spectra summary
+          no information about this spectrum is provided in the spectra summary
           table (Table 9). This spectrum is ignored.
         - Seven spectroscopically observed objects are missing a reported Ra,
           Dec, and redshift. These include: ``13046``, ``13346``, ``15833``,
@@ -114,7 +111,7 @@ class Sako18Spec(SpectroscopicRelease):
             An astropy table of data for the given ID
         """
 
-        # Read in all spectra for the given object Id
+        # Read in all spectra for the given object ID
         data_tables = []
         files = list(self._spectra_dir.glob(f'sn{obj_id}-*.txt'))
         files += list(self._spectra_dir.glob(f'gal{obj_id}-*.txt'))
@@ -128,7 +125,7 @@ class Sako18Spec(SpectroscopicRelease):
             summary_row = spectra_summary[spectra_summary['SID'] == spec_id][0]
             spec_type = 'Gal' if extraction_type == 'gal' else summary_row['Type']
 
-            # Get meta data for the current spectrum from the summary table
+            # Get metadata for the current spectrum from the summary table
             data['sid'] = spec_id
             data['type'] = spec_type
             data['telescope'] = summary_row['Telescope']
@@ -152,7 +149,7 @@ class Sako18Spec(SpectroscopicRelease):
         out_data = vstack(data_tables)
         out_data.meta['obj_id'] = obj_id
 
-        # Add meta data from the master table
+        # Add metadata from the master table
         master_table = self.load_table('master')
         phot_record = master_table[master_table['CID'] == obj_id]
 
@@ -189,7 +186,7 @@ class Sako18Spec(SpectroscopicRelease):
                 timeout=timeout
             )
 
-        # Spectral data parsing requires IRAF so we use preparsed data instead
+        # Spectral data parsing requires IRAF, so we use preparsed data instead
         if force or not self._spectra_dir.exists():
             with zipfile.ZipFile(self._spectra_zip, 'r') as zip_ref:
                 zip_ref.extractall(self._data_dir)

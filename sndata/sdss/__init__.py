@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """The ``sdss`` module provides access to supernova data from the Sloan
 Digital Sky Survey (SDSS). Please note that access to the photometric and
 spectroscopic components of the Sako et al. 2018 data release is provided

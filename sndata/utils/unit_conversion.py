@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """The ``unit_conversion`` handles the conversion of values between different
 units / timezones / systems of measurement.
 """

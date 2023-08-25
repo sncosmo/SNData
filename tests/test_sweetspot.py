@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """Tests for the ``sweetspot`` module."""
 
 from unittest import TestCase
