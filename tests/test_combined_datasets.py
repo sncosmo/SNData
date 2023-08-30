@@ -21,7 +21,7 @@ class CombinedDataParsing(TestCase, PhotometricDataParsing):
         cls.test_class.download_module_data()
 
     def test_bad_table_id_err(self):
-        """Test an InvalidObjId exception is raised for a made up Id"""
+        """Test an InvalidObjId exception is raised for a made up ID"""
 
         fake_table_id = ('fake_id', 'fake_release', 'fake_survey')
         self.assertRaises(InvalidTableId, self.test_class.load_table, fake_table_id)
@@ -95,7 +95,7 @@ class CombinedDataStringIDs(TestCase):
         )
 
     def test_duplicate_obj_id_strings(self):
-        """Test an error is raised for non unique string Ids"""
+        """Test an error is raised for non-unique string Ids"""
 
         dummy_release = csp.DR3()
         dummy_release.release = '234'

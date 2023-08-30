@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the CSP DR3 API"""
 
 import os
@@ -29,7 +26,7 @@ def parse_snoopy_path(path: str):
     )
 
     with open(path) as ofile:
-        # Get meta data from first line
+        # Get metadata from first line
         name, z, ra, dec = ofile.readline().split()
         out_table.meta['obj_id'] = name
         out_table.meta['ra'] = float(ra)

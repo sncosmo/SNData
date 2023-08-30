@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the SNLS Balland09 API"""
 
 import os
@@ -32,7 +29,7 @@ def fix_balland09_cds_readme(readme_path):
 
 
 class Balland09(DefaultParser, SpectroscopicRelease):
-    """The ``Balland09`` class  provides access to to the three year data
+    """The ``Balland09`` class  provides access to the three-year data
     release of the Supernova Legacy Survey (SNLS) performed by the
     Canada-France-Hawaii Telescope (CFHT). It includes 139 spectra of 124
     Type Ia supernovae that range from z = 0.149 to z = 1.031 and have an
@@ -70,7 +67,7 @@ class Balland09(DefaultParser, SpectroscopicRelease):
     def _get_available_ids(self):
         """Return a list of target object IDs for the current survey"""
 
-        # Use recursive glob since the data files are in sub directories
+        # Use recursive glob since the data files are in subdirectories
         files = self._spectra_dir.rglob('*.dat')
         ids = (Path(f).name.split('_')[1] for f in files)
         return sorted(set(ids))

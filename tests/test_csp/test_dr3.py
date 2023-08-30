@@ -1,4 +1,4 @@
-"""Tests for the ``csp.dr3`` class."""
+"""Tests for the ``csp.DR3`` class."""
 
 from unittest import TestCase
 

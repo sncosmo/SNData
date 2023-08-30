@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the CSP DR1 API"""
 
 from pathlib import Path
@@ -20,7 +17,7 @@ def read_csp_spectroscopy_file(path: str, format_table: bool = False) -> Table:
         format_table: Format table to a sndata standard format
 
     Returns:
-        An astropy table with file data and meta data
+        An astropy table with file data and metadata
     """
 
     path = Path(path)
@@ -35,7 +32,7 @@ def read_csp_spectroscopy_file(path: str, format_table: bool = False) -> Table:
     else:
         data = Table.read(path, format='ascii', names=['wavelength', 'flux'])
 
-    # Read the table meta data
+    # Read the table metadata
     file_comments = data.meta['comments']
     redshift = float(file_comments[1].lstrip('Redshift: '))
     obs_date = float(file_comments[3].lstrip('JDate_of_observation: '))
