@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module provides template testing classes for spectroscopic and
 photometric data parsing.
 """

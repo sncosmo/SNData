@@ -1,18 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
+"""Tests for the ``base_classes.PhotometricRelease`` class."""
 
-"""This module tests the template classes for the user interface."""
+from unittest import TestCase
 
-from sndata.base_classes import PhotometricRelease, SpectroscopicRelease
+from sndata.base_classes import PhotometricRelease
 from sndata.exceptions import NoDownloadedData
 
 
-class SpectroscopicDataUI:
-    """Generic UI tests for spectroscopic data releases"""
+class PhotometricDataUI(TestCase):
+    """Generic UI tests for photometric data releases"""
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = SpectroscopicRelease('dummy_survey', 'dummy_release')
+        cls.test_class = PhotometricRelease('dummy_survey', 'dummy_release')
 
     def test_get_data_for_id_no_downloaded_data(self):
         """Test ``get_data_for_id`` raises NoDownloadedData error"""
@@ -35,14 +34,6 @@ class SpectroscopicDataUI:
         """Test ``load_table`` raises NoDownloadedData error"""
 
         self.assertRaises(NoDownloadedData, self.test_class.load_table, 'dummy_id')
-
-
-class PhotometricDataUI(SpectroscopicDataUI):
-    """Generic UI tests for photometric data releases"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.test_class = PhotometricRelease('dummy_survey', 'dummy_release')
 
     def test_register_filters_no_downloaded_data(self):
         """Test ``register_filters`` raises NoDownloadedData error"""

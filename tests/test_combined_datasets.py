@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
-"""Test that survey data is accessed and served correctly for combined data
-sets
-"""
+"""Test that survey data is accessed and served correctly for combined data sets."""
 
 from unittest import TestCase
 
@@ -12,7 +7,7 @@ from astropy.table import vstack
 from sndata import CombinedDataset
 from sndata import csp, des
 from sndata._combine_data import reduce_id_mapping
-from .data_parsing_template_tests import PhotometricDataParsing
+from .common_tests import PhotometricDataParsing
 from .test_exceptions import InvalidTableId
 
 

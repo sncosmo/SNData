@@ -1,13 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
+"""Tests for the ``sweetspot.DR1`` class."""
 
-"""Tests for the ``sweetspot`` module."""
+from unittest import TestCase, SkipTest
 
-from unittest import TestCase
+import requests
 
-from sndata import sweetspot
-from .data_parsing_template_tests import PhotometricDataParsing
-from .standard_ui_template_tests import PhotometricDataUI
+from sndata.sweetspot import DR1
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+
+try:
+    DR1().download_module_data()
+
+except requests.exceptions.ConnectionError:
+    raise SkipTest('Could not connect to one or more remote servers.')
 
 
 class DR1Parsing(TestCase, PhotometricDataParsing):
@@ -15,8 +19,7 @@ class DR1Parsing(TestCase, PhotometricDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = sweetspot.DR1()
-        cls.test_class.download_module_data()
+        cls.test_class = DR1()
 
     def test_has_33_objids(self):
         """Test the data release includes all 33 objects"""
@@ -29,4 +32,4 @@ class DR1UI(TestCase, PhotometricDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = sweetspot.DR1()
+        cls.test_class = DR1()

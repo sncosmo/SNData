@@ -1,32 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
+"""Tests for the ``csp.dr3`` class."""
 
-"""Tests for the ``csp`` module."""
-
-from unittest import TestCase
+from unittest import TestCase, SkipTest
 
 import numpy as np
 
-from sndata import csp
-from .data_parsing_template_tests import PhotometricDataParsing, SpectroscopicDataParsing
-from .standard_ui_template_tests import PhotometricDataUI, SpectroscopicDataUI
+from sndata.csp import DR3
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI
 
+try:
+    DR3().download_module_data()
 
-class DR1Parsing(TestCase, SpectroscopicDataParsing):
-    """Data parsing tests for the DR1 release"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.test_class = csp.DR1()
-        cls.test_class.download_module_data()
-
-
-class DR1UI(TestCase, SpectroscopicDataUI):
-    """UI tests for the DR1 release"""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.test_class = csp.DR1()
+except ConnectionError:
+    raise SkipTest('Could not connect to one or more remote servers.')
 
 
 class DR3Parsing(TestCase, PhotometricDataParsing):
@@ -34,8 +19,7 @@ class DR3Parsing(TestCase, PhotometricDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = csp.DR3()
-        cls.test_class.download_module_data()
+        cls.test_class = DR3()
 
     def test_instrument_offsets_ar_applied(self):
         """Test returned DR3 data includes the instrument offset using a
@@ -43,7 +27,7 @@ class DR3Parsing(TestCase, PhotometricDataParsing):
          """
 
         def get_test_point(band, obj_id='2005el', **kwargs):
-            data = csp.DR3().get_data_for_id(obj_id, **kwargs)
+            data = DR3().get_data_for_id(obj_id, **kwargs)
             y_data = data[data['band'] == band]
             return y_data[0]
 
@@ -64,4 +48,4 @@ class DR3UI(TestCase, PhotometricDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = csp.DR3()
+        cls.test_class = DR3()
