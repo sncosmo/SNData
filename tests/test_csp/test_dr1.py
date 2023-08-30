@@ -1,18 +1,11 @@
 """Tests for the ``csp.dr1`` class."""
 
-from unittest import TestCase, SkipTest
-
-from requests.exceptions import ConnectionError
+from unittest import TestCase
 
 from sndata.csp import DR1
-from ..common_tests import SpectroscopicDataParsing
-from ..common_tests import SpectroscopicDataUI
+from ..common_tests import SpectroscopicDataParsing, SpectroscopicDataUI, download_data_or_skip
 
-try:
-    DR1().download_module_data()
-
-except ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(DR1())
 
 
 class DR1Parsing(TestCase, SpectroscopicDataParsing):

@@ -1,19 +1,12 @@
 """Tests for the ``snls.Balland09`` class"""
 
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 from unittest import skip
 
-import requests
-
 from sndata.snls import Balland09
-from ..common_tests import SpectroscopicDataParsing
-from ..common_tests import SpectroscopicDataUI
+from ..common_tests import SpectroscopicDataParsing, SpectroscopicDataUI, download_data_or_skip
 
-try:
-    Balland09().download_module_data()
-
-except requests.exceptions.ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(Balland09())
 
 
 class Balland09Parsing(TestCase, SpectroscopicDataParsing):

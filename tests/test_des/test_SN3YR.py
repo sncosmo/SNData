@@ -1,15 +1,11 @@
 """Tests for the ``des.SN3YR`` class."""
 
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 
 from sndata.des import SN3YR
-from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
 
-try:
-    SN3YR().download_module_data()
-
-except ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(SN3YR())
 
 
 class SN3YRParsing(TestCase, PhotometricDataParsing):

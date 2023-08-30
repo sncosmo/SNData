@@ -1,18 +1,11 @@
 """Tests for the ``sdss.Sako18Spec`` class"""
 
-from unittest import TestCase, SkipTest
-
-import requests
+from unittest import TestCase
 
 from sndata.sdss import Sako18Spec
-from ..common_tests import SpectroscopicDataParsing
-from ..common_tests import SpectroscopicDataUI
+from ..common_tests import SpectroscopicDataParsing, SpectroscopicDataUI, download_data_or_skip
 
-try:
-    Sako18Spec().download_module_data()
-
-except requests.exceptions.ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(Sako18Spec())
 
 
 class Sako18SpecParsing(TestCase, SpectroscopicDataParsing):

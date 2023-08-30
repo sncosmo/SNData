@@ -1,17 +1,11 @@
 """Tests for the ``sdss.Sako18`` class"""
 
-from unittest import TestCase, SkipTest
-
-import requests
+from unittest import TestCase
 
 from sndata.sdss import Sako18
-from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
 
-try:
-    Sako18().download_module_data()
-
-except requests.exceptions.ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(Sako18())
 
 
 class Sako18Parsing(TestCase, PhotometricDataParsing):

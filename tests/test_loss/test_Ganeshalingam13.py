@@ -1,17 +1,11 @@
 """Tests for the ``loss.Ganeshalingam13`` class."""
 
-from unittest import TestCase, SkipTest
-
-import requests
+from unittest import TestCase
 
 from sndata.loss import Ganeshalingam13
-from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
 
-try:
-    Ganeshalingam13().download_module_data()
-
-except requests.exceptions.ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(Ganeshalingam13())
 
 
 class Ganeshalingam13Parsing(TestCase, PhotometricDataParsing):

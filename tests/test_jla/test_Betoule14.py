@@ -1,17 +1,11 @@
 """Tests for the ``jla.Betoule14`` class"""
 
-from unittest import TestCase, SkipTest
-
-import requests
+from unittest import TestCase
 
 from sndata.jla import Betoule14
-from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
 
-try:
-    Betoule14().download_module_data()
-
-except requests.exceptions.ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(Betoule14())
 
 
 class Betoule14Parsing(TestCase, PhotometricDataParsing):

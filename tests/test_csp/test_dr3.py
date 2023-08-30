@@ -1,17 +1,13 @@
 """Tests for the ``csp.dr3`` class."""
 
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 
 import numpy as np
 
 from sndata.csp import DR3
-from ..common_tests import PhotometricDataParsing, PhotometricDataUI
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
 
-try:
-    DR3().download_module_data()
-
-except ConnectionError:
-    raise SkipTest('Could not connect to one or more remote servers.')
+download_data_or_skip(DR3())
 
 
 class DR3Parsing(TestCase, PhotometricDataParsing):

@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
-"""This module provides template testing classes for the user interface of
-spectroscopic and photometric data releases.
-"""
+"""Template test classes for high level data release class behavior."""
 
 
 class SpectroscopicDataUI:

@@ -1,6 +1,4 @@
-"""This module provides template testing classes for spectroscopic and
-photometric data parsing.
-"""
+"""Template test classes for spectroscopic and photometric data parsing."""
 
 import numpy as np
 import sncosmo
@@ -27,9 +25,7 @@ class SpectroscopicDataParsing:
                 return
 
             obj_id = input_table.meta['obj_id']
-            self.assertTrue(
-                input_table,
-                msg=f'Empty table for obj_id {obj_id}.')
+            self.assertTrue(input_table, msg=f'Empty table for obj_id {obj_id}.')
 
         if i < 0:
             self.fail('No data yielded')
