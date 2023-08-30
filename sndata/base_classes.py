@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """The ``base_classes`` module defines parent classes used by the data access
 API to define basic data handling and to enforce a consistent user interface.
 For an example on how to use these classes to create custom data access module
@@ -21,7 +18,7 @@ from astropy.table import Table
 from .exceptions import InvalidObjId, InvalidTableId
 from .utils import wrappers, data_parsing
 
-# Define short hand type for Ids of Vizier Tables
+# Define shorthand type for Ids of Vizier Tables
 VizierTableId = Union[int, str]
 
 
@@ -306,7 +303,7 @@ class DefaultParser:
         readme_path = self._table_dir / 'ReadMe'
         table_path = self._table_dir / f'table{table_id}.dat'
 
-        # Read data from file and add meta data from the readme
+        # Read data from file and add metadata from the readme
         data = ascii.read(str(table_path), format='cds', readme=str(readme_path))
         description = data_parsing.parse_vizier_table_descriptions(readme_path)[table_id]
         data.meta['description'] = description

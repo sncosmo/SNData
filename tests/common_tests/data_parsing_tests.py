@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
-"""This module provides template testing classes for spectroscopic and
-photometric data parsing.
-"""
+"""Template test classes for spectroscopic and photometric data parsing."""
 
 import numpy as np
 import sncosmo
@@ -30,9 +25,7 @@ class SpectroscopicDataParsing:
                 return
 
             obj_id = input_table.meta['obj_id']
-            self.assertTrue(
-                input_table,
-                msg=f'Empty table for obj_id {obj_id}.')
+            self.assertTrue(input_table, msg=f'Empty table for obj_id {obj_id}.')
 
         if i < 0:
             self.fail('No data yielded')
@@ -105,7 +98,7 @@ class SpectroscopicDataParsing:
         self.assertNotIn('comments', test_data.meta)
 
     def test_bad_table_id_err(self):
-        """Test an InvalidObjId exception is raised for a made up Id"""
+        """Test an InvalidObjId exception is raised for a made up ID"""
 
         self.assertRaises(InvalidTableId, self.test_class.load_table, 'fake_id')
 
@@ -123,7 +116,7 @@ class SpectroscopicDataParsing:
             try:
                 table = self.test_class.load_table(table)
 
-            except:
+            except Exception:
                 self.fail(f'Cannot parse table {table}')
 
             self.assertTrue(table, err_msg.format(table))

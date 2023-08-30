@@ -1,0 +1,57 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "sndata"
+version = "0.0.0"  # Version is set dynamically by the CI tool on publication
+authors = ["Daniel Perrefort"]
+readme = "README.md"
+description = "A Python interface for data published by various supernova surveys."
+homepage = "http://sndata.readthedocs.io/"
+repository = "https://github.com/sncosmo/SNData/"
+documentation = "http://sndata.readthedocs.io/"
+keywords = ["astronomy", "supernova", "data"]
+packages = [{ include = "sndata" }]
+include = [
+    "sndata/sdss/Spectra_txt.zip",
+    "sndata/loss/sndb_meta.csv"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Typing :: Typed"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+beautifulsoup4 = "*"
+astropy = "*"
+cython = "*"
+numpy = ">=1.17.0"
+pandas = "*"
+pyyaml = "*"
+requests = "*"
+tqdm = "*"
+sncosmo = "*"
+pytz = "*"
+
+[tool.poetry.group.tests]
+optional = true
+
+[tool.poetry.group.tests.dependencies]
+coverage = "*"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "*"
+sphinx-copybutton = "*"
+sphinx_rtd_theme = "*"

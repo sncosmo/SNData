@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines custom exceptions."""
 
 
@@ -15,7 +12,7 @@ class NoDownloadedData(Exception):
 
 
 class InvalidObjId(Exception):
-    """Error for when data is requested for an unknown object Id"""
+    """Error for when data is requested for an unknown object ID"""
 
     def __init__(self, *args, **kwargs):
         args = args if args else ('The provided object Id is not valid.',)
@@ -24,7 +21,7 @@ class InvalidObjId(Exception):
 
 
 class InvalidTableId(Exception):
-    """Error for when data is requested for an unknown table Id"""
+    """Error for when data is requested for an unknown table ID"""
 
     def __init__(self, *args, **kwargs):
         args = args if args else ('No table was found matching the given ID.',)

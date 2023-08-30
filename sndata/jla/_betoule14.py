@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the JLA Betoule14 API"""
 
 from typing import List
@@ -23,7 +20,7 @@ class Betoule14(PhotometricRelease):
     SNLS (0.2 <z < 1) and totals 740 spectroscopically confirmed type Ia
     supernovae with high quality light curves. (Source: Betoule et al. 2014)
 
-    This data set includes observations taken in the pre 2015 MegaCam filter
+    This data set includes observations taken in the pre-2015 MegaCam filter
     set used by the Canada-France-Hawaii Telescope (CFHT). These filters were
     measured at multiple positions by both the observing team and manufacturer.
     Transmission functions registered by this module represent the average

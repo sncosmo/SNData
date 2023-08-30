@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
-"""Tests for the ``snls`` module"""
+"""Tests for the ``snls.Balland09`` class"""
 
 from unittest import TestCase
 from unittest import skip
 
-from sndata import snls
-from .data_parsing_template_tests import SpectroscopicDataParsing
-from .standard_ui_template_tests import SpectroscopicDataUI
+from sndata.snls import Balland09
+from ..common_tests import SpectroscopicDataParsing, SpectroscopicDataUI, download_data_or_skip
+
+download_data_or_skip(Balland09())
 
 
 class Balland09Parsing(TestCase, SpectroscopicDataParsing):
@@ -16,8 +14,7 @@ class Balland09Parsing(TestCase, SpectroscopicDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = snls.Balland09()
-        cls.test_class.download_module_data()
+        cls.test_class = Balland09()
 
     @skip('Balland09 data tables do not have dates')
     def test_jd_time_format(self):
@@ -43,4 +40,4 @@ class Balland09UI(TestCase, SpectroscopicDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = snls.Balland09()
+        cls.test_class = Balland09()

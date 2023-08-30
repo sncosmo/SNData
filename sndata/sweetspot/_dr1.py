@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the Sweetspot DR1 API"""
 
 import tarfile
@@ -166,14 +163,11 @@ class DR1(PhotometricRelease, DefaultParser):
     def _decompress_filters(self):
         """Decompress filter files into the filter directory"""
 
-        print(self._filter_zip_path)
         with tarfile.open(self._filter_zip_path) as data_archive:
             for ffile in data_archive:
                 path = self._filter_dir / ffile.name
                 if path.exists():
                     continue
-
-                print(f'Unzipping {ffile.name}')
 
                 try:
                     data_archive.extract(ffile, path=self._filter_dir)

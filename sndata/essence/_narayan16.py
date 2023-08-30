@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-
 """This module defines the Essence Narayan16 API"""
 
 from pathlib import Path
