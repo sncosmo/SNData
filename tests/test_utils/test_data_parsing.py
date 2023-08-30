@@ -1,24 +1,12 @@
+"""Tests for the ``data_parsing`` module."""
+
 import os
 from pathlib import Path
 from unittest import TestCase
 
-import numpy as np
-
 import sndata
-from sndata import utils as utils
 from sndata.exceptions import NoDownloadedData
-from sndata.utils import unit_conversion, data_parsing
-
-
-class HourangleToDegrees(TestCase):
-    """Tests for the ``hourangle_to_degrees`` function"""
-
-    def test_coordinates_0_0(self):
-        """Test a zero hourangle returns zero degrees"""
-
-        ra, dec = unit_conversion.hourangle_to_degrees(0, 0, 0, '+', 0, 0, 0)
-        self.assertEqual(0, ra)
-        self.assertEqual(0, dec)
+from sndata.utils import data_parsing
 
 
 class FindDataDir(TestCase):
@@ -59,33 +47,6 @@ class FindDataDir(TestCase):
         expected_path = Path(sndata.__file__).resolve().parent / 'data' / survey / release
         recovered_dir = data_parsing.find_data_dir(survey.upper(), release.upper())
         self.assertEqual(recovered_dir, expected_path)
-
-
-class ConvertToJD(TestCase):
-    """Tests for the ``convert_to_jd`` function"""
-
-    @classmethod
-    def setUpClass(cls):
-        """Define test dates"""
-
-        cls.snoopy_date = 500
-        cls.mjd_date = cls.snoopy_date + 53000
-        cls.jd_date = cls.mjd_date + 2400000.5
-        cls.expected_jd = np.array(cls.jd_date)
-
-    def test_snoopy_format(self):
-        """Test conversion of the snoopy date format to JD"""
-
-        self.assertEqual(
-            self.expected_jd, unit_conversion.convert_to_jd(self.snoopy_date, 'snpy'),
-            'Incorrect date for snoopy format')
-
-    def test_mjd_format(self):
-        """Test conversion of the MJD format to JD"""
-
-        self.assertEqual(
-            self.expected_jd, unit_conversion.convert_to_jd(self.mjd_date, 'mjd'),
-            'Incorrect date for MJD format')
 
 
 class RequireDataPath(TestCase):

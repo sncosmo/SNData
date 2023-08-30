@@ -1,10 +1,11 @@
-"""Tests for the ``essence`` module."""
+"""Tests for the ``essence.Narayan16`` class."""
 
 from unittest import TestCase
 
-from sndata import essence
-from .data_parsing_template_tests import PhotometricDataParsing
-from .standard_ui_template_tests import PhotometricDataUI
+from sndata.essence import Narayan16
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
+
+download_data_or_skip(Narayan16())
 
 
 class Narayan16Parsing(TestCase, PhotometricDataParsing):
@@ -12,8 +13,7 @@ class Narayan16Parsing(TestCase, PhotometricDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = essence.Narayan16()
-        cls.test_class.download_module_data()
+        cls.test_class = Narayan16()
 
 
 class Narayan16UI(TestCase, PhotometricDataUI):
@@ -21,4 +21,4 @@ class Narayan16UI(TestCase, PhotometricDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = essence.Narayan16()
+        cls.test_class = Narayan16()

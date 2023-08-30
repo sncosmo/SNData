@@ -1,10 +1,11 @@
-"""Tests for the ``loss`` module."""
+"""Tests for the ``loss.Ganeshalingam13`` class."""
 
 from unittest import TestCase
 
-from sndata import loss
-from .data_parsing_template_tests import PhotometricDataParsing
-from .standard_ui_template_tests import PhotometricDataUI
+from sndata.loss import Ganeshalingam13
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
+
+download_data_or_skip(Ganeshalingam13())
 
 
 class Ganeshalingam13Parsing(TestCase, PhotometricDataParsing):
@@ -12,8 +13,7 @@ class Ganeshalingam13Parsing(TestCase, PhotometricDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = loss.Ganeshalingam13()
-        cls.test_class.download_module_data()
+        cls.test_class = Ganeshalingam13()
 
 
 class Ganeshalingam13UI(TestCase, PhotometricDataUI):
@@ -21,4 +21,4 @@ class Ganeshalingam13UI(TestCase, PhotometricDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = loss.Ganeshalingam13()
+        cls.test_class = Ganeshalingam13()

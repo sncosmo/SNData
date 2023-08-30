@@ -1,10 +1,11 @@
-"""Tests for the ``des`` module."""
+"""Tests for the ``des.SN3YR`` class."""
 
 from unittest import TestCase
 
-from sndata import des
-from .data_parsing_template_tests import PhotometricDataParsing
-from .standard_ui_template_tests import PhotometricDataUI
+from sndata.des import SN3YR
+from ..common_tests import PhotometricDataParsing, PhotometricDataUI, download_data_or_skip
+
+download_data_or_skip(SN3YR())
 
 
 class SN3YRParsing(TestCase, PhotometricDataParsing):
@@ -12,8 +13,7 @@ class SN3YRParsing(TestCase, PhotometricDataParsing):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = des.SN3YR()
-        cls.test_class.download_module_data()
+        cls.test_class = SN3YR()
 
 
 class SN3YRUI(TestCase, PhotometricDataUI):
@@ -21,4 +21,4 @@ class SN3YRUI(TestCase, PhotometricDataUI):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_class = des.SN3YR()
+        cls.test_class = SN3YR()

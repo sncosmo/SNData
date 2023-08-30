@@ -1,3 +1,5 @@
+"""Tests for the ``exceptions`` module"""
+
 from unittest import TestCase
 
 from sndata.exceptions import InvalidObjId, InvalidTableId, NoDownloadedData, ObservedDataTypeError
