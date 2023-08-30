@@ -78,7 +78,7 @@ def parse_vizier_table_descriptions(readme_path: Union[Path, str]):
         # Iterate until end of table marker
         while not line.startswith('---'):
             line_list = line.split()
-            table_num = line_list[0].removeprefix('table').removesuffix('.dat')
+            table_num = line_list[0][len('table'):].rstrip('.dat')
             if table_num.isdigit():
                 table_num = int(table_num)
 
