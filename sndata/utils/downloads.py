@@ -46,11 +46,11 @@ def download_file(
     if verbose:
         tqdm.write(f'Fetching {url}', file=sys.stdout)
         response = requests.get(url, stream=True, timeout=timeout)
+        response.raise_for_status()
 
         total = int(response.headers.get('content-length', 0))
         chunk_size = 1024
-        with tqdm(total=total, unit='B', unit_scale=True,
-                  unit_divisor=chunk_size, file=sys.stdout) as pbar:
+        with tqdm(total=total, unit='B', unit_scale=True, unit_divisor=chunk_size, file=sys.stdout) as pbar:
             for data in response.iter_content(chunk_size=chunk_size):
                 pbar.update(destination.write(data))
 
